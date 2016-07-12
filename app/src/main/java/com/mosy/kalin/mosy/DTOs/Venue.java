@@ -25,7 +25,7 @@ public class Venue {
 
     public String TeamEmail;
     public String getTeamEmail(){ return TeamEmail; }
-    public void setTeamEmail(String teamEmail){ this.ID = TeamEmail; }
+    public void setTeamEmail(String teamEmail){ this.TeamEmail = teamEmail; }
 
     public boolean AllowUploadFBOPictures;
     public boolean getAllowUploadFBOPictures(){ return AllowUploadFBOPictures; }
