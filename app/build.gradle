@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId "com.mosy.kalin.mosy"
@@ -26,11 +26,13 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.0.0'
 
     compile files('libs/android-support-v4.jar')
     compile files('libs/android-async-http-1.4.9.jar')
     compile files('libs/gson-2.7.jar')
     compile files('libs/httpclient-4.4.1.1.jar')
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support.constraint:constraint-layout:+'
+    compile 'com.android.support:design:24.2.1'
+    testCompile 'junit:junit:4.12'
 }

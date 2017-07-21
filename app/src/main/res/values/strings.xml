@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">mosy</string>
+    <string name="title_activity_login">Login to</string>
+    <string name="cancel_activity_login">Cancel</string>
+    <string name="login_activity_login">Login</string>
+    <string name="attempts_left_activity_login">Attempts Left:</string>
+    <string name="attempts_left_ph_activity_login">attempts_ph</string>
+    <string name="email_activity_login">Enter Email</string>
+    <string name="password_activity_login">Password</string>
 </resources>

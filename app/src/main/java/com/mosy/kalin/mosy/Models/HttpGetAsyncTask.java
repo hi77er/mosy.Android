@@ -30,7 +30,7 @@ public class HttpGetAsyncTask extends AsyncTask<String, Void, JSONObject> {
     @Override
     protected JSONObject doInBackground(String[] serviceUrl) {
         AsyncHttpClient client = new AsyncHttpClient();
-        String endpoint = theFactory.getMosyEndpoint("fbo") + "/Get/";
+        String endpoint = theFactory.getMosyWebAPIDevEndpoint("fbo") + "/Get/";
         RequestParams params = new RequestParams();
         params.put("Id", serviceUrl[0]);
 

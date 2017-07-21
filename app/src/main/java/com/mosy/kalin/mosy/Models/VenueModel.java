@@ -28,7 +28,7 @@ public class VenueModel {
     public Venue GetById(String id){
         Map<String, String> params = new HashMap<String, String>();
         params.put("Id", id);
-        JSONObject response = this.ModelHelper.Get(Factory.getMosyEndpoint("fbo"), "Get", params);
+        JSONObject response = this.ModelHelper.Get(Factory.getMosyWebAPIDevEndpoint("fbo"), "Get", params);
 
         if (response == null) return null;
         Venue result = this.ModelHelper.Deserialize(response, Venue.class);
