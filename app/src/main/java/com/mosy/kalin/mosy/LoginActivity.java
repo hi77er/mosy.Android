@@ -1,4 +1,5 @@
 package com.mosy.kalin.mosy;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,8 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Bundle;
 
-public class LoginActivity extends AppCompatActivity {
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
 
+@EActivity(R.layout.activity_login)
+public class LoginActivity extends AppCompatActivity {
     Button b1,b2;
     EditText ed1,ed2;
 
@@ -26,12 +30,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        b1 = (Button)findViewById(R.id.button);
-        ed1 = (EditText)findViewById(R.id.editText);
-        ed2 = (EditText)findViewById(R.id.editText2);
+        b1 = (Button)findViewById(R.id.login_btnLogin);
+        ed1 = (EditText)findViewById(R.id.login_etEmail);
+        ed2 = (EditText)findViewById(R.id.login_etPassword);
 
-        b2 = (Button)findViewById(R.id.button2);
-        tx1 = (TextView)findViewById(R.id.textView3);
+        b2 = (Button)findViewById(R.id.login_btnCancel);
+        tx1 = (TextView)findViewById(R.id.login_tvAttemptsLeftPH);
         tx1.setVisibility(View.GONE);
 
         b1.setOnClickListener(new View.OnClickListener() {
@@ -62,5 +66,12 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Click(R.id.login_btnRegister)
+    public void goToRegisterActivity(View view)
+    {
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity_.class);
+        startActivity(intent);
     }
 }

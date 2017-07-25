@@ -7,101 +7,101 @@
     android:paddingBottom = "@dimen/activity_vertical_margin" tools:context = ".LoginActivity">
 
     <TextView
+        android:id = "@+id/login_title"
         android:text = "@string/title_activity_login"
         android:layout_width="wrap_content"
         android:layout_height = "wrap_content"
-        android:id = "@+id/textview"
         android:textSize = "35sp"
         android:layout_alignParentTop = "true"
         android:layout_centerHorizontal = "true" />
 
     <TextView
+        android:id = "@+id/login_appName"
         android:layout_width = "wrap_content"
         android:layout_height = "wrap_content"
         android:text = "@string/app_name"
-        android:id = "@+id/textView"
-        android:layout_below = "@+id/textview"
+        android:layout_below = "@+id/login_title"
         android:layout_centerHorizontal = "true"
         android:textColor = "#740d26"
         android:textSize = "35sp" />
 
-    <!--<ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:minHeight="50px"
-        android:src="@drawable/abc"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true" />-->
-
     <EditText
+        android:id = "@+id/login_etEmail"
         android:layout_width = "wrap_content"
         android:layout_height = "wrap_content"
-        android:id = "@+id/editText"
         android:hint = "@string/email_activity_login"
         android:focusable = "true"
         android:textColorHighlight = "#ff7eff15"
         android:textColorHint = "#ffff299f"
         android:layout_marginTop = "46sp"
-        android:layout_below = "@+id/textView"
+        android:layout_below = "@+id/login_appName"
         android:layout_alignParentLeft = "true"
         android:layout_alignParentStart = "true"
         android:layout_alignParentRight = "true"
         android:layout_alignParentEnd = "true" />
 
     <EditText
+        android:id="@+id/login_etPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/editText2"
-        android:layout_below="@+id/editText"
+        android:layout_below="@+id/login_etEmail"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/editText"
-        android:layout_alignEnd="@+id/editText"
+        android:layout_alignRight="@+id/login_etEmail"
+        android:layout_alignEnd="@+id/login_etEmail"
         android:textColorHint="#ffff299f"
         android:hint="@string/password_activity_login" />
 
     <TextView
+        android:id="@+id/login_tvAttemptsLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/attempts_left_activity_login"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/editText2"
+        android:layout_below="@+id/login_etPassword"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textSize="25sp" />
 
     <TextView
+        android:id="@+id/login_tvAttemptsLeftPH"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/attempts_left_ph_activity_login"
-        android:id="@+id/textView3"
-        android:layout_alignTop="@+id/textView2"
+        android:layout_alignTop="@+id/login_tvAttemptsLeft"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_toEndOf="@+id/textview"
+        android:layout_alignBottom="@+id/login_tvAttemptsLeft"
+        android:layout_toEndOf="@+id/login_title"
         android:textSize="25sp"
-        android:layout_toRightOf="@+id/textview" />
+        android:layout_toRightOf="@+id/login_title" />
 
     <Button
+        android:id="@+id/login_btnLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/login_activity_login"
-        android:id="@+id/button"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/textview"
-        android:layout_toStartOf="@+id/textview" />
+        android:layout_toLeftOf="@+id/login_title"
+        android:layout_toStartOf="@+id/login_title" />
 
     <Button
+        android:id="@+id/login_btnRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register_activity_login"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/login_appName"
+        android:layout_alignStart="@+id/login_appName" />
+
+    <Button
+        android:id="@+id/login_btnCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cancel_activity_login"
-        android:id="@+id/button2"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/textview"
-        android:layout_toEndOf="@+id/textview" />
+        android:layout_toRightOf="@+id/login_title"
+        android:layout_toEndOf="@+id/login_title" />
 
 </RelativeLayout>
