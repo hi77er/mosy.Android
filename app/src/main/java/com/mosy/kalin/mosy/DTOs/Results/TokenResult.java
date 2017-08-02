@@ -1,12 +1,15 @@
-package com.mosy.kalin.mosy.DTOs;
+package com.mosy.kalin.mosy.DTOs.Results;
 
 import com.google.gson.annotations.SerializedName;
+import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
 
 /**
  * Created by kkras on 7/25/2017.
  */
 
-public class TokenModel {
+public class TokenResult {
+    public TokenResultStatus Status;
+
     @SerializedName("access_token")
     public String AccessToken;
 
@@ -24,4 +27,5 @@ public class TokenModel {
 
    @SerializedName("userName")
     public String Username;
+
 }

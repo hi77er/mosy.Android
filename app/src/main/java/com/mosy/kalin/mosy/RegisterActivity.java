@@ -1,6 +1,7 @@
 package com.mosy.kalin.mosy;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,6 +13,8 @@ import com.mosy.kalin.mosy.Models.BindingModels.RegisterBindingModel;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 
+import java.util.concurrent.ExecutionException;
+
 @EActivity(R.layout.activity_register)
 public class RegisterActivity extends AppCompatActivity {
 
@@ -21,11 +24,25 @@ public class RegisterActivity extends AppCompatActivity {
         String password = ((EditText)findViewById(R.id.etPassword)).getText().toString();
         Context applicationContext = getApplicationContext();
 
-        if (!StringHelper.isNullOrWhitespace(email) && !StringHelper.isNullOrWhitespace(email)) {
+        //TODO: Check if User with this Username already exists calling an Api method created for this purpose.
+
+        if (!StringHelper.isNullOrWhitespace(email) && !StringHelper.isNullOrWhitespace(password)) {
             if (StringHelper.isEmailAddress(email)) {
                 if (StringHelper.isMatch("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*(_|[^\\w])).{6,}$", password)) {
                     RegisterBindingModel model = new RegisterBindingModel(email, password, password);
-                    new RegisterAsyncTask(applicationContext).execute(model);
+                    try {
+                        new RegisterAsyncTask(applicationContext).execute(model).get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+
+                    Intent intent = new Intent(RegisterActivity.this, LoginActivity_.class);
+                    startActivity(intent);
+                    Toast.makeText(applicationContext,
+                            "Confirm email and login again. Register successful.",
+                            Toast.LENGTH_SHORT).show();
                 } else
                     Toast.makeText(applicationContext,
                             "Passwords must have at least one non letter and digit character. " +

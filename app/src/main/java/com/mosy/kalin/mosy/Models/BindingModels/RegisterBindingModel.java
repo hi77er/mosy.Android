@@ -5,24 +5,21 @@ package com.mosy.kalin.mosy.Models.BindingModels;
  */
 
 public class RegisterBindingModel {
-    private String email;
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String Email;
+    public String getEmail() { return Email; }
+    public void setEmail(String email) { this.Email = email; }
 
-    private String password;
-    public String getPassword() { return password; }
+    public String Password;
+    public String getPassword() { return Password; }
 
-    private String confirmPassword;
-    public String getConfirmPassword() { return confirmPassword; }
-    public void setConfirmPassword(String confirmPassword) { this.confirmPassword = confirmPassword; }
+    public String ConfirmPassword;
+    public String getConfirmPassword() { return ConfirmPassword; }
+    public void setConfirmPassword(String confirmPassword) { this.ConfirmPassword = confirmPassword; }
 
     public RegisterBindingModel() { }
     public RegisterBindingModel(String email, String password, String confirmPassword) {
-        this.email = email;
-        this.password = password;
-        this.confirmPassword = confirmPassword;
+        this.Email = email;
+        this.Password = password;
+        this.ConfirmPassword = confirmPassword;
     }
-
-
-    
 }

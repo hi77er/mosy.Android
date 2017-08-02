@@ -22,5 +22,13 @@
 
 
 
+    <!--Venue Activity-->
+
+    <!--Venues Activity-->
+    <string name="title_venues_activity">Venues</string>
+
+    <!-- Venue Item -->
+    <string name="venue_item_name">Venue Name</string>
+    <string name="venue_item_class">Class</string>
 
 </resources>

@@ -1,12 +1,15 @@
 package com.mosy.kalin.mosy.DTOs;
 
 import com.google.gson.GsonBuilder;
+import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
+import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -20,14 +23,67 @@ import cz.msebera.android.httpclient.client.methods.HttpDelete;
 import cz.msebera.android.httpclient.client.methods.HttpGet;
 import cz.msebera.android.httpclient.client.methods.HttpPost;
 import cz.msebera.android.httpclient.client.utils.URLEncodedUtils;
+import cz.msebera.android.httpclient.entity.ByteArrayEntity;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Created by kkras on 7/25/2017.
  */
 
 public class JSONHttpClient {
+
+    public TokenResult GetToken(final String url, String username, String password) {
+        String encoded = String.format("grant_type=password&username=%s&password=%s", username, password);
+
+        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(url);
+        TokenResult token = new TokenResult();
+        token.Status = TokenResultStatus.Fail;
+        try {
+            httpPost.setHeader("Content-type", "application/x-www-form-urlencoded");
+            HttpEntity entity = new ByteArrayEntity(encoded.getBytes("UTF-8"));
+            httpPost.setEntity(entity);
+
+            HttpResponse httpResponse = defaultHttpClient.execute(httpPost);
+            HttpEntity httpEntity = httpResponse.getEntity();
+            if (httpEntity != null) {
+                InputStream inputStream = httpEntity.getContent();
+                String resultString = convertStreamToString(inputStream);
+                inputStream.close();
+
+                //TODO: Handle the case when no Internet connection
+                //TODO: Handle the case when Server does not respond
+                if (resultString.contains("invalid_grant") ||
+                        (resultString.contains("error") && (resultString.contains("username") || resultString.contains("password")))){
+                    token.Status = TokenResultStatus.Unauthorized;
+                }
+                else if(resultString.contains("access_token")) {
+                    token = new GsonBuilder().create().fromJson(resultString, TokenResult.class);
+                    token.Status = TokenResultStatus.Success;
+                }
+                else if(resultString.contains("Invalid Hostname")){
+                    token.Status = TokenResultStatus.InvalidHosName;
+                }
+                else {
+                    token.Status = TokenResultStatus.Fail;
+                }
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return token;
+    }
+
     public <T> T PostObject(final String url, final Object object, final Class<T> responseObjectClass) {
         DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(url);
@@ -70,10 +126,12 @@ public class JSONHttpClient {
     private String convertStreamToString(InputStream inputStream) {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder stringBuilder = new StringBuilder();
+        String line = "";
         try {
-            while ((bufferedReader.readLine()) != null) {
-                stringBuilder.append(bufferedReader.readLine());
-                stringBuilder.append("\n");
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder
+                        .append(line)
+                        .append("\n");
             }
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

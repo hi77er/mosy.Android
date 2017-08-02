@@ -1,4 +1,5 @@
 package com.mosy.kalin.mosy;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,8 +15,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Bundle;
 
+import com.mosy.kalin.mosy.Async.Tasks.RegisterAsyncTask;
+import com.mosy.kalin.mosy.Async.Tasks.TokenLoginAsyncTask;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
+import com.mosy.kalin.mosy.Models.BindingModels.RegisterBindingModel;
+
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+
+import java.util.concurrent.ExecutionException;
 
 @EActivity(R.layout.activity_login)
 public class LoginActivity extends AppCompatActivity {
@@ -24,6 +33,38 @@ public class LoginActivity extends AppCompatActivity {
 
     TextView tx1;
     int counter = 3;
+
+    @Click(R.id.login_btnLogin)
+    public void Login() {
+        String email = ((EditText)findViewById(R.id.login_etEmail)).getText().toString();
+        String password = ((EditText)findViewById(R.id.login_etPassword)).getText().toString();
+        Context applicationContext = getApplicationContext();
+
+        if (!StringHelper.isNullOrWhitespace(email) && !StringHelper.isNullOrWhitespace(password)) {
+            if (StringHelper.isEmailAddress(email)) {
+                LoginBindingModel model = new LoginBindingModel(email, password);
+                try {
+                    new TokenLoginAsyncTask(applicationContext).execute(model).get();
+
+//                    Intent intent = new Intent(RegisterActivity.this, LoginActivity_.class);
+//                    startActivity(intent);
+//                    Toast.makeText(applicationContext,
+//                            "Confirm email and login again. Register successful.",
+//                            Toast.LENGTH_SHORT).show();
+                }  catch (InterruptedException e) {
+                e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            } else
+                Toast.makeText(applicationContext,
+                        "Invalid Email address.",
+                        Toast.LENGTH_SHORT).show();
+        } else
+            Toast.makeText(applicationContext,
+                    "Email and password are required.",
+                    Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

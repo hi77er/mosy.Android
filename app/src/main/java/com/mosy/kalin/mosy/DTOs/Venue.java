@@ -7,6 +7,11 @@ import java.math.BigDecimal;
  */
 public class Venue {
 
+    public Venue(String name, String venueClass){
+        this.setName(name);
+        this.setClass(venueClass);
+    }
+
     public String ID;
     public String getID(){ return ID; }
     public void setID(String id){ this.ID = id; }
@@ -64,4 +69,6 @@ public class Venue {
 //    public List<FBOEndorsement>  Endorsements;
 //
 //    public TablesAndCount List<object>;
+
+
 }
