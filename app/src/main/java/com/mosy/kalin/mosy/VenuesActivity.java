@@ -46,6 +46,16 @@ public class VenuesActivity extends Activity {
         this.venues[18] = new Venue("Venue9", "Bar");
         this.venues[19] = new Venue("Venue10", "Bar");
         this.venues[20] = new Venue("Venue11", "Bar");
+        this.venues[21] = new Venue("Happy", "Bar");
+        this.venues[22] = new Venue("Mc Donalds", "Fast Food");
+        this.venues[23] = new Venue("Raffy", "Restaurant & Bar");
+        this.venues[24] = new Venue("Donut", "Restaurant");
+        this.venues[25] = new Venue("Pizza Hut", "Pizzerria");
+        this.venues[26] = new Venue("Lovin Hut", "Snack Bar");
+        this.venues[27] = new Venue("Spaghetti Kitchen", "Restaurant");
+        this.venues[28] = new Venue("Venue9", "Bar");
+        this.venues[29] = new Venue("Venue10", "Bar");
+        this.venues[30] = new Venue("Venue11", "Bar");
 
         VenuesAdapter cus = new VenuesAdapter(this, venues);
         ListView lv = (ListView)findViewById(R.id.venues_lvVenues);
