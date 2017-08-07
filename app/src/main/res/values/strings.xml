@@ -30,5 +30,6 @@
     <!-- Venue Item -->
     <string name="venue_item_name">Venue Name</string>
     <string name="venue_item_class">Class</string>
+    <string name="venues_tvNothingLoaded">No venues loaded.</string>
 
 </resources>

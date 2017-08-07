@@ -1,25 +1,18 @@
 package com.mosy.kalin.mosy;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.app.Activity;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.Bundle;
 
-import com.mosy.kalin.mosy.Async.Tasks.RegisterAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.TokenLoginAsyncTask;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.RegisterBindingModel;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -112,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
     @Click(R.id.login_btnRegister)
     public void goToRegisterActivity(View view)
     {
-        Intent intent = new Intent(LoginActivity.this, RegisterActivity_.class);
-        startActivity(intent);
+//        Intent intent = new Intent(LoginActivity.this, RegisterActivity_.class);
+//        startActivity(intent);
     }
 }

@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".VenuesActivity"
+            android:name=".VenuesActivity_"
             android:label="@string/title_venues_activity"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>

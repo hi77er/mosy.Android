@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.mosy.kalin.mosy.DTOs.Enums.AuthenticationResultStatus;
-import com.mosy.kalin.mosy.DTOs.JSONHttpClient;
+import com.mosy.kalin.mosy.Http.JSONHttpClient;
 import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
 import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;

@@ -1,4 +1,4 @@
-package com.mosy.kalin.mosy.DTOs;
+package com.mosy.kalin.mosy.Http;
 
 import com.google.gson.GsonBuilder;
 import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
