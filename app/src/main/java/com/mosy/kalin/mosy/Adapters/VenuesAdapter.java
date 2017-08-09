@@ -5,7 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.mosy.kalin.mosy.Async.Tasks.GetVenuesAsyncTask;
 import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.Models.BindingModels.GetVenuesBindingModel;
 import com.mosy.kalin.mosy.Views.VenueItemView;
 import com.mosy.kalin.mosy.Views.VenueItemView_;
 
@@ -14,7 +16,7 @@ import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by kkras on 7/31/2017.
@@ -22,60 +24,36 @@ import java.util.List;
 
 @EBean
 public class VenuesAdapter extends BaseAdapter {
-    List<Venue> venues;
+    ArrayList<Venue> venues;
 
     @RootContext
     Context context;
 
     @AfterInject
     void initAdapter() {
-        venues = new ArrayList<Venue>();
-
-        this.venues.add( new Venue("The Godfather", "Bar"));
-        this.venues.add(new Venue("Happy", "Bar"));
-        this.venues.add(new Venue("Mc Donalds", "Fast Food"));
-        this.venues.add(new Venue("Raffy", "Restaurant & Bar"));
-        this.venues.add(new Venue("Donut", "Restaurant"));
-        this.venues.add(new Venue("Pizza Hut", "Pizzeria"));
-        this.venues.add(new Venue("Lovin Hut", "Snack Bar"));
-        this.venues.add(new Venue("Spaghetti Kitchen", "Restaurant"));
-        this.venues.add(new Venue("Venue9", "Bar"));
-        this.venues.add(new Venue("Venue10", "Bar"));
-        this.venues.add(new Venue("Venue11", "Bar"));
-        this.venues.add(new Venue("Happy", "Bar"));
-        this.venues.add(new Venue("Mc Donalds", "Fast Food"));
-        this.venues.add(new Venue("Raffy", "Restaurant & Bar"));
-        this.venues.add(new Venue("Donut", "Restaurant"));
-        this.venues.add(new Venue("Pizza Hut", "Pizzeria"));
-        this.venues.add(new Venue("Lovin Hut", "Snack Bar"));
-        this.venues.add(new Venue("Spaghetti Kitchen", "Restaurant"));
-        this.venues.add(new Venue("Venue9", "Bar"));
-        this.venues.add(new Venue("Venue10", "Bar"));
-        this.venues.add(new Venue("Venue11", "Bar"));
-        this.venues.add(new Venue("Happy", "Bar"));
-        this.venues.add(new Venue("Mc Donalds", "Fast Food"));
-        this.venues.add(new Venue("Raffy", "Restaurant & Bar"));
-        this.venues.add(new Venue("Donut", "Restaurant"));
-        this.venues.add(new Venue("Pizza Hut", "Pizzeria"));
-        this.venues.add(new Venue("Lovin Hut", "Snack Bar"));
-        this.venues.add(new Venue("Spaghetti Kitchen", "Restaurant"));
-        this.venues.add(new Venue("Venue9", "Bar"));
-        this.venues.add(new Venue("Venue10", "Bar"));
-        this.venues.add(new Venue("Venue11", "Bar"));
+        try {
+            this.venues = new GetVenuesAsyncTask(context).execute(new GetVenuesBindingModel()).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        VenueItemView venueItemView;
-        if (convertView == null) {
+        VenueItemView venueItemView = null;
+        if (convertView == null)
             venueItemView = VenueItemView_.build(context);
-        } else {
+        else
             venueItemView = (VenueItemView) convertView;
-        }
-        venueItemView.bind(getItem(position));
+
+        Venue venue = getItem(position);
+        venueItemView.bind(venue);
 
         return venueItemView;
-//        return null;
     }
 
     @Override
@@ -85,7 +63,7 @@ public class VenuesAdapter extends BaseAdapter {
 
     @Override
     public Venue getItem(int position) {
-        return venues.get(position);
+        return (Venue) venues.get(position);
     }
 
     @Override

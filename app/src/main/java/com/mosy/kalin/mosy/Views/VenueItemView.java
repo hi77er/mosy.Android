@@ -16,18 +16,19 @@ import org.androidannotations.annotations.ViewById;
 
 @EViewGroup(R.layout.activity_venue_item)
 public class VenueItemView extends LinearLayout {
-    @ViewById
-    TextView tv_venueName;
 
-    @ViewById
-    TextView tv_venueClass;
+    @ViewById//(resName = "venueItem_tvName")
+    TextView venueItem_tvName;
+
+    @ViewById//(resName = "venueItem_tvClass")
+    TextView venueItem_tvClass;
 
     public VenueItemView(Context context) {
         super(context);
     }
 
     public void bind(Venue venue) {
-        tv_venueName.setText(venue.getName());
-        tv_venueClass.setText(venue.getVenueClass());
+        venueItem_tvName.setText(venue.Name);
+        venueItem_tvClass.setText(venue.Class);
     }
 }

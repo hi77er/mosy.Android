@@ -7,7 +7,7 @@ import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
  * Created by kkras on 7/25/2017.
  */
 
-public class TokenResult {
+public class TokenResult extends ResultBase {
     public TokenResultStatus Status;
 
     @SerializedName("access_token")

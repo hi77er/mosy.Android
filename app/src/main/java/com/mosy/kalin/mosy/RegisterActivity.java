@@ -38,8 +38,8 @@ public class RegisterActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-//                    Intent intent = new Intent(RegisterActivity.this, LoginActivity_.class);
-//                    startActivity(intent);
+                    Intent intent = new Intent(RegisterActivity.this, LoginActivity_.class);
+                    startActivity(intent);
                     Toast.makeText(applicationContext,
                             "Confirm email and login again. Register successful.",
                             Toast.LENGTH_SHORT).show();

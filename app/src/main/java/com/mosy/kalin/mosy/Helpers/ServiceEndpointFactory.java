@@ -10,17 +10,24 @@ public class ServiceEndpointFactory implements IServiceEndpointFactory {
     // any additional binding will cause 10.0.2.2 not to be resolved
     // the server should be configured t oserve content on exactly 127.0.0.1
     // the server should be configured t oserve content on exactly 127.0.0.1
-    private static final String publicEndpoint = "http://mosyws/api";
-    private static final String publicTokenEndpoint = "http://mosyws/token";
+//    private static final String publicEndpoint = "http://mosyws/api";
+//    private static final String publicTokenEndpoint = "http://mosyws/token";
 
     private static final String devEndpoint = "http://10.0.2.2:8080/api/"; // Use when debugging on Emulator
     private static final String devTokenEndpoint = "http://10.0.2.2:8080/token"; // Use when debugging on Emulator
 
-    //private static final String devEndpoint = "http://172.16.1.100:8080/api"; // When debugging on actual Device
-    //private static final String devTokenEndpoint = "http://172.16.1.100:8080/token"; // When debugging on actual Device
+    //INFO: When using the following settings do the following:
+    //1. Turn off mobile network on mobile phone
+    //2. connect the laptop and the phone to the same Wi-Fi network
+    //3. Set manually the IP of the computer's Wi-Fi network to be 172.16.1.100
+//    private static final String devEndpoint = "http://172.16.1.100:8080/api"; // When debugging on actual Device
+//    private static final String devTokenEndpoint = "http://172.16.1.100:8080/token"; // When debugging on actual Device
 
-    @Override
-    public String getMosyWebAPIPublicEndpoint(String action) { return publicEndpoint + action; }
+//    @Override
+//    public String getMosyWebAPIPublicEndpoint(String action) { return publicEndpoint + action; }
+
+//    @Override
+//    public String getMosyWebAPIPublicTokenEndpoint(String action) { return publicTokenEndpoint + action; }
 
     @Override
     public String getMosyWebAPIDevEndpoint(String action) {

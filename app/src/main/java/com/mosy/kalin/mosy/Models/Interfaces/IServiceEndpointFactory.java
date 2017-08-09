@@ -5,7 +5,8 @@ package com.mosy.kalin.mosy.Models.Interfaces;
  */
 public interface IServiceEndpointFactory {
 
-    String getMosyWebAPIPublicEndpoint(String action);
+//    String getMosyWebAPIPublicTokenEndpoint(String action);
+//    String getMosyWebAPIPublicEndpoint(String action);
     String getMosyWebAPIDevTokenEndpoint();
     String getMosyWebAPIDevEndpoint(String action);
 }

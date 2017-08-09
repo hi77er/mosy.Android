@@ -39,13 +39,10 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     new TokenLoginAsyncTask(applicationContext).execute(model).get();
 
-//                    Intent intent = new Intent(RegisterActivity.this, LoginActivity_.class);
-//                    startActivity(intent);
-//                    Toast.makeText(applicationContext,
-//                            "Confirm email and login again. Register successful.",
-//                            Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginActivity.this, VenuesActivity_.class);
+                    startActivity(intent);
                 }  catch (InterruptedException e) {
-                e.printStackTrace();
+                    e.printStackTrace();
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
@@ -105,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
     @Click(R.id.login_btnRegister)
     public void goToRegisterActivity(View view)
     {
-//        Intent intent = new Intent(LoginActivity.this, RegisterActivity_.class);
-//        startActivity(intent);
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity_.class);
+        startActivity(intent);
     }
 }

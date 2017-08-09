@@ -1,14 +1,18 @@
 package com.mosy.kalin.mosy.Http;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
 import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
+import com.mosy.kalin.mosy.DTOs.Venue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -37,6 +41,80 @@ import okhttp3.Response;
  */
 
 public class JSONHttpClient {
+
+    public <T> T Get(String url, List<NameValuePair> params, final Type objectType) { //final Class<T> objectClass
+        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
+        if (params != null)
+            url += "?" + URLEncodedUtils.format(params, "utf-8");
+
+        HttpGet httpGet = new HttpGet(url);
+        try {
+            httpGet.setHeader("Accept", "application/json");
+            httpGet.setHeader("Accept-Encoding", "gzip");
+
+            HttpResponse httpResponse = defaultHttpClient.execute(httpGet);
+            HttpEntity httpEntity = httpResponse.getEntity();
+            if (httpEntity != null) {
+                InputStream inputStream = httpEntity.getContent();
+                Header contentEncoding = httpResponse.getFirstHeader("Content-Encoding");
+                if (contentEncoding != null && contentEncoding.getValue().equalsIgnoreCase("gzip")) {
+                    inputStream = new GZIPInputStream(inputStream);
+                }
+
+                String resultString = convertStreamToString(inputStream);
+                inputStream.close();
+
+                return new GsonBuilder().create().fromJson(resultString, objectType);
+            }
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return null;
+    }
+
+    public <T> T PostObject(final String url, final Object object, final Type objectType) { //final Class<T> objectClass
+        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(url);
+        try {
+            StringEntity stringEntity = new StringEntity(new GsonBuilder().create().toJson(object));
+            httpPost.setEntity(stringEntity);
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+            httpPost.setHeader("Accept-Encoding", "gzip");
+
+            HttpResponse httpResponse = defaultHttpClient.execute(httpPost);
+            HttpEntity httpEntity = httpResponse.getEntity();
+            if (httpEntity != null) {
+                InputStream inputStream = httpEntity.getContent();
+                Header contentEncoding = httpResponse.getFirstHeader("Content-Encoding");
+                if (contentEncoding != null && contentEncoding.getValue().equalsIgnoreCase("gzip")) {
+                    inputStream = new GZIPInputStream(inputStream);
+                }
+
+                String resultString = convertStreamToString(inputStream);
+                inputStream.close();
+                return new GsonBuilder().create().fromJson(resultString, objectType);
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return null;
+    }
+
+    public <T> T PostParams(String url, final List<NameValuePair> params, final Type objectType){ // final Class<T> responseObjectClass)
+        String paramString = URLEncodedUtils.format(params, "utf-8");
+        url += "?" + paramString;
+        return PostObject(url, null, objectType);
+    }
 
     public TokenResult GetToken(final String url, String username, String password) {
         String encoded = String.format("grant_type=password&username=%s&password=%s", username, password);
@@ -84,44 +162,23 @@ public class JSONHttpClient {
         return token;
     }
 
-    public <T> T PostObject(final String url, final Object object, final Class<T> responseObjectClass) {
+    public boolean Delete(String url, final List<NameValuePair> params) {
         DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(url);
+        String paramString = URLEncodedUtils.format(params, "utf-8");
+        url += "?" + paramString;
+        HttpDelete httpDelete = new HttpDelete(url);
+
+        HttpResponse httpResponse = null;
         try {
-            StringEntity stringEntity = new StringEntity(new GsonBuilder().create().toJson(object));
-            httpPost.setEntity(stringEntity);
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
-            httpPost.setHeader("Accept-Encoding", "gzip");
-
-            HttpResponse httpResponse = defaultHttpClient.execute(httpPost);
-            HttpEntity httpEntity = httpResponse.getEntity();
-            if (httpEntity != null) {
-                InputStream inputStream = httpEntity.getContent();
-                Header contentEncoding = httpResponse.getFirstHeader("Content-Encoding");
-                if (contentEncoding != null && contentEncoding.getValue().equalsIgnoreCase("gzip")) {
-                    inputStream = new GZIPInputStream(inputStream);
-                }
-
-                String resultString = convertStreamToString(inputStream);
-                inputStream.close();
-                return new GsonBuilder().create().fromJson(resultString, responseObjectClass);
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            httpResponse = defaultHttpClient.execute(httpDelete);
+            return httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_NO_CONTENT;
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        return null;
+
+        return false;
     }
 
-    public <T> T PostParams(String url, final List<NameValuePair> params, final Class<T> responseObjectClass) {
-        String paramString = URLEncodedUtils.format(params, "utf-8");
-        url += "?" + paramString;
-        return PostObject(url, null, responseObjectClass);
-    }
 
     private String convertStreamToString(InputStream inputStream) {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -146,54 +203,4 @@ public class JSONHttpClient {
         return stringBuilder.toString();
     }
 
-    public <T> T Get(String url, List<NameValuePair> params, final Class<T> objectClass) {
-        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        String paramString = URLEncodedUtils.format(params, "utf-8");
-        url += "?" + paramString;
-        HttpGet httpGet = new HttpGet(url);
-        try {
-            httpGet.setHeader("Accept", "application/json");
-            httpGet.setHeader("Accept-Encoding", "gzip");
-
-            HttpResponse httpResponse = defaultHttpClient.execute(httpGet);
-            HttpEntity httpEntity = httpResponse.getEntity();
-            if (httpEntity != null) {
-                InputStream inputStream = httpEntity.getContent();
-                Header contentEncoding = httpResponse.getFirstHeader("Content-Encoding");
-                if (contentEncoding != null && contentEncoding.getValue().equalsIgnoreCase("gzip")) {
-                    inputStream = new GZIPInputStream(inputStream);
-                }
-
-                String resultString = convertStreamToString(inputStream);
-                inputStream.close();
-                return new GsonBuilder().create().fromJson(resultString, objectClass);
-
-            }
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-        return null;
-    }
-
-    public boolean Delete(String url, final List<NameValuePair> params) {
-        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        String paramString = URLEncodedUtils.format(params, "utf-8");
-        url += "?" + paramString;
-        HttpDelete httpDelete = new HttpDelete(url);
-
-        HttpResponse httpResponse = null;
-        try {
-            httpResponse = defaultHttpClient.execute(httpDelete);
-            return httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_NO_CONTENT;
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-        return false;
-    }
 }

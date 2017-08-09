@@ -6,18 +6,27 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/tv_venueClass"
+        android:id="@+id/venueItem_tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/venue_item_class" />
+        android:layout_gravity="start"
+        android:text="@string/venue_item_name"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp" />
 
     <TextView
-        android:id="@+id/tv_venueName"
+        android:id="@+id/venueItem_tvClass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/venue_item_name" />
+        android:layout_gravity="start"
+        android:text="@string/venue_item_class"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp" />
+
 
 
 </LinearLayout>
