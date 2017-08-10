@@ -5,6 +5,7 @@ package com.mosy.kalin.mosy.Models.BindingModels;
  */
 
 public class LoginBindingModel {
+
     public String Email;
     public String getEmail() { return Email; }
     public void setEmail(String email) { this.Email = email; }
@@ -17,4 +18,5 @@ public class LoginBindingModel {
         this.Email = email;
         this.Password = password;
     }
+
 }

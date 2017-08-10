@@ -34,4 +34,7 @@
     <string name="venue_name">Venue name</string>
     <string name="title_activity_venue">VenueActivity</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="brochure_tvName">Brochure Name</string>
+
 </resources>

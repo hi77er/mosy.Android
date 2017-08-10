@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import com.google.gson.reflect.TypeToken;
 import com.mosy.kalin.mosy.DTOs.Enums.AuthenticationResultStatus;
+import com.mosy.kalin.mosy.DTOs.Results.VenueImageResult;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
@@ -29,14 +30,17 @@ public class GetVenuesAsyncTask extends AsyncTask<GetVenuesBindingModel, String,
     protected ArrayList<Venue> doInBackground(GetVenuesBindingModel... models) {
 //        GetVenuesBindingModel model = models[0];
         String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint("FBO/AllBasic");
-        ArrayList<Venue> venuesResult; // = new ArrayList<Venue>();
+        ArrayList<Venue> venuesResult = new ArrayList<Venue>();
 
         try {
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
             venuesResult = jsonHttpClient.Get(endpoint, null, new TypeToken<ArrayList<Venue>>(){}.getType());
         } catch(Exception e) {
             e.printStackTrace();
-            return null;
+            Venue errResult = new Venue();
+            errResult.ErrorMessage = e.getMessage();
+            venuesResult.add(errResult);
+            return venuesResult;
         }
         return venuesResult;
     }

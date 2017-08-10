@@ -10,6 +10,7 @@ import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenuesBindingModel;
 import com.mosy.kalin.mosy.Views.VenueItemView;
 import com.mosy.kalin.mosy.Views.VenueItemView_;
+//import com.mosy.kalin.mosy.Views.VenueItemView_;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;
@@ -58,7 +59,9 @@ public class VenuesAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return venues.size();//ListView items count.
+        if (this.venues != null)
+            return venues.size();
+        else return 0;
     }
 
     @Override

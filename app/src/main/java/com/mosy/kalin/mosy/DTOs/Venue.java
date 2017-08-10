@@ -1,6 +1,7 @@
 package com.mosy.kalin.mosy.DTOs;
 
 import com.google.gson.annotations.SerializedName;
+import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -8,7 +9,10 @@ import java.math.BigDecimal;
 /**
  * Created by User on 7/6/2016.
  */
-public class Venue implements Serializable {
+// Implements Serializable in order to be passed between activities.
+public class Venue
+        extends ResultBase
+        implements Serializable {
 
     @SerializedName("Id")
     public String Id;
