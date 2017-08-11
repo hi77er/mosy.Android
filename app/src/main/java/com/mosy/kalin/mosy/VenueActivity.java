@@ -1,34 +1,26 @@
 package com.mosy.kalin.mosy;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.AttributeSet;
 import android.util.Base64;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mosy.kalin.mosy.Adapters.MenuAdapter;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueIndoorImageAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueMenuAsyncTask;
-import com.mosy.kalin.mosy.Async.Tasks.GetVenuesAsyncTask;
 import com.mosy.kalin.mosy.DTOs.Brochure;
-import com.mosy.kalin.mosy.DTOs.Results.VenueImageResult;
+import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueMenuBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenuesBindingModel;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
@@ -37,6 +29,7 @@ import java.util.concurrent.ExecutionException;
 
 @EActivity(R.layout.activity_venue)
 public class VenueActivity extends AppCompatActivity /*, FragmentActivity*/ {
+
 
     Venue Venue;
 
@@ -64,15 +57,15 @@ public class VenueActivity extends AppCompatActivity /*, FragmentActivity*/ {
         GetVenueIndoorImageBindingModel indorImageModel = new GetVenueIndoorImageBindingModel(this.Venue.Id);
         try {
             //INFO: TryGet Venue Image
-//            VenueImageResult result = new GetVenueIndoorImageAsyncTask(context).execute(indorImageModel).get();
-//            if (result.Bytes != null) {
-//                byte[] byteArray = Base64.decode(result.Bytes, Base64.DEFAULT);
-//                Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-//                this.IndoorImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
-//                this.IndoorImage.setVisibility(View.VISIBLE);
-//            }
-//            else
-//                this.IndoorImage.setVisibility(View.GONE);
+            VenueImage result = new GetVenueIndoorImageAsyncTask(context).execute(indorImageModel).get();
+            if (result.Bytes != null) {
+                byte[] byteArray = Base64.decode(result.Bytes, Base64.DEFAULT);
+                Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                this.IndoorImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
+                this.IndoorImage.setVisibility(View.VISIBLE);
+            }
+            else
+                this.IndoorImage.setVisibility(View.GONE);
 
             GetVenueMenuBindingModel model = new GetVenueMenuBindingModel(this.Venue.Id);
             ArrayList<Brochure> brochures = new GetVenueMenuAsyncTask(context).execute(model).get();

@@ -4,16 +4,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.google.gson.reflect.TypeToken;
-import com.mosy.kalin.mosy.DTOs.Enums.AuthenticationResultStatus;
-import com.mosy.kalin.mosy.DTOs.Results.VenueImageResult;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
-import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenuesBindingModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by kkras on 8/7/2017.

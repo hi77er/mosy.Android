@@ -1,12 +1,20 @@
 package com.mosy.kalin.mosy.Adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.mosy.kalin.mosy.Async.Tasks.GetVenueIndoorImageAsyncTask;
+import com.mosy.kalin.mosy.Async.Tasks.GetVenueOutdoorImageAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenuesAsyncTask;
 import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.DTOs.VenueImage;
+import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageBindingModel;
+import com.mosy.kalin.mosy.Models.BindingModels.GetVenueOutdoorImageBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenuesBindingModel;
 import com.mosy.kalin.mosy.Views.VenueItemView;
 import com.mosy.kalin.mosy.Views.VenueItemView_;
@@ -34,6 +42,11 @@ public class VenuesAdapter extends BaseAdapter {
     void initAdapter() {
         try {
             this.venues = new GetVenuesAsyncTask(context).execute(new GetVenuesBindingModel()).get();
+            for (Venue venue: this.venues) {
+                GetVenueOutdoorImageBindingModel outdorImageModel = new GetVenueOutdoorImageBindingModel(venue.Id);
+                VenueImage outdoorImage = new GetVenueOutdoorImageAsyncTask(context).execute(outdorImageModel).get();
+                venue.OutdoorImage = outdoorImage;
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

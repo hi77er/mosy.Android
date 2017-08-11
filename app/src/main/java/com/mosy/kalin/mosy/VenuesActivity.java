@@ -30,6 +30,7 @@ public class VenuesActivity extends AppCompatActivity {
     @ItemClick
     void venues_lvVenuesItemClicked(Venue venue) {
         Intent intent = new Intent(VenuesActivity.this, VenueActivity_.class);
+        venue.OutdoorImage = null; // Looks like it cannot serialize the image object. We either don't need this one in the Venue page.
         intent.putExtra("Venue", venue);
         startActivity(intent);
     }

@@ -7,7 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageBindingModel;
+import com.mosy.kalin.mosy.Models.BindingModels.GetVenueOutdoorImageBindingModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,18 +19,18 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
  * Created by kkras on 8/9/2017.
  */
 
-public class GetVenueIndoorImageAsyncTask extends AsyncTask<GetVenueIndoorImageBindingModel, String, VenueImage> {
+public class GetVenueOutdoorImageAsyncTask extends AsyncTask<GetVenueOutdoorImageBindingModel, String, VenueImage> {
 
     private Context context;
 
-    public GetVenueIndoorImageAsyncTask(Context context) {
+    public GetVenueOutdoorImageAsyncTask(Context context) {
         this.context = context;
     }
 
     @Override
-    protected VenueImage doInBackground(GetVenueIndoorImageBindingModel... models) {
-        GetVenueIndoorImageBindingModel model = models[0];
-        String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint("FBOFiles/IndoorById");
+    protected VenueImage doInBackground(GetVenueOutdoorImageBindingModel... models) {
+        GetVenueOutdoorImageBindingModel model = models[0];
+        String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint("FBOFiles/OutdoorById");
         VenueImage imageResult = null;
 
         try {

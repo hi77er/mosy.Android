@@ -1,12 +1,13 @@
-package com.mosy.kalin.mosy.DTOs.Results;
+package com.mosy.kalin.mosy.DTOs;
 
 import com.google.gson.annotations.SerializedName;
+import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
 
 /**
  * Created by kkras on 8/9/2017.
  */
 
-public class VenueImageResult extends ResultBase {
+public class VenueImage extends ResultBase {
 
     @SerializedName("Id")
     public String Id;
@@ -19,6 +20,9 @@ public class VenueImageResult extends ResultBase {
 
     @SerializedName("Description")
     public String Description;
+
+    @SerializedName("IsOutdoors")
+    public boolean IsOutdoors;
 
     @SerializedName("Bytes")
     public String Bytes;

@@ -1,6 +1,11 @@
 package com.mosy.kalin.mosy.Views;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,18 +22,27 @@ import org.androidannotations.annotations.ViewById;
 @EViewGroup(R.layout.activity_venue_item)
 public class VenueItemView extends LinearLayout {
 
-    @ViewById//(resName = "venueItem_tvName")
-    TextView venueItem_tvName;
+    @ViewById(resName = "venueItem_tvName")
+    TextView Name;
 
-    @ViewById//(resName = "venueItem_tvClass")
-    TextView venueItem_tvClass;
+    @ViewById(resName = "venueItem_tvClass")
+    TextView Class;
+
+    @ViewById(resName = "venueItem_ivOutdoor")
+    ImageView OutdoorImage;
 
     public VenueItemView(Context context) {
         super(context);
     }
 
     public void bind(Venue venue) {
-        venueItem_tvName.setText(venue.Name);
-        venueItem_tvClass.setText(venue.Class);
+        this.Name.setText(venue.Name);
+        this.Class.setText(venue.Class);
+        if (venue.OutdoorImage != null && venue.OutdoorImage.Bytes != null){
+            byte[] byteArray = Base64.decode(venue.OutdoorImage.Bytes, Base64.DEFAULT);
+            Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            this.OutdoorImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
+            this.OutdoorImage.setVisibility(View.VISIBLE);
+        }
     }
 }

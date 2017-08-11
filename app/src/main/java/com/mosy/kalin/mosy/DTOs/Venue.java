@@ -23,6 +23,8 @@ public class Venue
     @SerializedName("Class")
     public String Class;
 
+    public VenueImage OutdoorImage;
+
     public BigDecimal Rating;
 
 //    public boolean AllowUploadFBOPictures;

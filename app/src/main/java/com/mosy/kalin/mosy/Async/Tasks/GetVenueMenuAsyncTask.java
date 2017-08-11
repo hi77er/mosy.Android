@@ -5,13 +5,9 @@ import android.os.AsyncTask;
 
 import com.google.gson.reflect.TypeToken;
 import com.mosy.kalin.mosy.DTOs.Brochure;
-import com.mosy.kalin.mosy.DTOs.Results.VenueImageResult;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueMenuBindingModel;
-
-import org.androidannotations.annotations.Bean;
 
 import java.util.ArrayList;
 import java.util.List;
