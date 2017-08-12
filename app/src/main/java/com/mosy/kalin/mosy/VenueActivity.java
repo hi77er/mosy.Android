@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mosy.kalin.mosy.Adapters.MenuAdapter;
+import com.mosy.kalin.mosy.Adapters.BrochuresAdapter;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueIndoorImageAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueMenuAsyncTask;
 import com.mosy.kalin.mosy.DTOs.Brochure;
@@ -22,6 +22,7 @@ import com.mosy.kalin.mosy.Models.BindingModels.GetVenueMenuBindingModel;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import java.util.concurrent.ExecutionException;
 @EActivity(R.layout.activity_venue)
 public class VenueActivity extends AppCompatActivity /*, FragmentActivity*/ {
 
-
+    @Extra
     Venue Venue;
 
     @ViewById(resName = "venue_tvName")
@@ -45,7 +46,7 @@ public class VenueActivity extends AppCompatActivity /*, FragmentActivity*/ {
     @ViewById(resName = "venue_vpMenu")
     ViewPager Menu;
 
-    MenuAdapter Adapter;
+    BrochuresAdapter Adapter;
 
     @AfterViews
     void updateVenueWithData() {
@@ -69,7 +70,8 @@ public class VenueActivity extends AppCompatActivity /*, FragmentActivity*/ {
 
             GetVenueMenuBindingModel model = new GetVenueMenuBindingModel(this.Venue.Id);
             ArrayList<Brochure> brochures = new GetVenueMenuAsyncTask(context).execute(model).get();
-            MenuAdapter adapter = new MenuAdapter(getSupportFragmentManager(), brochures);
+
+            BrochuresAdapter adapter = new BrochuresAdapter(getSupportFragmentManager(), brochures);
             this.Menu.setAdapter(adapter);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -84,7 +86,6 @@ public class VenueActivity extends AppCompatActivity /*, FragmentActivity*/ {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.Venue = (Venue)getIntent().getSerializableExtra("Venue");
     }
 
 }

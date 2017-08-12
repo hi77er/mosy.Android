@@ -36,5 +36,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="brochure_tvName">Brochure Name</string>
+    <string name="requestable_item_name">Requestable Name</string>
+    <string name="requestable_btnAddToOrder">+ order</string>
 
 </resources>

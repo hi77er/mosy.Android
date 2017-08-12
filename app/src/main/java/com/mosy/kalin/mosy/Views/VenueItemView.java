@@ -7,6 +7,7 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mosy.kalin.mosy.DTOs.Venue;
@@ -20,7 +21,7 @@ import org.androidannotations.annotations.ViewById;
  */
 
 @EViewGroup(R.layout.activity_venue_item)
-public class VenueItemView extends LinearLayout {
+public class VenueItemView extends RelativeLayout {
 
     @ViewById(resName = "venueItem_tvName")
     TextView Name;

@@ -5,5 +5,6 @@
     <color name="colorAccent">#fc7878</color>
 
     <color name="colorMenuBackground">#ffe2d5</color>
+    <color name="colorMenuTitle">#ffa67d</color>
     <color name="colorPageBackground1">#ffeeee</color>
 </resources>

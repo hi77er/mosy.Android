@@ -1,16 +1,22 @@
 package com.mosy.kalin.mosy.Adapters;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueOutdoorImageAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenuesAsyncTask;
+import com.mosy.kalin.mosy.DTOs.Requestable;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueOutdoorImageBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenuesBindingModel;
+import com.mosy.kalin.mosy.Views.RequestableItemView;
+import com.mosy.kalin.mosy.Views.RequestableItemView_;
 import com.mosy.kalin.mosy.Views.VenueItemView;
 import com.mosy.kalin.mosy.Views.VenueItemView_;
 
@@ -26,54 +32,45 @@ import java.util.concurrent.ExecutionException;
  */
 
 @EBean
-public class VenuesAdapter extends BaseAdapter {
-    ArrayList<Venue> venues;
+public class RequestablesAdapter extends BaseAdapter {
+
+    ArrayList<Requestable> Requestables;
+    public void setRequestables(ArrayList<Requestable> requestables){
+        this.Requestables = requestables;
+    }
 
     @RootContext
     Context context;
 
-    @AfterInject
-    void initAdapter() {
-        try {
-            this.venues = new GetVenuesAsyncTask(context).execute(new GetVenuesBindingModel()).get();
-            for (Venue venue: this.venues) {
-                GetVenueOutdoorImageBindingModel outdorImageModel = new GetVenueOutdoorImageBindingModel(venue.Id);
-                VenueImage outdoorImage = new GetVenueOutdoorImageAsyncTask(context).execute(outdorImageModel).get();
-                venue.OutdoorImage = outdoorImage;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    @AfterInject
+//    void initAdapter() {
+//
+//    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        VenueItemView venueItemView = null;
+        RequestableItemView requestableItemView = null;
         if (convertView == null)
-            venueItemView = VenueItemView_.build(context);
+            requestableItemView = RequestableItemView_.build(context);
         else
-            venueItemView = (VenueItemView) convertView;
+            requestableItemView = (RequestableItemView) convertView;
 
-        Venue venue = getItem(position);
-        venueItemView.bind(venue);
+        Requestable requestable = getItem(position);
+        requestableItemView.bind(requestable);
 
-        return venueItemView;
+        return requestableItemView;
     }
 
     @Override
     public int getCount() {
-        if (this.venues != null)
-            return venues.size();
+        if (this.Requestables != null)
+            return this.Requestables.size();
         else return 0;
     }
 
     @Override
-    public Venue getItem(int position) {
-        return (Venue) venues.get(position);
+    public Requestable getItem(int position) {
+        return (Requestable) this.Requestables.get(position);
     }
 
     @Override
