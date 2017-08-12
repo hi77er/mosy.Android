@@ -37,8 +37,8 @@ public class VenuesAdapter extends BaseAdapter {
         try {
             this.venues = new GetVenuesAsyncTask(context).execute(new GetVenuesBindingModel()).get();
             for (Venue venue: this.venues) {
-                GetVenueOutdoorImageBindingModel outdorImageModel = new GetVenueOutdoorImageBindingModel(venue.Id);
-                VenueImage outdoorImage = new GetVenueOutdoorImageAsyncTask(context).execute(outdorImageModel).get();
+                GetVenueOutdoorImageBindingModel outdoorImageModel = new GetVenueOutdoorImageBindingModel(venue.Id);
+                VenueImage outdoorImage = new GetVenueOutdoorImageAsyncTask(context).execute(outdoorImageModel).get();
                 venue.OutdoorImage = outdoorImage;
             }
         } catch (InterruptedException e) {

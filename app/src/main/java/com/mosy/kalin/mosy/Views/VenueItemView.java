@@ -20,7 +20,7 @@ import org.androidannotations.annotations.ViewById;
  * Created by kkras on 8/3/2017.
  */
 
-@EViewGroup(R.layout.activity_venue_item)
+@EViewGroup(R.layout.activity_item_venue)
 public class VenueItemView extends RelativeLayout {
 
     @ViewById(resName = "venueItem_tvName")

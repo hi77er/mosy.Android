@@ -23,16 +23,7 @@ public class BrochuresAdapter extends FragmentStatePagerAdapter {
 
 //    @AfterInject
 //    void initAdapter() {
-//        try {
-//            GetVenueMenuBindingModel model = new GetVenueMenuBindingModel(this.VenueId);
-//            this.Brochures = new GetVenueMenuAsyncTask(context).execute(model).get();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+//
 //    }
 
     public BrochuresAdapter(FragmentManager fm, ArrayList<Brochure> brochures) {
@@ -43,9 +34,12 @@ public class BrochuresAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Fragment fragment = new BrochureFragment_();
-        Bundle bundle = new Bundle();
         Brochure brochure = this.Brochures.get(position);
+
+        Bundle bundle = new Bundle();
         bundle.putString("BrochureName", brochure.Name);
+        bundle.putParcelableArrayList("BrochureRequestables",brochure.Requestables);
+
         fragment.setArguments(bundle);
         return fragment;
     }
