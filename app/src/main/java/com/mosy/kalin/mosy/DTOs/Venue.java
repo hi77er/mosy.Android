@@ -17,11 +17,17 @@ public class Venue
     @SerializedName("Id")
     public String Id;
 
+    @SerializedName("LocationId")
+    public String LocationId;
+
     @SerializedName("Name")
     public String Name;
 
     @SerializedName("Class")
     public String Class;
+
+    @SerializedName("FBOLocation")
+    public VenueLocation Location;
 
     public VenueImage OutdoorImage;
 
