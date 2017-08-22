@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -30,9 +31,15 @@ public class Requestable
 
     @SerializedName("PreparationEstimateSeconds")
     public int PreparationEstimateSeconds;
+//
+//    @SerializedName("RequestableIngredients")
+//    public ArrayList<RequestableIngredient> RequestableIngredients;
+
+    @SerializedName("Ingredients")
+    public ArrayList<Ingredient> Ingredients;
 
     protected Requestable(Parcel in) {
-        String[] data = new String[3];
+        String[] data = new String[4];
 
         in.readStringArray(data);
         // the order needs to be the same as in writeToParcel() method
@@ -41,6 +48,8 @@ public class Requestable
         this.Name = data[2];
         this.Summary = data[3];
         this.PreparationEstimateSeconds = Integer.parseInt(data[4]);
+//        this.RequestableIngredients = in.readArrayList(null);
+        this.Ingredients = in.readArrayList(null);
 
     }
 
@@ -68,6 +77,8 @@ public class Requestable
         parcel.writeString(Name);
         parcel.writeString(Summary);
         parcel.writeInt(PreparationEstimateSeconds);
+//        parcel.writeList(RequestableIngredients);
+        parcel.writeList(Ingredients);
 
     }
 }

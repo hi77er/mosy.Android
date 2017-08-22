@@ -29,24 +29,18 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 @EActivity(R.layout.activity_venue)
-public class VenueActivity extends AppCompatActivity /*, FragmentActivity*/ {
+public class VenueActivity extends AppCompatActivity {
 
     @Extra
     Venue Venue;
-
     @ViewById(resName = "venue_tvName")
     TextView Name;
-
     @ViewById(resName = "venue_tvClass")
     TextView Class;
-
     @ViewById(resName = "venue_ivIndoor")
     ImageView IndoorImage;
-
     @ViewById(resName = "venue_vpMenu")
     ViewPager Menu;
-
-    BrochuresAdapter Adapter;
 
     @AfterViews
     void updateVenueWithData() {

@@ -3,6 +3,7 @@ package com.mosy.kalin.mosy.Fragments;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -37,7 +38,7 @@ public class BrochureFragment extends Fragment {
     TextView brochure_tvName;
 
     @ViewById
-    ListView brochure_lvRequestables;
+    ExpandableListView brochure_lvRequestables;
 
     @Bean
     RequestablesAdapter requestablesAdapter;

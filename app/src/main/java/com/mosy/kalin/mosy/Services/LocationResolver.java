@@ -41,9 +41,8 @@ import static android.content.Context.LOCATION_SERVICE;
 public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, android.location.LocationListener {
 
-
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters  //The minimum distance to change Updates in meters
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 ; // 1 minute //The minimum time between updates in milliseconds
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 3 ; // 1 minute //The minimum time between updates in milliseconds
 
     private final int REQUEST_LOCATION = 2; //Location Request code
     private GoogleApiClient mGoogleApiClient; //Google Api Client
@@ -205,6 +204,12 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
         mGoogleApiClient.connect();
     }
 
+    public void onResume() {
+        mGoogleApiClient.connect();
+    }
+
+
+
     @Override
     public void onConnected(Bundle bundle) {
         // startLocationPooling();
@@ -314,7 +319,7 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
     }
 
 
-    public void getLocation() {
+    private void getLocation() {
         try {
 
 
@@ -390,7 +395,7 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
     }
 
 
-    public   void showWifiSettingsDialog(final Context  context) {
+    private void showWifiSettingsDialog(final Context context) {
         SweetAlertDialog builder = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);
         builder.setTitleText("Need Internet");
         builder.setContentText("Please enable your internet connection");
@@ -423,7 +428,7 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
         }
     }
 
-    public static boolean isLocationEnabled(Context context) {
+    private static boolean isLocationEnabled(Context context) {
         int locationMode = 0;
         String locationProviders;
 

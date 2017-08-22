@@ -25,8 +25,8 @@ public class ServiceEndpointFactory implements IServiceEndpointFactory {
     private static final String devEndpoint = "http://10.0.2.2:8080/api/"; // Use when debugging on Emulator
     private static final String devTokenEndpoint = "http://10.0.2.2:8080/token"; // Use when debugging on Emulator
 
-//    private static final String devEndpoint = "http://192.168.42.241:8080/api"; // When debugging on actual Device
-//    private static final String devTokenEndpoint = "http://192.168.42.241:8080/token"; // When debugging on actual Device
+//    private static final String devEndpoint = "http://192.168.1.10:8080/api"; // When debugging on actual Device
+//    private static final String devTokenEndpoint = "http://192.168.1.10:8080/token"; // When debugging on actual Device
 
 //    private static final String publicEndpoint = "http://mosyws/api";
 //    private static final String publicTokenEndpoint = "http://mosyws/token";

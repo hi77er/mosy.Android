@@ -2,6 +2,7 @@ package com.mosy.kalin.mosy.Adapters;
 
 import android.content.Context;
 import android.location.Location;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -13,6 +14,7 @@ import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueOutdoorImageBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenuesBindingModel;
+import com.mosy.kalin.mosy.R;
 import com.mosy.kalin.mosy.Services.LocationResolver;
 import com.mosy.kalin.mosy.Views.VenueItemView;
 import com.mosy.kalin.mosy.Views.VenueItemView_;
@@ -41,6 +43,19 @@ public class VenuesAdapter extends BaseAdapter {
     public void setLocation(Location location) {
         this.deviceLocation = location;
         loadVenues();
+    }
+
+    public SwipeRefreshLayout swipeContainer;
+    public void setSwipeRefreshLayout(SwipeRefreshLayout layout) {
+        if (layout != null) {
+            this.swipeContainer = layout;
+            // Configure the refreshing colors
+            this.swipeContainer.setColorSchemeResources(
+                    android.R.color.holo_blue_bright,
+                    android.R.color.holo_green_light,
+                    android.R.color.holo_orange_light,
+                    android.R.color.holo_red_light);
+        }
     }
 
     @AfterInject
@@ -79,21 +94,29 @@ public class VenuesAdapter extends BaseAdapter {
         return position;
     }
 
-    private void loadVenues() {
+    public void loadVenues() {
         try {
             this.venues = new GetVenuesAsyncTask(context).execute(new GetVenuesBindingModel()).get();
+
             for (Venue venue: this.venues) {
                 GetVenueOutdoorImageBindingModel outdoorImageModel = new GetVenueOutdoorImageBindingModel(venue.Id);
                 VenueImage outdoorImage = new GetVenueOutdoorImageAsyncTask(context).execute(outdoorImageModel).get();
-                venue.OutdoorImage = outdoorImage;
+                if (outdoorImage.Bytes != null)
+                    venue.OutdoorImage = outdoorImage;
+                else
+                    venue.OutdoorImage = null;
 
                 if (this.deviceLocation != null)
-                    venue.Location.DistanceToCurrentLocationMeters = calculateDistanceToLocation(
+                {
+                    double deviceLatitude = this.deviceLocation.getLatitude();
+                    double deviceLongitude = this.deviceLocation.getLongitude();
+                    double distance = calculateDistanceToLocation(
                             venue.Location.Latitude,
                             venue.Location.Longitude,
-                            this.deviceLocation.getLatitude(),
-                            this.deviceLocation.getLongitude());
-
+                            deviceLatitude,
+                            deviceLongitude);
+                    venue.Location.DistanceToCurrentLocationMeters = distance;
+                }
             }
 
             Collections.sort(this.venues, new Comparator<Venue>() {
@@ -102,8 +125,7 @@ public class VenuesAdapter extends BaseAdapter {
                     return Double.compare(v1.Location.DistanceToCurrentLocationMeters, v2.Location.DistanceToCurrentLocationMeters);
                 }
             });
-
-//            this.venues.sort(Comparator.comparing(a -> a.Location.DistanceToCurrentLocationMeters));
+            VenuesAdapter.super.notifyDataSetChanged();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

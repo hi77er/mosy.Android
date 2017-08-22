@@ -33,15 +33,15 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".VenuesActivity_"
-            android:label="@string/title_venues_activity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/title_venues_activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".VenueActivity_">
+            android:name=".VenueActivity_"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <data android:host="google.com" android:scheme="http" />
                 <category android:name="android.intent.category.BROWSABLE" />

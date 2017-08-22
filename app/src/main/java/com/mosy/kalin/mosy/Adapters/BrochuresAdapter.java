@@ -21,11 +21,6 @@ public class BrochuresAdapter extends FragmentStatePagerAdapter {
     String VenueId;
     public void setVenueId(String venueId){ this.VenueId = venueId; }
 
-//    @AfterInject
-//    void initAdapter() {
-//
-//    }
-
     public BrochuresAdapter(FragmentManager fm, ArrayList<Brochure> brochures) {
         super(fm);
         this.Brochures = brochures;

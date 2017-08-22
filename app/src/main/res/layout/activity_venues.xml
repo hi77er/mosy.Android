@@ -5,18 +5,23 @@
     android:orientation="vertical"
     android:background="#FFEEEE">
 
-    <ListView android:id="@+id/venues_lvVenues"
-        android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:focusableInTouchMode="false"
-        android:listSelector="@android:color/transparent"
-        android:layout_weight="2"
-        android:headerDividersEnabled="false"
-        android:footerDividersEnabled="false"
-        android:dividerHeight="5dp"
-        android:divider="#770000"
-        android:cacheColorHint="#000000"
-        android:drawSelectorOnTop="false">
-    </ListView>
-
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/venues_lSwipeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ListView android:id="@+id/venues_lvVenues"
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:focusableInTouchMode="false"
+            android:listSelector="@android:color/transparent"
+            android:layout_weight="2"
+            android:headerDividersEnabled="false"
+            android:footerDividersEnabled="false"
+            android:dividerHeight="5dp"
+            android:divider="#770000"
+            android:cacheColorHint="#000000"
+            android:drawSelectorOnTop="false">
+        </ListView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

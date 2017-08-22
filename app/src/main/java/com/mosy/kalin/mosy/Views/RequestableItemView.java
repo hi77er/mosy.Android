@@ -34,6 +34,5 @@ public class RequestableItemView extends RelativeLayout {
 
     public void bind(Requestable requestable) {
         this.Name.setText(requestable.Name);
-
     }
 }

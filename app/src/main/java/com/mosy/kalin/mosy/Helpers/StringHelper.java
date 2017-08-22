@@ -1,5 +1,6 @@
 package com.mosy.kalin.mosy.Helpers;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,5 +44,22 @@ public class StringHelper {
 
     public static boolean isEmailAddress(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    public static String join(String separator, List<String> mList) {
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+
+        for (String m: mList) {
+            sb.append(m);
+            count++;
+            if (count < mList.size())
+                sb.append(separator);
+        }
+        return sb.toString();
+    }
+
+    public static String empty() {
+        return "";
     }
 }

@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -32,8 +33,7 @@ import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.activity_venues)
-public class VenuesActivity
-        extends AppCompatActivity
+public class VenuesActivity extends AppCompatActivity
 {
     private LocationResolver mLocationResolver;
 
@@ -45,22 +45,32 @@ public class VenuesActivity
 
     @AfterViews
     void bindAdapter() {
+        final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout)findViewById(R.id.venues_lSwipeContainer);
+        adapter.setSwipeRefreshLayout(swipeContainer);
+
+        adapter.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                adapter.loadVenues();
+                retrieveLocation();
+                swipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
+            }
+        });
         Venues.setAdapter(adapter);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mLocationResolver = new LocationResolver(this);
-        retrieveLocation();
-
         setContentView(R.layout.activity_venues);
-    }
 
+        mLocationResolver = new LocationResolver(this);
+    }
     @Override
     protected void onStart() {
         super.onStart();
         mLocationResolver.onStart();
+        retrieveLocation();
     }
     @Override
     protected void onStop() {
@@ -81,7 +91,8 @@ public class VenuesActivity
     @ItemClick
     void venues_lvVenuesItemClicked(Venue venue) {
         Intent intent = new Intent(VenuesActivity.this, VenueActivity_.class);
-        venue.OutdoorImage = null; // Looks like it cannot serialize the image object. We either don't need this one in the Venue page.
+        venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+        venue.Location = null;
         intent.putExtra("Venue", venue);
         startActivity(intent);
     }
@@ -90,13 +101,10 @@ public class VenuesActivity
         mLocationResolver.resolveLocation(this, new LocationResolver.OnLocationResolved() {
             @Override
             public void onLocationResolved(Location location) {
-                if (adapter != null)
-                    adapter.setLocation(location);
-
-                String message = "Lat: " + location.getLatitude() + ", Lon: " + location.getLongitude();
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                adapter.setLocation(location);
             }
         });
     }
+
 
 }

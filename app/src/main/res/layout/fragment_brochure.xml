@@ -22,7 +22,7 @@
         android:textStyle="bold"
         android:textColor="@color/colorMenuTitle" />
 
-    <ListView android:id="@+id/brochure_lvRequestables"
+    <ExpandableListView android:id="@+id/brochure_lvRequestables"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -30,7 +30,8 @@
         android:listSelector="@android:color/transparent"
         android:headerDividersEnabled="false"
         android:footerDividersEnabled="false"
-        android:drawSelectorOnTop="false">
-    </ListView>
+        android:drawSelectorOnTop="false"
+        android:groupIndicator="@null">
+    </ExpandableListView>
 
 </LinearLayout>
