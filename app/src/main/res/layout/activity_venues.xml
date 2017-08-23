@@ -10,6 +10,7 @@
         android:id="@+id/venues_lSwipeContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ListView android:id="@+id/venues_lvVenues"
             android:layout_width="fill_parent"
             android:layout_height="0dip"

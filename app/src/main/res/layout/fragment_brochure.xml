@@ -31,7 +31,9 @@
         android:headerDividersEnabled="false"
         android:footerDividersEnabled="false"
         android:drawSelectorOnTop="false"
-        android:groupIndicator="@null">
+        android:groupIndicator="@null"
+        android:divider="@null"
+        android:dividerHeight="0dp">
     </ExpandableListView>
 
 </LinearLayout>

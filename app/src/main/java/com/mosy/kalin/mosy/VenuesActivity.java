@@ -33,7 +33,8 @@ import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.activity_venues)
-public class VenuesActivity extends AppCompatActivity
+public class VenuesActivity
+        extends AppCompatActivity
 {
     private LocationResolver mLocationResolver;
 

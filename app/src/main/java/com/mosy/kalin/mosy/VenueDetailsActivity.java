@@ -1,12 +1,13 @@
 package com.mosy.kalin.mosy;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,35 +17,31 @@ import com.mosy.kalin.mosy.Adapters.BrochuresAdapter;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueIndoorImageAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueMenuAsyncTask;
 import com.mosy.kalin.mosy.DTOs.Brochure;
-import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueMenuBindingModel;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-@EActivity(R.layout.activity_venue)
-public class VenueActivity
-        extends AppCompatActivity {
+
+@EActivity(R.layout.activity_venue_details)
+public class VenueDetailsActivity extends AppCompatActivity {
 
     @Extra
-    Venue Venue;
-    @ViewById(resName = "venue_tvName")
+    public Venue Venue;
+    @ViewById(resName = "venueDetails_tvName")
     TextView Name;
-    @ViewById(resName = "venue_tvClass")
+    @ViewById(resName = "venueDetails_tvClass")
     TextView Class;
-    @ViewById(resName = "venue_ivIndoor")
+    @ViewById(resName = "venueDetails_ivIndoor")
     ImageView IndoorImage;
-    @ViewById(resName = "venue_vpMenu")
-    ViewPager Menu;
 
     @AfterViews
     void updateVenueWithData() {
@@ -66,11 +63,6 @@ public class VenueActivity
             else
                 this.IndoorImage.setVisibility(View.GONE);
 
-            GetVenueMenuBindingModel model = new GetVenueMenuBindingModel(this.Venue.Id);
-            ArrayList<Brochure> brochures = new GetVenueMenuAsyncTask(context).execute(model).get();
-
-            BrochuresAdapter adapter = new BrochuresAdapter(getSupportFragmentManager(), brochures);
-            this.Menu.setAdapter(adapter);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -84,17 +76,8 @@ public class VenueActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
 
 
-    @Click
-    void venue_lVenueTitleClicked() {
-        Intent intent = new Intent(VenueActivity.this, VenueDetailsActivity_.class);
-        this.Venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-        this.Venue.Location = null;
-        intent.putExtra("Venue", this.Venue);
-        startActivity(intent);
-        overridePendingTransition( R.transition.slide_in_up, R.transition.slide_out_up );
     }
 
 }

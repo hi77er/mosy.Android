@@ -16,7 +16,8 @@ import org.androidannotations.annotations.EActivity;
 import java.util.concurrent.ExecutionException;
 
 @EActivity(R.layout.activity_register)
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity
+        extends AppCompatActivity {
 
     @Click(R.id.btnRegister)
     public void Register() {

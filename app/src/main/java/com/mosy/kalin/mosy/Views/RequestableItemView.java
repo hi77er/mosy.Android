@@ -22,7 +22,7 @@ import org.androidannotations.annotations.ViewById;
  * Created by kkras on 8/3/2017.
  */
 
-@EViewGroup(R.layout.activity_requestable_item)
+@EViewGroup(R.layout.activity_item_requestable)
 public class RequestableItemView extends RelativeLayout {
 
     @ViewById(resName = "requestableItem_tvName")

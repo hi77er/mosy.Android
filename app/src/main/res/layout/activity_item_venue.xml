@@ -1,36 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/venueItem_tvName"
-            android:layout_gravity="start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:text="@string/venue_item_name"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/venueItem_tvClass"
-            android:layout_gravity="start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/venue_item_class" />
-    </LinearLayout>
+    android:layoutDirection="rtl"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentRight="true"
+    android:paddingStart="10dp"
+    android:paddingLeft="10dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="10dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="10dp">
 
     <ImageView
         android:id="@+id/venueItem_ivOutdoor"
@@ -39,4 +21,64 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true" />
 
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layoutDirection="ltr">
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/venueItem_tvName"
+                android:layout_gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/venue_item_name"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/venueItem_tvClass"
+                android:layout_gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/venue_item_class"
+                android:textStyle="bold"
+                android:textColor="#c0c0c0"/>
+
+            <TextView
+                android:id="@+id/venueItem_tvWalkTime"
+                android:layout_gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Closes after 20 minutes"
+                android:textStyle="bold"
+                android:textColor="@color/colorTertiary" />
+
+            <TextView
+                android:id="@+id/venueItem_tvDistance"
+                android:layout_gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5min walking, 10 - by car "
+                android:textStyle="bold"
+                android:textColor="@color/colorQuaternary" />
+
+        </LinearLayout>
+
+        <!--<TextView
+            android:id="@+id/venueItem_tvWorkTime"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Closes after 20 minutes"
+            android:textStyle="bold"
+            android:textColor="@color/colorTertiary"/>
+-->
+    </RelativeLayout>
+
+</LinearLayout>

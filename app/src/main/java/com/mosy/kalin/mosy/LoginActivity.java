@@ -20,7 +20,8 @@ import org.androidannotations.annotations.EActivity;
 import java.util.concurrent.ExecutionException;
 
 @EActivity(R.layout.activity_login)
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity
+        extends AppCompatActivity {
     Button b1,b2;
     EditText ed1,ed2;
 
