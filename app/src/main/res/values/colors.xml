@@ -7,6 +7,7 @@
 
     <color name="colorAccent">#fc7878</color>
 
+    <color name="colorWhite">#FFFFFF</color>
     <color name="colorSecondaryVeryVeryLight">#f7f7f0</color>
     <color name="colorSecondaryVeryLight">#F1F0CC</color>
     <color name="colorSecondaryLight">#D5BF86</color>

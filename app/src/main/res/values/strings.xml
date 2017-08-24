@@ -1,6 +1,6 @@
 <resources>
     <!--App Level-->
-    <string name="app_name">mosy</string>
+    <string name="app_name">tastr</string>
 
     <!--Login Activity-->
     <string name="title_activity_login">Login to</string>
@@ -39,5 +39,7 @@
     <string name="requestable_item_name">Requestable Name</string>
     <string name="requestable_btnAddToOrder">+ order</string>
     <string name="title_activity_venue_details">VenueDetailsActivity</string>
+    <string name="search_hint">Search venues and dishes ..</string>
+    <string name="menu_search">Search</string>
 
 </resources>
