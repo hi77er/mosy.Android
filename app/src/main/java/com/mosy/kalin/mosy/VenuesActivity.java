@@ -63,6 +63,14 @@ public class VenuesActivity
                 swipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
             }
         });
+
+        Intent intent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            performSearch(query);
+        }
+        else adapter.loadVenues();
+
         Venues.setAdapter(adapter);
     }
 
@@ -70,12 +78,6 @@ public class VenuesActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venues);
-
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            performSearch(query);
-        }
         mLocationResolver = new LocationResolver(this);
     }
 
@@ -129,7 +131,9 @@ public class VenuesActivity
     }
 
     private void performSearch(String query) {
-        Toast.makeText(getApplicationContext(), "Searching for " + query + " .." , Toast.LENGTH_LONG).show();
+        Boolean found = adapter.findVenues(query);
+        String toastMessage = found ? "Results for '"+query+"'" : "No matches found";
+        Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
     }
 
 }

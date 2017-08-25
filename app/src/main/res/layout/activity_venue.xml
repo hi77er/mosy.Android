@@ -30,7 +30,7 @@
             android:layout_gravity="start"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:visibility="gone" />
+            android:src="@drawable/ic_venue_default_thumbnail" />
 
         <LinearLayout
             android:orientation="vertical"

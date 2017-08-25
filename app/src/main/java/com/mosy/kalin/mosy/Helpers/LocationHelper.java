@@ -1,5 +1,7 @@
 package com.mosy.kalin.mosy.Helpers;
 
+import android.location.Location;
+
 import java.text.DecimalFormat;
 
 /**
@@ -46,5 +48,11 @@ public class LocationHelper {
     public static double calcMinutesWalkingToLocation(double distanceMeters) {
         double time = ((distanceMeters / 1000) / APPROXIMATE_WALKING_SPEED) * 60;
         return time;
+    }
+
+    public static double calculateDistanceToLocation(double fromLongitude, double fromLatitude, double toLongitude, double toLatitude) {
+        float[] distance = new float[1];
+        Location.distanceBetween(fromLatitude, fromLongitude, toLatitude, toLongitude, distance); // in Meters
+        return distance[0];
     }
 }

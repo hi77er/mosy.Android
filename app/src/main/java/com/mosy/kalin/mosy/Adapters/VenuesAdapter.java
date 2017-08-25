@@ -6,16 +6,17 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Toast;
 
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueOutdoorImageAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenuesAsyncTask;
+import com.mosy.kalin.mosy.Async.Tasks.SearchVenuesAsyncTask;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
+import com.mosy.kalin.mosy.Helpers.LocationHelper;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueOutdoorImageBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenuesBindingModel;
-import com.mosy.kalin.mosy.R;
-import com.mosy.kalin.mosy.Services.LocationResolver;
+import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
+import com.mosy.kalin.mosy.Services.VenuesService;
 import com.mosy.kalin.mosy.Views.VenueItemView;
 import com.mosy.kalin.mosy.Views.VenueItemView_;
 
@@ -26,7 +27,6 @@ import org.androidannotations.annotations.RootContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by kkras on 7/31/2017.
@@ -42,7 +42,6 @@ public class VenuesAdapter extends BaseAdapter {
     private Location deviceLocation;
     public void setLocation(Location location) {
         this.deviceLocation = location;
-        loadVenues();
     }
 
     public SwipeRefreshLayout swipeContainer;
@@ -60,7 +59,7 @@ public class VenuesAdapter extends BaseAdapter {
 
     @AfterInject
     void initAdapter() {
-        loadVenues();
+
     }
 
     @Override
@@ -76,68 +75,51 @@ public class VenuesAdapter extends BaseAdapter {
 
         return venueItemView;
     }
-
     @Override
     public int getCount() {
         if (this.venues != null)
             return venues.size();
         else return 0;
     }
-
     @Override
     public Venue getItem(int position) {
         return (Venue) venues.get(position);
     }
-
     @Override
     public long getItemId(int position) {
         return position;
     }
 
-    public void loadVenues() {
+    public boolean loadVenues() {
         try {
             this.venues = new GetVenuesAsyncTask(context).execute(new GetVenuesBindingModel()).get();
-
-            for (Venue venue: this.venues) {
-                GetVenueOutdoorImageBindingModel outdoorImageModel = new GetVenueOutdoorImageBindingModel(venue.Id);
-                VenueImage outdoorImage = new GetVenueOutdoorImageAsyncTask(context).execute(outdoorImageModel).get();
-                if (outdoorImage.Bytes != null)
-                    venue.OutdoorImage = outdoorImage;
-                else
-                    venue.OutdoorImage = null;
-
-                if (this.deviceLocation != null)
-                {
-                    double deviceLatitude = this.deviceLocation.getLatitude();
-                    double deviceLongitude = this.deviceLocation.getLongitude();
-                    double distance = calculateDistanceToLocation(
-                            venue.Location.Latitude,
-                            venue.Location.Longitude,
-                            deviceLatitude,
-                            deviceLongitude);
-                    venue.Location.DistanceToCurrentLocationMeters = distance;
-                }
+            if (this.venues.size() > 0){
+                VenuesService vService = new VenuesService();
+                vService.downloadVenuesOutdoorImages(venues, context);
+                vService.calculateVenuesDistances(venues, this.deviceLocation);
+                vService.sortVenuesByDistanceToDevice(venues);
+                VenuesAdapter.super.notifyDataSetChanged();
             }
-
-            Collections.sort(this.venues, new Comparator<Venue>() {
-                @Override
-                public int compare(Venue v1, Venue v2) {
-                    return Double.compare(v1.Location.DistanceToCurrentLocationMeters, v2.Location.DistanceToCurrentLocationMeters);
-                }
-            });
-            VenuesAdapter.super.notifyDataSetChanged();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return this.venues.size() > 0;
     }
 
-    private double calculateDistanceToLocation(double fromLongitude, double fromLatitude, double toLongitude, double toLatitude) {
-        float[] distance = new float[1];
-        Location.distanceBetween(fromLatitude, fromLongitude, toLatitude, toLongitude, distance); // in Meters
-        return distance[0];
+    public boolean findVenues(String query){
+        try {
+            this.venues = new SearchVenuesAsyncTask(context).execute(new SearchVenuesBindingModel(query)).get();
+            if (this.venues.size() > 0){
+                VenuesService vService = new VenuesService();
+                vService.downloadVenuesOutdoorImages(venues, context);
+                vService.calculateVenuesDistances(venues, this.deviceLocation);
+                VenuesAdapter.super.notifyDataSetChanged();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this.venues.size() > 0;
     }
+
+
 }

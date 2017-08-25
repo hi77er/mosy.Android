@@ -58,11 +58,7 @@ public class VenueDetailsActivity extends AppCompatActivity {
                 byte[] byteArray = Base64.decode(result.Bytes, Base64.DEFAULT);
                 Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
                 this.IndoorImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
-                this.IndoorImage.setVisibility(View.VISIBLE);
             }
-            else
-                this.IndoorImage.setVisibility(View.GONE);
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

@@ -54,8 +54,9 @@ public class VenueItemView extends RelativeLayout {
             byte[] byteArray = Base64.decode(venue.OutdoorImage.Bytes, Base64.DEFAULT);
             Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
             this.OutdoorImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
-            this.OutdoorImage.setVisibility(View.VISIBLE);
         }
+        else
+            this.OutdoorImage.setImageResource(R.drawable.ic_venue_default_thumbnail);
     }
 
 }

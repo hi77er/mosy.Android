@@ -23,7 +23,7 @@
             android:layout_gravity="start"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:visibility="gone" />
+            android:src="@drawable/ic_venue_default_thumbnail"/>
 
         <LinearLayout
             android:orientation="vertical"

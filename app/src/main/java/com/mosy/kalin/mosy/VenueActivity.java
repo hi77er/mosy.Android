@@ -61,10 +61,7 @@ public class VenueActivity
                 byte[] byteArray = Base64.decode(result.Bytes, Base64.DEFAULT);
                 Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
                 this.IndoorImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
-                this.IndoorImage.setVisibility(View.VISIBLE);
             }
-            else
-                this.IndoorImage.setVisibility(View.GONE);
 
             GetVenueMenuBindingModel model = new GetVenueMenuBindingModel(this.Venue.Id);
             ArrayList<Brochure> brochures = new GetVenueMenuAsyncTask(context).execute(model).get();
@@ -78,7 +75,6 @@ public class VenueActivity
         } catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
     @Override
