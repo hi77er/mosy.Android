@@ -35,13 +35,15 @@ import org.androidannotations.annotations.ViewById;
 public class VenuesActivity
         extends AppCompatActivity
 {
-    private LocationResolver mLocationResolver;
     SearchView searchView;
+    LocationResolver mLocationResolver;
+
+    @SystemService
+    SearchManager searchManager;
 
     @Bean
     VenuesAdapter adapter;
-    @SystemService
-    SearchManager searchManager;
+
     @ViewById(R.id.search_toolbar)
     Toolbar toolbar;
     @ViewById(resName = "venues_lvVenues")
@@ -117,6 +119,7 @@ public class VenuesActivity
         Intent intent = new Intent(VenuesActivity.this, VenueActivity_.class);
         venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
         venue.Location = null;
+        venue.BusinessHours = null;
         intent.putExtra("Venue", venue);
         startActivity(intent);
     }

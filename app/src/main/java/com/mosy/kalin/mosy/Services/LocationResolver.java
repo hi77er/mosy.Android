@@ -32,11 +32,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 
 
+import org.androidannotations.annotations.EBean;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.content.Context.LOCATION_SERVICE;
-
-
 
 public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, android.location.LocationListener {

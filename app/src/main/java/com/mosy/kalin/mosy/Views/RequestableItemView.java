@@ -23,7 +23,8 @@ import org.androidannotations.annotations.ViewById;
  */
 
 @EViewGroup(R.layout.activity_item_requestable)
-public class RequestableItemView extends RelativeLayout {
+public class RequestableItemView
+        extends RelativeLayout {
 
     @ViewById(resName = "requestableItem_tvName")
     TextView Name;

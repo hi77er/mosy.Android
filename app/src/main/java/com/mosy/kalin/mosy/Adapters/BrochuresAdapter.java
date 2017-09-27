@@ -8,13 +8,15 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.mosy.kalin.mosy.DTOs.Brochure;
 import com.mosy.kalin.mosy.Fragments.BrochureFragment_;
 
+
 import java.util.ArrayList;
 
 /**
  * Created by kkras on 8/10/2017.
  */
 
-public class BrochuresAdapter extends FragmentStatePagerAdapter {
+public class BrochuresAdapter
+        extends FragmentStatePagerAdapter {
 
     ArrayList<Brochure> Brochures;
 

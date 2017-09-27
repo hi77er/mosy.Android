@@ -29,6 +29,9 @@ public class Venue
     @SerializedName("FBOLocation")
     public VenueLocation Location;
 
+    @SerializedName("FBOBusinessHour")
+    public VenueBusinessHours BusinessHours;
+
     public VenueImage OutdoorImage;
 
     public BigDecimal Rating;

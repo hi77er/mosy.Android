@@ -52,7 +52,7 @@
                 android:textColor="#c0c0c0"/>
 
             <TextView
-                android:id="@+id/venueItem_tvWalkTime"
+                android:id="@+id/venueItem_tvOpenedSinceUntil"
                 android:layout_gravity="start"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -71,15 +71,6 @@
 
         </LinearLayout>
 
-        <!--<TextView
-            android:id="@+id/venueItem_tvWorkTime"
-            android:layout_alignParentBottom="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Closes after 20 minutes"
-            android:textStyle="bold"
-            android:textColor="@color/colorTertiary"/>
--->
     </RelativeLayout>
 
 </LinearLayout>

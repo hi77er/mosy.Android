@@ -1,5 +1,6 @@
 <resources>
     <!--App Level-->
+    <string name="google_maps_key">AIzaSyDkyNsNMAi8VoxWrLnI-8pp0W5P54r2Dvs</string>
     <string name="app_name">tastr</string>
 
     <!--Login Activity-->
@@ -41,5 +42,12 @@
     <string name="title_activity_venue_details">VenueDetailsActivity</string>
     <string name="search_hint">Search venues and dishes ..</string>
     <string name="menu_search">Search</string>
+    <string name="venueDetails_mondayHours">Monday</string>
+    <string name="venueDetails_tuesdayHours">Tuesday</string>
+    <string name="venueDetails_wednesdayHours">Wednesday</string>
+    <string name="venueDetails_thursdayHours">Thursday</string>
+    <string name="venueDetails_fridayHours">Friday</string>
+    <string name="venueDetails_saturdayHours">Saturday</string>
+    <string name="venueDetails_sundayHours">Sunday</string>
 
 </resources>

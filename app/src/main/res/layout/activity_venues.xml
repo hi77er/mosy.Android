@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="#FFEEEE">
+    android:background="@color/colorPrimaryVeryLight">
 
     <include
         layout="@layout/search_toolbar" />

@@ -24,7 +24,8 @@ import java.util.HashMap;
  */
 
 @EBean
-public class RequestablesAdapter implements ExpandableListAdapter {
+public class RequestablesAdapter
+        implements ExpandableListAdapter {
 
     ArrayList<Requestable> Requestables;
     public void setRequestables(ArrayList<Requestable> requestables){

@@ -1,59 +1,411 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorPageBackground1"
-    android:paddingStart="10dp"
-    android:paddingTop="10dp"
-    android:paddingEnd="10dp">
+    android:id="@+id/venueDetails_svMain"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
 
     <LinearLayout
-        android:id="@+id/venueDetails_lVenueTitle"
-        android:orientation="horizontal"
-        android:layout_gravity="start"
-        android:layout_weight="1"
-        android:layout_height="0dp"
-        android:layout_width="match_parent">
-        <!--android:layout_marginBottom="10dp"-->
-
-        <ImageView
-            android:id="@+id/venueDetails_ivIndoor"
-            android:layout_gravity="start"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/ic_venue_default_thumbnail"/>
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:background="@color/colorPageBackground1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
+            android:id="@+id/venueDetails_lVenueHeading"
+            android:orientation="horizontal"
+            android:layout_gravity="start"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp">
+            android:layout_width="match_parent"
+            android:layout_marginBottom="10dp">
 
-            <TextView
-                android:id="@+id/venueDetails_tvName"
+            <ImageView
+                android:id="@+id/venueDetails_ivIndoor"
+                android:layout_gravity="start"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/ic_venue_default_thumbnail"/>
+
+            <LinearLayout
+                android:id="@+id/venueDetails_lTitle"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/venue_item_name"
-                android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp">
 
-            <TextView
-                android:id="@+id/venueDetails_tvClass"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/venue_item_class"
-                android:layout_marginTop="5dp"
-                android:textSize="18sp" />
+                <TextView
+                    android:id="@+id/venueDetails_tvName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/venue_item_name"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/venueDetails_tvClass"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/venue_item_class"
+                    android:layout_marginTop="5dp"
+                    android:textSize="19sp" />
+            </LinearLayout>
         </LinearLayout>
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/venueDetails_lBadges"
+            android:orientation="horizontal"
+            android:layout_gravity="start"
+            android:background="@color/colorPrimaryVeryLight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"
+            android:visibility="gone">
 
+        </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/venueDetails_lContacts"
+            android:orientation="vertical"
+            android:layout_gravity="start"
+            android:background="@color/colorPrimaryVeryLight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:id="@+id/venueDetails_lFacebook"
+                android:orientation="horizontal"
+                android:layout_gravity="start"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/venueDetails_ivFacebookIcon"
+                    android:layout_gravity="start"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_venue_default_thumbnail" />
+
+                <TextView
+                    android:id="@+id/venueDetails_tvFacebook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoLink="web"
+                    android:textSize="18sp"
+                    android:text="http://www.facebook.com/kdkrastev89"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/venueDetails_lTelephone"
+                android:orientation="horizontal"
+                android:layout_gravity="start"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/venueDetails_ivTelephone"
+                    android:layout_gravity="start"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_venue_default_thumbnail"/>
+
+                <TextView
+                    android:id="@+id/venueDetails_tvTelephone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="+35988346357712"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/venueDetails_lAddress"
+                android:orientation="horizontal"
+                android:layout_gravity="start"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/venueDetails_ivAddress"
+                    android:layout_gravity="start"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_venue_default_thumbnail" />
+
+                <TextView
+                    android:id="@+id/venueDetails_tvAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="гр. София, бул Княгиня Мария Луиза №57, ет. 4"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/venueDetails_lEmail"
+                android:orientation="horizontal"
+                android:layout_gravity="start"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/venueDetails_ivEmail"
+                    android:layout_gravity="start"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_venue_default_thumbnail"/>
+
+                <TextView
+                    android:id="@+id/venueDetails_tvEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="kkrastev@live.com"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/venueDetails_lBusinessHours"
+            android:orientation="horizontal"
+            android:layout_gravity="start"
+            android:background="@color/colorPrimaryVeryLight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/venueDetails_lBusinessHoursLeft"
+                android:orientation="vertical"
+                android:layout_gravity="start"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp">
+
+                <LinearLayout
+                    android:id="@+id/venueDetails_lMonday"
+                    android:orientation="horizontal"
+                    android:layout_gravity="start"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content">
+
+                    <TextView
+                        android:id="@+id/venueDetails_tvBHMondayTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:text="@string/venueDetails_mondayHours"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp" />
+
+                    <TextView
+                        android:id="@+id/venueDetails_tvBHMondayTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/venueDetails_lTuesday"
+                    android:orientation="horizontal"
+                    android:layout_gravity="start"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content">
+
+                    <TextView
+                        android:id="@+id/venueDetails_tvBHTuesdayTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:text="@string/venueDetails_tuesdayHours"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp" />
+
+                    <TextView
+                        android:id="@+id/venueDetails_tvBHTuesdayTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/venueDetails_lWednesday"
+                    android:orientation="horizontal"
+                    android:layout_gravity="start"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content">
+
+                    <TextView
+                        android:id="@+id/venueDetails_tvBHWednesdayTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:text="@string/venueDetails_wednesdayHours"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp" />
+
+                    <TextView
+                        android:id="@+id/venueDetails_tvBHWednesdayTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/venueDetails_lThursday"
+                    android:orientation="horizontal"
+                    android:layout_gravity="start"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content">
+
+                    <TextView
+                        android:id="@+id/venueDetails_tvBHThursdayTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:text="@string/venueDetails_thursdayHours"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp" />
+
+                    <TextView
+                        android:id="@+id/venueDetails_tvBHThursdayTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/venueDetails_lBusinessHoursRight"
+                android:orientation="vertical"
+                android:layout_gravity="start"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp">
+
+                <LinearLayout
+                    android:id="@+id/venueDetails_lFriday"
+                    android:orientation="horizontal"
+                    android:layout_gravity="start"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content">
+
+                    <TextView
+                        android:id="@+id/venueDetails_tvBHFridayTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:text="@string/venueDetails_fridayHours"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp" />
+
+                    <TextView
+                        android:id="@+id/venueDetails_tvBHFridayTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/venueDetails_lSaturday"
+                    android:orientation="horizontal"
+                    android:layout_gravity="start"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content">
+
+                    <TextView
+                        android:id="@+id/venueDetails_tvBHSaturdayTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:text="@string/venueDetails_saturdayHours"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp" />
+
+                    <TextView
+                        android:id="@+id/venueDetails_tvBHSaturdayTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/venueDetails_lSunday"
+                    android:orientation="horizontal"
+                    android:layout_gravity="start"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content">
+
+                    <TextView
+                        android:id="@+id/venueDetails_tvBHSundayTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:text="@string/venueDetails_sundayHours"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp" />
+
+                    <TextView
+                        android:id="@+id/venueDetails_tvBHSundayTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/venueDetails_lMap"
+            android:layout_width="match_parent"
+            android:layout_height="250dp">
+
+            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                tools:context="com.example.mapwithmarker.MapsMarkerActivity"
+                android:id="@+id/venueDetails_frMap"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="-100dp"
+                android:layout_marginBottom="-100dp" />
+
+            <ImageView
+                android:id="@+id/venueDetails_ivMapTransparent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@color/transparent" />
+
+        </RelativeLayout>
 
 
 </LinearLayout>
+</ScrollView>

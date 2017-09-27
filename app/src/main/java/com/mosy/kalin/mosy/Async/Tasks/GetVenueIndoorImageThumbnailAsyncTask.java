@@ -7,8 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueOutdoorImageBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueOutdoorImageThumbnailBindingModel;
+import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageThumbnailBindingModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,18 +19,18 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
  * Created by kkras on 8/9/2017.
  */
 
-public class GetVenueOutdoorImageAsyncTask extends AsyncTask<GetVenueOutdoorImageBindingModel, String, VenueImage> {
+public class GetVenueIndoorImageThumbnailAsyncTask extends AsyncTask<GetVenueIndoorImageThumbnailBindingModel, String, VenueImage> {
 
     private Context context;
 
-    public GetVenueOutdoorImageAsyncTask(Context context) {
+    public GetVenueIndoorImageThumbnailAsyncTask(Context context) {
         this.context = context;
     }
 
     @Override
-    protected VenueImage doInBackground(GetVenueOutdoorImageBindingModel... models) {
-        GetVenueOutdoorImageBindingModel model = models[0];
-        String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint("FBOFiles/OutdoorById");
+    protected VenueImage doInBackground(GetVenueIndoorImageThumbnailBindingModel... models) {
+        GetVenueIndoorImageThumbnailBindingModel model = models[0];
+        String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint("FBOFiles/IndoorThumbnailById");
         VenueImage imageResult = null;
 
         try {

@@ -23,7 +23,8 @@ import java.util.ArrayList;
 
 
 @EViewGroup(R.layout.activity_item_requestable_details)
-public class RequestableItemDetailsView extends RelativeLayout {
+public class RequestableItemDetailsView
+        extends RelativeLayout {
 
     public RequestableItemDetailsView(Context context) {
         super(context);

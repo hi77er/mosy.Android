@@ -8,24 +8,22 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mosy.kalin.mosy.Adapters.BrochuresAdapter;
-import com.mosy.kalin.mosy.Async.Tasks.GetVenueIndoorImageAsyncTask;
+import com.mosy.kalin.mosy.Async.Tasks.GetVenueIndoorImageThumbnailAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueMenuAsyncTask;
 import com.mosy.kalin.mosy.DTOs.Brochure;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.Venue;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageBindingModel;
+import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageThumbnailBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueMenuBindingModel;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
@@ -53,10 +51,10 @@ public class VenueActivity
         Name.setText(this.Venue.Name);
         Class.setText(this.Venue.Class);
 
-        GetVenueIndoorImageBindingModel indorImageModel = new GetVenueIndoorImageBindingModel(this.Venue.Id);
+        GetVenueIndoorImageThumbnailBindingModel indorImageModel = new GetVenueIndoorImageThumbnailBindingModel(this.Venue.Id);
         try {
             //INFO: TryGet Venue Image
-            VenueImage result = new GetVenueIndoorImageAsyncTask(context).execute(indorImageModel).get();
+            VenueImage result = new GetVenueIndoorImageThumbnailAsyncTask(context).execute(indorImageModel).get();
             if (result.Bytes != null) {
                 byte[] byteArray = Base64.decode(result.Bytes, Base64.DEFAULT);
                 Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
@@ -82,9 +80,8 @@ public class VenueActivity
         super.onCreate(savedInstanceState);
     }
 
-
-    @Click
-    void venue_lVenueTitleClicked() {
+    @Click(R.id.venue_lVenueTitle)
+    void venueTitle_Click() {
         Intent intent = new Intent(VenueActivity.this, VenueDetailsActivity_.class);
         this.Venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
         this.Venue.Location = null;

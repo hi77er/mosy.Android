@@ -7,7 +7,8 @@ import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
  * Created by kkras on 8/9/2017.
  */
 
-public class VenueImage extends ResultBase {
+public class VenueImage
+        extends ResultBase {
 
     @SerializedName("Id")
     public String Id;

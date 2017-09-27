@@ -28,11 +28,7 @@ android {
         }
     }
 }
-//
-//compileOptions {
-//    targetCompatibility 1.8
-//    sourceCompatibility 1.8
-//}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -48,5 +44,6 @@ dependencies {
     compile 'com.android.support:support-v4:26.0.0-beta2'
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
     compile 'com.google.android.gms:play-services-location:11.0.4'
+    compile 'com.google.android.gms:play-services-maps:11.0.4'
     testCompile 'junit:junit:4.12'
 }

@@ -7,13 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.mosy.kalin.mosy.Async.Tasks.GetVenueOutdoorImageAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenuesAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.SearchVenuesAsyncTask;
 import com.mosy.kalin.mosy.DTOs.Venue;
-import com.mosy.kalin.mosy.DTOs.VenueImage;
-import com.mosy.kalin.mosy.Helpers.LocationHelper;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueOutdoorImageBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenuesBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
 import com.mosy.kalin.mosy.Services.VenuesService;
@@ -25,15 +21,15 @@ import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * Created by kkras on 7/31/2017.
  */
 
 @EBean
-public class VenuesAdapter extends BaseAdapter {
+public class VenuesAdapter
+        extends BaseAdapter {
+
     ArrayList<Venue> venues;
 
     @RootContext
@@ -95,7 +91,8 @@ public class VenuesAdapter extends BaseAdapter {
             this.venues = new GetVenuesAsyncTask(context).execute(new GetVenuesBindingModel()).get();
             if (this.venues.size() > 0){
                 VenuesService vService = new VenuesService();
-                vService.downloadVenuesOutdoorImages(venues, context);
+                vService.downloadVenuesOutdoorImageThumbnails(venues, context);
+                vService.downloadVenuesBusinessHours(venues, context);
                 vService.calculateVenuesDistances(venues, this.deviceLocation);
                 vService.sortVenuesByDistanceToDevice(venues);
                 VenuesAdapter.super.notifyDataSetChanged();
@@ -111,7 +108,7 @@ public class VenuesAdapter extends BaseAdapter {
             this.venues = new SearchVenuesAsyncTask(context).execute(new SearchVenuesBindingModel(query)).get();
             if (this.venues.size() > 0){
                 VenuesService vService = new VenuesService();
-                vService.downloadVenuesOutdoorImages(venues, context);
+                vService.downloadVenuesOutdoorImageThumbnails(venues, context);
                 vService.calculateVenuesDistances(venues, this.deviceLocation);
                 VenuesAdapter.super.notifyDataSetChanged();
             }
