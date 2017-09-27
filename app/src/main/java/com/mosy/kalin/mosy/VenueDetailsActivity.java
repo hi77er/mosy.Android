@@ -75,7 +75,7 @@ public class VenueDetailsActivity
     TextView Name;
     @ViewById(resName = "venueDetails_tvClass")
     TextView Class;
-    @ViewById(resName = "venueDetails_ivIndoor")
+    @ViewById(resName = "venueDetails_ivIndoorThumbnail")
     ImageView IndoorImageThumbnail;
     @ViewById(resName = "venueDetails_tvBHMondayTime")
     TextView Monday;
@@ -207,7 +207,7 @@ public class VenueDetailsActivity
         }
     }
 
-    @Click(resName = "venueDetails_ivIndoor")
+    @Click(resName = "venueDetails_ivIndoorThumbnail")
     public void ImageClick()
     {
         if (!IsUsingDefaultIndoorImageThumbnail) {

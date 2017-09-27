@@ -44,7 +44,7 @@ public class VenueItemView
     TextView OpenedSinceUntil;
     @ViewById(resName = "venueItem_tvDistance")
     TextView DistanceFromDevice;
-    @ViewById(resName = "venueItem_ivOutdoor")
+    @ViewById(resName = "venueItem_ivOutdoorThumbnail")
     ImageView OutdoorImageThumbnail;
 
     public VenueItemView(Context context) {
@@ -80,7 +80,7 @@ public class VenueItemView
         }
     }
 
-    @Click(resName = "venueItem_ivOutdoor")
+    @Click(resName = "venueItem_ivOutdoorThumbnail")
     public void ItemClick()
     {
         if (! IsUsingDefaultOutdoorImageThumbnail){
