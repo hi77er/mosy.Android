@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import com.google.gson.reflect.TypeToken;
 import com.mosy.kalin.mosy.DTOs.Brochure;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueMenuBindingModel;
 
@@ -38,7 +39,7 @@ public class GetVenueMenuAsyncTask extends AsyncTask<GetVenueMenuBindingModel, S
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             NameValuePair param1 = new BasicNameValuePair("Id", model.VenueId);
             params.add(param1);
-            brochuresResult = jsonHttpClient.Get(endpoint, params, new TypeToken<ArrayList<Brochure>>(){}.getType());
+            brochuresResult = jsonHttpClient.Get(endpoint, params, new TypeToken<ArrayList<Brochure>>(){}.getType(), StringHelper.empty());
         } catch(Exception e) {
             e.printStackTrace();
             Brochure errResult = new Brochure();

@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
+import com.mosy.kalin.mosy.Helpers.DateHelper;
 import com.mosy.kalin.mosy.Services.VenuesService;
 
 import org.androidannotations.annotations.AfterViews;
@@ -35,6 +36,9 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.FragmentById;
 import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.ViewById;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 @EActivity(R.layout.activity_venue_details)
 public class VenueDetailsActivity
@@ -174,27 +178,28 @@ public class VenueDetailsActivity
     private void populateBusinessHours(VenueBusinessHours businessHours) {
         if (businessHours != null // and a single day has business hours set ->
             && (businessHours.IsMondayDayOff || businessHours.IsTuesdayDayOff || businessHours.IsWednesdayDayOff || businessHours.IsThursdayDayOff || businessHours.IsFridayDayOff || businessHours.IsSaturdayDayOff || businessHours.IsSundayDayOff || businessHours.MondayFrom != null || businessHours.MondayTo != null || businessHours.TuesdayFrom != null || businessHours.TuesdayTo != null || businessHours.WednesdayFrom != null || businessHours.WednesdayTo != null || businessHours.ThursdayFrom != null || businessHours.ThursdayTo != null || businessHours.FridayFrom != null || businessHours.FridayTo != null || businessHours.SaturdayFrom != null || businessHours.SaturdayTo != null || businessHours.SundayFrom != null || businessHours.SundayTo != null)) {
+
             String d1 = businessHours.IsMondayDayOff ? "Day Off" :
-                    ((businessHours.MondayFrom != null ? businessHours.MondayFrom.substring(0, 5) : "") + " - " +
-                     (businessHours.MondayTo != null ? businessHours.MondayTo.substring(0, 5) : ""));
+                    (DateHelper.GetTime(businessHours.MondayFrom) + " - " +
+                     DateHelper.GetTime(businessHours.MondayTo));
             String d2 = businessHours.IsTuesdayDayOff ? "Day Off" :
-                    ((businessHours.TuesdayFrom != null ? businessHours.TuesdayFrom.substring(0, 5) : "") + " - " +
-                     (businessHours.TuesdayTo != null ? businessHours.ThursdayTo.substring(0, 5) : ""));
+                    (DateHelper.GetTime(businessHours.TuesdayFrom) + " - " +
+                     DateHelper.GetTime(businessHours.TuesdayTo));
             String d3 = businessHours.IsWednesdayDayOff ? "Day Off" :
-                    ((businessHours.WednesdayFrom != null ? businessHours.WednesdayFrom.substring(0, 5) : "") + " - " +
-                     (businessHours.WednesdayTo != null ? businessHours.WednesdayTo.substring(0, 5) : ""));
+                    (DateHelper.GetTime(businessHours.WednesdayFrom) + " - " +
+                     DateHelper.GetTime(businessHours.WednesdayTo));
             String d4 = businessHours.IsThursdayDayOff ? "Day Off" :
-                    ((businessHours.ThursdayFrom != null ? businessHours.TuesdayFrom.substring(0, 5) : "") + " - " +
-                     (businessHours.ThursdayTo != null ? businessHours.ThursdayTo.substring(0, 5) : ""));
+                    (DateHelper.GetTime(businessHours.ThursdayFrom) + " - " +
+                     DateHelper.GetTime(businessHours.ThursdayTo));
             String d5 = businessHours.IsFridayDayOff ? "Day Off" :
-                    ((businessHours.FridayFrom != null ? businessHours.FridayFrom.substring(0, 5) : "") + " - " +
-                     (businessHours.FridayTo != null ? businessHours.FridayTo.substring(0, 5) : ""));
+                    (DateHelper.GetTime(businessHours.FridayFrom) + " - " +
+                     DateHelper.GetTime(businessHours.FridayTo));
             String d6 = businessHours.IsSaturdayDayOff ? "Day Off" :
-                    ((businessHours.SaturdayFrom != null ? businessHours.SaturdayFrom.substring(0, 5) : "") + " - " +
-                     (businessHours.SaturdayTo != null ? businessHours.SaturdayTo.substring(0, 5) : ""));
+                    (DateHelper.GetTime(businessHours.SaturdayFrom) + " - " +
+                     DateHelper.GetTime(businessHours.SaturdayTo));
             String d7 = businessHours.IsSundayDayOff ? "Day Off" :
-                    ((businessHours.SundayFrom != null ? businessHours.SundayFrom.substring(0, 5) : "") + " - " +
-                     (businessHours.SundayTo != null ? businessHours.SundayTo.substring(0, 5) : ""));
+                    (DateHelper.GetTime(businessHours.SundayFrom) + " - " +
+                     DateHelper.GetTime(businessHours.SundayTo));
 
             this.Monday.setText(d1);
             this.Tuesday.setText(d2);

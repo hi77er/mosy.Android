@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import com.google.gson.reflect.TypeToken;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenuesBindingModel;
 
@@ -30,7 +31,7 @@ public class GetVenuesAsyncTask extends AsyncTask<GetVenuesBindingModel, String,
 
         try {
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            venuesResult = jsonHttpClient.Get(endpoint, null, new TypeToken<ArrayList<Venue>>(){}.getType());
+            venuesResult = jsonHttpClient.Get(endpoint, null, new TypeToken<ArrayList<Venue>>(){}.getType(), StringHelper.empty());
         } catch(Exception e) {
             e.printStackTrace();
             Venue errResult = new Venue();

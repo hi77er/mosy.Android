@@ -3,6 +3,8 @@ package com.mosy.kalin.mosy.DTOs;
 import com.google.gson.annotations.SerializedName;
 import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
 
+import java.util.Date;
+
 /**
  * Created by kkras on 9/4/2017.
  */
@@ -29,34 +31,34 @@ public class VenueBusinessHours
     public boolean IsSundayDayOff;
 
     @SerializedName("MondayFrom")
-    public String MondayFrom;
+    public Date MondayFrom;
     @SerializedName("TuesdayFrom")
-    public String TuesdayFrom;
+    public Date TuesdayFrom;
     @SerializedName("ThursdayFrom")
-    public String ThursdayFrom;
+    public Date ThursdayFrom;
     @SerializedName("WednesdayFrom")
-    public String WednesdayFrom;
+    public Date WednesdayFrom;
     @SerializedName("FridayFrom")
-    public String FridayFrom;
+    public Date FridayFrom;
     @SerializedName("SaturdayFrom")
-    public String SaturdayFrom ;
+    public Date SaturdayFrom ;
     @SerializedName("SundayFrom")
-    public String SundayFrom;
+    public Date SundayFrom;
 
     @SerializedName("MondayTo")
-    public String MondayTo;
+    public Date MondayTo;
     @SerializedName("TuesdayTo")
-    public String TuesdayTo;
+    public Date TuesdayTo;
     @SerializedName("WednesdayTo")
-    public String WednesdayTo;
+    public Date WednesdayTo;
     @SerializedName("ThursdayTo")
-    public String ThursdayTo;
+    public Date ThursdayTo;
     @SerializedName("FridayTo")
-    public String FridayTo;
+    public Date FridayTo;
     @SerializedName("SaturdayTo")
-    public String SaturdayTo;
+    public Date SaturdayTo;
     @SerializedName("SundayTo")
-    public String SundayTo;
+    public Date SundayTo;
 
     public VenueBusinessHours() {
 

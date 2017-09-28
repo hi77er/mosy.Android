@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
+import com.mosy.kalin.mosy.Helpers.BusinessHoursHelper;
 import com.mosy.kalin.mosy.Helpers.LocationHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.R;
@@ -56,9 +57,9 @@ public class VenueItemView
         this.Name.setText(venue.Name);
         this.Class.setText(venue.Class);
         if (venue.BusinessHours != null) {
-            String sinceUntil = LocationHelper.buildDistanceText(venue.Location.DistanceToCurrentLocationMeters);
+            String sinceUntil = BusinessHoursHelper.buildBusinessHoursText(venue.BusinessHours);
 
-            this.OpenedSinceUntil.setText("Opened since 20 mins.");
+            this.OpenedSinceUntil.setText(sinceUntil);
         }
 
         if (venue.Location != null) {

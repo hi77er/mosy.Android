@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
 import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
 import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,7 +43,7 @@ import okhttp3.Response;
 
 public class JSONHttpClient {
 
-    public <T> T Get(String url, List<NameValuePair> params, final Type objectType) { //final Class<T> objectClass
+    public <T> T Get(String url, List<NameValuePair> params, final Type objectType, String dateFormat) { //final Class<T> objectClass
         DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
         if (params != null)
             url += "?" + URLEncodedUtils.format(params, "utf-8");
@@ -64,9 +65,12 @@ public class JSONHttpClient {
                 String resultString = convertStreamToString(inputStream);
                 inputStream.close();
 
-                return new GsonBuilder().create().fromJson(resultString, objectType);
-            }
+                GsonBuilder builder  = new GsonBuilder();
+                if (!dateFormat.equals(StringHelper.empty()))
+                    builder.setDateFormat(dateFormat);
 
+                return builder.create().fromJson(resultString, objectType);
+            }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (ClientProtocolException e) {
@@ -79,7 +83,7 @@ public class JSONHttpClient {
         return null;
     }
 
-    public <T> T PostObject(final String url, final Object object, final Type objectType) { //final Class<T> objectClass
+    public <T> T PostObject(final String url, final Object object, final Type objectType, String dateFormat) { //final Class<T> objectClass
         DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(url);
         try {
@@ -100,7 +104,11 @@ public class JSONHttpClient {
 
                 String resultString = convertStreamToString(inputStream);
                 inputStream.close();
-                return new GsonBuilder().create().fromJson(resultString, objectType);
+
+                GsonBuilder jsonBuilder = new GsonBuilder();
+                if (!dateFormat.equals(StringHelper.empty()))
+                    jsonBuilder.setDateFormat(dateFormat);
+                return jsonBuilder.create().fromJson(resultString, objectType);
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -112,10 +120,10 @@ public class JSONHttpClient {
         return null;
     }
 
-    public <T> T PostParams(String url, final List<NameValuePair> params, final Type objectType){ // final Class<T> responseObjectClass)
+    public <T> T PostParams(String url, final List<NameValuePair> params, final Type objectType, String dateFormat){ // final Class<T> responseObjectClass)
         String paramString = URLEncodedUtils.format(params, "utf-8");
         url += "?" + paramString;
-        return PostObject(url, null, objectType);
+        return PostObject(url, null, objectType, dateFormat);
     }
 
     public TokenResult GetToken(final String url, String username, String password) {

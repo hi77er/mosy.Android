@@ -38,7 +38,7 @@ public class GetVenueBusinessHoursAsyncTask extends AsyncTask<GetVenueBusinessHo
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             NameValuePair param1 = new BasicNameValuePair("fboId", model.VenueId);
             params.add(param1);
-            businessHours = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueBusinessHours>(){}.getType());
+            businessHours = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueBusinessHours>(){}.getType(), "HH:mm:ss");
         } catch(Exception e) {
             e.printStackTrace();
             VenueBusinessHours errResult = new VenueBusinessHours();

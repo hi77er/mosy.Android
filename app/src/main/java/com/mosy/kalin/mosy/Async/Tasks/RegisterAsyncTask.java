@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
 import com.mosy.kalin.mosy.DTOs.Results.RegisterResult;
 import com.mosy.kalin.mosy.Models.BindingModels.RegisterBindingModel;
@@ -27,7 +28,7 @@ public class RegisterAsyncTask extends AsyncTask<RegisterBindingModel, String, R
         JSONHttpClient jsonHttpClient = new JSONHttpClient();
 
         try {
-            String result = jsonHttpClient.PostObject(registerEndpoint, model, String.class);
+            String result = jsonHttpClient.PostObject(registerEndpoint, model, String.class, StringHelper.empty());
             return new RegisterResult(true, result);
         }
         catch(Exception e)
