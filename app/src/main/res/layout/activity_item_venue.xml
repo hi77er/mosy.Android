@@ -42,23 +42,31 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/venueItem_tvClass"
-                android:layout_gravity="start"
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/venue_item_class"
-                android:textStyle="bold"
-                android:textColor="#c0c0c0"/>
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/venueItem_tvOpenedSinceUntil"
-                android:layout_gravity="start"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Closes after 20 minutes"
-                android:textStyle="bold"
-                android:textColor="@color/colorTertiary" />
+                <TextView
+                    android:id="@+id/venueItem_tvClass"
+                    android:layout_gravity="start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/venue_item_class"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/soft"/>
+
+                <TextView
+                    android:id="@+id/venueItem_tvOpenedSinceUntil"
+                    android:layout_gravity="start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/soft" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/venueItem_tvDistance"
@@ -67,6 +75,7 @@
                 android:layout_height="wrap_content"
                 android:text="5min walking, 10 - by car "
                 android:textStyle="bold"
+                android:textSize="16sp"
                 android:textColor="@color/colorQuaternary" />
 
         </LinearLayout>

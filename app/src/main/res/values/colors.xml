@@ -8,6 +8,7 @@
 
     <color name="colorAccent">#fc7878</color>
 
+    <color name="soft">#ababab</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorSecondaryVeryVeryLight">#f7f7f0</color>
     <color name="colorSecondaryVeryLight">#F1F0CC</color>

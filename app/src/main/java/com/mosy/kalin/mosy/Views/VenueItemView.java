@@ -56,10 +56,17 @@ public class VenueItemView
         this.VenueId = venue.Id;
         this.Name.setText(venue.Name);
         this.Class.setText(venue.Class);
-        if (venue.BusinessHours != null) {
-            String sinceUntil = BusinessHoursHelper.buildBusinessHoursText(venue.BusinessHours);
 
+        if (venue.BusinessHours != null) {
+            if (venue.Name.equals("The Godfather")) {
+                String asda ="";
+            }
+            String sinceUntil = BusinessHoursHelper.buildBusinessHoursText(venue.BusinessHours);
             this.OpenedSinceUntil.setText(sinceUntil);
+            if (sinceUntil.equals(StringHelper.empty()))
+                this.OpenedSinceUntil.setVisibility(GONE);
+            else
+                this.OpenedSinceUntil.setVisibility(VISIBLE);
         }
 
         if (venue.Location != null) {
