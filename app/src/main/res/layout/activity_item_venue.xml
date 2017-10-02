@@ -20,7 +20,7 @@
         android:layout_height="100dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/ic_venue_default_thumbnail" />
+        android:src="@drawable/venue_default_thumbnail" />
 
     <RelativeLayout
         android:layout_width="match_parent"

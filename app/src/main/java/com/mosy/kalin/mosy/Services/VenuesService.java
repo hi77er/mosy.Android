@@ -34,33 +34,33 @@ import java.util.Comparator;
 @EBean
 public class VenuesService {
 
-    public VenueBusinessHours downloadVenuesBusinessHours(String venueId, Context context) {
+    public VenueBusinessHours downloadVenuesBusinessHours(String venueId) {
         VenueBusinessHours businessHours = null;
         try {
             GetVenueBusinessHoursBindingModel businessHoursModel = new GetVenueBusinessHoursBindingModel(venueId);
-            businessHours = new GetVenueBusinessHoursAsyncTask(context).execute(businessHoursModel).get();
+            businessHours = new GetVenueBusinessHoursAsyncTask().execute(businessHoursModel).get();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return businessHours;
     }
 
-    public void downloadVenuesBusinessHours(ArrayList<Venue> venues, Context context) {
+    public void downloadVenuesBusinessHours(ArrayList<Venue> venues) {
         try {
             for (Venue venue: venues) {
                 GetVenueBusinessHoursBindingModel businessHoursModel = new GetVenueBusinessHoursBindingModel(venue.Id);
-                venue.BusinessHours = new GetVenueBusinessHoursAsyncTask(context).execute(businessHoursModel).get();
+                venue.BusinessHours = new GetVenueBusinessHoursAsyncTask().execute(businessHoursModel).get();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void downloadVenuesOutdoorImageThumbnails(ArrayList<Venue> venues, Context context) {
+    public void downloadVenuesOutdoorImageThumbnails(ArrayList<Venue> venues) {
         try {
             for (Venue venue: venues) {
                 GetVenueOutdoorImageThumbnailBindingModel outdoorImageModel = new GetVenueOutdoorImageThumbnailBindingModel(venue.Id);
-                VenueImage outdoorImage = new GetVenueOutdoorImageThumbnailAsyncTask(context).execute(outdoorImageModel).get();
+                VenueImage outdoorImage = new GetVenueOutdoorImageThumbnailAsyncTask().execute(outdoorImageModel).get();
 
                 if (outdoorImage.Bytes != null) venue.OutdoorImage = outdoorImage;
                 else venue.OutdoorImage = null;
@@ -70,44 +70,44 @@ public class VenuesService {
         }
     }
 
-    public VenueImage downloadVenueOutdoorImage(String venueId, Context context) {
+    public VenueImage downloadVenueOutdoorImage(String venueId) {
         VenueImage image = null;
         try {
             GetVenueOutdoorImageBindingModel outdoorImageModel = new GetVenueOutdoorImageBindingModel(venueId);
-            image = new GetVenueOutdoorImageAsyncTask(context).execute(outdoorImageModel).get();
+            image = new GetVenueOutdoorImageAsyncTask().execute(outdoorImageModel).get();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return image;
     }
 
-    public VenueImage downloadVenueIndoorImageThumbnails(Venue venue, Context context) {
+    public VenueImage downloadVenueIndoorImageThumbnails(Venue venue) {
         VenueImage image = null;
         try {
             GetVenueIndoorImageThumbnailBindingModel indorImageModel = new GetVenueIndoorImageThumbnailBindingModel(venue.Id);
-            image = new GetVenueIndoorImageThumbnailAsyncTask(context).execute(indorImageModel).get();
+            image = new GetVenueIndoorImageThumbnailAsyncTask().execute(indorImageModel).get();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return image;
     }
 
-    public VenueImage downloadVenueIndoorImage(String venueId, Context context) {
+    public VenueImage downloadVenueIndoorImage(String venueId) {
         VenueImage image = null;
         try {
             GetVenueIndoorImageBindingModel indorImageModel = new GetVenueIndoorImageBindingModel(venueId);
-            image = new GetVenueIndoorImageAsyncTask(context).execute(indorImageModel).get();
+            image = new GetVenueIndoorImageAsyncTask().execute(indorImageModel).get();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return image;
     }
 
-    public VenueLocation downloadVenueLocation(String venueId, Context context) {
+    public VenueLocation downloadVenueLocation(String venueId) {
         VenueLocation location = null;
         try {
             GetVenueLocationBindingModel locationModel = new GetVenueLocationBindingModel(venueId);
-            location = new GetVenueLocationAsyncTask(context).execute(locationModel).get();
+            location = new GetVenueLocationAsyncTask().execute(locationModel).get();
         } catch (Exception e) {
             e.printStackTrace();
         }

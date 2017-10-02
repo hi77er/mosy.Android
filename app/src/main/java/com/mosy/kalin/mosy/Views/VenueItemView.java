@@ -84,7 +84,7 @@ public class VenueItemView
         }
         else{
             IsUsingDefaultOutdoorImageThumbnail = true;
-            this.OutdoorImageThumbnail.setImageResource(R.drawable.ic_venue_default_thumbnail);
+            this.OutdoorImageThumbnail.setImageResource(R.drawable.venue_default_thumbnail);
         }
     }
 
@@ -97,7 +97,7 @@ public class VenueItemView
             nagDialog.setCancelable(true);
             nagDialog.setContentView(R.layout.image_preview_dialog);
 
-            VenueImage image = this.VenuesService.downloadVenueOutdoorImage(this.VenueId, this.getContext());
+            VenueImage image = this.VenuesService.downloadVenueOutdoorImage(this.VenueId);
             byte[] byteArray = Base64.decode(image.Bytes, Base64.DEFAULT);
             Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 

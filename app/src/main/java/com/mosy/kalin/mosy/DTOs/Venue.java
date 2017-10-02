@@ -5,6 +5,7 @@ import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 /**
  * Created by User on 7/6/2016.
@@ -36,6 +37,9 @@ public class Venue
 
     public BigDecimal Rating;
 
+    @SerializedName("FBOEndorsements")
+    public ArrayList<VenueBadgeEndorsement> Endorsements;
+
 //    public boolean AllowUploadFBOPictures;
 //    public boolean AllowUploadMenuPictures;
 //    public boolean AllowAnonymousUpload;
@@ -50,7 +54,6 @@ public class Venue
 //    public List<FBORate> Rates;
 //    public List<FBOContact> Contacts;
 //    public List<FBOImageMeta> Images;
-//    public List<FBOEndorsement>  Endorsements;
 //    public TablesAndCount List<object>;
 
 }

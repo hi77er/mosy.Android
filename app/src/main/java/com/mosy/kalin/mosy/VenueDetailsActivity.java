@@ -1,7 +1,6 @@
 package com.mosy.kalin.mosy;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.BooleanResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,9 +21,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.DTOs.VenueBadgeEndorsement;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Helpers.DateHelper;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Services.BadgeEndorsementsService;
 import com.mosy.kalin.mosy.Services.VenuesService;
 
 import org.androidannotations.annotations.AfterViews;
@@ -37,8 +38,7 @@ import org.androidannotations.annotations.FragmentById;
 import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.ViewById;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import java.util.ArrayList;
 
 @EActivity(R.layout.activity_venue_details)
 public class VenueDetailsActivity
@@ -52,6 +52,9 @@ public class VenueDetailsActivity
 
     @Bean
     public VenuesService VenuesService;
+
+    @Bean
+    public BadgeEndorsementsService BadgeEndorsementsService;
 
     @FragmentById(R.id.venueDetails_frMap)
     SupportMapFragment VenueLocationMap;
@@ -92,35 +95,56 @@ public class VenueDetailsActivity
     @ViewById(resName = "venueDetails_tvBHFridayTime")
     TextView Friday;
     @ViewById(resName = "venueDetails_tvBHSaturdayTime")
-    TextView Saturnday;
+    TextView Saturday;
     @ViewById(resName = "venueDetails_tvBHSundayTime")
     TextView Sunday;
 
+    @ViewById(resName = "venueDetailsBadge_freeWiFi")
+    ImageView FreeWiFi;
+    @ViewById(resName = "venueDetailsBadge_workingFriendly")
+    ImageView WorkingFriendly;
+    @ViewById(resName = "venueDetailsBadge_bikeFriendly")
+    ImageView BikeFrindly;
+    @ViewById(resName = "venueDetailsBadge_childFriendly")
+    ImageView ChildFriendly;
+    @ViewById(resName = "venueDetailsBadge_funPlace")
+    ImageView FunPlace;
+    @ViewById(resName = "venueDetailsBadge_parkingSign")
+    ImageView ParkingSign;
+    @ViewById(resName = "venueDetailsBadge_petFriendly")
+    ImageView PetFriendly;
+    @ViewById(resName = "venueDetailsBadge_romanticPlace")
+    ImageView RomanticPlace;
+    @ViewById(resName = "venueDetailsBadge_wheelchairFriendly")
+    ImageView WheelchairFriendly;
+    @ViewById(resName = "venueDetailsBadge_noSmoking")
+    ImageView NoSmoking;
+
     @AfterViews
     void updateVenueWithData() {
-        Context context = getApplicationContext();
-
         Name.setText(this.Venue.Name);
         Class.setText(this.Venue.Class);
 
         try {
-            VenueImage image = this.VenuesService.downloadVenueIndoorImageThumbnails(this.Venue, this);
+            VenueImage image = this.VenuesService.downloadVenueIndoorImageThumbnails(this.Venue);
             populateIndoorImage(image);
 
             populateContacts();
 
-            this.Venue.BusinessHours = this.VenuesService.downloadVenuesBusinessHours(this.Venue.Id, this);
+            this.Venue.BusinessHours = this.VenuesService.downloadVenuesBusinessHours(this.Venue.Id);
             populateBusinessHours(this.Venue.BusinessHours);
 
-            this.Venue.Location = this.VenuesService.downloadVenueLocation(this.Venue.Id, this);
+            this.Venue.Location = this.VenuesService.downloadVenueLocation(this.Venue.Id);
             this.VenueLocationMap.getMapAsync(this);
+
+            this.Venue.Endorsements = this.BadgeEndorsementsService.downloadVenueBadgeEndorsements(this.Venue.Id);
+            populateBadges(this.Venue.Endorsements);
 
         }
         catch (Exception e){
             e.printStackTrace();
         }
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,7 +152,7 @@ public class VenueDetailsActivity
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        if (this.Venue != null & this.Venue.Location != null) {
+        if (this.Venue != null && this.Venue.Location != null) {
             LatLng venueLocation = new LatLng(this.Venue.Location.Latitude, this.Venue.Location.Longitude);
             googleMap.addMarker(
                 new MarkerOptions()
@@ -177,38 +201,95 @@ public class VenueDetailsActivity
 
     private void populateBusinessHours(VenueBusinessHours businessHours) {
         if (businessHours != null // and a single day has business hours set ->
-            && (businessHours.IsMondayDayOff || businessHours.IsTuesdayDayOff || businessHours.IsWednesdayDayOff || businessHours.IsThursdayDayOff || businessHours.IsFridayDayOff || businessHours.IsSaturdayDayOff || businessHours.IsSundayDayOff || businessHours.MondayFrom != null || businessHours.MondayTo != null || businessHours.TuesdayFrom != null || businessHours.TuesdayTo != null || businessHours.WednesdayFrom != null || businessHours.WednesdayTo != null || businessHours.ThursdayFrom != null || businessHours.ThursdayTo != null || businessHours.FridayFrom != null || businessHours.FridayTo != null || businessHours.SaturdayFrom != null || businessHours.SaturdayTo != null || businessHours.SundayFrom != null || businessHours.SundayTo != null)) {
+            && (businessHours.IsMondayDayOff || businessHours.IsTuesdayDayOff || businessHours.IsWednesdayDayOff ||
+                businessHours.IsThursdayDayOff || businessHours.IsFridayDayOff || businessHours.IsSaturdayDayOff ||
+                businessHours.IsSundayDayOff || businessHours.MondayFrom != null || businessHours.MondayTo != null
+                || businessHours.TuesdayFrom != null || businessHours.TuesdayTo != null || businessHours.WednesdayFrom != null
+                || businessHours.WednesdayTo != null || businessHours.ThursdayFrom != null || businessHours.ThursdayTo != null
+                || businessHours.FridayFrom != null || businessHours.FridayTo != null || businessHours.SaturdayFrom != null
+                || businessHours.SaturdayTo != null || businessHours.SundayFrom != null || businessHours.SundayTo != null)) {
 
             String d1 = businessHours.IsMondayDayOff ? "Day Off" :
-                    (DateHelper.GetTime(businessHours.MondayFrom) + " - " +
-                     DateHelper.GetTime(businessHours.MondayTo));
+                    ((businessHours.MondayFrom != null ? DateHelper.GetTime(businessHours.MondayFrom) : StringHelper.empty()) + " - " +
+                     (businessHours.MondayTo != null ? DateHelper.GetTime(businessHours.MondayTo) : StringHelper.empty()));
             String d2 = businessHours.IsTuesdayDayOff ? "Day Off" :
-                    (DateHelper.GetTime(businessHours.TuesdayFrom) + " - " +
-                     DateHelper.GetTime(businessHours.TuesdayTo));
+                    ((businessHours.TuesdayFrom != null ? DateHelper.GetTime(businessHours.TuesdayFrom) : StringHelper.empty()) + " - " +
+                     (businessHours.TuesdayTo != null ? DateHelper.GetTime(businessHours.TuesdayTo) : StringHelper.empty()));
             String d3 = businessHours.IsWednesdayDayOff ? "Day Off" :
-                    (DateHelper.GetTime(businessHours.WednesdayFrom) + " - " +
-                     DateHelper.GetTime(businessHours.WednesdayTo));
+                    ((businessHours.WednesdayFrom != null ? DateHelper.GetTime(businessHours.WednesdayFrom) : StringHelper.empty())+ " - " +
+                     (businessHours.WednesdayTo != null ? DateHelper.GetTime(businessHours.WednesdayTo) : StringHelper.empty()));
             String d4 = businessHours.IsThursdayDayOff ? "Day Off" :
-                    (DateHelper.GetTime(businessHours.ThursdayFrom) + " - " +
-                     DateHelper.GetTime(businessHours.ThursdayTo));
+                    ((businessHours.ThursdayFrom != null ? DateHelper.GetTime(businessHours.ThursdayFrom) : StringHelper.empty()) + " - " +
+                     (businessHours.ThursdayTo != null ? DateHelper.GetTime(businessHours.ThursdayTo) : StringHelper.empty()));
             String d5 = businessHours.IsFridayDayOff ? "Day Off" :
-                    (DateHelper.GetTime(businessHours.FridayFrom) + " - " +
-                     DateHelper.GetTime(businessHours.FridayTo));
+                    ((businessHours.FridayFrom != null ? DateHelper.GetTime(businessHours.FridayFrom) : StringHelper.empty()) + " - " +
+                     (businessHours.FridayTo != null ? DateHelper.GetTime(businessHours.FridayTo) : StringHelper.empty()));
             String d6 = businessHours.IsSaturdayDayOff ? "Day Off" :
-                    (DateHelper.GetTime(businessHours.SaturdayFrom) + " - " +
-                     DateHelper.GetTime(businessHours.SaturdayTo));
+                    ((businessHours.SaturdayFrom != null ? DateHelper.GetTime(businessHours.SaturdayFrom) : StringHelper.empty())+ " - " +
+                     (businessHours.SaturdayTo != null ? DateHelper.GetTime(businessHours.SaturdayTo) : StringHelper.empty()));
             String d7 = businessHours.IsSundayDayOff ? "Day Off" :
-                    (DateHelper.GetTime(businessHours.SundayFrom) + " - " +
-                     DateHelper.GetTime(businessHours.SundayTo));
+                    ((businessHours.SundayFrom != null ? DateHelper.GetTime(businessHours.SundayFrom) : StringHelper.empty())+ " - " +
+                     (businessHours.SundayTo != null ? DateHelper.GetTime(businessHours.SundayTo) : StringHelper.empty()));
 
             this.Monday.setText(d1);
             this.Tuesday.setText(d2);
             this.Wednesday.setText(d3);
             this.Thursday.setText(d4);
             this.Friday.setText(d5);
-            this.Saturnday.setText(d6);
+            this.Saturday.setText(d6);
             this.Sunday.setText(d7);
             this.LayoutBusinessHours.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void populateBadges(ArrayList<VenueBadgeEndorsement> badgeEndorsements) {
+        if (badgeEndorsements != null && badgeEndorsements.size() > 0)
+        {
+            boolean any = false;
+            //INFO: Weak code! Strong dependency to badge ids here.
+            for (VenueBadgeEndorsement endorsement : badgeEndorsements) {
+                if (endorsement.BadgeId.toUpperCase().equals("E48D0871-500E-4D41-8620-840308901970")){
+                    this.FreeWiFi.setVisibility(View.VISIBLE);
+                    any = true;
+                }
+                if (endorsement.BadgeId.toUpperCase().equals("93252A33-D2A7-44A6-B375-0496EB3B5F9E")){
+                    this.WorkingFriendly.setVisibility(View.VISIBLE);
+                    any = true;
+                }
+                if (endorsement.BadgeId.toUpperCase().equals("602F1863-A209-4E34-BC5E-871AE52AE684")) {
+                    this.BikeFrindly.setVisibility(View.VISIBLE);
+                    any = true;
+                }
+                if (endorsement.BadgeId.toUpperCase().equals("4F952337-5F15-4EFA-934A-7A948800B93F")){
+                    this.ChildFriendly.setVisibility(View.VISIBLE);
+                    any = true;
+                }
+                if (endorsement.BadgeId.toUpperCase().equals("BE06BC04-CB07-4884-866B-907132DE2944")) {
+                    this.FunPlace.setVisibility(View.VISIBLE);
+                    any = true;
+                }
+                if (endorsement.BadgeId.toUpperCase().equals("245733F1-35C4-4497-B188-59B1A69480AA")){
+                    this.ParkingSign.setVisibility(View.VISIBLE);
+                    any = true;
+                }
+                if (endorsement.BadgeId.toUpperCase().equals("5CF4A8FA-CA93-4D36-BD67-E4E6A26D751E")) {
+                    this.PetFriendly.setVisibility(View.VISIBLE);
+                    any = true;
+                }
+                if (endorsement.BadgeId.toUpperCase().equals("D7C4C6BB-A717-4774-B3B3-E4C23893D2BF")) {
+                    this.RomanticPlace.setVisibility(View.VISIBLE);
+                    any = true;
+                }
+                if (endorsement.BadgeId.toUpperCase().equals("C8C0E9CA-4F73-4A01-93DB-00573BD2E7F0")) {
+                    this.WheelchairFriendly.setVisibility(View.VISIBLE);
+                    any = true;
+                }
+                if (endorsement.BadgeId.toUpperCase().equals("39814B44-BC9A-4172-B91A-D190213DB112")) {
+                    this.NoSmoking.setVisibility(View.VISIBLE);
+                    any = true;
+                }
+            }
+            if (any) this.LayoutBadges.setVisibility(View.VISIBLE);
         }
     }
 
@@ -221,11 +302,11 @@ public class VenueDetailsActivity
             nagDialog.setCancelable(true);
             nagDialog.setContentView(R.layout.image_preview_dialog);
 
-            VenueImage image = this.VenuesService.downloadVenueIndoorImage(this.Venue.Id, this);
+            VenueImage image = this.VenuesService.downloadVenueIndoorImage(this.Venue.Id);
             byte[] byteArray = Base64.decode(image.Bytes, Base64.DEFAULT);
             Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
-            ImageView ivPreview = (ImageView) nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
+            ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
             ivPreview.setImageBitmap(bmp);
             nagDialog.show();
         }

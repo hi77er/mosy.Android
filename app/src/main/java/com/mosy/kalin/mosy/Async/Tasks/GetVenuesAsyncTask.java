@@ -17,11 +17,6 @@ import java.util.ArrayList;
  */
 
 public class GetVenuesAsyncTask extends AsyncTask<GetVenuesBindingModel, String, ArrayList<Venue>> {
-    private Context context;
-
-    public GetVenuesAsyncTask(Context context) {
-        this.context = context;
-    }
 
     @Override
     protected ArrayList<Venue> doInBackground(GetVenuesBindingModel... models) {

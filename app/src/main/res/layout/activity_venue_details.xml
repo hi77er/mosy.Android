@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/venueDetails_svMain"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
@@ -26,7 +27,7 @@
                 android:layout_gravity="start"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:src="@drawable/ic_venue_default_thumbnail"/>
+                android:src="@drawable/venue_default_thumbnail"/>
 
             <LinearLayout
                 android:id="@+id/venueDetails_lTitle"
@@ -61,11 +62,61 @@
             android:orientation="horizontal"
             android:layout_gravity="start"
             android:background="@color/colorPrimaryVeryLight"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:padding="10dp"
             android:visibility="gone">
+
+            <ImageView android:id="@+id/venueDetailsBadge_freeWiFi" android:src="@drawable/free_wifi"
+                       android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
+                       android:tooltipText="@string/venueDetailsBadge_freeWifiTooltip" android:visibility="gone"
+                       android:contentDescription="@string/venueDetailsBadge_freeWifiTooltip" />
+
+            <ImageView android:id="@+id/venueDetailsBadge_workingFriendly" android:src="@drawable/working_friendly"
+                       android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
+                       android:tooltipText="@string/venueDetailsBadge_workingFriendlyTooltip" android:visibility="gone"
+                       android:contentDescription="@string/venueDetailsBadge_workingFriendlyTooltip" />
+
+            <ImageView android:id="@+id/venueDetailsBadge_bikeFriendly" android:src="@drawable/bike_friendly"
+                       android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
+                       android:tooltipText="@string/venueDetailsBadge_bikeFriendlyTooltip" android:visibility="gone"
+                       android:contentDescription="@string/venueDetailsBadge_bikeFriendlyTooltip" />
+
+            <ImageView android:id="@+id/venueDetailsBadge_childFriendly" android:src="@drawable/child_friendly"
+                       android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
+                       android:tooltipText="@string/venueDetailsBadge_childFriendlyTooltip" android:visibility="gone"
+                       android:contentDescription="@string/venueDetailsBadge_childFriendlyTooltip" />
+
+            <ImageView android:id="@+id/venueDetailsBadge_funPlace" android:src="@drawable/fun_place"
+                       android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
+                       android:tooltipText="@string/venueDetailsBadge_funPlaceTooltip" android:visibility="gone"
+                       android:contentDescription="@string/venueDetailsBadge_funPlaceTooltip" />
+
+            <ImageView android:id="@+id/venueDetailsBadge_parkingSign" android:src="@drawable/parking_sign"
+                       android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
+                       android:tooltipText="@string/venueDetailsBadge_parkingSignTooltip" android:visibility="gone"
+                       android:contentDescription="@string/venueDetailsBadge_parkingSignTooltip" />
+
+            <ImageView android:id="@+id/venueDetailsBadge_petFriendly" android:src="@drawable/pet_friendly"
+                       android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
+                       android:tooltipText="@string/venueDetailsBadge_petFriendlyTooltip" android:visibility="gone"
+                       android:contentDescription="@string/venueDetailsBadge_petFriendlyTooltip" />
+
+            <ImageView android:id="@+id/venueDetailsBadge_romanticPlace" android:src="@drawable/romantic_place"
+                       android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
+                       android:tooltipText="@string/venueDetailsBadge_romanticPlaceTooltip" android:visibility="gone"
+                       android:contentDescription="@string/venueDetailsBadge_romanticPlaceTooltip" />
+
+            <ImageView android:id="@+id/venueDetailsBadge_wheelchairFriendly" android:src="@drawable/wheelchair_friendly"
+                       android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
+                       android:tooltipText="@string/venueDetailsBadge_wheelchairFriendlyTooltip" android:visibility="gone"
+                       android:contentDescription="@string/venueDetailsBadge_wheelchairFriendlyTooltip" />
+
+            <ImageView android:id="@+id/venueDetailsBadge_noSmoking" android:src="@drawable/no_smoking"
+                       android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
+                       android:tooltipText="@string/venueDetailsBadge_noSmokingTooltip" android:visibility="gone"
+                       android:contentDescription="@string/venueDetailsBadge_noSmokingTooltip" />
 
         </LinearLayout>
 
@@ -93,7 +144,8 @@
                     android:layout_gravity="start"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/ic_venue_default_thumbnail" />
+                    android:src="@drawable/venue_default_thumbnail"
+                    android:contentDescription="@string/venue_default_thumbnail"  />
 
                 <TextView
                     android:id="@+id/venueDetails_tvFacebook"
@@ -101,7 +153,8 @@
                     android:layout_height="wrap_content"
                     android:autoLink="web"
                     android:textSize="18sp"
-                    android:text="http://www.facebook.com/kdkrastev89"/>
+                    android:text="http://www.facebook.com/kdkrastev89"
+                    />
             </LinearLayout>
 
             <LinearLayout
@@ -117,14 +170,15 @@
                     android:layout_gravity="start"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/ic_venue_default_thumbnail"/>
+                    android:src="@drawable/venue_default_thumbnail"
+                    android:contentDescription="@string/venue_default_thumbnail" />
 
                 <TextView
                     android:id="@+id/venueDetails_tvTelephone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
-                    android:text="+35988346357712"/>
+                    android:text="+34988346347712"/>
             </LinearLayout>
 
             <LinearLayout
@@ -140,7 +194,8 @@
                     android:layout_gravity="start"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/ic_venue_default_thumbnail" />
+                    android:src="@drawable/venue_default_thumbnail"
+                    android:contentDescription="@string/venue_default_thumbnail"  />
 
                 <TextView
                     android:id="@+id/venueDetails_tvAddress"
@@ -163,7 +218,8 @@
                     android:layout_gravity="start"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/ic_venue_default_thumbnail"/>
+                    android:src="@drawable/venue_default_thumbnail"
+                    android:contentDescription="@string/venue_default_thumbnail" />
 
                 <TextView
                     android:id="@+id/venueDetails_tvEmail"

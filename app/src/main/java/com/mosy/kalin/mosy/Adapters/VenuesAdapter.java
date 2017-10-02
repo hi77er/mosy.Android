@@ -88,11 +88,11 @@ public class VenuesAdapter
 
     public boolean loadVenues() {
         try {
-            this.venues = new GetVenuesAsyncTask(context).execute(new GetVenuesBindingModel()).get();
+            this.venues = new GetVenuesAsyncTask().execute(new GetVenuesBindingModel()).get();
             if (this.venues.size() > 0){
                 VenuesService vService = new VenuesService();
-                vService.downloadVenuesOutdoorImageThumbnails(venues, context);
-                vService.downloadVenuesBusinessHours(venues, context);
+                vService.downloadVenuesOutdoorImageThumbnails(venues);
+                vService.downloadVenuesBusinessHours(venues);
                 vService.calculateVenuesDistances(venues, this.deviceLocation);
                 vService.sortVenuesByDistanceToDevice(venues);
                 VenuesAdapter.super.notifyDataSetChanged();
@@ -105,10 +105,10 @@ public class VenuesAdapter
 
     public boolean findVenues(String query){
         try {
-            this.venues = new SearchVenuesAsyncTask(context).execute(new SearchVenuesBindingModel(query)).get();
+            this.venues = new SearchVenuesAsyncTask().execute(new SearchVenuesBindingModel(query)).get();
             if (this.venues.size() > 0){
                 VenuesService vService = new VenuesService();
-                vService.downloadVenuesOutdoorImageThumbnails(venues, context);
+                vService.downloadVenuesOutdoorImageThumbnails(venues);
                 vService.calculateVenuesDistances(venues, this.deviceLocation);
                 VenuesAdapter.super.notifyDataSetChanged();
             }

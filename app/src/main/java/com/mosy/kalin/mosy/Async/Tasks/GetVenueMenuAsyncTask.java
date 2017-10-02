@@ -22,12 +22,6 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
 
 public class GetVenueMenuAsyncTask extends AsyncTask<GetVenueMenuBindingModel, String, ArrayList<Brochure>> {
 
-    private Context context;
-
-    public GetVenueMenuAsyncTask(Context context) {
-        this.context = context;
-    }
-
     @Override
     protected ArrayList<Brochure> doInBackground(GetVenueMenuBindingModel... models) {
         GetVenueMenuBindingModel model = models[0];

@@ -51,10 +51,10 @@ public class VenueActivity
         Name.setText(this.Venue.Name);
         Class.setText(this.Venue.Class);
 
-        GetVenueIndoorImageThumbnailBindingModel indorImageModel = new GetVenueIndoorImageThumbnailBindingModel(this.Venue.Id);
+        GetVenueIndoorImageThumbnailBindingModel indoorImageModel = new GetVenueIndoorImageThumbnailBindingModel(this.Venue.Id);
         try {
             //INFO: TryGet Venue Image
-            VenueImage result = new GetVenueIndoorImageThumbnailAsyncTask(context).execute(indorImageModel).get();
+            VenueImage result = new GetVenueIndoorImageThumbnailAsyncTask().execute(indoorImageModel).get();
             if (result.Bytes != null) {
                 byte[] byteArray = Base64.decode(result.Bytes, Base64.DEFAULT);
                 Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
@@ -62,7 +62,7 @@ public class VenueActivity
             }
 
             GetVenueMenuBindingModel model = new GetVenueMenuBindingModel(this.Venue.Id);
-            ArrayList<Brochure> brochures = new GetVenueMenuAsyncTask(context).execute(model).get();
+            ArrayList<Brochure> brochures = new GetVenueMenuAsyncTask().execute(model).get();
 
             BrochuresAdapter adapter = new BrochuresAdapter(getSupportFragmentManager(), brochures);
             this.Menu.setAdapter(adapter);

@@ -24,12 +24,6 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
 
 public class GetVenueLocationAsyncTask extends AsyncTask<GetVenueLocationBindingModel, String, VenueLocation> {
 
-    private Context context;
-
-    public GetVenueLocationAsyncTask(Context context) {
-        this.context = context;
-    }
-
     @Override
     protected VenueLocation doInBackground(GetVenueLocationBindingModel... models) {
         GetVenueLocationBindingModel model = models[0];

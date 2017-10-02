@@ -21,12 +21,6 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
 
 public class GetVenueBusinessHoursAsyncTask extends AsyncTask<GetVenueBusinessHoursBindingModel, String, VenueBusinessHours> {
 
-    private Context context;
-
-    public GetVenueBusinessHoursAsyncTask(Context context) {
-        this.context = context;
-    }
-
     @Override
     protected VenueBusinessHours doInBackground(GetVenueBusinessHoursBindingModel... models) {
         GetVenueBusinessHoursBindingModel model = models[0];

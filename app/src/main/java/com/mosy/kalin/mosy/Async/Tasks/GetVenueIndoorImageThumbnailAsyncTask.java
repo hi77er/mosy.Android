@@ -22,12 +22,6 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
 
 public class GetVenueIndoorImageThumbnailAsyncTask extends AsyncTask<GetVenueIndoorImageThumbnailBindingModel, String, VenueImage> {
 
-    private Context context;
-
-    public GetVenueIndoorImageThumbnailAsyncTask(Context context) {
-        this.context = context;
-    }
-
     @Override
     protected VenueImage doInBackground(GetVenueIndoorImageThumbnailBindingModel... models) {
         GetVenueIndoorImageThumbnailBindingModel model = models[0];

@@ -22,11 +22,6 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
  */
 
 public class SearchVenuesAsyncTask extends AsyncTask<SearchVenuesBindingModel, String, ArrayList<Venue>> {
-    private Context context;
-
-    public SearchVenuesAsyncTask(Context context) {
-        this.context = context;
-    }
 
     @Override
     protected ArrayList<Venue> doInBackground(SearchVenuesBindingModel... models) {

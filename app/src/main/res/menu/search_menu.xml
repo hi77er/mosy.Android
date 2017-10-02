@@ -16,7 +16,7 @@
     <item
         android:orderInCategory="2"
         android:id="@+id/action_search"
-        android:icon="@drawable/ic_action_search"
+        android:icon="@drawable/search_thumbnail"
         android:title="@string/menu_search"
         app:showAsAction="always"
         app:actionViewClass="android.support.v7.widget.SearchView" />
