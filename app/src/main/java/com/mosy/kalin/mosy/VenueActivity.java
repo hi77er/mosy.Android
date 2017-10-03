@@ -11,10 +11,10 @@ import android.util.Base64;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mosy.kalin.mosy.Adapters.BrochuresAdapter;
+import com.mosy.kalin.mosy.Adapters.MenuListsAdapter;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueIndoorImageThumbnailAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueMenuAsyncTask;
-import com.mosy.kalin.mosy.DTOs.Brochure;
+import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageThumbnailBindingModel;
@@ -46,8 +46,6 @@ public class VenueActivity
 
     @AfterViews
     void updateVenueWithData() {
-        Context context = getApplicationContext();
-
         Name.setText(this.Venue.Name);
         Class.setText(this.Venue.Class);
 
@@ -62,14 +60,10 @@ public class VenueActivity
             }
 
             GetVenueMenuBindingModel model = new GetVenueMenuBindingModel(this.Venue.Id);
-            ArrayList<Brochure> brochures = new GetVenueMenuAsyncTask().execute(model).get();
+            ArrayList<MenuList> menuLists = new GetVenueMenuAsyncTask().execute(model).get();
 
-            BrochuresAdapter adapter = new BrochuresAdapter(getSupportFragmentManager(), brochures);
+            MenuListsAdapter adapter = new MenuListsAdapter(getSupportFragmentManager(), menuLists);
             this.Menu.setAdapter(adapter);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
         } catch (Exception e){
             e.printStackTrace();
         }

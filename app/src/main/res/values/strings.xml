@@ -60,5 +60,6 @@
     <string name="venueDetailsBadge_wheelchairFriendlyTooltip">Wheelchair accessible.</string>
     <string name="venueDetailsBadge_noSmokingTooltip">No smoking allowed.</string>
     <string name="venue_default_thumbnail">venueDefaultThumbnailContentDescripion</string>
+    <string name="dishDetails_ivIcon">Default Dish Icon</string>
 
 </resources>

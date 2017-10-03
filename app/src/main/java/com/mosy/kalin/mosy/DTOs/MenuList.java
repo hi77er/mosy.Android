@@ -4,13 +4,12 @@ import com.google.gson.annotations.SerializedName;
 import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by kkras on 8/10/2017.
  */
 
-public class Brochure extends ResultBase {
+public class MenuList extends ResultBase {
 
     @SerializedName("Id")
     public String Id;
@@ -29,6 +28,6 @@ public class Brochure extends ResultBase {
 
     //Collections
     @SerializedName("Requestables")
-    public ArrayList<Requestable> Requestables;
+    public ArrayList<MenuListItem> menuListItems;
 
 }

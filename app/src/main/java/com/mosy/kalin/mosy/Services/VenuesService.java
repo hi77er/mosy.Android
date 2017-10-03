@@ -62,8 +62,7 @@ public class VenuesService {
                 GetVenueOutdoorImageThumbnailBindingModel outdoorImageModel = new GetVenueOutdoorImageThumbnailBindingModel(venue.Id);
                 VenueImage outdoorImage = new GetVenueOutdoorImageThumbnailAsyncTask().execute(outdoorImageModel).get();
 
-                if (outdoorImage.Bytes != null) venue.OutdoorImage = outdoorImage;
-                else venue.OutdoorImage = null;
+                venue.OutdoorImage = (outdoorImage != null && outdoorImage.Bytes != null) ? outdoorImage : null;
             }
         } catch (Exception e) {
             e.printStackTrace();

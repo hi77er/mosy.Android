@@ -31,7 +31,7 @@ public class GetVenueOutdoorImageThumbnailAsyncTask extends AsyncTask<GetVenueOu
         try {
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-            NameValuePair param1 = new BasicNameValuePair("Id", model.VenueId);
+            NameValuePair param1 = new BasicNameValuePair("id", model.VenueId);
             params.add(param1);
             imageResult = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueImage>(){}.getType(), StringHelper.empty());
         } catch(Exception e) {

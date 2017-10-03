@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.BrochureFragment_"
+    tools:context=".Fragments.MenuListFragment_"
     android:background="@color/colorMenuBackground"
     android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:id="@+id/brochure_tvName"
+        android:id="@+id/menuList_tvName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
@@ -22,7 +22,7 @@
         android:textStyle="bold"
         android:textColor="@color/colorMenuTitle" />
 
-    <ExpandableListView android:id="@+id/brochure_lvRequestables"
+    <ExpandableListView android:id="@+id/menuList_lvItems"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

@@ -1,10 +1,9 @@
 package com.mosy.kalin.mosy.Async.Tasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.google.gson.reflect.TypeToken;
-import com.mosy.kalin.mosy.DTOs.Brochure;
+import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
@@ -20,23 +19,23 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
  * Created by kkras on 8/10/2017.
  */
 
-public class GetVenueMenuAsyncTask extends AsyncTask<GetVenueMenuBindingModel, String, ArrayList<Brochure>> {
+public class GetVenueMenuAsyncTask extends AsyncTask<GetVenueMenuBindingModel, String, ArrayList<MenuList>> {
 
     @Override
-    protected ArrayList<Brochure> doInBackground(GetVenueMenuBindingModel... models) {
+    protected ArrayList<MenuList> doInBackground(GetVenueMenuBindingModel... models) {
         GetVenueMenuBindingModel model = models[0];
         String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint("Brochure/ByFBOIdWithRequestablesWithIngredients");
-        ArrayList<Brochure> brochuresResult = new ArrayList<Brochure>();
+        ArrayList<MenuList> brochuresResult = new ArrayList<MenuList>();
 
         try {
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             NameValuePair param1 = new BasicNameValuePair("Id", model.VenueId);
             params.add(param1);
-            brochuresResult = jsonHttpClient.Get(endpoint, params, new TypeToken<ArrayList<Brochure>>(){}.getType(), StringHelper.empty());
+            brochuresResult = jsonHttpClient.Get(endpoint, params, new TypeToken<ArrayList<MenuList>>(){}.getType(), StringHelper.empty());
         } catch(Exception e) {
             e.printStackTrace();
-            Brochure errResult = new Brochure();
+            MenuList errResult = new MenuList();
             errResult.ErrorMessage = e.getMessage();
             brochuresResult.add(errResult);
             errResult.ErrorMessage = e.getMessage();
@@ -46,7 +45,7 @@ public class GetVenueMenuAsyncTask extends AsyncTask<GetVenueMenuBindingModel, S
     }
 
     @Override
-    protected void onPostExecute(final ArrayList<Brochure> result) {
+    protected void onPostExecute(final ArrayList<MenuList> result) {
         super.onPostExecute(result);
     }
 }

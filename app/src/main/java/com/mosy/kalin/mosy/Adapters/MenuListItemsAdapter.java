@@ -5,13 +5,12 @@ import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
-import android.widget.Toast;
 
-import com.mosy.kalin.mosy.DTOs.Requestable;
-import com.mosy.kalin.mosy.Views.RequestableItemDetailsView;
-import com.mosy.kalin.mosy.Views.RequestableItemDetailsView_;
-import com.mosy.kalin.mosy.Views.RequestableItemView;
-import com.mosy.kalin.mosy.Views.RequestableItemView_;
+import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.Views.MenuListItemDetailsView;
+import com.mosy.kalin.mosy.Views.MenuListItemDetailsView_;
+import com.mosy.kalin.mosy.Views.MenuListItemView;
+import com.mosy.kalin.mosy.Views.MenuListItemView_;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
@@ -24,19 +23,19 @@ import java.util.HashMap;
  */
 
 @EBean
-public class RequestablesAdapter
+public class MenuListItemsAdapter
         implements ExpandableListAdapter {
 
-    ArrayList<Requestable> Requestables;
-    public void setRequestables(ArrayList<Requestable> requestables){
-        this.Requestables = requestables;
-        this.setDetails(this.Requestables);
+    ArrayList<MenuListItem> menuListItems;
+    public void setMenuListItems(ArrayList<MenuListItem> menuListItems){
+        this.menuListItems = menuListItems;
+        this.setDetails(this.menuListItems);
     }
 
-    HashMap<String, Requestable> Details;
-    public void setDetails(ArrayList<Requestable> requestables){
+    HashMap<String, MenuListItem> Details;
+    public void setDetails(ArrayList<MenuListItem> menuListItems){
         this.Details = new HashMap<>();
-        for (Requestable req: requestables)
+        for (MenuListItem req: menuListItems)
             this.Details.put(req.Name, req);
     }
 
@@ -45,7 +44,7 @@ public class RequestablesAdapter
 
     @Override
     public Object getChild(int listPosition, int expandedListPosition) {
-        return this.Requestables.get(listPosition);
+        return this.menuListItems.get(listPosition);
     }
 
     @Override
@@ -55,28 +54,28 @@ public class RequestablesAdapter
 
     @Override
     public View getChildView(int listPosition, int expandedListPosition, boolean b, View convertView, ViewGroup viewGroup) {
-        RequestableItemDetailsView requestableItemDetailsView = null;
+        MenuListItemDetailsView menuListItemDetailsView = null;
         if (convertView == null)
-            requestableItemDetailsView = RequestableItemDetailsView_.build(context);
+            menuListItemDetailsView = MenuListItemDetailsView_.build(context);
         else
-            requestableItemDetailsView = (RequestableItemDetailsView) convertView;
+            menuListItemDetailsView = (MenuListItemDetailsView) convertView;
 
-        Requestable requestable = this.Requestables.get(listPosition);
-        requestableItemDetailsView.bind(requestable);
+        MenuListItem menuListItem = this.menuListItems.get(listPosition);
+        menuListItemDetailsView.bind(menuListItem);
 
-        return requestableItemDetailsView;
+        return menuListItemDetailsView;
     }
 
     @Override
     public int getChildrenCount(int i) {
-        if (this.Requestables.get(i).Ingredients.size() < 1)
+        if (this.menuListItems.get(i).Ingredients.size() < 1)
             return 0;
         return 1;
     }
 
     @Override
     public Object getGroup(int listPosition) {
-        return this.Requestables.get(listPosition).Name;
+        return this.menuListItems.get(listPosition).Name;
     }
 
     @Override
@@ -91,7 +90,7 @@ public class RequestablesAdapter
 
     @Override
     public int getGroupCount() {
-        return this.Requestables.size();
+        return this.menuListItems.size();
     }
 
     @Override
@@ -101,16 +100,16 @@ public class RequestablesAdapter
 
     @Override
     public View getGroupView(int listPosition, boolean isExpanded, View convertView, ViewGroup viewGroup) {
-        RequestableItemView requestableItemView = null;
+        MenuListItemView menuListItemView = null;
         if (convertView == null)
-            requestableItemView = RequestableItemView_.build(context);
+            menuListItemView = MenuListItemView_.build(context);
         else
-            requestableItemView = (RequestableItemView) convertView;
+            menuListItemView = (MenuListItemView) convertView;
 
-        Requestable requestable = this.Requestables.get(listPosition);
-        requestableItemView.bind(requestable);
+        MenuListItem menuListItem = this.menuListItems.get(listPosition);
+        menuListItemView.bind(menuListItem);
 
-        return requestableItemView;
+        return menuListItemView;
     }
 
     @Override

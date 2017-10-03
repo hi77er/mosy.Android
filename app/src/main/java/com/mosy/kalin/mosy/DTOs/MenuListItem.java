@@ -6,14 +6,13 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
  * Created by kkras on 8/10/2017.
  */
 
-public class Requestable
+public class MenuListItem
         extends ResultBase
         implements Parcelable {
 
@@ -33,12 +32,12 @@ public class Requestable
     public int PreparationEstimateSeconds;
 //
 //    @SerializedName("RequestableIngredients")
-//    public ArrayList<RequestableIngredient> RequestableIngredients;
+//    public ArrayList<MenuListItemIngredient> RequestableIngredients;
 
     @SerializedName("Ingredients")
     public ArrayList<Ingredient> Ingredients;
 
-    protected Requestable(Parcel in) {
+    protected MenuListItem(Parcel in) {
         String[] data = new String[4];
 
         in.readStringArray(data);
@@ -53,15 +52,15 @@ public class Requestable
 
     }
 
-    public static final Creator<Requestable> CREATOR = new Creator<Requestable>() {
+    public static final Creator<MenuListItem> CREATOR = new Creator<MenuListItem>() {
         @Override
-        public Requestable createFromParcel(Parcel in) {
-            return new Requestable(in);
+        public MenuListItem createFromParcel(Parcel in) {
+            return new MenuListItem(in);
         }
 
         @Override
-        public Requestable[] newArray(int size) {
-            return new Requestable[size];
+        public MenuListItem[] newArray(int size) {
+            return new MenuListItem[size];
         }
     };
 

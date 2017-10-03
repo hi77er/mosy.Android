@@ -79,7 +79,7 @@ public class VenuesAdapter
     }
     @Override
     public Venue getItem(int position) {
-        return (Venue) venues.get(position);
+        return venues.get(position);
     }
     @Override
     public long getItemId(int position) {

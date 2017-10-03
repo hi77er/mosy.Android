@@ -10,7 +10,7 @@ import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
  * Created by kkras on 8/22/2017.
  */
 
-public class RequestableIngredient
+public class MenuListItemIngredient
         extends ResultBase
         implements Parcelable {
 
@@ -24,7 +24,7 @@ public class RequestableIngredient
     public boolean Removable;
 
 
-    protected RequestableIngredient(Parcel in) {
+    protected MenuListItemIngredient(Parcel in) {
         String[] data = new String[4];
 
         in.readStringArray(data);
@@ -34,15 +34,15 @@ public class RequestableIngredient
         this.Removable = Boolean.parseBoolean(data[2]);
     }
 
-    public static final Creator<RequestableIngredient> CREATOR = new Creator<RequestableIngredient>() {
+    public static final Creator<MenuListItemIngredient> CREATOR = new Creator<MenuListItemIngredient>() {
         @Override
-        public RequestableIngredient createFromParcel(Parcel in) {
-            return new RequestableIngredient(in);
+        public MenuListItemIngredient createFromParcel(Parcel in) {
+            return new MenuListItemIngredient(in);
         }
 
         @Override
-        public RequestableIngredient[] newArray(int size) {
-            return new RequestableIngredient[size];
+        public MenuListItemIngredient[] newArray(int size) {
+            return new MenuListItemIngredient[size];
         }
     };
 

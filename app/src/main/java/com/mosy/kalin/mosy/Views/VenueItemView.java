@@ -16,16 +16,11 @@ import com.mosy.kalin.mosy.Helpers.BusinessHoursHelper;
 import com.mosy.kalin.mosy.Helpers.LocationHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.R;
-import com.mosy.kalin.mosy.Services.VenuesService;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
-
-/**
- * Created by kkras on 8/3/2017.
- */
 
 @EViewGroup(R.layout.activity_item_venue)
 public class VenueItemView
@@ -58,9 +53,6 @@ public class VenueItemView
         this.Class.setText(venue.Class);
 
         if (venue.BusinessHours != null) {
-            if (venue.Name.equals("The Godfather")) {
-                String asda ="";
-            }
             String sinceUntil = BusinessHoursHelper.buildBusinessHoursText(venue.BusinessHours);
             this.OpenedSinceUntil.setText(sinceUntil);
             if (sinceUntil.equals(StringHelper.empty()))
@@ -98,12 +90,14 @@ public class VenueItemView
             nagDialog.setContentView(R.layout.image_preview_dialog);
 
             VenueImage image = this.VenuesService.downloadVenueOutdoorImage(this.VenueId);
-            byte[] byteArray = Base64.decode(image.Bytes, Base64.DEFAULT);
-            Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            if (image.Bytes != null) {
+                byte[] byteArray = Base64.decode(image.Bytes, Base64.DEFAULT);
+                Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
-            ImageView ivPreview = (ImageView)nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
-            ivPreview.setImageBitmap(bmp);
-            nagDialog.show();
+                ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
+                ivPreview.setImageBitmap(bmp);
+                nagDialog.show();
+            }
         }
     }
 

@@ -47,9 +47,9 @@ public class Venue
 //    public FBOStatusMessage LastFBOStatusMessage;
 //
 //    public List<FBOStatusMessage> StatusMessages;
-//    public List<Brochure> Brochures;
+//    public List<MenuList> Brochures;
 //    public List<FBOTable> Tables;
-//    public UnassignedBrochures As IEnumerable(Of Brochure)
+//    public UnassignedBrochures As IEnumerable(Of MenuList)
 //    public List<FBOVisit> Visits;
 //    public List<FBORate> Rates;
 //    public List<FBOContact> Contacts;
