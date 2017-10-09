@@ -56,16 +56,16 @@ public class BusinessHoursHelper {
             Date threeHoursFromOpening = DateHelper.addHours(from, 3);
             Date threeHoursBeforeClosing = DateHelper.addHours(from, 3);
             if (currentTime.before(threeHoursFromOpening))
-                outputText = " - Opened since " + DateHelper.printDifference(currentTime, from);
+                outputText = "Opened since " + DateHelper.printDifference(currentTime, from);
             else if(currentTime.after(threeHoursBeforeClosing))
-                outputText = " - Closes after " + DateHelper.printDifference(currentTime, to);
+                outputText = "Closes after " + DateHelper.printDifference(currentTime, to);
             else
-                outputText = " - Opened";
+                outputText = "Opened";
         }
         else if (currentTime.before(from))
-            outputText = " - Opens after " + DateHelper.printDifference(currentTime, from);
+            outputText = "Opens after " + DateHelper.printDifference(currentTime, from);
         else if (currentTime.after(to))
-            outputText = " - Closed since " + DateHelper.printDifference(currentTime, from);
+            outputText = "Closed since " + DateHelper.printDifference(currentTime, from);
 
         return outputText;
     }

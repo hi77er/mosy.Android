@@ -38,6 +38,7 @@ import org.androidannotations.annotations.FragmentById;
 import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.ViewById;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 @EActivity(R.layout.activity_venue_details)
@@ -200,6 +201,7 @@ public class VenueDetailsActivity
     }
 
     private void populateBusinessHours(VenueBusinessHours businessHours) {
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
         if (businessHours != null // and a single day has business hours set ->
             && (businessHours.IsMondayDayOff || businessHours.IsTuesdayDayOff || businessHours.IsWednesdayDayOff ||
                 businessHours.IsThursdayDayOff || businessHours.IsFridayDayOff || businessHours.IsSaturdayDayOff ||
@@ -210,26 +212,26 @@ public class VenueDetailsActivity
                 || businessHours.SaturdayTo != null || businessHours.SundayFrom != null || businessHours.SundayTo != null)) {
 
             String d1 = businessHours.IsMondayDayOff ? "Day Off" :
-                    ((businessHours.MondayFrom != null ? DateHelper.GetTime(businessHours.MondayFrom) : StringHelper.empty()) + " - " +
-                     (businessHours.MondayTo != null ? DateHelper.GetTime(businessHours.MondayTo) : StringHelper.empty()));
+                    ((businessHours.MondayFrom != null ? DateHelper.ToString(businessHours.MondayFrom, formatter) : StringHelper.empty()) + " - " +
+                     (businessHours.MondayTo != null ? DateHelper.ToString(businessHours.MondayTo, formatter) : StringHelper.empty()));
             String d2 = businessHours.IsTuesdayDayOff ? "Day Off" :
-                    ((businessHours.TuesdayFrom != null ? DateHelper.GetTime(businessHours.TuesdayFrom) : StringHelper.empty()) + " - " +
-                     (businessHours.TuesdayTo != null ? DateHelper.GetTime(businessHours.TuesdayTo) : StringHelper.empty()));
+                    ((businessHours.TuesdayFrom != null ? DateHelper.ToString(businessHours.TuesdayFrom, formatter) : StringHelper.empty()) + " - " +
+                     (businessHours.TuesdayTo != null ? DateHelper.ToString(businessHours.TuesdayTo, formatter) : StringHelper.empty()));
             String d3 = businessHours.IsWednesdayDayOff ? "Day Off" :
-                    ((businessHours.WednesdayFrom != null ? DateHelper.GetTime(businessHours.WednesdayFrom) : StringHelper.empty())+ " - " +
-                     (businessHours.WednesdayTo != null ? DateHelper.GetTime(businessHours.WednesdayTo) : StringHelper.empty()));
+                    ((businessHours.WednesdayFrom != null ? DateHelper.ToString(businessHours.WednesdayFrom, formatter) : StringHelper.empty())+ " - " +
+                     (businessHours.WednesdayTo != null ? DateHelper.ToString(businessHours.WednesdayTo, formatter) : StringHelper.empty()));
             String d4 = businessHours.IsThursdayDayOff ? "Day Off" :
-                    ((businessHours.ThursdayFrom != null ? DateHelper.GetTime(businessHours.ThursdayFrom) : StringHelper.empty()) + " - " +
-                     (businessHours.ThursdayTo != null ? DateHelper.GetTime(businessHours.ThursdayTo) : StringHelper.empty()));
+                    ((businessHours.ThursdayFrom != null ? DateHelper.ToString(businessHours.ThursdayFrom, formatter) : StringHelper.empty()) + " - " +
+                     (businessHours.ThursdayTo != null ? DateHelper.ToString(businessHours.ThursdayTo, formatter) : StringHelper.empty()));
             String d5 = businessHours.IsFridayDayOff ? "Day Off" :
-                    ((businessHours.FridayFrom != null ? DateHelper.GetTime(businessHours.FridayFrom) : StringHelper.empty()) + " - " +
-                     (businessHours.FridayTo != null ? DateHelper.GetTime(businessHours.FridayTo) : StringHelper.empty()));
+                    ((businessHours.FridayFrom != null ? DateHelper.ToString(businessHours.FridayFrom, formatter) : StringHelper.empty()) + " - " +
+                     (businessHours.FridayTo != null ? DateHelper.ToString(businessHours.FridayTo, formatter) : StringHelper.empty()));
             String d6 = businessHours.IsSaturdayDayOff ? "Day Off" :
-                    ((businessHours.SaturdayFrom != null ? DateHelper.GetTime(businessHours.SaturdayFrom) : StringHelper.empty())+ " - " +
-                     (businessHours.SaturdayTo != null ? DateHelper.GetTime(businessHours.SaturdayTo) : StringHelper.empty()));
+                    ((businessHours.SaturdayFrom != null ? DateHelper.ToString(businessHours.SaturdayFrom, formatter) : StringHelper.empty())+ " - " +
+                     (businessHours.SaturdayTo != null ? DateHelper.ToString(businessHours.SaturdayTo, formatter) : StringHelper.empty()));
             String d7 = businessHours.IsSundayDayOff ? "Day Off" :
-                    ((businessHours.SundayFrom != null ? DateHelper.GetTime(businessHours.SundayFrom) : StringHelper.empty())+ " - " +
-                     (businessHours.SundayTo != null ? DateHelper.GetTime(businessHours.SundayTo) : StringHelper.empty()));
+                    ((businessHours.SundayFrom != null ? DateHelper.ToString(businessHours.SundayFrom, formatter) : StringHelper.empty())+ " - " +
+                     (businessHours.SundayTo != null ? DateHelper.ToString(businessHours.SundayTo, formatter) : StringHelper.empty()));
 
             this.Monday.setText(d1);
             this.Tuesday.setText(d2);

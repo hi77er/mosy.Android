@@ -12,8 +12,7 @@ import java.util.Date;
 public class DateHelper {
 
     public static String ToString(Date date, SimpleDateFormat formatter){
-        SimpleDateFormat df = (formatter == null ? formatter : new SimpleDateFormat("MM/dd/yyyy HH:mm:ss"));
-        return df.format(date != null ? date : StringHelper.empty());
+        return formatter.format(date != null ? date : StringHelper.empty());
     }
 
     public static String GetTime(Date date){
