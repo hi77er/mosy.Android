@@ -22,14 +22,17 @@ import com.mosy.kalin.mosy.Models.Interfaces.IServiceEndpointFactory;
  */
 public class ServiceEndpointFactory implements IServiceEndpointFactory {
 
-    private static final String devEndpoint = "http://10.0.2.2:8080/api/"; // Use when debugging on Emulator
-    private static final String devTokenEndpoint = "http://10.0.2.2:8080/token"; // Use when debugging on Emulator
+//    // DEV EMULATOR endpoints
+//    private static final String apiEndpoint = "http://10.0.2.2:8080/api/"; // Use when debugging on Emulator
+//    private static final String apiTokenEndpoint = "http://10.0.2.2:8080/token"; // Use when debugging on Emulator
 
-//    private static final String devEndpoint = "http://192.168.1.10:8080/api"; // When debugging on actual Device
-//    private static final String devTokenEndpoint = "http://192.168.1.10:8080/token"; // When debugging on actual Device
+//    // DEV DEVICE endpoints
+//    private static final String apiEndpoint = "http://192.168.1.10:8080/api"; // When debugging on actual Device
+//    private static final String apiTokenEndpoint = "http://192.168.1.10:8080/token"; // When debugging on actual Device
 
-//    private static final String publicEndpoint = "http://mosyws/api";
-//    private static final String publicTokenEndpoint = "http://mosyws/token";
+    // PUBLIC endpoints
+    private static final String apiEndpoint = "http://mosyws.azurewebsites.net/api";
+    private static final String apiTokenEndpoint = "http://mosyws.azurewebsites.net/token";
 
 //    @Override
 //    public String getMosyWebAPIPublicEndpoint(String action) { return publicEndpoint + action; }
@@ -39,10 +42,10 @@ public class ServiceEndpointFactory implements IServiceEndpointFactory {
 
     @Override
     public String getMosyWebAPIDevEndpoint(String action) {
-        return devEndpoint + action;
+        return apiEndpoint + action;
     }
     @Override
-    public String getMosyWebAPIDevTokenEndpoint() { return devTokenEndpoint; }
+    public String getMosyWebAPIDevTokenEndpoint() { return apiTokenEndpoint; }
 
 
 
