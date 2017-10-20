@@ -27,11 +27,11 @@ public class ServiceEndpointFactory implements IServiceEndpointFactory {
 //    private static final String apiTokenEndpoint = "http://10.0.2.2:8080/token"; // Use when debugging on Emulator
 
 //    // DEV DEVICE endpoints
-//    private static final String apiEndpoint = "http://192.168.1.10:8080/api"; // When debugging on actual Device
+//    private static final String apiEndpoint = "http://192.168.1.10:8080/api/"; // When debugging on actual Device
 //    private static final String apiTokenEndpoint = "http://192.168.1.10:8080/token"; // When debugging on actual Device
 
     // PUBLIC endpoints
-    private static final String apiEndpoint = "http://mosyws.azurewebsites.net/api";
+    private static final String apiEndpoint = "http://mosyws.azurewebsites.net/api/";
     private static final String apiTokenEndpoint = "http://mosyws.azurewebsites.net/token";
 
 //    @Override
