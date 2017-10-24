@@ -29,7 +29,6 @@ import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 
-
 @EActivity(R.layout.activity_venues)
 @OptionsMenu(R.menu.search_menu)
 public class VenuesActivity

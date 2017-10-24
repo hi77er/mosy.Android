@@ -40,7 +40,8 @@
     <string name="requestable_item_name">Requestable Name</string>
     <string name="requestable_btnAddToOrder">+ order</string>
     <string name="title_activity_venue_details">VenueDetailsActivity</string>
-    <string name="search_hint">Search venues and dishes ..</string>
+    <string name="search_venues_hint">Search venues…</string>
+    <string name="search_dishes_hint">Search dishes…</string>
     <string name="menu_search">Search</string>
     <string name="venueDetails_mondayHours">Monday</string>
     <string name="venueDetails_tuesdayHours">Tuesday</string>
@@ -61,5 +62,7 @@
     <string name="venueDetailsBadge_noSmokingTooltip">No smoking allowed.</string>
     <string name="venue_default_thumbnail">venueDefaultThumbnailContentDescripion</string>
     <string name="dishDetails_ivIcon">Default Dish Icon</string>
+    <string name="title_dishes_activity">Dishes</string>
+    <string name="title_activity_landing">mosy</string>
 
 </resources>
