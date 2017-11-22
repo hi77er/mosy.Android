@@ -47,16 +47,17 @@ public class StringHelper {
     }
 
     public static String join(String separator, List<String> mList) {
-        StringBuilder sb = new StringBuilder();
+        if (mList.size() <= 0) return StringHelper.empty();
+        StringBuilder builder = new StringBuilder();
         int count = 0;
+        int elementsCount = mList.size();
 
-        for (String m: mList) {
-            sb.append(m);
+        for (String item: mList) {
+            builder.append(item);
             count++;
-            if (count < mList.size())
-                sb.append(separator);
+            if (count < elementsCount) builder.append(separator);
         }
-        return sb.toString();
+        return builder.toString();
     }
 
     public static String empty() {

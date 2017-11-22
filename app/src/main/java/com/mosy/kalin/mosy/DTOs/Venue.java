@@ -7,9 +7,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-/**
- * Created by User on 7/6/2016.
- */
 // Implements Serializable in order to be passed between activities.
 public class Venue
         extends ResultBase
@@ -30,9 +27,10 @@ public class Venue
     @SerializedName("FBOLocation")
     public VenueLocation Location;
 
-    @SerializedName("FBOBusinessHour")
-    public VenueBusinessHours BusinessHours;
+//    @SerializedName("BusinessHours")
+    public VenueBusinessHours VenueBusinessHours;
 
+    @SerializedName("OutdoorImageMeta")
     public VenueImage OutdoorImage;
 
     public BigDecimal Rating;

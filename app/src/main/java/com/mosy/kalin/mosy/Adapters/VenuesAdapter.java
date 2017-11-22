@@ -45,7 +45,7 @@ public class VenuesAdapter
         if (layout != null) {
             this.swipeContainer = layout;
             // Configure the refreshing colors
-            this.swipeContainer.setColorSchemeResources(
+            this.swipeContainer.setColorScheme(
                     android.R.color.holo_blue_bright,
                     android.R.color.holo_green_light,
                     android.R.color.holo_orange_light,
@@ -61,8 +61,9 @@ public class VenuesAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         VenueItemView venueItemView = null;
-        if (convertView == null)
+        if (convertView == null) {
             venueItemView = VenueItemView_.build(context);
+        }
         else
             venueItemView = (VenueItemView) convertView;
 
@@ -86,13 +87,18 @@ public class VenuesAdapter
         return position;
     }
 
-    public boolean loadVenues() {
+    public void loadVenues() {
+        boolean venuesFound = false;
         try {
             this.venues = new GetVenuesAsyncTask().execute(new GetVenuesBindingModel()).get();
-            if (this.venues.size() > 0){
+            boolean isNotNull = this.venues != null;
+            boolean firstVenueHasItem = this.venues.get(0) != null;
+            boolean hasNotErrorMessage = firstVenueHasItem && this.venues.get(0).ErrorMessage == null;
+            boolean hasElements = this.venues.size() > 0;
+
+            venuesFound = isNotNull && hasElements && hasNotErrorMessage;
+            if (venuesFound) {
                 VenuesService vService = new VenuesService();
-                vService.downloadVenuesOutdoorImageThumbnails(venues);
-                vService.downloadVenuesBusinessHours(venues);
                 vService.calculateVenuesDistances(venues, this.deviceLocation);
                 vService.sortVenuesByDistanceToDevice(venues);
                 VenuesAdapter.super.notifyDataSetChanged();
@@ -100,7 +106,6 @@ public class VenuesAdapter
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return this.venues.size() > 0;
     }
 
     public boolean findVenues(String query){
@@ -108,7 +113,7 @@ public class VenuesAdapter
             this.venues = new SearchVenuesAsyncTask().execute(new SearchVenuesBindingModel(query)).get();
             if (this.venues.size() > 0){
                 VenuesService vService = new VenuesService();
-                vService.downloadVenuesOutdoorImageThumbnails(venues);
+                vService.downloadVenuesOutdoorImageThumbnailsMeta(venues);
                 vService.calculateVenuesDistances(venues, this.deviceLocation);
                 VenuesAdapter.super.notifyDataSetChanged();
             }

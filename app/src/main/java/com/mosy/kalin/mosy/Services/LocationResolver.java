@@ -1,12 +1,9 @@
 package com.mosy.kalin.mosy.Services;
 
-/**
- * Created by kkras on 8/17/2017.
- */
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -18,8 +15,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -30,11 +29,6 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
-
-
-import org.androidannotations.annotations.EBean;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -52,7 +46,8 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
     private OnLocationResolved mOnLocationResolved;
     private Activity mActivity;
 
-    private SweetAlertDialog mDialog; //Location permission Dialog
+    private AlertDialog alertDialog; //Location permission Dialog
+
 
     public LocationResolver(Activity activity){
         mActivity=activity;
@@ -92,8 +87,9 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
 
     /* This function checks if location permissions are granted or not */
     public boolean isLocationPermissionEnabled() {
-        int fineLocationPermission = mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-        int coarseLocationPermission = mActivity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
+        int fineLocationPermission = ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION);
+        int coarseLocationPermission = ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION);
+        //mActivity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION); // min API 23
 
         return (fineLocationPermission == PackageManager.PERMISSION_GRANTED &&
                 coarseLocationPermission == PackageManager.PERMISSION_GRANTED);
@@ -102,7 +98,6 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
     /* Previous location permissions were denied , this function opens app settings page
     *  So user can enable permission manually */
     private void startAppDetailsActivity() {
-
         final Intent i = new Intent();
         i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         i.addCategory(Intent.CATEGORY_DEFAULT);
@@ -112,27 +107,24 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
     }
 
     private void showLocationSettingsDialog() {
-        SweetAlertDialog builder = new SweetAlertDialog(mActivity, SweetAlertDialog.WARNING_TYPE);
-        builder.setTitleText("Need Location");
-        builder.setContentText("In order for the app to work seamlessly.Please  enable Location Service.");
-        builder.setConfirmText("Enable");
-        builder.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog dialog) {
-                dialog.cancel();
-                startLocationSettings();
-            }
-        });
-        builder.setCancelText("Cancel");
-        builder.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog dialog) {
-                dialog.cancel();
+        if (alertDialog != null) alertDialog.cancel();
 
-            }
-        });
-
-        builder.show();
+        alertDialog = new AlertDialog.Builder(mActivity, android.R.style.Theme_Material_Dialog_Alert)
+                .setTitle("Need Location")
+                .setMessage("In order for the app to work seamlessly.Please  enable Location Service.")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        startLocationSettings();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     private void startLocationSettings() {
@@ -147,10 +139,8 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     startLocationPooling();
                 } else {
-                    if (mActivity.shouldShowRequestPermissionRationale(
-                            Manifest.permission.ACCESS_FINE_LOCATION) &&
-                        mActivity.shouldShowRequestPermissionRationale(
-                            Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) &&
+                        ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION)) {
                         showPermissionRequestDialog();
                     } else {
                         showPermissionDeniedDialog();
@@ -164,8 +154,8 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
     * Starting location pooling
     * */
     public void startLocationPooling() {
-        if (mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            mActivity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
@@ -193,9 +183,8 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
     }
 
     public void onStop() {
-        if (mDialog != null) {
-            mDialog.cancel();
-        }
+        if (alertDialog != null) alertDialog.cancel();
+
         stopLocationUpdates();
         mGoogleApiClient.disconnect();
     }
@@ -220,8 +209,7 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
         try {
             ConnectivityManager cm = (ConnectivityManager) mActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo netInfo = cm.getActiveNetworkInfo();
-            boolean isConnected = netInfo != null && netInfo.isConnected();
-            return isConnected;
+            return netInfo != null && netInfo.isConnected();
         } catch (Exception e) {
             return false;
         }
@@ -254,7 +242,7 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         if (connectionResult.hasResolution()) {
             try {
                 // Start an Activity that tries to resolve the error
@@ -334,8 +322,8 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
             if (!isGPSEnabled && !isNetworkEnabled) {
                 Log.e("Location", "No provider enabled");
             } else {
-                if (mActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    mActivity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
                     return;
@@ -396,31 +384,27 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
 
 
     private void showWifiSettingsDialog(final Context context) {
-        SweetAlertDialog builder = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);
-        builder.setTitleText("Need Internet");
-        builder.setContentText("Please enable your internet connection");
+        if (alertDialog != null) alertDialog.cancel();
 
-        builder.setConfirmText("Enable");
-        builder.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog dialog) {
-                dialog.cancel();
-                startWifiSettings(context);
-            }
-        });
-        builder.setCancelText("Cancel");
-        builder.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog dialog) {
-                dialog.cancel();
-
-            }
-        });
-
-        builder.show();
+        alertDialog = new AlertDialog.Builder(mActivity, android.R.style.Theme_Material_Dialog_Alert)
+            .setTitle("Need Internet")
+            .setMessage("Please enable your internet connection")
+            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                    startWifiSettings(context);
+                }
+            })
+            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            })
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show();
     }
 
-    private   void startWifiSettings(Context context) {
+    private void startWifiSettings(Context context) {
         try {
             context.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
         } catch (Exception e) {
@@ -449,63 +433,51 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
         }
     }
 
-
     /* location permissions were denied with "do not show"  unchecked.. this function shows a dialog describing why this app
     *  need location permission. */
     private void showPermissionRequestDialog() {
-        if (mDialog != null)
-            mDialog.cancel();
-        mDialog = new SweetAlertDialog(mActivity, SweetAlertDialog.NORMAL_TYPE);
-        mDialog.setTitleText("You need location permission");
-        mDialog.setContentText("Enable location permission");
-        mDialog.setConfirmText("grant");
-        mDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog dialog) {
-                dialog.cancel();
-                mActivity.requestPermissions(
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        REQUEST_LOCATION);
-            }
-        });
-        mDialog.setCancelText("Cancel");
-        mDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog dialog) {
-                dialog.cancel();
-            }
-        });
-        mDialog.show();
+        if (alertDialog != null) alertDialog.cancel();
+
+        alertDialog = new AlertDialog.Builder(mActivity, android.R.style.Theme_Material_Dialog_Alert)
+            .setTitle("You need location permission")
+            .setMessage("Enable location permission")
+            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                    ActivityCompat.requestPermissions(mActivity,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+                }
+            })
+            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            })
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show();
     }
 
     /*  Previously Permission Request was cancelled with 'Dont Ask Again',
     *   Redirect to Settings after showing Information about why you need the permission */
     private void showPermissionDeniedDialog() {
-        if (mDialog != null)
-            mDialog.cancel();
-        mDialog = new SweetAlertDialog(mActivity, SweetAlertDialog.NORMAL_TYPE);
-        mDialog.setTitleText("Need Location Permission");
+        if (alertDialog != null) alertDialog.cancel();
 
-
-        mDialog.setContentText("Enable location permission");
-        mDialog.setConfirmText("grant");
-        mDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog dialog) {
-                dialog.cancel();
-                startAppDetailsActivity();
-            }
-        });
-        mDialog.setCancelText("Cancel");
-        mDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog dialog) {
-                dialog.cancel();
-
-            }
-        });
-
-        mDialog.show();
+        alertDialog = new AlertDialog.Builder(mActivity, android.R.style.Theme_Material_Dialog_Alert)
+            .setTitle("Need Location Permission")
+            .setMessage("Enable location permission")
+            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                    startAppDetailsActivity();
+                }
+            })
+            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            })
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show();
     }
 
 }

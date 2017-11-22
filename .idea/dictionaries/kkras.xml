@@ -2,15 +2,20 @@
   <dictionary name="kkras">
     <words>
       <w>donalds</w>
+      <w>fboalbums</w>
+      <w>foodoo</w>
       <w>kalin</w>
       <w>lovin</w>
       <w>mapwithmarker</w>
       <w>mosy</w>
+      <w>mosylogs</w>
+      <w>mosystorage</w>
       <w>mosyws</w>
       <w>raffy</w>
       <w>requestable</w>
       <w>requestables</w>
       <w>textview</w>
+      <w>userimages</w>
     </words>
   </dictionary>
 </component>

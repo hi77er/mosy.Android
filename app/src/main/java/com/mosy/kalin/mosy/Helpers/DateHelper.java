@@ -1,22 +1,43 @@
 package com.mosy.kalin.mosy.Helpers;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-/**
- * Created by kkras on 9/28/2017.
- */
+import java.util.GregorianCalendar;
 
 public class DateHelper {
+
+    public static Date fromDate(Calendar dateCalendar, int year, int month, int day_of_month, int hour, int minute, int second){
+        return new GregorianCalendar(
+                year != 0 ? year : dateCalendar.get(Calendar.YEAR),
+                month != 0 ? month : dateCalendar.get(Calendar.MONTH),
+                day_of_month != 0 ? day_of_month : dateCalendar.get(Calendar.DAY_OF_MONTH),
+                hour != 0 ? hour : dateCalendar.get(Calendar.HOUR),
+                minute != 0 ? minute : dateCalendar.get(Calendar.MINUTE),
+                second != 0 ? second : dateCalendar.get(Calendar.SECOND)
+        ).getTime();
+    }
+
+    public static Date fromToday(int year, int month, int day_of_month, int hour, int minute, int second){
+        Calendar todaysCalendar = Calendar.getInstance();
+        return new GregorianCalendar(
+                year != 0 ? year : todaysCalendar.get(Calendar.YEAR),
+                month != 0 ? month : todaysCalendar.get(Calendar.MONTH),
+                day_of_month != 0 ? day_of_month : todaysCalendar.get(Calendar.DAY_OF_MONTH),
+                hour != 0 ? hour : todaysCalendar.get(Calendar.HOUR),
+                minute != 0 ? minute : todaysCalendar.get(Calendar.MINUTE),
+                second != 0 ? second : todaysCalendar.get(Calendar.SECOND)
+        ).getTime();
+    }
 
     public static String ToString(Date date, SimpleDateFormat formatter){
         return formatter.format(date != null ? date : StringHelper.empty());
     }
 
     public static String GetTime(Date date){
-        return date.getHours() + ":" + date.getMinutes();
+        Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+        calendar.setTime(date);   // assigns calendar to given date
+        return calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
     }
 
     public static String printDifference(Date startDate, Date endDate) {

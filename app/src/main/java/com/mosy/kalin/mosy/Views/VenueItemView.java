@@ -16,6 +16,7 @@ import com.mosy.kalin.mosy.Helpers.BusinessHoursHelper;
 import com.mosy.kalin.mosy.Helpers.LocationHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.R;
+import com.mosy.kalin.mosy.Services.AzureBlobService;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
@@ -52,8 +53,8 @@ public class VenueItemView
         this.Name.setText(venue.Name);
         this.Class.setText(venue.Class);
 
-        if (venue.BusinessHours != null) {
-            String sinceUntil = BusinessHoursHelper.buildBusinessHoursText(venue.BusinessHours);
+        if (venue.VenueBusinessHours != null) {
+            String sinceUntil = BusinessHoursHelper.buildBusinessHoursText(venue.VenueBusinessHours);
             this.OpenedSinceUntil.setText(sinceUntil);
             if (sinceUntil.equals(StringHelper.empty()))
                 this.OpenedSinceUntil.setVisibility(GONE);
@@ -68,13 +69,16 @@ public class VenueItemView
             this.DistanceFromDevice.setText(text);
         }
 
-        if (venue.OutdoorImage != null && venue.OutdoorImage.Bytes != null){
-            byte[] byteArray = Base64.decode(venue.OutdoorImage.Bytes, Base64.DEFAULT);
+        if (venue.OutdoorImage != null){
+//            byte[] byteArray = Base64.decode(venue.OutdoorImage.Bytes, Base64.DEFAULT);
+//            byte[] byteArray = Base64.decode(venue.OutdoorImage.Bytes, Base64.DEFAULT);
+            AzureBlobService service = new AzureBlobService();
+            byte[] byteArray = service.GetBlob(venue.OutdoorImage.Id, "userimages\\fboalbums\\200x200");
             Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
             this.OutdoorImageThumbnail.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
             IsUsingDefaultOutdoorImageThumbnail = false;
         }
-        else{
+        else {
             IsUsingDefaultOutdoorImageThumbnail = true;
             this.OutdoorImageThumbnail.setImageResource(R.drawable.venue_default_thumbnail);
         }

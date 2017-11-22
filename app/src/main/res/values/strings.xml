@@ -1,7 +1,7 @@
 <resources>
     <!--App Level-->
     <string name="google_maps_key">AIzaSyDkyNsNMAi8VoxWrLnI-8pp0W5P54r2Dvs</string>
-    <string name="app_name">tastr</string>
+    <string name="app_name">Foodoo</string>
 
     <!--Login Activity-->
     <string name="title_activity_login">Login to</string>
@@ -64,5 +64,7 @@
     <string name="dishDetails_ivIcon">Default Dish Icon</string>
     <string name="title_dishes_activity">Dishes</string>
     <string name="title_activity_landing">mosy</string>
+    <string name="landing_btnVenues">V E N U E S</string>
+    <string name="landing_btnDishes">D I S H E S</string>
 
 </resources>

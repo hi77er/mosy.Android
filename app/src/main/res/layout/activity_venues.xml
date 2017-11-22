@@ -21,10 +21,11 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="60dp"
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
             android:drawableStart="@drawable/venue_default_thumbnail_xxs"
             android:background="@color/colorMenuBackground"
             android:textColor="@color/colorPrimary"
-            android:textStyle="bold"
             android:textSize="18sp" />
 
         <Button
@@ -33,10 +34,11 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="60dp"
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
             android:drawableStart="@drawable/drink_default_thumbnail_xxs"
             android:background="@color/colorMenuBackground"
             android:textColor="@color/colorPrimary"
-            android:textStyle="bold"
             android:textSize="18sp" />
     </LinearLayout>
 
@@ -46,7 +48,8 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent">
 
-        <ListView android:id="@+id/venues_lvVenues"
+        <ListView
+            android:id="@+id/venues_lvVenues"
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:focusableInTouchMode="false"

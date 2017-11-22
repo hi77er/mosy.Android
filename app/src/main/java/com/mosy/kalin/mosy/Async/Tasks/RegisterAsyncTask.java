@@ -10,16 +10,10 @@ import com.mosy.kalin.mosy.DTOs.Results.RegisterResult;
 import com.mosy.kalin.mosy.Models.BindingModels.RegisterBindingModel;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 
-/**
- * Created by kkras on 7/25/2017.
- */
-
 public class RegisterAsyncTask extends AsyncTask<RegisterBindingModel, String, RegisterResult> {
     private Context context;
 
-    public RegisterAsyncTask(Context context) {
-        this.context = context;
-    }
+    public RegisterAsyncTask(Context context) { this.context = context; }
 
     @Override
     protected RegisterResult doInBackground(RegisterBindingModel... models) {

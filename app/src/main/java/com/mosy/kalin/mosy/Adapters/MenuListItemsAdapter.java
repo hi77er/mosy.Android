@@ -18,10 +18,6 @@ import org.androidannotations.annotations.RootContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by kkras on 7/31/2017.
- */
-
 @EBean
 public class MenuListItemsAdapter
         implements ExpandableListAdapter {

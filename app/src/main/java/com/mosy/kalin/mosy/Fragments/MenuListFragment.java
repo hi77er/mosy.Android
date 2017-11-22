@@ -28,10 +28,12 @@ public class MenuListFragment extends Fragment {
     @FragmentArg("MenuListItems")
     ArrayList<MenuListItem> MenuListItems;
 
-    @ViewById
+//    @ViewById
+    @ViewById(R.id.menuList_tvName)
     TextView menuList_tvName;
 
-    @ViewById
+//    @ViewById
+    @ViewById(R.id.menuList_lvItems)
     ExpandableListView menuList_lvItems;
 
     @Bean

@@ -1,6 +1,5 @@
 package com.mosy.kalin.mosy.Async.Tasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.google.gson.reflect.TypeToken;
@@ -10,11 +9,8 @@ import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenuesBindingModel;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-
-/**
- * Created by kkras on 8/7/2017.
- */
 
 public class GetVenuesAsyncTask extends AsyncTask<GetVenuesBindingModel, String, ArrayList<Venue>> {
 
@@ -26,7 +22,8 @@ public class GetVenuesAsyncTask extends AsyncTask<GetVenuesBindingModel, String,
 
         try {
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            venuesResult = jsonHttpClient.Get(endpoint, null, new TypeToken<ArrayList<Venue>>(){}.getType(), StringHelper.empty());
+            Type returnType = new TypeToken<ArrayList<Venue>>(){}.getType();
+            venuesResult = jsonHttpClient.Get(endpoint, null, returnType, "HH:mm:ss");
         } catch(Exception e) {
             e.printStackTrace();
             Venue errResult = new Venue();

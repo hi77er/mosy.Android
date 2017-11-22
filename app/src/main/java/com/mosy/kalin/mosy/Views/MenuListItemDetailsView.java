@@ -24,11 +24,6 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
-/**
- * Created by kkras on 8/21/2017.
- */
-
-
 @EViewGroup(R.layout.activity_item_menulistitem_details)
 public class MenuListItemDetailsView
         extends RelativeLayout {

@@ -42,9 +42,7 @@ public class LoginActivity
 
                     Intent intent = new Intent(LoginActivity.this, VenuesActivity_.class);
                     startActivity(intent);
-                }  catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else
@@ -60,7 +58,7 @@ public class LoginActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        // setContentView(R.layout.activity_login);
 
         b1 = (Button)findViewById(R.id.login_btnLogin);
         ed1 = (EditText)findViewById(R.id.login_etEmail);

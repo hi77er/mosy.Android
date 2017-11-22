@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LandingActivity">
+    android:orientation="vertical"
+    android:background="@color/colorWhite"
+    android:paddingStart="20dp"
+    android:paddingTop="100dp"
+    android:paddingEnd="20dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/foodoo_logo_transparent_rect"
+        android:layout_marginBottom="60dp" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/landing_btnVenues"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:paddingStart="90dp"
+        android:paddingEnd="90dp"
+        android:drawableStart="@drawable/venue_default_thumbnail_xxs"
+        android:text="@string/landing_btnVenues"
+        android:textSize="20sp"
+        android:background="@color/colorPrimaryVeryLight"
+        android:textColor="@color/colorPrimary" />
+    <!--android:textStyle="bold"-->
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/landing_btnDishes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="90dp"
+        android:paddingEnd="90dp"
+        android:drawableStart="@drawable/drink_default_thumbnail_xxs"
+        android:text="@string/landing_btnDishes"
+        android:textSize="20sp"
+        android:background="@color/colorPrimaryVeryLight"
+        android:textColor="@color/colorPrimary" />
+    <!--android:textStyle="bold"-->
 
 
+</LinearLayout>
 
-</android.support.constraint.ConstraintLayout>

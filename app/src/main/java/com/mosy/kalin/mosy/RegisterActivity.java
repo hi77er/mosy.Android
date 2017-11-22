@@ -33,9 +33,7 @@ public class RegisterActivity
                     RegisterBindingModel model = new RegisterBindingModel(email, password, password);
                     try {
                         new RegisterAsyncTask(applicationContext).execute(model).get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 

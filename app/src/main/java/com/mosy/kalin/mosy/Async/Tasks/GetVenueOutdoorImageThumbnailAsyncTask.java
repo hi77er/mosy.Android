@@ -1,6 +1,6 @@
 package com.mosy.kalin.mosy.Async.Tasks;
 
-import android.content.Context;
+import android.content.ContentValues;
 import android.os.AsyncTask;
 
 import com.google.gson.reflect.TypeToken;
@@ -10,29 +10,19 @@ import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueOutdoorImageThumbnailBindingModel;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import cz.msebera.android.httpclient.NameValuePair;
-import cz.msebera.android.httpclient.message.BasicNameValuePair;
-
-/**
- * Created by kkras on 8/9/2017.
- */
-
 public class GetVenueOutdoorImageThumbnailAsyncTask extends AsyncTask<GetVenueOutdoorImageThumbnailBindingModel, String, VenueImage> {
 
     @Override
     protected VenueImage doInBackground(GetVenueOutdoorImageThumbnailBindingModel... models) {
         GetVenueOutdoorImageThumbnailBindingModel model = models[0];
         String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint("FBOFiles/OutdoorThumbnailById");
-        VenueImage imageResult = null;
+        VenueImage imageResult;
 
         try {
+            ContentValues params = new ContentValues();
+            params.put("id", model.VenueId);
+
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            NameValuePair param1 = new BasicNameValuePair("id", model.VenueId);
-            params.add(param1);
             imageResult = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueImage>(){}.getType(), StringHelper.empty());
         } catch(Exception e) {
             e.printStackTrace();

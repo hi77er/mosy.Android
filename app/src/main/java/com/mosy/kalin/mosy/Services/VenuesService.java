@@ -27,12 +27,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-/**
- * Created by kkras on 8/25/2017.
- */
-
 @EBean
 public class VenuesService {
+
+    public VenuesService() {
+
+    }
 
     public VenueBusinessHours downloadVenuesBusinessHours(String venueId) {
         VenueBusinessHours businessHours = null;
@@ -49,20 +49,19 @@ public class VenuesService {
         try {
             for (Venue venue: venues) {
                 GetVenueBusinessHoursBindingModel businessHoursModel = new GetVenueBusinessHoursBindingModel(venue.Id);
-                venue.BusinessHours = new GetVenueBusinessHoursAsyncTask().execute(businessHoursModel).get();
+                venue.VenueBusinessHours = new GetVenueBusinessHoursAsyncTask().execute(businessHoursModel).get();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void downloadVenuesOutdoorImageThumbnails(ArrayList<Venue> venues) {
+    public void downloadVenuesOutdoorImageThumbnailsMeta(ArrayList<Venue> venues) {
         try {
             for (Venue venue: venues) {
                 GetVenueOutdoorImageThumbnailBindingModel outdoorImageModel = new GetVenueOutdoorImageThumbnailBindingModel(venue.Id);
-                VenueImage outdoorImage = new GetVenueOutdoorImageThumbnailAsyncTask().execute(outdoorImageModel).get();
 
-                venue.OutdoorImage = (outdoorImage != null && outdoorImage.Bytes != null) ? outdoorImage : null;
+                venue.OutdoorImage = new GetVenueOutdoorImageThumbnailAsyncTask().execute(outdoorImageModel).get();
             }
         } catch (Exception e) {
             e.printStackTrace();

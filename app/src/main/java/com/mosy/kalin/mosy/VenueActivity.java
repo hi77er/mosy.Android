@@ -1,6 +1,5 @@
 package com.mosy.kalin.mosy;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,11 +26,9 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 @EActivity(R.layout.activity_venue)
-public class VenueActivity
-        extends AppCompatActivity {
+public class VenueActivity extends AppCompatActivity {
 
     @Extra
     Venue Venue;

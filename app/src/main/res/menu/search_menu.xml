@@ -6,7 +6,7 @@
     tools:context=".VenueActivity_">
 
     <item
-        android:orderInCategory="1"
+        android:orderInCategory="0"
         android:id="@+id/action_app_name"
         android:icon="@mipmap/ic_launcher"
         android:title="@string/app_name"
@@ -14,7 +14,7 @@
         app:actionViewClass="@string/app_name" />
 
     <item
-        android:orderInCategory="2"
+        android:orderInCategory="1"
         android:id="@+id/action_search"
         android:icon="@drawable/search_thumbnail"
         android:title="@string/menu_search"

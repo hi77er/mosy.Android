@@ -1,5 +1,6 @@
 package com.mosy.kalin.mosy;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -41,6 +42,7 @@ import org.androidannotations.annotations.ViewById;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+@SuppressLint("Registered")
 @EActivity(R.layout.activity_venue_details)
 public class VenueDetailsActivity
         extends AppCompatActivity
@@ -77,8 +79,6 @@ public class VenueDetailsActivity
 
     @ViewById(resName = "venueDetails_svMain")
     ScrollView ScrollViewMain;
-    @ViewById(resName = "venueDetails_ivMapTransparent")
-    ImageView TransparentImage;
     @ViewById(resName = "venueDetails_tvName")
     TextView Name;
     @ViewById(resName = "venueDetails_tvClass")
@@ -100,12 +100,14 @@ public class VenueDetailsActivity
     @ViewById(resName = "venueDetails_tvBHSundayTime")
     TextView Sunday;
 
+    @ViewById(resName = "venueDetails_ivMapTransparent")
+    ImageView TransparentImage;
     @ViewById(resName = "venueDetailsBadge_freeWiFi")
     ImageView FreeWiFi;
     @ViewById(resName = "venueDetailsBadge_workingFriendly")
     ImageView WorkingFriendly;
     @ViewById(resName = "venueDetailsBadge_bikeFriendly")
-    ImageView BikeFrindly;
+    ImageView BikeFriendly;
     @ViewById(resName = "venueDetailsBadge_childFriendly")
     ImageView ChildFriendly;
     @ViewById(resName = "venueDetailsBadge_funPlace")
@@ -132,8 +134,8 @@ public class VenueDetailsActivity
 
             populateContacts();
 
-            this.Venue.BusinessHours = this.VenuesService.downloadVenuesBusinessHours(this.Venue.Id);
-            populateBusinessHours(this.Venue.BusinessHours);
+            this.Venue.VenueBusinessHours = this.VenuesService.downloadVenuesBusinessHours(this.Venue.Id);
+            populateBusinessHours(this.Venue.VenueBusinessHours);
 
             this.Venue.Location = this.VenuesService.downloadVenueLocation(this.Venue.Id);
             this.VenueLocationMap.getMapAsync(this);
@@ -201,7 +203,7 @@ public class VenueDetailsActivity
     }
 
     private void populateBusinessHours(VenueBusinessHours businessHours) {
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat formatter =  new SimpleDateFormat("HH:mm");
         if (businessHours != null // and a single day has business hours set ->
             && (businessHours.IsMondayDayOff || businessHours.IsTuesdayDayOff || businessHours.IsWednesdayDayOff ||
                 businessHours.IsThursdayDayOff || businessHours.IsFridayDayOff || businessHours.IsSaturdayDayOff ||
@@ -259,7 +261,7 @@ public class VenueDetailsActivity
                     any = true;
                 }
                 if (endorsement.BadgeId.toUpperCase().equals("602F1863-A209-4E34-BC5E-871AE52AE684")) {
-                    this.BikeFrindly.setVisibility(View.VISIBLE);
+                    this.BikeFriendly.setVisibility(View.VISIBLE);
                     any = true;
                 }
                 if (endorsement.BadgeId.toUpperCase().equals("4F952337-5F15-4EFA-934A-7A948800B93F")){

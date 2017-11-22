@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Created by kkras on 8/23/2017.
@@ -41,16 +42,18 @@ public class BusinessHoursHelper {
     private static String constructTextWhenNoDayOff(Date from, Date to) {
         if (from == null || to == null) return  StringHelper.empty();
         String outputText = StringHelper.empty();
-        Calendar calendar = Calendar.getInstance();
-        Date currentTime = calendar.getTime();
+        Date currentTime = Calendar.getInstance().getTime();
 
         // Equalize year month and day
-        from.setYear(currentTime.getYear());
-        from.setMonth(currentTime.getMonth());
-        from.setDate(currentTime.getDate());
-        to.setYear(currentTime.getYear());
-        to.setMonth(currentTime.getMonth());
-        to.setDate(currentTime.getDate());
+        Calendar fromCal = Calendar.getInstance();
+        fromCal.setTime(from);
+        Date newFrom = DateHelper.fromToday(0, 0, 0, fromCal.get(Calendar.HOUR), fromCal.get(Calendar.MINUTE), fromCal.get(Calendar.SECOND));
+        from.setTime(newFrom.getTime());
+
+        Calendar toCal = Calendar.getInstance();
+        toCal.setTime(to);
+        Date newTo = DateHelper.fromToday(0, 0, 0, toCal.get(Calendar.HOUR), toCal.get(Calendar.MINUTE), toCal.get(Calendar.SECOND));
+        to.setTime(newTo.getTime());
 
         if (currentTime.after(from) && (currentTime.before(to))) {
             Date threeHoursFromOpening = DateHelper.addHours(from, 3);

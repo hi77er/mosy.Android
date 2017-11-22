@@ -10,10 +10,6 @@ import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
 import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 
-/**
- * Created by kkras on 7/29/2017.
- */
-
 public class TokenLoginAsyncTask extends AsyncTask<LoginBindingModel, String, AuthenticationResultStatus> {
     private Context context;
 

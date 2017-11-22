@@ -37,6 +37,7 @@ public class MenuListItem
     @SerializedName("Ingredients")
     public ArrayList<Ingredient> Ingredients;
 
+    @SuppressWarnings("unchecked")
     protected MenuListItem(Parcel in) {
         String[] data = new String[4];
 
@@ -49,7 +50,6 @@ public class MenuListItem
         this.PreparationEstimateSeconds = Integer.parseInt(data[4]);
 //        this.RequestableIngredients = in.readArrayList(null);
         this.Ingredients = in.readArrayList(null);
-
     }
 
     public static final Creator<MenuListItem> CREATOR = new Creator<MenuListItem>() {
