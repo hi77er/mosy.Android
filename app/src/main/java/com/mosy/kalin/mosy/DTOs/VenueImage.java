@@ -26,6 +26,6 @@ public class VenueImage
     public boolean IsOutdoors;
 
     @SerializedName("Bytes")
-    public String Bytes;
+    public byte[] Bytes;
 
 }

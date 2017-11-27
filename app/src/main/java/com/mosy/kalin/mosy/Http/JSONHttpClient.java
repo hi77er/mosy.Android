@@ -1,8 +1,6 @@
 package com.mosy.kalin.mosy.Http;
 
 import android.content.ContentValues;
-import android.content.pm.ApplicationInfo;
-import android.util.TimingLogger;
 
 import com.google.gson.GsonBuilder;
 import com.mosy.kalin.mosy.BuildConfig;
@@ -23,6 +21,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +63,7 @@ public class JSONHttpClient {
             if (httpStatusCode == HttpURLConnection.HTTP_OK) {
                 String jsonString = convertStreamToString(this.Connection.getInputStream());
 
-                GsonBuilder builder  = new GsonBuilder();
+                GsonBuilder builder  = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer());
                 if (!dateFormat.equals(StringHelper.empty()))
                     builder.setDateFormat(dateFormat);
 

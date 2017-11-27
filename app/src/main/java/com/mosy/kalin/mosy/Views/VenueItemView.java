@@ -28,6 +28,7 @@ public class VenueItemView
         extends RelativeLayout {
 
     String VenueId;
+    String OutdoorImageId;
     Boolean IsUsingDefaultOutdoorImageThumbnail;
 
     @Bean
@@ -50,6 +51,9 @@ public class VenueItemView
 
     public void bind(Venue venue) {
         this.VenueId = venue.Id;
+        if (venue.OutdoorImage != null)
+            this.OutdoorImageId = venue.OutdoorImage.Id;
+
         this.Name.setText(venue.Name);
         this.Class.setText(venue.Class);
 
@@ -62,19 +66,24 @@ public class VenueItemView
                 this.OpenedSinceUntil.setVisibility(VISIBLE);
         }
 
-        if (venue.Location != null) {
-            String distance = LocationHelper.buildDistanceText(venue.Location.DistanceToCurrentLocationMeters);
-            String timeWalking = LocationHelper.buildMinutesWalkingText(venue.Location.DistanceToCurrentLocationMeters);
-            String text = distance + (timeWalking.length() > 0 ? " | " + timeWalking : StringHelper.empty());
+//        if (venue.Location != null) {
+//            String distance = LocationHelper.buildDistanceText(venue.Location.DistanceToCurrentLocationMeters);
+//            String timeWalking = LocationHelper.buildMinutesWalkingText(venue.Location.DistanceToCurrentLocationMeters);
+//            String text = distance + (timeWalking.length() > 0 ? " | " + timeWalking : StringHelper.empty());
+//            this.DistanceFromDevice.setText(text);
+//        }
+
+        if (venue.DistanceToCurrentDeviceLocation > 0)
+        {
+            String distance = LocationHelper.buildDistanceText(venue.DistanceToCurrentDeviceLocation);
+            String timeWalking = LocationHelper.buildMinutesWalkingText(venue.DistanceToCurrentDeviceLocation);
+            String text = distance + (timeWalking.length() > 0 ? timeWalking : StringHelper.empty());
             this.DistanceFromDevice.setText(text);
         }
 
-        if (venue.OutdoorImage != null){
+        if (venue.OutdoorImage != null && venue.OutdoorImage.Bytes != null){
 //            byte[] byteArray = Base64.decode(venue.OutdoorImage.Bytes, Base64.DEFAULT);
-//            byte[] byteArray = Base64.decode(venue.OutdoorImage.Bytes, Base64.DEFAULT);
-            AzureBlobService service = new AzureBlobService();
-            byte[] byteArray = service.GetBlob(venue.OutdoorImage.Id, "userimages\\fboalbums\\200x200");
-            Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            Bitmap bmp = BitmapFactory.decodeByteArray(venue.OutdoorImage.Bytes, 0, venue.OutdoorImage.Bytes.length);
             this.OutdoorImageThumbnail.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
             IsUsingDefaultOutdoorImageThumbnail = false;
         }
@@ -85,7 +94,7 @@ public class VenueItemView
     }
 
     @Click(resName = "venueItem_ivOutdoorThumbnail")
-    public void ItemClick()
+    public void OutdoorThumbnailClick()
     {
         if (! IsUsingDefaultOutdoorImageThumbnail){
             final Dialog nagDialog = new Dialog(this.getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
@@ -93,14 +102,15 @@ public class VenueItemView
             nagDialog.setCancelable(true);
             nagDialog.setContentView(R.layout.image_preview_dialog);
 
-            VenueImage image = this.VenuesService.downloadVenueOutdoorImage(this.VenueId);
-            if (image.Bytes != null) {
-                byte[] byteArray = Base64.decode(image.Bytes, Base64.DEFAULT);
-                Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            if (this.OutdoorImageId != null && this.OutdoorImageId.length() > 0) {
+                byte[] byteArray = new AzureBlobService().GetBlob(this.OutdoorImageId, "userimages\\fboalbums\\original");
 
-                ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
-                ivPreview.setImageBitmap(bmp);
-                nagDialog.show();
+                if (byteArray != null && byteArray.length > 0) {
+                    Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                    ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
+                    ivPreview.setImageBitmap(bmp);
+                    nagDialog.show();
+                }
             }
         }
     }

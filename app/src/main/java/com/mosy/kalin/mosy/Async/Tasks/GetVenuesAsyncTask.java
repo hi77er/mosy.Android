@@ -23,7 +23,7 @@ public class GetVenuesAsyncTask extends AsyncTask<GetVenuesBindingModel, String,
         try {
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
             Type returnType = new TypeToken<ArrayList<Venue>>(){}.getType();
-            venuesResult = jsonHttpClient.Get(endpoint, null, returnType, "HH:mm:ss");
+            venuesResult = jsonHttpClient.Get(endpoint, null, returnType, "yyyy-MM-dd'T'HH:mm:ss.");
         } catch(Exception e) {
             e.printStackTrace();
             Venue errResult = new Venue();

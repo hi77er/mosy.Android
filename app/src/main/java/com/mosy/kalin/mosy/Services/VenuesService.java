@@ -5,6 +5,7 @@ import android.location.Location;
 
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueBusinessHoursAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueIndoorImageAsyncTask;
+import com.mosy.kalin.mosy.Async.Tasks.GetVenueIndoorImageMetaAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueIndoorImageThumbnailAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueLocationAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueOutdoorImageAsyncTask;
@@ -16,6 +17,7 @@ import com.mosy.kalin.mosy.DTOs.VenueLocation;
 import com.mosy.kalin.mosy.Helpers.LocationHelper;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBusinessHoursBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageBindingModel;
+import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageMetaBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageThumbnailBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueLocationBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueOutdoorImageBindingModel;
@@ -26,6 +28,7 @@ import org.androidannotations.annotations.EBean;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.concurrent.ExecutionException;
 
 @EBean
 public class VenuesService {
@@ -129,11 +132,34 @@ public class VenuesService {
     }
 
     public void sortVenuesByDistanceToDevice(ArrayList<Venue> venues) {
+        for (Venue venue: venues)
+            if (venue.DistanceToCurrentDeviceLocation == 0) venue.DistanceToCurrentDeviceLocation = 999999999;
+
         Collections.sort(venues, new Comparator<Venue>() {
             @Override
             public int compare(Venue v1, Venue v2) {
-                return Double.compare(v1.Location.DistanceToCurrentLocationMeters, v2.Location.DistanceToCurrentLocationMeters);
+                return Double.compare(v1.DistanceToCurrentDeviceLocation, v2.DistanceToCurrentDeviceLocation);
             }
         });
+    }
+
+    public void LoadVenuesOutdoorImageThumbnails(ArrayList<Venue> venues) {
+        for (Venue venue: venues) {
+            if (venue.OutdoorImage != null && venue.OutdoorImage.Id != null && venue.OutdoorImage.Id.length() > 0)
+                venue.OutdoorImage.Bytes = new AzureBlobService().GetBlob(venue.OutdoorImage.Id, "userimages\\fboalbums\\100x100");
+        }
+    }
+
+    public VenueImage downloadVenueIndoorImageMeta(String id) {
+        GetVenueIndoorImageMetaBindingModel model = new GetVenueIndoorImageMetaBindingModel(id);
+        VenueImage image = null;
+        try {
+            image = new GetVenueIndoorImageMetaAsyncTask().execute(model).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return image;
     }
 }

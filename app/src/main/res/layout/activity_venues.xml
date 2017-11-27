@@ -17,11 +17,11 @@
 
         <Button
             android:id="@+id/venues_btnNavigateToVenues"
-            android:text="Venues"
+            android:text="@string/venues_btnNavigateToVenuesText"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="60dp"
-            android:paddingStart="40dp"
+            android:paddingStart="20dp"
             android:paddingEnd="40dp"
             android:drawableStart="@drawable/venue_default_thumbnail_xxs"
             android:background="@color/colorMenuBackground"
@@ -30,11 +30,11 @@
 
         <Button
             android:id="@+id/venues_btnNavigateToDishes"
-            android:text="Dishes"
+            android:text="@string/venues_btnNavigateToDishesText"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="60dp"
-            android:paddingStart="40dp"
+            android:paddingStart="20dp"
             android:paddingEnd="40dp"
             android:drawableStart="@drawable/drink_default_thumbnail_xxs"
             android:background="@color/colorMenuBackground"

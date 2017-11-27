@@ -14,6 +14,7 @@ public class LocationHelper {
 
     public static String buildDistanceText(double distanceMeters){
         String text = StringHelper.empty();
+
         if (distanceMeters == 0)
             text = StringHelper.empty();
         else if (distanceMeters < 5)
@@ -25,23 +26,29 @@ public class LocationHelper {
         else if (distanceMeters < 1000) {
             long longValue =  (long) distanceMeters;
             text = String.valueOf(longValue) + "m";
-        }
-        else if (distanceMeters >= 1000) {
+        } else if (distanceMeters >= 1000  && distanceMeters < 999999999 ) {
             distanceMeters =  distanceMeters / 1000;
             text = new DecimalFormat("##.#").format(distanceMeters) + "km";
-        }
+        } else if (distanceMeters == 999999999)
+            text = StringHelper.empty();
+
         return text;
     }
 
     public static String buildMinutesWalkingText(double distanceMeters) {
         String text = StringHelper.empty();
         double time = calcMinutesWalkingToLocation(distanceMeters);
-        if (time < 1)
-            text = "Less than 1 minute walking";
+
+        if (time > 0 && time < 1)
+            text = StringHelper.empty();
+        if (time > 0 && time < 1)
+            text = " | Less than 1 minute walking";
         if (time > 1 && time < 59)
-            text = new DecimalFormat("##.#").format(time) + " minutes walking";
-        if (time > 59)
+            text = " | " + new DecimalFormat("##.#").format(time) + " minutes walking";
+        if (time > 59 && time < 999999999)
             text = StringHelper.empty(); // too far, unnecessary to display time walking
+        else if (time == 999999999)
+            text = StringHelper.empty();
         return text;
     }
 

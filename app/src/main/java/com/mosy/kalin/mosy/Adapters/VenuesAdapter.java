@@ -36,9 +36,8 @@ public class VenuesAdapter
     Context context;
 
     private Location deviceLocation;
-    public void setLocation(Location location) {
-        this.deviceLocation = location;
-    }
+    public void setLocation(Location location) { this.deviceLocation = location; }
+    public Location getLocation() { return this.deviceLocation; }
 
     public SwipeRefreshLayout swipeContainer;
     public void setSwipeRefreshLayout(SwipeRefreshLayout layout) {
@@ -72,6 +71,7 @@ public class VenuesAdapter
 
         return venueItemView;
     }
+
     @Override
     public int getCount() {
         if (this.venues != null)
@@ -87,41 +87,49 @@ public class VenuesAdapter
         return position;
     }
 
-    public void loadVenues() {
-        boolean venuesFound = false;
-        try {
-            this.venues = new GetVenuesAsyncTask().execute(new GetVenuesBindingModel()).get();
-            boolean isNotNull = this.venues != null;
-            boolean firstVenueHasItem = this.venues.get(0) != null;
-            boolean hasNotErrorMessage = firstVenueHasItem && this.venues.get(0).ErrorMessage == null;
-            boolean hasElements = this.venues.size() > 0;
-
-            venuesFound = isNotNull && hasElements && hasNotErrorMessage;
-            if (venuesFound) {
-                VenuesService vService = new VenuesService();
-                vService.calculateVenuesDistances(venues, this.deviceLocation);
-                vService.sortVenuesByDistanceToDevice(venues);
-                VenuesAdapter.super.notifyDataSetChanged();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public void loadVenues() {
+//        boolean venuesFound = false;
+//        try {
+//            this.venues = new GetVenuesAsyncTask().execute(new GetVenuesBindingModel()).get();
+//            boolean isNotNull = this.venues != null;
+//            boolean firstVenueHasItem = this.venues.get(0) != null;
+//            boolean hasNotErrorMessage = firstVenueHasItem && this.venues.get(0).ErrorMessage == null;
+//            boolean hasElements = this.venues.size() > 0;
+//
+//            venuesFound = isNotNull && hasElements && hasNotErrorMessage;
+//            if (venuesFound) {
+//                VenuesService vService = new VenuesService();
+//                vService.LoadVenuesOutdoorImageThumbnails(venues);
+//                vService.calculateVenuesDistances(venues, this.deviceLocation);
+//                vService.sortVenuesByDistanceToDevice(venues);
+//                VenuesAdapter.super.notifyDataSetChanged();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public boolean findVenues(String query){
         try {
-            this.venues = new SearchVenuesAsyncTask().execute(new SearchVenuesBindingModel(query)).get();
-            if (this.venues.size() > 0){
+            double latitude = this.deviceLocation != null ? this.deviceLocation.getLatitude() : 0;
+            double longitude = this.deviceLocation != null ? this.deviceLocation.getLongitude() : 0;
+            this.venues = new SearchVenuesAsyncTask().execute(new SearchVenuesBindingModel(50, query, latitude, longitude)).get();
+
+            boolean firstVenueHasItem = this.venues != null && this.venues.get(0) != null;
+            boolean hasNonErrorItem = firstVenueHasItem && this.venues.get(0).ErrorMessage == null;
+
+            if (hasNonErrorItem) {
                 VenuesService vService = new VenuesService();
-                vService.downloadVenuesOutdoorImageThumbnailsMeta(venues);
-                vService.calculateVenuesDistances(venues, this.deviceLocation);
+                vService.LoadVenuesOutdoorImageThumbnails(venues);
+                vService.sortVenuesByDistanceToDevice(venues);
+//                vService.downloadVenuesOutdoorImageThumbnailsMeta(venues); // deprecated
+//                vService.calculateVenuesDistances(venues, this.deviceLocation); // deprecated
                 VenuesAdapter.super.notifyDataSetChanged();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return this.venues.size() > 0;
+        return this.venues != null && this.venues.size() > 0;
     }
-
 
 }

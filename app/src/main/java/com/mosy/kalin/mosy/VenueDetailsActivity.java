@@ -27,6 +27,7 @@ import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Helpers.DateHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Services.AzureBlobService;
 import com.mosy.kalin.mosy.Services.BadgeEndorsementsService;
 import com.mosy.kalin.mosy.Services.VenuesService;
 
@@ -125,13 +126,14 @@ public class VenueDetailsActivity
 
     @AfterViews
     void updateVenueWithData() {
-        Name.setText(this.Venue.Name);
-        Class.setText(this.Venue.Class);
-
         try {
-            VenueImage image = this.VenuesService.downloadVenueIndoorImageThumbnails(this.Venue);
-            populateIndoorImage(image);
+            Name.setText(this.Venue.Name);
+            Class.setText(this.Venue.Class);
 
+            this.Venue.IndoorImage = new VenuesService().downloadVenueIndoorImageMeta(this.Venue.Id);
+
+            if (this.Venue != null && this.Venue.IndoorImage != null && this.Venue.IndoorImage.Id != null && this.Venue.IndoorImage.Id.length() > 0)
+                populateIndoorImageThumbnail(this.Venue.IndoorImage.Id);
             populateContacts();
 
             this.Venue.VenueBusinessHours = this.VenuesService.downloadVenuesBusinessHours(this.Venue.Id);
@@ -187,10 +189,10 @@ public class VenueDetailsActivity
         }
     }
 
-    private void populateIndoorImage(VenueImage image) {
-        if (image != null && image.Bytes != null) {
-            byte[] byteArray = Base64.decode(image.Bytes, Base64.DEFAULT);
-            Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+    private void populateIndoorImageThumbnail(String blobId) {
+        if (blobId != null && blobId.length() > 0) {
+            byte[] byteAray = new AzureBlobService().GetBlob(blobId, "userimages\\fboalbums\\200x200");;
+            Bitmap bmp = BitmapFactory.decodeByteArray(byteAray, 0, byteAray.length);
             this.IndoorImageThumbnail.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
             this.IsUsingDefaultIndoorImageThumbnail = false;
         }
@@ -306,13 +308,18 @@ public class VenueDetailsActivity
             nagDialog.setCancelable(true);
             nagDialog.setContentView(R.layout.image_preview_dialog);
 
-            VenueImage image = this.VenuesService.downloadVenueIndoorImage(this.Venue.Id);
-            byte[] byteArray = Base64.decode(image.Bytes, Base64.DEFAULT);
-            Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            Bitmap bmp = null;
+            if (this.Venue != null && this.Venue.IndoorImage != null && this.Venue.IndoorImage.Id != null && this.Venue.IndoorImage.Id.length() > 0)
+            {
+                byte[] byteArray = new AzureBlobService().GetBlob(this.Venue.IndoorImage.Id, "userimages\\fboalbums\\original");
+                if (byteArray != null && byteArray.length > 0) {
+                    bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                    ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
+                    ivPreview.setImageBitmap(bmp);
+                    nagDialog.show();
+                }
+            }
 
-            ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
-            ivPreview.setImageBitmap(bmp);
-            nagDialog.show();
         }
     }
 

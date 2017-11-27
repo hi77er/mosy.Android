@@ -41,6 +41,7 @@ public class VenuesActivity
 //    @Extra
 //    SearchMode Mode;
     long timeStarted = 0;
+    Location lastKnowLocation;
 
     @Extra
     boolean DishesSearchModeActivated;
@@ -59,39 +60,49 @@ public class VenuesActivity
     @ViewById(resName = "venues_lvVenues")
     ListView Venues;
 
-    @AfterViews
-    void bindAdapter() {
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout)findViewById(R.id.venues_lSwipeContainer);
-        adapter.setSwipeRefreshLayout(swipeContainer);
-
-        adapter.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-            adapter.loadVenues();
-            retrieveLocation();
-            swipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
-            }
-        });
-
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            performSearch(query);
-        }
-        else adapter.loadVenues();
-
-        Venues.setAdapter(adapter);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         timeStarted = System.currentTimeMillis();
         boolean value = this.DishesSearchModeActivated;
+
         mLocationResolver = new LocationResolver(this);
+        mLocationResolver.onStart();
+        retrieveLocation();
+    }
+
+    @AfterViews
+    void bindAdapter() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        String query = "searchall";
+        Intent intent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(intent.getAction()))
+            query = intent.getStringExtra(SearchManager.QUERY);
+        performSearch(query);
+
+        final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout)findViewById(R.id.venues_lSwipeContainer);
+        adapter.setSwipeRefreshLayout(swipeContainer);
+        adapter.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                retrieveLocation();
+                performSearch("searchall");
+                swipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
+            }
+        });
+        Venues.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (BuildConfig.DEBUG) {
+            System.out.println("MOSYLOGS : APP LOADED!" + " TOOK: " + ((System.currentTimeMillis() - timeStarted) / 1000) + " sec;");
+            Toast.makeText(this, "Loaded for: " + ((System.currentTimeMillis() - timeStarted) / 1000) + " sec", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -100,18 +111,6 @@ public class VenuesActivity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
         return true;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mLocationResolver.onStart();
-        retrieveLocation();
-
-        if (BuildConfig.DEBUG) {
-            System.out.println("MOSYLOGS : APP LOADED!" + " TOOK: " + ((System.currentTimeMillis() - timeStarted) / 1000) + " sec;");
-            Toast.makeText(this, "Loaded for: " + ((System.currentTimeMillis() - timeStarted) / 1000) + " sec", Toast.LENGTH_LONG).show();
-        }
     }
 
     @Override
@@ -134,6 +133,7 @@ public class VenuesActivity
     void openMenu(Venue venue) {
         Intent intent = new Intent(VenuesActivity.this, VenueActivity_.class);
         venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+        venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
         venue.Location = null;
         venue.VenueBusinessHours = null;
         intent.putExtra("Venue", venue);
@@ -150,7 +150,7 @@ public class VenuesActivity
     }
 
     private void performSearch(String query) {
-        Boolean found = adapter.findVenues(query);
+        Boolean found = adapter.findVenues(query); //TODO: SET LATITUDE AND LONGITUDE TO DUCRRENT DEVICE PARAMS
         String toastMessage = found ? "Results for '"+query+"'" : "No matches found";
         Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
     }

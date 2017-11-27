@@ -60,11 +60,13 @@
     <string name="venueDetailsBadge_romanticPlaceTooltip">Romantic place. Romantic view. Romantic music.</string>
     <string name="venueDetailsBadge_wheelchairFriendlyTooltip">Wheelchair accessible.</string>
     <string name="venueDetailsBadge_noSmokingTooltip">No smoking allowed.</string>
-    <string name="venue_default_thumbnail">venueDefaultThumbnailContentDescripion</string>
+    <string name="venue_default_thumbnail">venueDefaultThumbnailContentDescription</string>
     <string name="dishDetails_ivIcon">Default Dish Icon</string>
     <string name="title_dishes_activity">Dishes</string>
-    <string name="title_activity_landing">mosy</string>
-    <string name="landing_btnVenues">V E N U E S</string>
-    <string name="landing_btnDishes">D I S H E S</string>
+    <string name="title_activity_landing">Foodoo</string>
+    <string name="landing_btnVenues">VENUES</string>
+    <string name="landing_btnDishes">DISHES</string>
+    <string name="venues_btnNavigateToVenuesText">Venues</string>
+    <string name="venues_btnNavigateToDishesText">Dishes</string>
 
 </resources>

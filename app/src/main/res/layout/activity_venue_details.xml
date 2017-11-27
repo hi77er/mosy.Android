@@ -152,7 +152,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:autoLink="web"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:text="http://www.facebook.com/kdkrastev89"
                     />
             </LinearLayout>
@@ -177,7 +177,7 @@
                     android:id="@+id/venueDetails_tvTelephone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:text="+34988346347712"/>
             </LinearLayout>
 
@@ -201,7 +201,7 @@
                     android:id="@+id/venueDetails_tvAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:text="гр. София, бул Княгиня Мария Луиза №57, ет. 4"/>
             </LinearLayout>
 
@@ -225,7 +225,7 @@
                     android:id="@+id/venueDetails_tvEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:text="kkrastev@live.com"/>
             </LinearLayout>
         </LinearLayout>
@@ -261,7 +261,7 @@
                         android:id="@+id/venueDetails_tvBHMondayTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:text="@string/venueDetails_mondayHours"
                         android:layout_marginRight="5dp"
@@ -271,7 +271,7 @@
                         android:id="@+id/venueDetails_tvBHMondayTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp" />
+                        android:textSize="15sp" />
 
                 </LinearLayout>
 
@@ -286,7 +286,7 @@
                         android:id="@+id/venueDetails_tvBHTuesdayTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:text="@string/venueDetails_tuesdayHours"
                         android:layout_marginRight="5dp"
@@ -296,7 +296,7 @@
                         android:id="@+id/venueDetails_tvBHTuesdayTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp" />
+                        android:textSize="15sp" />
 
                 </LinearLayout>
 
@@ -312,7 +312,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:text="@string/venueDetails_wednesdayHours"
                         android:layout_marginRight="5dp"
                         android:layout_marginEnd="5dp" />
@@ -321,7 +321,7 @@
                         android:id="@+id/venueDetails_tvBHWednesdayTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp" />
+                        android:textSize="15sp" />
 
                 </LinearLayout>
 
@@ -336,7 +336,7 @@
                         android:id="@+id/venueDetails_tvBHThursdayTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:text="@string/venueDetails_thursdayHours"
                         android:layout_marginRight="5dp"
@@ -346,7 +346,7 @@
                         android:id="@+id/venueDetails_tvBHThursdayTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp" />
+                        android:textSize="15sp" />
 
                 </LinearLayout>
 
@@ -372,7 +372,7 @@
                         android:id="@+id/venueDetails_tvBHFridayTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:text="@string/venueDetails_fridayHours"
                         android:layout_marginRight="5dp"
@@ -382,7 +382,7 @@
                         android:id="@+id/venueDetails_tvBHFridayTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp" />
+                        android:textSize="15sp" />
 
                 </LinearLayout>
 
@@ -397,7 +397,7 @@
                         android:id="@+id/venueDetails_tvBHSaturdayTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:text="@string/venueDetails_saturdayHours"
                         android:layout_marginRight="5dp"
@@ -407,7 +407,7 @@
                         android:id="@+id/venueDetails_tvBHSaturdayTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp" />
+                        android:textSize="15sp" />
 
                 </LinearLayout>
 
@@ -422,7 +422,7 @@
                         android:id="@+id/venueDetails_tvBHSundayTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:text="@string/venueDetails_sundayHours"
                         android:layout_marginRight="5dp"
@@ -432,7 +432,7 @@
                         android:id="@+id/venueDetails_tvBHSundayTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp" />
+                        android:textSize="15sp" />
 
                 </LinearLayout>
 

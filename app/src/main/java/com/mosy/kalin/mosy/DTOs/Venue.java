@@ -27,16 +27,22 @@ public class Venue
     @SerializedName("FBOLocation")
     public VenueLocation Location;
 
-//    @SerializedName("BusinessHours")
+    @SerializedName("BusinessHours")
     public VenueBusinessHours VenueBusinessHours;
 
     @SerializedName("OutdoorImageMeta")
     public VenueImage OutdoorImage;
 
+    @SerializedName("IndoorImageMeta")
+    public VenueImage IndoorImage;
+
     public BigDecimal Rating;
 
     @SerializedName("FBOEndorsements")
     public ArrayList<VenueBadgeEndorsement> Endorsements;
+
+    @SerializedName("DistanceToDevice")
+    public double DistanceToCurrentDeviceLocation;
 
 //    public boolean AllowUploadFBOPictures;
 //    public boolean AllowUploadMenuPictures;
