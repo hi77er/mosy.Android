@@ -4,21 +4,26 @@ import android.content.ContentValues;
 import android.os.AsyncTask;
 
 import com.google.gson.reflect.TypeToken;
+import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
+import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
+import com.mosy.kalin.mosy.R;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-public class SearchVenuesAsyncTask extends AsyncTask<SearchVenuesBindingModel, String, ArrayList<Venue>> {
+import java.util.Objects;
+
+public class SearchMenuListItemsAsyncTask extends AsyncTask<SearchMenuListItemsBindingModel, String, ArrayList<MenuListItem>> {
 
     @Override
-    protected ArrayList<Venue> doInBackground(SearchVenuesBindingModel... models) {
-        SearchVenuesBindingModel model = models[0];
-        String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint("FBO/QueryClosestFBOs");
-        ArrayList<Venue> venuesResult = new ArrayList<>();
+    protected ArrayList<MenuListItem> doInBackground(SearchMenuListItemsBindingModel... models) {
+        SearchMenuListItemsBindingModel model = models[0];
+        String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint("Requestable/QueryClosestRequestables");
+        ArrayList<MenuListItem> venuesResult = new ArrayList<>();
 
         try {
             ContentValues params = new ContentValues();
@@ -28,20 +33,16 @@ public class SearchVenuesAsyncTask extends AsyncTask<SearchVenuesBindingModel, S
             if (!model.Query.equals(StringHelper.empty())) params.put("query", model.Query);
 
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            Type returnType = new TypeToken<ArrayList<Venue>>(){}.getType();
-            venuesResult = jsonHttpClient.Get(endpoint, params, returnType, "yyyy-MM-dd'T'HH:mm:ss.");
+            Type returnType = new TypeToken<ArrayList<MenuListItem>>(){}.getType();
+            venuesResult = jsonHttpClient.Get(endpoint, params, returnType, StringHelper.empty());
         } catch(Exception e) {
             e.printStackTrace();
-            Venue errResult = new Venue();
-            errResult.ErrorMessage = e.getMessage();
-            venuesResult.add(errResult);
-            return venuesResult;
         }
         return venuesResult;
     }
 
     @Override
-    protected void onPostExecute(final ArrayList<Venue> result) {
+    protected void onPostExecute(final ArrayList<MenuListItem> result) {
         super.onPostExecute(result);
     }
 }

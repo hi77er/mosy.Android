@@ -80,7 +80,7 @@ public class VenuesActivity
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction()))
             query = intent.getStringExtra(SearchManager.QUERY);
-        performSearch(query);
+        performFBOSearch(query);
 
         final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout)findViewById(R.id.venues_lSwipeContainer);
         adapter.setSwipeRefreshLayout(swipeContainer);
@@ -88,7 +88,7 @@ public class VenuesActivity
             @Override
             public void onRefresh() {
                 retrieveLocation();
-                performSearch("searchall");
+                performFBOSearch("searchall");
                 swipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
             }
         });
@@ -98,11 +98,6 @@ public class VenuesActivity
     @Override
     protected void onStart() {
         super.onStart();
-
-        if (BuildConfig.DEBUG) {
-            System.out.println("MOSYLOGS : APP LOADED!" + " TOOK: " + ((System.currentTimeMillis() - timeStarted) / 1000) + " sec;");
-            Toast.makeText(this, "Loaded for: " + ((System.currentTimeMillis() - timeStarted) / 1000) + " sec", Toast.LENGTH_LONG).show();
-        }
     }
 
     @Override
@@ -110,6 +105,11 @@ public class VenuesActivity
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
+
+        if (BuildConfig.DEBUG) {
+            System.out.println("MOSYLOGS : APP LOADED!" + " TOOK: " + ((System.currentTimeMillis() - timeStarted) / 1000) + " sec;");
+            Toast.makeText(this, "Loaded for: " + ((System.currentTimeMillis() - timeStarted) / 1000) + " sec", Toast.LENGTH_LONG).show();
+        }
         return true;
     }
 
@@ -149,10 +149,10 @@ public class VenuesActivity
         });
     }
 
-    private void performSearch(String query) {
+    private void performFBOSearch(String query) {
         Boolean found = adapter.findVenues(query); //TODO: SET LATITUDE AND LONGITUDE TO DUCRRENT DEVICE PARAMS
-        String toastMessage = found ? "Results for '"+query+"'" : "No matches found";
-        Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
+//        String toastMessage = found ? "Results for '"+query+"'" : "No matches found";
+//        Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
     }
 
 }

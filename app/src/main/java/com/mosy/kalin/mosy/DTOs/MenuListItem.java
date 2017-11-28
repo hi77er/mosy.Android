@@ -19,7 +19,7 @@ public class MenuListItem
     @SerializedName("Id")
     public String Id;
 
-    @SerializedName("BruchureId")
+    @SerializedName("BrochureId")
     public String BrochureId;
 
     @SerializedName("Name")
@@ -30,14 +30,23 @@ public class MenuListItem
 
     @SerializedName("PreparationEstimateSeconds")
     public int PreparationEstimateSeconds;
-//
-//    @SerializedName("RequestableIngredients")
-//    public ArrayList<MenuListItemIngredient> RequestableIngredients;
 
     @SerializedName("Ingredients")
     public ArrayList<Ingredient> Ingredients;
 
-    @SuppressWarnings("unchecked")
+    @SerializedName("FBOId")
+    public String VenueId;
+
+    @SerializedName("FBOName")
+    public String VenueName;
+
+    @SerializedName("RequestableImageMeta")
+    public MenuListItemImage ImageThumbnail;
+//    @SerializedName("RequestableFBOPriceTag")
+//    public PriceTag PriceTag;
+
+
+@SuppressWarnings("unchecked")
     protected MenuListItem(Parcel in) {
         String[] data = new String[4];
 
@@ -48,8 +57,22 @@ public class MenuListItem
         this.Name = data[2];
         this.Summary = data[3];
         this.PreparationEstimateSeconds = Integer.parseInt(data[4]);
-//        this.RequestableIngredients = in.readArrayList(null);
+        this.VenueId = data[5];
+        this.VenueName = data[6];
         this.Ingredients = in.readArrayList(null);
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(Id);
+        parcel.writeString(BrochureId);
+        parcel.writeString(Name);
+        parcel.writeString(Summary);
+        parcel.writeInt(PreparationEstimateSeconds);
+        parcel.writeString(VenueId);
+        parcel.writeString(VenueName);
+        parcel.writeList(Ingredients);
+
     }
 
     public static final Creator<MenuListItem> CREATOR = new Creator<MenuListItem>() {
@@ -67,17 +90,5 @@ public class MenuListItem
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(Id);
-        parcel.writeString(BrochureId);
-        parcel.writeString(Name);
-        parcel.writeString(Summary);
-        parcel.writeInt(PreparationEstimateSeconds);
-//        parcel.writeList(RequestableIngredients);
-        parcel.writeList(Ingredients);
-
     }
 }
