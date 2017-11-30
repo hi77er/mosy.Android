@@ -29,6 +29,6 @@ public class MenuListItemImage
     public boolean IsOutdoors;
 
     @SerializedName("Bytes")
-    public String Bytes;
+    public byte[] Bytes;
 
 }

@@ -23,7 +23,7 @@ public class SearchVenuesBindingModel {
     public void setLongitude(double longitude) { this.Longitude = longitude; }
 
     public SearchVenuesBindingModel() { }
-    public SearchVenuesBindingModel(int maxResultsCount, String query, double latitude, double longitude) {
+    public SearchVenuesBindingModel(int maxResultsCount, double latitude, double longitude, String query) {
         this.MaxResultsCount = maxResultsCount;
         this.Query = query;
         this.Latitude = latitude;

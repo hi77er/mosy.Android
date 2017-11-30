@@ -23,11 +23,11 @@ public class SearchMenuListItemsBindingModel {
     public void setLongitude(double longitude) { this.Longitude = longitude; }
 
     public SearchMenuListItemsBindingModel() { }
-    public SearchMenuListItemsBindingModel(int maxResultsCount, String query, double latitude, double longitude) {
+    public SearchMenuListItemsBindingModel(int maxResultsCount, double latitude, double longitude, String query) {
         this.MaxResultsCount = maxResultsCount;
-        this.Query = query;
         this.Latitude = latitude;
         this.Longitude = longitude;
+        this.Query = query;
     }
 
 }

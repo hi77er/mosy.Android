@@ -68,5 +68,6 @@
     <string name="landing_btnDishes">DISHES</string>
     <string name="venues_btnNavigateToVenuesText">Venues</string>
     <string name="venues_btnNavigateToDishesText">Dishes</string>
+    <string name="menulist_item_name">Dish Name</string>
 
 </resources>

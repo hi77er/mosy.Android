@@ -26,6 +26,7 @@ public class AzureBlobDownloadAsyncTask extends AsyncTask<DownloadBlobModel, Voi
             blob.downloadToByteArray(blobBytes,0);
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
 
         return blobBytes;

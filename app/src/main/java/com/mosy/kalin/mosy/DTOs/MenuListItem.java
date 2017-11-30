@@ -42,6 +42,9 @@ public class MenuListItem
 
     @SerializedName("RequestableImageMeta")
     public MenuListItemImage ImageThumbnail;
+
+    @SerializedName("DistanceToDevice")
+    public double DistanceToCurrentDeviceLocation;
 //    @SerializedName("RequestableFBOPriceTag")
 //    public PriceTag PriceTag;
 

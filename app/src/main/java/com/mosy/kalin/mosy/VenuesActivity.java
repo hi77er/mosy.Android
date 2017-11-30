@@ -14,23 +14,19 @@ import android.view.Menu;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.mosy.kalin.mosy.Adapters.DishesAdapter;
 import com.mosy.kalin.mosy.Adapters.VenuesAdapter;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Services.LocationResolver;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ItemClick;
-import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
-import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
-
-import javax.xml.datatype.Duration;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_venues)
@@ -38,13 +34,10 @@ import javax.xml.datatype.Duration;
 public class VenuesActivity
         extends AppCompatActivity
 {
-//    @Extra
-//    SearchMode Mode;
     long timeStarted = 0;
-    Location lastKnowLocation;
 
     @Extra
-    boolean DishesSearchModeActivated;
+    static boolean DishesSearchModeActivated;
 
     SearchView searchView;
     LocationResolver mLocationResolver;
@@ -53,18 +46,21 @@ public class VenuesActivity
     SearchManager searchManager;
 
     @Bean
-    VenuesAdapter adapter;
+    VenuesAdapter venuesAdapter;
+    @Bean
+    DishesAdapter dishesAdapter;
 
     @ViewById(R.id.search_toolbar)
     Toolbar toolbar;
     @ViewById(resName = "venues_lvVenues")
     ListView Venues;
+    @ViewById(resName = "venues_lvDishes")
+    ListView Dishes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         timeStarted = System.currentTimeMillis();
-        boolean value = this.DishesSearchModeActivated;
 
         mLocationResolver = new LocationResolver(this);
         mLocationResolver.onStart();
@@ -72,7 +68,7 @@ public class VenuesActivity
     }
 
     @AfterViews
-    void bindAdapter() {
+    void afterViews() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -80,19 +76,37 @@ public class VenuesActivity
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction()))
             query = intent.getStringExtra(SearchManager.QUERY);
-        performFBOSearch(query);
 
-        final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout)findViewById(R.id.venues_lSwipeContainer);
-        adapter.setSwipeRefreshLayout(swipeContainer);
-        adapter.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                retrieveLocation();
-                performFBOSearch("searchall");
-                swipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
-            }
-        });
-        Venues.setAdapter(adapter);
+        if (!DishesSearchModeActivated) {
+            final SwipeRefreshLayout venuesSwipeContainer = findViewById(R.id.venues_lVenuesSwipeContainer);
+            venuesAdapter.setSwipeRefreshLayout(venuesSwipeContainer);
+            venuesAdapter.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    retrieveLocation();
+                    performFBOSearch("searchall");
+                    venuesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
+                }
+            });
+
+            performFBOSearch(query);
+            Venues.setAdapter(venuesAdapter);
+        }
+        else {
+            final SwipeRefreshLayout dishesSwipeContainer = findViewById(R.id.venues_lDishesSwipeContainer);
+            dishesAdapter.setSwipeRefreshLayout(dishesSwipeContainer);
+            dishesAdapter.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    retrieveLocation();
+                    performDishesSearch("searchall");
+                    dishesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
+                }
+            });
+
+            performDishesSearch(query);
+            Dishes.setAdapter(dishesAdapter);
+        }
     }
 
     @Override
@@ -144,15 +158,19 @@ public class VenuesActivity
         mLocationResolver.resolveLocation(this, new LocationResolver.OnLocationResolved() {
             @Override
             public void onLocationResolved(Location location) {
-                adapter.setLocation(location);
+                venuesAdapter.setLocation(location);
+                dishesAdapter.setLocation(location);
             }
         });
     }
 
     private void performFBOSearch(String query) {
-        Boolean found = adapter.findVenues(query); //TODO: SET LATITUDE AND LONGITUDE TO DUCRRENT DEVICE PARAMS
+        Boolean found = venuesAdapter.findVenues(query);
 //        String toastMessage = found ? "Results for '"+query+"'" : "No matches found";
 //        Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
     }
 
+    private void performDishesSearch(String query) {
+        Boolean found = dishesAdapter.findDishes(query);
+    }
 }

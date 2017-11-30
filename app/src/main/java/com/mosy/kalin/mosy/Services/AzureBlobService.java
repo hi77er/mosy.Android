@@ -17,8 +17,9 @@ public class AzureBlobService {
         try {
             if (BuildConfig.DEBUG) execStart = System.currentTimeMillis();
 
+            AzureBlobDownloadAsyncTask task = new AzureBlobDownloadAsyncTask();
             DownloadBlobModel model = new DownloadBlobModel(blobId, containerName);
-            bufferArr = new AzureBlobDownloadAsyncTask().execute(model).get();
+            bufferArr = task.execute(model).get();
 
             if (BuildConfig.DEBUG) elapsed = System.currentTimeMillis() - execStart;
             if (BuildConfig.DEBUG) System.out.println("MOSYLOGS : AZURE BLOB DOWNLOAD" + containerName + " - " + blobId + " TOOK: " + elapsed + "ms;");

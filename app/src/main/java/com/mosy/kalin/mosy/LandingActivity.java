@@ -1,5 +1,6 @@
 package com.mosy.kalin.mosy;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 
+@SuppressLint("Registered")
 @EActivity(R.layout.activity_landing)
 public class LandingActivity
         extends AppCompatActivity
@@ -15,6 +17,12 @@ public class LandingActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // setContentView(R.layout.activity_landing);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         // setContentView(R.layout.activity_landing);
     }
 

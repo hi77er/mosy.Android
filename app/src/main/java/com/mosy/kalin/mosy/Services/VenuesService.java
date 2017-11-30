@@ -1,6 +1,5 @@
 package com.mosy.kalin.mosy.Services;
 
-import android.content.Context;
 import android.location.Location;
 
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueBusinessHoursAsyncTask;
@@ -155,9 +154,7 @@ public class VenuesService {
         VenueImage image = null;
         try {
             image = new GetVenueIndoorImageMetaAsyncTask().execute(model).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return image;

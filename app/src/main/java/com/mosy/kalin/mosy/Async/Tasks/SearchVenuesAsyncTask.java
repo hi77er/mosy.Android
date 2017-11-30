@@ -25,7 +25,8 @@ public class SearchVenuesAsyncTask extends AsyncTask<SearchVenuesBindingModel, S
             params.put("maxResultsCount", model.MaxResultsCount);
             params.put("latitude", model.Latitude);
             params.put("longitude", model.Longitude);
-            if (!model.Query.equals(StringHelper.empty())) params.put("query", model.Query);
+            if (!model.Query.equals(StringHelper.empty()))
+                params.put("query", model.Query);
 
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
             Type returnType = new TypeToken<ArrayList<Venue>>(){}.getType();

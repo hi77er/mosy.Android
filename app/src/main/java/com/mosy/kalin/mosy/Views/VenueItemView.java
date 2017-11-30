@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
+import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.BusinessHoursHelper;
 import com.mosy.kalin.mosy.Helpers.LocationHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
@@ -66,13 +67,6 @@ public class VenueItemView
                 this.OpenedSinceUntil.setVisibility(VISIBLE);
         }
 
-//        if (venue.Location != null) {
-//            String distance = LocationHelper.buildDistanceText(venue.Location.DistanceToCurrentLocationMeters);
-//            String timeWalking = LocationHelper.buildMinutesWalkingText(venue.Location.DistanceToCurrentLocationMeters);
-//            String text = distance + (timeWalking.length() > 0 ? " | " + timeWalking : StringHelper.empty());
-//            this.DistanceFromDevice.setText(text);
-//        }
-
         if (venue.DistanceToCurrentDeviceLocation > 0)
         {
             String distance = LocationHelper.buildDistanceText(venue.DistanceToCurrentDeviceLocation);
@@ -81,8 +75,7 @@ public class VenueItemView
             this.DistanceFromDevice.setText(text);
         }
 
-        if (venue.OutdoorImage != null && venue.OutdoorImage.Bytes != null){
-//            byte[] byteArray = Base64.decode(venue.OutdoorImage.Bytes, Base64.DEFAULT);
+        if (venue.OutdoorImage != null && ArrayHelper.hasValidBitmapContent(venue.OutdoorImage.Bytes)){
             Bitmap bmp = BitmapFactory.decodeByteArray(venue.OutdoorImage.Bytes, 0, venue.OutdoorImage.Bytes.length);
             this.OutdoorImageThumbnail.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
             IsUsingDefaultOutdoorImageThumbnail = false;
