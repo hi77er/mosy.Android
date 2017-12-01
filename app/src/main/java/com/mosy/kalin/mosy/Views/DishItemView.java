@@ -35,6 +35,8 @@ public class DishItemView
 
     @ViewById(resName = "menuListItem_tvName")
     TextView Name;
+    @ViewById(resName = "menuListItem_tvVenueName")
+    TextView VenueName;
     //@ViewById(resName = "menuListItem_tvOpenedSinceUntil")
     //TextView OpenedSinceUntil;
     @ViewById(resName = "menuListItem_tvDistance")
@@ -48,6 +50,7 @@ public class DishItemView
 
     public void bind(MenuListItem menuListItem) {
         this.Name.setText(menuListItem.Name);
+        this.VenueName.setText(menuListItem.VenueName);
         if (menuListItem.ImageThumbnail != null) this.ImageId = menuListItem.ImageThumbnail.Id;
 
         if (menuListItem.DistanceToCurrentDeviceLocation > 0)

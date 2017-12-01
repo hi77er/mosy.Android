@@ -13,6 +13,7 @@ public class LocationHelper {
     private static final int APPROXIMATE_WALKING_SPEED = 5; // km per hour
 
     public static String buildDistanceText(double distanceMeters){
+        distanceMeters = DoubleHelper.round(distanceMeters, 2);
         String text = StringHelper.empty();
 
         if (distanceMeters == 0)
@@ -37,6 +38,7 @@ public class LocationHelper {
 
     public static String buildMinutesWalkingText(double distanceMeters) {
         String text = StringHelper.empty();
+        distanceMeters = DoubleHelper.round(distanceMeters, 2);
         double time = calcMinutesWalkingToLocation(distanceMeters);
 
         if (time > 0 && time < 1)

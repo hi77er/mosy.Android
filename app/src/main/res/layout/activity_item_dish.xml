@@ -35,6 +35,16 @@
             android:textSize="19sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/menuListItem_tvVenueName"
+            android:layout_gravity="start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/menulist_item_venueName"
+            android:textSize="16sp"
+            android:textColor="@color/soft"
+            android:textStyle="bold" />
+
         <!--<TextView-->
             <!--android:id="@+id/venueItem_tvOpenedSinceUntil"-->
             <!--android:layout_gravity="start"-->

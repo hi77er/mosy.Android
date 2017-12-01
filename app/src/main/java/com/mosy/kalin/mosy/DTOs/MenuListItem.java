@@ -24,6 +24,7 @@ public class MenuListItem
 
     @SerializedName("Name")
     public String Name;
+    public String getName(){return this.Name;}
 
     @SerializedName("Summary")
     public String Summary;

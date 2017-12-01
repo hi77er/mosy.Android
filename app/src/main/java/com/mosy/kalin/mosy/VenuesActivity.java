@@ -78,7 +78,7 @@ public class VenuesActivity
             query = intent.getStringExtra(SearchManager.QUERY);
 
         if (!DishesSearchModeActivated) {
-            final SwipeRefreshLayout venuesSwipeContainer = findViewById(R.id.venues_lVenuesSwipeContainer);
+            final  SwipeRefreshLayout venuesSwipeContainer = findViewById(R.id.venues_lVenuesSwipeContainer);
             venuesAdapter.setSwipeRefreshLayout(venuesSwipeContainer);
             venuesAdapter.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
