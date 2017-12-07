@@ -73,9 +73,9 @@
                      android:layout_weight="1"
                      android:layout_height="match_parent"
                      android:textStyle="bold"
-                     android:textSize="21sp"
+                     android:textSize="22sp"
                      android:textColor="@color/colorPrimarySalmon"
-                     android:text="0 m"
+                     android:text="0m"
                      android:gravity="center_vertical" />
 
                  <ImageView
@@ -90,9 +90,9 @@
                      android:layout_weight="1"
                      android:layout_height="match_parent"
                      android:textStyle="bold"
-                     android:textSize="21sp"
+                     android:textSize="22sp"
                      android:textColor="@color/colorPrimarySalmon"
-                     android:text="0 min"
+                     android:text="0min"
                      android:gravity="center_vertical"  />
             </LinearLayout>
 
@@ -113,7 +113,7 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:textStyle="bold"
-                    android:textSize="21sp"
+                    android:textSize="22sp"
                     android:textColor="@color/colorPrimarySalmon"
                     android:text="0.0"
                     android:gravity="center_vertical" />
@@ -130,7 +130,7 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:textStyle="bold"
-                    android:textSize="21sp"
+                    android:textSize="22sp"
                     android:textColor="@color/colorPrimarySalmon"
                     android:text="$0"
                     android:gravity="center_vertical" />
