@@ -37,12 +37,19 @@ public class DishItemView
     TextView Name;
     @ViewById(resName = "menuListItem_tvVenueName")
     TextView VenueName;
+    @ViewById(resName = "menuListItem_ivThumbnail")
+    ImageView ImageThumbnail;
     //@ViewById(resName = "menuListItem_tvOpenedSinceUntil")
     //TextView OpenedSinceUntil;
     @ViewById(resName = "menuListItem_tvDistance")
     TextView DistanceFromDevice;
-    @ViewById(resName = "menuListItem_ivThumbnail")
-    ImageView ImageThumbnail;
+    @ViewById(resName = "menuListItem_tvWalkingTime")
+    TextView WalkingTime;
+    @ViewById(resName = "menuListItem_tvPriceTag")
+    TextView PriceTag;
+    @ViewById(resName = "menuListItem_tvRatingTag")
+    TextView RatingTag;
+
 
     public DishItemView(Context context) {
         super(context);
@@ -56,9 +63,11 @@ public class DishItemView
         if (menuListItem.DistanceToCurrentDeviceLocation > 0)
         {
             String distance = LocationHelper.buildDistanceText(menuListItem.DistanceToCurrentDeviceLocation);
+            this.DistanceFromDevice.setText(distance);
+
             String timeWalking = LocationHelper.buildMinutesWalkingText(menuListItem.DistanceToCurrentDeviceLocation);
-            String text = distance + (timeWalking.length() > 0 ? timeWalking : StringHelper.empty());
-            this.DistanceFromDevice.setText(text);
+            timeWalking = (timeWalking.length() > 0 ? timeWalking : StringHelper.empty());
+            this.WalkingTime.setText(timeWalking);
         }
 
         if (menuListItem.ImageThumbnail != null && ArrayHelper.hasValidBitmapContent(menuListItem.ImageThumbnail.Bytes)){

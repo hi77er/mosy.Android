@@ -1,30 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="ltr"
     android:layout_alignParentEnd="true"
     android:paddingStart="10dp"
     android:paddingLeft="10dp"
-    android:paddingTop="10dp"
+    android:paddingTop="3dp"
     android:paddingEnd="10dp"
     android:paddingRight="10dp"
     android:paddingBottom="10dp">
 
-    <ImageView
-        android:id="@+id/menuListItem_ivThumbnail"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginEnd="10dp"
-        android:src="@drawable/drink_default" />
-
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="45dp"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/menuListItem_tvName"
@@ -32,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/menulist_item_name"
-            android:textSize="19sp"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
         <TextView
@@ -41,27 +33,108 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/menulist_item_venueName"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textColor="@color/soft"
             android:textStyle="bold" />
 
-        <!--<TextView-->
-            <!--android:id="@+id/venueItem_tvOpenedSinceUntil"-->
-            <!--android:layout_gravity="start"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textStyle="bold"-->
-            <!--android:textSize="16sp"-->
-            <!--android:textColor="@color/soft" />-->
-
-        <TextView
-            android:id="@+id/menuListItem_tvDistance"
-            android:layout_gravity="start"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="@color/colorQuaternary" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/menuListItem_ivThumbnail"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:src="@drawable/drink_default" />
+
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="47dp">
+
+                 <ImageView
+                     android:layout_width="0dp"
+                     android:layout_weight="1"
+                     android:layout_height="wrap_content"
+                     android:src="@drawable/distance_salmon"/>
+
+                 <TextView
+                     android:id="@+id/menuListItem_tvDistance"
+                     android:layout_width="0dp"
+                     android:layout_weight="1"
+                     android:layout_height="match_parent"
+                     android:textStyle="bold"
+                     android:textSize="21sp"
+                     android:textColor="@color/colorPrimarySalmon"
+                     android:text="0 m"
+                     android:gravity="center_vertical" />
+
+                 <ImageView
+                     android:layout_width="0dp"
+                     android:layout_weight="1"
+                     android:layout_height="wrap_content"
+                     android:src="@drawable/walkingtime_salmon"/>
+
+                 <TextView
+                     android:id="@+id/menuListItem_tvWalkingTime"
+                     android:layout_width="0dp"
+                     android:layout_weight="1"
+                     android:layout_height="match_parent"
+                     android:textStyle="bold"
+                     android:textSize="21sp"
+                     android:textColor="@color/colorPrimarySalmon"
+                     android:text="0 min"
+                     android:gravity="center_vertical"  />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/rating_salmon"/>
+
+                <TextView
+                    android:id="@+id/menuListItem_tvPriceTag"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:textStyle="bold"
+                    android:textSize="21sp"
+                    android:textColor="@color/colorPrimarySalmon"
+                    android:text="0.0"
+                    android:gravity="center_vertical" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/pricetag_salmon"/>
+
+                <TextView
+                    android:id="@+id/menuListItem_tvRatingTag"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:textStyle="bold"
+                    android:textSize="21sp"
+                    android:textColor="@color/colorPrimarySalmon"
+                    android:text="$0"
+                    android:gravity="center_vertical" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

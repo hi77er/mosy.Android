@@ -12,6 +12,7 @@
       <w>mosylogs</w>
       <w>mosystorage</w>
       <w>mosyws</w>
+      <w>pricetag</w>
       <w>raffy</w>
       <w>requestable</w>
       <w>requestablealbums</w>
@@ -19,6 +20,7 @@
       <w>searchall</w>
       <w>textview</w>
       <w>userimages</w>
+      <w>walkingtime</w>
     </words>
   </dictionary>
 </component>
