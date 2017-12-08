@@ -64,7 +64,7 @@ public class MenuListItemDetailsView
             }
             else {
                 this.IsUsingDefaultOutdoorImageThumbnail = true;
-                this.MenuListItemMainImage.setImageResource(R.drawable.drink_default);
+                this.MenuListItemMainImage.setImageResource(R.drawable.eat_paprika);
             }
         }
     }

@@ -43,6 +43,8 @@ public class VenueItemView
     TextView OpenedSinceUntil;
     @ViewById(resName = "venueItem_tvDistance")
     TextView DistanceFromDevice;
+    @ViewById(resName = "venueItem_tvWalkingMinutes")
+    TextView WalkingMinutes;
     @ViewById(resName = "venueItem_ivOutdoorThumbnail")
     ImageView OutdoorImageThumbnail;
 
@@ -70,9 +72,11 @@ public class VenueItemView
         if (venue.DistanceToCurrentDeviceLocation > 0)
         {
             String distance = LocationHelper.buildDistanceText(venue.DistanceToCurrentDeviceLocation);
+            this.DistanceFromDevice.setText(distance);
+
             String timeWalking = LocationHelper.buildMinutesWalkingText(venue.DistanceToCurrentDeviceLocation);
-            String text = distance + (timeWalking.length() > 0 ? timeWalking : StringHelper.empty());
-            this.DistanceFromDevice.setText(text);
+            timeWalking = (timeWalking.length() > 0 ? timeWalking : StringHelper.empty());
+            this.DistanceFromDevice.setText(timeWalking );
         }
 
         if (venue.OutdoorImage != null && ArrayHelper.hasValidBitmapContent(venue.OutdoorImage.Bytes)){

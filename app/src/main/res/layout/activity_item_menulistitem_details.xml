@@ -8,7 +8,7 @@
 
     <ImageView
         android:id="@+id/menuListItemDetails_ivMainImage"
-        android:src="@drawable/drink_default"
+        android:src="@drawable/eat_paprika"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginStart="20dp"

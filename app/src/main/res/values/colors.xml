@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#720023</color>
     <color name="colorPrimaryVeryDark">#3F0D12</color>
     <color name="colorPrimarySalmon">#EF6461</color>
+    <color name="colorPrimaryLight">#CF9893</color>
+    <color name="colorPrimaryCareys">#D69CA7</color>
     <color name="colorPrimarySalmonLight">#FEC3BF</color>
     <color name="colorPrimaryVeryLight">#FFEEEE</color>
 

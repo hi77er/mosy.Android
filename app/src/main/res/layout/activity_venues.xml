@@ -6,41 +6,7 @@
     android:orientation="vertical"
     android:background="@color/colorWhite">
 
-    <include layout="@layout/search_toolbar" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:paddingBottom="5dp"
-        android:background="@color/colorPrimary">
-
-        <Button
-            android:id="@+id/venues_btnNavigateToVenues"
-            android:text="@string/venues_btnNavigateToVenuesText"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="60dp"
-            android:paddingStart="20dp"
-            android:paddingEnd="40dp"
-            android:drawableStart="@drawable/venue_default_thumbnail_xxs"
-            android:background="@color/colorMenuBackground"
-            android:textColor="@color/colorPrimary"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/venues_btnNavigateToDishes"
-            android:text="@string/venues_btnNavigateToDishesText"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="60dp"
-            android:paddingStart="20dp"
-            android:paddingEnd="40dp"
-            android:drawableStart="@drawable/drink_default_thumbnail_xxs"
-            android:background="@color/colorMenuBackground"
-            android:textColor="@color/colorPrimary"
-            android:textSize="18sp" />
-    </LinearLayout>
+    <include layout="@layout/action_bar_search_toolbar" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

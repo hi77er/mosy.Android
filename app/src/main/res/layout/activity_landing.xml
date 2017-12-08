@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="90dp"
         android:paddingEnd="90dp"
-        android:drawableStart="@drawable/drink_default_thumbnail_xxs"
+        android:drawableStart="@drawable/eat_paprika_xxs"
         android:text="@string/landing_btnDishes"
         android:textSize="20sp"
         android:background="@color/colorPrimaryVeryLight"

@@ -98,7 +98,7 @@ public class DishesAdapter
 
     public boolean findDishes(String query){
         try {
-            SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(30, this.DeviceLastKnownLatitude, this.DeviceLastKnownLongitude, query);
+            SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(8, this.DeviceLastKnownLatitude, this.DeviceLastKnownLongitude, query);
             this.menuListItems = new SearchMenuListItemsAsyncTask().execute(model).get();
 
             if (this.menuListItems != null && this.menuListItems.get(0) != null) {

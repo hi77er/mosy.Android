@@ -3,14 +3,17 @@ package com.mosy.kalin.mosy;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -39,7 +42,6 @@ public class VenuesActivity
     @Extra
     static boolean DishesSearchModeActivated;
 
-    SearchView searchView;
     LocationResolver mLocationResolver;
 
     @SystemService
@@ -50,7 +52,9 @@ public class VenuesActivity
     @Bean
     DishesAdapter dishesAdapter;
 
-    @ViewById(R.id.search_toolbar)
+    SearchView searchView;
+
+    @ViewById(R.id.toolbar)
     Toolbar toolbar;
     @ViewById(resName = "venues_lvVenues")
     ListView Venues;
@@ -69,8 +73,7 @@ public class VenuesActivity
 
     @AfterViews
     void afterViews() {
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        configureActionBar();
 
         String query = "searchall";
         Intent intent = getIntent();
@@ -109,6 +112,7 @@ public class VenuesActivity
         }
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -116,6 +120,14 @@ public class VenuesActivity
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
+        if (!DishesSearchModeActivated) {
+            menu.findItem(R.id.action_dishes).setVisible(true);
+            menu.findItem(R.id.action_venues).setVisible(false);
+        } else {
+            menu.findItem(R.id.action_venues).setVisible(true);
+            menu.findItem(R.id.action_dishes).setVisible(false);
+        }
+
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
@@ -125,6 +137,21 @@ public class VenuesActivity
             Toast.makeText(this, "Loaded for: " + ((System.currentTimeMillis() - timeStarted) / 1000) + " sec", Toast.LENGTH_LONG).show();
         }
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_venues:
+                this.NavigateVenuesSearch();
+                return true;
+            case R.id.action_dishes:
+                this.NavigateDishesSearch();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -144,13 +171,27 @@ public class VenuesActivity
     }
 
     @ItemClick(resName = "venues_lvVenues")
-    void openMenu(Venue venue) {
+    void openVenueMenu(Venue venue) {
         Intent intent = new Intent(VenuesActivity.this, VenueActivity_.class);
         venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
         venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
         venue.Location = null;
         venue.VenueBusinessHours = null;
         intent.putExtra("Venue", venue);
+        startActivity(intent);
+    }
+
+//    @ItemClick(resName = "action_bar_venues")
+    public void NavigateVenuesSearch(){
+        Intent intent = new Intent(VenuesActivity.this, VenuesActivity_.class);
+        intent.putExtra("DishesSearchModeActivated", false); //else find dishes
+        startActivity(intent);
+    }
+
+//    @ItemClick(resName = "action_bar_dishes")
+    public void NavigateDishesSearch(){
+        Intent intent = new Intent(VenuesActivity.this, VenuesActivity_.class);
+        intent.putExtra("DishesSearchModeActivated", true); //else find dishes
         startActivity(intent);
     }
 
@@ -173,4 +214,37 @@ public class VenuesActivity
     private void performDishesSearch(String query) {
         Boolean found = dishesAdapter.findDishes(query);
     }
+
+    private Bitmap resizeBitmapImageFn(
+            Bitmap bmpSource, int maxResolution){
+        int iWidth = bmpSource.getWidth();
+        int iHeight = bmpSource.getHeight();
+        int newWidth = iWidth ;
+        int newHeight = iHeight ;
+        float rate = 0.0f;
+
+        if(iWidth > iHeight ){
+            if(maxResolution < iWidth ){
+                rate = maxResolution / (float) iWidth ;
+                newHeight = (int) (iHeight * rate);
+                newWidth = maxResolution;
+            }
+        }else{
+            if(maxResolution < iHeight ){
+                rate = maxResolution / (float) iHeight ;
+                newWidth = (int) (iWidth * rate);
+                newHeight = maxResolution;
+            }
+        }
+
+        return Bitmap.createScaledBitmap(
+                bmpSource, newWidth, newHeight, true);
+    }
+
+    private void configureActionBar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+    }
+
 }

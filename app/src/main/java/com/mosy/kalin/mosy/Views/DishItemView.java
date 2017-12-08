@@ -77,7 +77,7 @@ public class DishItemView
         }
         else {
             IsUsingDefaultImageThumbnail = true;
-            this.ImageThumbnail.setImageResource(R.drawable.drink_default);
+            this.ImageThumbnail.setImageResource(R.drawable.eat_paprika);
         }
     }
 

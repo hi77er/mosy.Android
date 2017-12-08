@@ -94,7 +94,7 @@ public class VenuesAdapter
 
     public boolean findVenues(String query){
         try {
-            SearchVenuesBindingModel model = new SearchVenuesBindingModel(30, this.DeviceLastKnownLatitude, this.DeviceLastKnownLongitude, query);
+            SearchVenuesBindingModel model = new SearchVenuesBindingModel(8, this.DeviceLastKnownLatitude, this.DeviceLastKnownLongitude, query);
             this.venues = new SearchVenuesAsyncTask().execute(model).get();
 
             if (this.venues != null && this.venues.get(0) != null) {

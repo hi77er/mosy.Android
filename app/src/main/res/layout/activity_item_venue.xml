@@ -33,12 +33,11 @@
             <TextView
                 android:id="@+id/venueItem_tvName"
                 android:layout_gravity="start"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/venue_item_name"
                 android:textSize="19sp"
                 android:textStyle="bold" />
-
 
             <TextView
                 android:id="@+id/venueItem_tvClass"
@@ -62,13 +61,20 @@
             <TextView
                 android:id="@+id/venueItem_tvDistance"
                 android:layout_gravity="start"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="5min walking, 10 - by car "
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:textColor="@color/colorQuaternary" />
 
+            <TextView
+                android:id="@+id/venueItem_tvWalkingMinutes"
+                android:layout_gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/colorQuaternary" />
         </LinearLayout>
 
     </RelativeLayout>
