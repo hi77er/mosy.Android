@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorWhite">
 
-    <include layout="@layout/action_bar_search_toolbar" />
+    <include layout="@layout/action_bar_toolbar" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/venues_lVenuesSwipeContainer"
+        android:layout_marginTop="55dp"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:visibility="gone">
 
         <ListView
             android:id="@+id/venues_lvVenues"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="0dip"
             android:focusableInTouchMode="false"
             android:listSelector="@android:color/transparent"
@@ -35,12 +35,13 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/venues_lDishesSwipeContainer"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="55dp"
         android:visibility="gone">
 
         <ListView
             android:id="@+id/venues_lvDishes"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="0dip"
             android:focusableInTouchMode="false"
             android:listSelector="@android:color/transparent"
@@ -53,4 +54,17 @@
             android:drawSelectorOnTop="false">
         </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
-</LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/venues_ibFilters"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_action_filters"
+        android:backgroundTint="@color/colorPrimary"
+        app:borderWidth="0dp"
+        android:elevation="4dp" />
+</RelativeLayout>

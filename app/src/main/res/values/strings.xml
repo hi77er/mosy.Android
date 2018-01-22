@@ -40,7 +40,8 @@
     <string name="requestable_item_name">Requestable Name</string>
     <string name="requestable_btnAddToOrder">+ order</string>
     <string name="title_activity_venue_details">VenueDetailsActivity</string>
-    <string name="search_hint">Search …</string>
+    <string name="search_venues_hint">Search venues …</string>
+    <string name="search_dishes_hint">Search dishes …</string>
     <string name="menu_search">Search</string>
     <string name="venueDetails_mondayHours">Monday</string>
     <string name="venueDetails_tuesdayHours">Tuesday</string>
@@ -69,5 +70,45 @@
     <string name="venues_btnNavigateToDishesText">Dishes</string>
     <string name="menulist_item_name">Dish Name</string>
     <string name="menulist_item_venueName">Venue Name</string>
+    <string name="title_activity_filters_venues">Filter venues</string>
+    <string name="title_activity_filters_dishes">Filter dishes</string>
+    <string name="filters_venues_title_venues_sbDistance">Distance: off</string>
+    <string name="filters_venues_title_venues_sbRating">Rating: higher than 5</string>
+    <string name="filters_dishes_tvDistance">Distance: off</string>
+    <string name="filters_dishes_tvRating">Rating: higher than 5</string>
+    <string name="filters_dishes_show_closed">Show closed venues</string>
+    <string name="filters_dishes_tvCuisinePhase">Phase:</string>
+    <string name="filters_dishes_tvCuisineRegion">Region:</string>
+    <string name="filters_dishes_tvCuisineSpectrum">Spectrum:</string>
+    <string name="filters_dishes_tvCuisineEndorsements">Endorsements:</string>
+
+
+
+
+    <!--Filters-->
+    <string name="CuisinePhaseSalads">Salads</string>
+    <string name="CuisinePhaseAppetizersAndSnacks">Appet</string>
+    <string name="CuisinePhaseDrinks">Drinks</string>
+    <string name="CuisinePhaseBreakfast">Snacks</string>
+    <string name="CuisinePhaseMains">Mains</string>
+    <string name="CuisinePhaseDeserts">Deserts</string>
+
+    <string name="CuisineRegionAsian">Asia</string>
+    <string name="CuisineRegionMiddleEastern">Eastern</string>
+    <string name="CuisineRegionEuropean">Europe</string>
+    <string name="CuisineRegionAfrican">Africa</string>
+    <string name="CuisineRegionAmerican">America</string>
+    <string name="CuisineRegionOther">Other</string>
+
+    <string name="CuisineSpectrumFishAndSeafood">Fish &amp; sea</string>
+    <string name="CuisineSpectrumWhiteMeat">White meat</string>
+    <string name="CuisineSpectrumVegan">Vegan</string>
+    <string name="CuisineSpectrumGlutenFree">Gluten free</string>
+    <string name="CuisineSpectrumRedMeat">Red meat</string>
+    <string name="CuisineSpectrumRawVegan">Raw vegan</string>
+    <string name="CuisineSpectrumVegetarian">Vegetarian</string>
+
+    <string name="CuisineSpectrumKosher">Kosher</string>
+    <string name="CuisineSpectrumHalal">Halal</string>
 
 </resources>

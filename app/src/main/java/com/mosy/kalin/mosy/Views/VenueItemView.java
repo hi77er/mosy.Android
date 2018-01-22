@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
@@ -39,8 +40,8 @@ public class VenueItemView
     TextView Name;
     @ViewById(resName = "venueItem_tvClass")
     TextView Class;
-    @ViewById(resName = "venueItem_tvOpenedSinceUntil")
-    TextView OpenedSinceUntil;
+    @ViewById(resName = "menuListItem_tvWorkingStatus")
+    TextView WorkingStatus;
     @ViewById(resName = "venueItem_tvDistance")
     TextView DistanceFromDevice;
     @ViewById(resName = "venueItem_tvWalkingMinutes")
@@ -60,13 +61,18 @@ public class VenueItemView
         this.Name.setText(venue.Name);
         this.Class.setText(venue.Class);
 
-        if (venue.VenueBusinessHours != null) {
-            String sinceUntil = BusinessHoursHelper.buildBusinessHoursText(venue.VenueBusinessHours);
-            this.OpenedSinceUntil.setText(sinceUntil);
-            if (sinceUntil.equals(StringHelper.empty()))
-                this.OpenedSinceUntil.setVisibility(GONE);
-            else
-                this.OpenedSinceUntil.setVisibility(VISIBLE);
+        com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus status = BusinessHoursHelper.getWorkingStatus(venue.VenueBusinessHours);
+        switch (status){
+            case Open:
+                this.WorkingStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.open_moss_nopadding, 0, 0, 0);
+                break;
+            case Open247:
+                this.WorkingStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.open247_emerald_nopadding, 0, 0, 0);
+                break;
+            case Closed:
+                this.WorkingStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.closed_salmon_nopadding, 0, 0, 0);
+                break;
+            case Unknown: break;
         }
 
         if (venue.DistanceToCurrentDeviceLocation > 0)
@@ -76,7 +82,7 @@ public class VenueItemView
 
             String timeWalking = LocationHelper.buildMinutesWalkingText(venue.DistanceToCurrentDeviceLocation);
             timeWalking = (timeWalking.length() > 0 ? timeWalking : StringHelper.empty());
-            this.DistanceFromDevice.setText(timeWalking );
+            this.WalkingMinutes.setText(timeWalking );
         }
 
         if (venue.OutdoorImage != null && ArrayHelper.hasValidBitmapContent(venue.OutdoorImage.Bytes)){

@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import com.google.gson.reflect.TypeToken;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
+import com.mosy.kalin.mosy.Http.HttpParams;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBusinessHoursBindingModel;
 
@@ -18,7 +19,7 @@ public class GetVenueBusinessHoursAsyncTask extends AsyncTask<GetVenueBusinessHo
         VenueBusinessHours businessHours = null;
 
         try {
-            ContentValues params = new ContentValues();
+            HttpParams params = new HttpParams();
             params.put("fboId", model.VenueId);
 
             JSONHttpClient jsonHttpClient = new JSONHttpClient();

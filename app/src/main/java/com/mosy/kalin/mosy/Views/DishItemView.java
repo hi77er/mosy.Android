@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
@@ -39,8 +40,9 @@ public class DishItemView
     TextView VenueName;
     @ViewById(resName = "menuListItem_ivThumbnail")
     ImageView ImageThumbnail;
-    //@ViewById(resName = "menuListItem_tvOpenedSinceUntil")
-    //TextView OpenedSinceUntil;
+
+    @ViewById(resName = "menuListItem_tvWorkingStatus")
+    TextView WorkingStatus;
     @ViewById(resName = "menuListItem_tvDistance")
     TextView DistanceFromDevice;
     @ViewById(resName = "menuListItem_tvWalkingTime")
@@ -49,7 +51,6 @@ public class DishItemView
     TextView PriceTag;
     @ViewById(resName = "menuListItem_tvRatingTag")
     TextView RatingTag;
-
 
     public DishItemView(Context context) {
         super(context);
@@ -79,6 +80,21 @@ public class DishItemView
             IsUsingDefaultImageThumbnail = true;
             this.ImageThumbnail.setImageResource(R.drawable.eat_paprika);
         }
+
+        WorkingStatus status = BusinessHoursHelper.getWorkingStatus(menuListItem.VenueBusinessHours);
+        switch (status){
+            case Open:
+                this.WorkingStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.open_moss, 0, 0, 0);
+                break;
+            case Open247:
+                this.WorkingStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.open247_emerald, 0, 0, 0);
+                break;
+            case Closed:
+                this.WorkingStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.closed_salmon, 0, 0, 0);
+                break;
+            case Unknown: break;
+        }
+
     }
 
     @Click(resName = "menuListItem_ivThumbnail")

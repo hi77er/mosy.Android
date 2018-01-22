@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mosy.kalin.mosy.DTOs.VenueBadgeEndorsement;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Http.HttpParams;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBadgeEndorsementsBindingModel;
 
@@ -20,7 +21,7 @@ public class GetVenueBadgeEndorsementsAsyncTask extends AsyncTask<GetVenueBadgeE
         String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint("FBOEndorsements/ByFBOId");
         ArrayList<VenueBadgeEndorsement> badgeEndorsements = new ArrayList<VenueBadgeEndorsement>();
 
-        try {ContentValues params = new ContentValues();
+        try {HttpParams params = new HttpParams();
             params.put("fboId", model.VenueId);
 
             JSONHttpClient jsonHttpClient = new JSONHttpClient();

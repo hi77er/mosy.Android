@@ -16,6 +16,7 @@ import com.mosy.kalin.mosy.Views.VenueItemView;
 import com.mosy.kalin.mosy.Views.VenueItemView_;
 
 import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
@@ -29,6 +30,9 @@ public class VenuesAdapter
 
     @RootContext
     Context context;
+
+    @Bean
+    VenuesService venuesService;
 
     private Location deviceLocation;
     public void setLocation(Location location) {
@@ -94,8 +98,7 @@ public class VenuesAdapter
 
     public boolean findVenues(String query){
         try {
-            SearchVenuesBindingModel model = new SearchVenuesBindingModel(8, this.DeviceLastKnownLatitude, this.DeviceLastKnownLongitude, query);
-            this.venues = new SearchVenuesAsyncTask().execute(model).get();
+            this.venues = venuesService.searchVenues(8, this.DeviceLastKnownLatitude, this.DeviceLastKnownLongitude, query);
 
             if (this.venues != null && this.venues.get(0) != null) {
                 VenuesService vService = new VenuesService();

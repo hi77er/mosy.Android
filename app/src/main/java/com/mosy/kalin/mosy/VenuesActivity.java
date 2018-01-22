@@ -3,24 +3,26 @@ package com.mosy.kalin.mosy;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mosy.kalin.mosy.Adapters.DishesAdapter;
 import com.mosy.kalin.mosy.Adapters.VenuesAdapter;
+import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Services.LocationResolver;
+import com.mosy.kalin.mosy.Services.VenuesService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -31,22 +33,32 @@ import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.ArrayList;
+
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_venues)
-@OptionsMenu(R.menu.search_menu)
+@OptionsMenu(R.menu.menu)
 public class VenuesActivity
-        extends AppCompatActivity
-{
+        extends AppCompatActivity {
     long timeStarted = 0;
 
     @Extra
     static boolean DishesSearchModeActivated;
+    @Extra
+    static ArrayList<String> CuisinePhaseFilterIds;
+    @Extra
+    static ArrayList<String> CuisineRegionFilterIds;
+    @Extra
+    static ArrayList<String> CuisineSpectrumFilterIds;
+
 
     LocationResolver mLocationResolver;
 
     @SystemService
     SearchManager searchManager;
 
+    @Bean
+    VenuesService venuesService;
     @Bean
     VenuesAdapter venuesAdapter;
     @Bean
@@ -57,9 +69,11 @@ public class VenuesActivity
     @ViewById(R.id.toolbar)
     Toolbar toolbar;
     @ViewById(resName = "venues_lvVenues")
-    ListView Venues;
+    ListView venues;
     @ViewById(resName = "venues_lvDishes")
-    ListView Dishes;
+    ListView dishes;
+
+    FloatingActionButton filters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,40 +89,58 @@ public class VenuesActivity
     void afterViews() {
         configureActionBar();
 
+//        venuesService = new VenuesService();
+
+        this.filters = findViewById(R.id.venues_ibFilters);
+        this.filters.setOnClickListener(v -> openFilters());
+
         String query = "searchall";
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction()))
             query = intent.getStringExtra(SearchManager.QUERY);
 
         if (!DishesSearchModeActivated) {
-            final  SwipeRefreshLayout venuesSwipeContainer = findViewById(R.id.venues_lVenuesSwipeContainer);
+            final SwipeRefreshLayout venuesSwipeContainer = findViewById(R.id.venues_lVenuesSwipeContainer);
             venuesAdapter.setSwipeRefreshLayout(venuesSwipeContainer);
-            venuesAdapter.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    retrieveLocation();
-                    performFBOSearch("searchall");
-                    venuesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
-                }
+            venuesAdapter.swipeContainer.setOnRefreshListener(() -> {
+                retrieveLocation();
+                performVenueSearch("searchall");
+                venuesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
             });
 
-            performFBOSearch(query);
-            Venues.setAdapter(venuesAdapter);
-        }
-        else {
+            performVenueSearch(query);
+            venues.setAdapter(venuesAdapter);
+            venues.setOnScrollListener(new AbsListView.OnScrollListener() {
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    // TODO Auto-generated method stub
+                }
+
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    if (scrollState == 0) filters.show();// scrolling stopped
+                    else filters.hide();
+                }
+            });
+        } else {
             final SwipeRefreshLayout dishesSwipeContainer = findViewById(R.id.venues_lDishesSwipeContainer);
             dishesAdapter.setSwipeRefreshLayout(dishesSwipeContainer);
-            dishesAdapter.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    retrieveLocation();
-                    performDishesSearch("searchall");
-                    dishesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
-                }
+            dishesAdapter.swipeContainer.setOnRefreshListener(() -> {
+                retrieveLocation();
+                performDishesSearch("searchall", CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
+                dishesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
             });
 
-            performDishesSearch(query);
-            Dishes.setAdapter(dishesAdapter);
+            performDishesSearch(query, CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
+            dishes.setAdapter(dishesAdapter);
+            dishes.setOnScrollListener(new AbsListView.OnScrollListener() {
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    // TODO Auto-generated method stub
+                }
+
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    if (scrollState == 0) filters.show();// scrolling stopped
+                    else filters.hide();
+                }
+            });
         }
     }
 
@@ -120,15 +152,16 @@ public class VenuesActivity
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         if (!DishesSearchModeActivated) {
             menu.findItem(R.id.action_dishes).setVisible(true);
             menu.findItem(R.id.action_venues).setVisible(false);
+            searchView.setQueryHint(getString(R.string.search_venues_hint));
         } else {
             menu.findItem(R.id.action_venues).setVisible(true);
             menu.findItem(R.id.action_dishes).setVisible(false);
+            searchView.setQueryHint(getString(R.string.search_dishes_hint));
         }
-
-        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
 
@@ -159,11 +192,13 @@ public class VenuesActivity
         super.onStop();
         mLocationResolver.onStop();
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mLocationResolver.onDestroy();
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -181,17 +216,44 @@ public class VenuesActivity
         startActivity(intent);
     }
 
-//    @ItemClick(resName = "action_bar_venues")
-    public void NavigateVenuesSearch(){
-        Intent intent = new Intent(VenuesActivity.this, VenuesActivity_.class);
-        intent.putExtra("DishesSearchModeActivated", false); //else find dishes
+
+    @ItemClick(resName = "venues_lvDishes")
+    void openDishMenu(MenuListItem listItem) {
+        Intent intent = new Intent(VenuesActivity.this, VenueActivity_.class);
+        Venue venue = venuesService.GetById(listItem.VenueId);
+
+        venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+        venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+        venue.Location = null;
+        venue.VenueBusinessHours = null;
+        intent.putExtra("Venue", venue);
         startActivity(intent);
     }
 
-//    @ItemClick(resName = "action_bar_dishes")
-    public void NavigateDishesSearch(){
+    //    @ItemClick(resName = "venues_ibFilters")
+    void openFilters() {
+        if (DishesSearchModeActivated) {
+            Intent intent = new Intent(VenuesActivity.this, DishesFiltersActivity_.class);
+            intent.putExtra("CuisinePhaseFilterIds", CuisinePhaseFilterIds);
+            intent.putExtra("CuisineRegionFilterIds", CuisineRegionFilterIds);
+            intent.putExtra("CuisineSpectrumFilterIds", CuisineSpectrumFilterIds);
+            startActivity(intent);
+        } else
+            startActivity(new Intent(VenuesActivity.this, VenuesFiltersActivity_.class));
+    }
+
+    public void NavigateVenuesSearch() {
         Intent intent = new Intent(VenuesActivity.this, VenuesActivity_.class);
-        intent.putExtra("DishesSearchModeActivated", true); //else find dishes
+        intent.putExtra("DishesSearchModeActivated", false);
+        startActivity(intent);
+    }
+
+    public void NavigateDishesSearch() {
+        Intent intent = new Intent(VenuesActivity.this, VenuesActivity_.class);
+        intent.putExtra("DishesSearchModeActivated", true);
+//        intent.putExtra("CuisinePhaseFilterIds", CuisinePhaseFilterIds);
+//        intent.putExtra("CuisineRegionFilterIds", CuisineRegionFilterIds);
+//        intent.putExtra("CuisineSpectrumFilterIds", CuisineRegionFilterIds);
         startActivity(intent);
     }
 
@@ -205,40 +267,12 @@ public class VenuesActivity
         });
     }
 
-    private void performFBOSearch(String query) {
+    private void performVenueSearch(String query) {
         Boolean found = venuesAdapter.findVenues(query);
-//        String toastMessage = found ? "Results for '"+query+"'" : "No matches found";
-//        Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
     }
 
-    private void performDishesSearch(String query) {
-        Boolean found = dishesAdapter.findDishes(query);
-    }
-
-    private Bitmap resizeBitmapImageFn(
-            Bitmap bmpSource, int maxResolution){
-        int iWidth = bmpSource.getWidth();
-        int iHeight = bmpSource.getHeight();
-        int newWidth = iWidth ;
-        int newHeight = iHeight ;
-        float rate = 0.0f;
-
-        if(iWidth > iHeight ){
-            if(maxResolution < iWidth ){
-                rate = maxResolution / (float) iWidth ;
-                newHeight = (int) (iHeight * rate);
-                newWidth = maxResolution;
-            }
-        }else{
-            if(maxResolution < iHeight ){
-                rate = maxResolution / (float) iHeight ;
-                newWidth = (int) (iWidth * rate);
-                newHeight = maxResolution;
-            }
-        }
-
-        return Bitmap.createScaledBitmap(
-                bmpSource, newWidth, newHeight, true);
+    private void performDishesSearch(String query, ArrayList<String> phaseFilterIds, ArrayList<String> regionFilterIds, ArrayList<String> spectrumFilterIds) {
+        Boolean found = dishesAdapter.findDishes(query, phaseFilterIds, regionFilterIds, spectrumFilterIds);
     }
 
     private void configureActionBar() {

@@ -24,23 +24,14 @@
         <item name="submitBackground">@color/transparent</item>
 
         <item name="closeIcon">@drawable/ic_action_close_white</item>
-        <item name="searchIcon">@drawable/ic_action_search_white</item>
+        <item name="searchIcon">@drawable/ic_action_seach_white</item>
 
         <item name="android:padding">0dp</item>
-
-        <!-- Go/commit button icon -->
-        <!--<item name="goIcon">...</item>-->
-        <!--&lt;!&ndash; Voice search button icon &ndash;&gt;-->
-        <!--<item name="voiceIcon">...</item>-->
-        <!--&lt;!&ndash; Commit icon shown in the query suggestion row &ndash;&gt;-->
-        <!--<item name="commitIcon">...</item>-->
-        <!-- Layout for query suggestion rows -->
     </style>
 
 
-
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:background">#720023</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -48,4 +39,23 @@
     <style name="AppTheme.SearchViewDarkStyle" parent="ThemeOverlay.AppCompat.Dark">
         <item name="android:editTextColor">@color/colorWhite</item>
     </style>
+
+    <style name="Theme.AppCompat.PopUp" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
+
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowTitleBackgroundStyle">@style/Theme.AppCompat.PopUp.TitleBackground</item>
+        <item name="colorAccent">@color/colorPrimarySalmon</item>
+    </style>
+
+    <style name="Theme.AppCompat.PopUp.TitleBackground">
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimaryVeryLight</item>
+    </style>
+
 </resources>

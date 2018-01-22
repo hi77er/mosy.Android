@@ -1,5 +1,8 @@
 package com.mosy.kalin.mosy.Models.BindingModels;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by kkras on 8/7/2017.
  */
@@ -7,27 +10,30 @@ package com.mosy.kalin.mosy.Models.BindingModels;
 public class SearchMenuListItemsBindingModel {
 
     public int MaxResultsCount;
-    public int getMaxResultsCount() { return MaxResultsCount; }
-    public void setMaxResultsCount(int maxResultsCount) { this.MaxResultsCount = maxResultsCount; }
-
     public String Query;
-    public String getQuery() { return Query; }
-    public void setQuery(String query) { this.Query = query; }
-
     public double Latitude;
-    public double getLatitude() { return Latitude; }
-    public void setLatitude(double latitude) { this.Latitude = latitude; }
-
     public double Longitude;
-    public double getLongitude() { return Longitude; }
-    public void setLongitude(double longitude) { this.Longitude = longitude; }
+    public List<String> SelectedCuisinePhaseIds;
+    public List<String> SelectedCuisineRegionIds;
+    public List<String> SelectedCuisineSpectrumIds;
 
     public SearchMenuListItemsBindingModel() { }
-    public SearchMenuListItemsBindingModel(int maxResultsCount, double latitude, double longitude, String query) {
+    public SearchMenuListItemsBindingModel(
+            int maxResultsCount,
+            double latitude,
+            double longitude,
+            String query,
+            ArrayList<String> phaseFilterIds,
+            ArrayList<String> regionFilterIds,
+            ArrayList<String> spectrumFilterIds)
+    {
         this.MaxResultsCount = maxResultsCount;
         this.Latitude = latitude;
         this.Longitude = longitude;
         this.Query = query;
+        this.SelectedCuisinePhaseIds = phaseFilterIds;
+        this.SelectedCuisineRegionIds = regionFilterIds;
+        this.SelectedCuisineSpectrumIds = spectrumFilterIds;
     }
 
 }

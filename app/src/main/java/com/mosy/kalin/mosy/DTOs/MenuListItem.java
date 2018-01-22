@@ -46,6 +46,10 @@ public class MenuListItem
 
     @SerializedName("DistanceToDevice")
     public double DistanceToCurrentDeviceLocation;
+
+    @SerializedName("BusinessHours")
+    public VenueBusinessHours VenueBusinessHours;
+
 //    @SerializedName("RequestableFBOPriceTag")
 //    public PriceTag PriceTag;
 

@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Http.HttpParams;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
 
@@ -21,10 +22,10 @@ public class SearchVenuesAsyncTask extends AsyncTask<SearchVenuesBindingModel, S
         ArrayList<Venue> venuesResult = new ArrayList<>();
 
         try {
-            ContentValues params = new ContentValues();
-            params.put("maxResultsCount", model.MaxResultsCount);
-            params.put("latitude", model.Latitude);
-            params.put("longitude", model.Longitude);
+            HttpParams params = new HttpParams();
+            params.put("maxResultsCount", String.valueOf(model.MaxResultsCount));
+            params.put("latitude", String.valueOf(model.Latitude));
+            params.put("longitude", String.valueOf(model.Longitude));
             if (!model.Query.equals(StringHelper.empty()))
                 params.put("query", model.Query);
 

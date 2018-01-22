@@ -43,6 +43,7 @@
             android:name=".RegisterActivity_"
             android:label="@string/title_activity_register"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".VenuesActivity_"
             android:label="@string/title_venues_activity"
@@ -56,6 +57,7 @@
 
             <meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
         </activity>
+
         <activity
             android:name=".VenueActivity_"
             android:theme="@style/AppTheme.NoActionBar">
@@ -69,10 +71,20 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".VenueDetailsActivity_"
             android:label="@string/title_activity_venue_details"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".VenuesFiltersActivity_"
+            android:theme="@style/Theme.AppCompat.PopUp" />
+
+        <activity
+            android:name=".DishesFiltersActivity_"
+            android:theme="@style/Theme.AppCompat.PopUp" />
+
 
         <meta-data
             android:name="com.google.android.gms.version"

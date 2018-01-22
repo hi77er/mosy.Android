@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".VenueActivity_">
+
+    <!--<item-->
+        <!--android:orderInCategory="0"-->
+        <!--android:id="@+id/action_app_name"-->
+        <!--app:actionLayout="@layout/action_bar_logo"-->
+        <!--android:title="@string/app_name"-->
+        <!--app:showAsAction="ifRoom" />-->
+
+    <item
+        android:id="@+id/action_venues"
+        android:orderInCategory="0"
+        android:title="@string/venues_btnNavigateToVenuesText"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_action_venues_white"/>
+
+    <item
+        android:id="@+id/action_dishes"
+        android:orderInCategory="0"
+        android:title="@string/venues_btnNavigateToDishesText"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_action_dishes_white" />
+
+    <item
+        android:orderInCategory="1"
+        android:id="@+id/action_search"
+        android:title="@string/menu_search"
+        app:showAsAction="always"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        android:actionLayout="@layout/action_bar_toolbar"/>
+
+</menu>

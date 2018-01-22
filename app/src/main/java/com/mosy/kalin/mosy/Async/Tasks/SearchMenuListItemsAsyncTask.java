@@ -8,6 +8,8 @@ import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Http.HttpParam;
+import com.mosy.kalin.mosy.Http.HttpParams;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
@@ -15,6 +17,7 @@ import com.mosy.kalin.mosy.R;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Objects;
 
 public class SearchMenuListItemsAsyncTask extends AsyncTask<SearchMenuListItemsBindingModel, String, ArrayList<MenuListItem>> {
@@ -26,11 +29,23 @@ public class SearchMenuListItemsAsyncTask extends AsyncTask<SearchMenuListItemsB
         ArrayList<MenuListItem> venuesResult = new ArrayList<>();
 
         try {
-            ContentValues params = new ContentValues();
-            params.put("maxResultsCount", model.MaxResultsCount);
-            params.put("latitude", model.Latitude);
-            params.put("longitude", model.Longitude);
+            HttpParams params = new HttpParams();
+            params.put("maxResultsCount", String.valueOf(model.MaxResultsCount));
+            params.put("latitude", String.valueOf(model.Latitude));
+            params.put("longitude", String.valueOf(model.Longitude));
             if (!model.Query.equals(StringHelper.empty())) params.put("query", model.Query);
+
+            if (model.SelectedCuisinePhaseIds != null)
+                for (String filter : model.SelectedCuisinePhaseIds)
+                    params.put("cuisinePhaseIds", filter);
+
+            if (model.SelectedCuisineRegionIds != null)
+                for (String filter : model.SelectedCuisineRegionIds)
+                    params.put("cuisineRegionIds", filter);
+
+            if (model.SelectedCuisineSpectrumIds != null)
+                for (String filter : model.SelectedCuisineSpectrumIds)
+                    params.put("cuisineSpectrumIds", filter);
 
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
             Type returnType = new TypeToken<ArrayList<MenuListItem>>(){}.getType();

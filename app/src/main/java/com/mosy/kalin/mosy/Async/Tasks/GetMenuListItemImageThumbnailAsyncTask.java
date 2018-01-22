@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mosy.kalin.mosy.DTOs.MenuListItemImage;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Http.HttpParams;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
 import com.mosy.kalin.mosy.Models.BindingModels.GetMenuListItemImageThumbnailBindingModel;
 
@@ -19,7 +20,7 @@ public class GetMenuListItemImageThumbnailAsyncTask extends AsyncTask<GetMenuLis
         MenuListItemImage imageResult;
 
         try {
-            ContentValues params = new ContentValues();
+            HttpParams params = new HttpParams();
             params.put("menuListItemId", model.MenuListItemId);
 
             JSONHttpClient jsonHttpClient = new JSONHttpClient();

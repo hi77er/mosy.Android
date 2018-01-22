@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Http.HttpParams;
 import com.mosy.kalin.mosy.Http.JSONHttpClient;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageMetaBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageThumbnailBindingModel;
@@ -20,7 +21,7 @@ public class GetVenueIndoorImageMetaAsyncTask extends AsyncTask<GetVenueIndoorIm
         VenueImage imageResult;
 
         try {
-            ContentValues params = new ContentValues();
+            HttpParams params = new HttpParams();
             params.put("Id", model.VenueId);
 
             JSONHttpClient jsonHttpClient = new JSONHttpClient();

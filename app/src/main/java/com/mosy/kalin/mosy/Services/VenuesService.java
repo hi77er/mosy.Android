@@ -3,24 +3,28 @@ package com.mosy.kalin.mosy.Services;
 import android.location.Location;
 
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueBusinessHoursAsyncTask;
+import com.mosy.kalin.mosy.Async.Tasks.GetVenueByIdAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueIndoorImageAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueIndoorImageMetaAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueIndoorImageThumbnailAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueLocationAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueOutdoorImageAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueOutdoorImageThumbnailAsyncTask;
+import com.mosy.kalin.mosy.Async.Tasks.SearchVenuesAsyncTask;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.VenueLocation;
 import com.mosy.kalin.mosy.Helpers.LocationHelper;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBusinessHoursBindingModel;
+import com.mosy.kalin.mosy.Models.BindingModels.GetVenueByIdBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageMetaBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageThumbnailBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueLocationBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueOutdoorImageBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueOutdoorImageThumbnailBindingModel;
+import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
 
 import org.androidannotations.annotations.EBean;
 
@@ -34,6 +38,28 @@ public class VenuesService {
 
     public VenuesService() {
 
+    }
+
+    public Venue GetById(String venueId) {
+        Venue result = null;
+        try {
+            GetVenueByIdBindingModel model = new GetVenueByIdBindingModel(venueId);
+            result = new GetVenueByIdAsyncTask().execute(model).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public ArrayList<Venue> searchVenues(int maxResoultsCount, double deviceLastKnownLatitude, double deviceLastKnownLongitude, String query){
+        ArrayList<Venue> result = null;
+        try {
+            SearchVenuesBindingModel model = new SearchVenuesBindingModel(maxResoultsCount, deviceLastKnownLatitude, deviceLastKnownLongitude, query);
+            result = new SearchVenuesAsyncTask().execute(model).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public VenueBusinessHours downloadVenuesBusinessHours(String venueId) {
@@ -159,4 +185,6 @@ public class VenuesService {
         }
         return image;
     }
+
+
 }

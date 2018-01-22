@@ -44,7 +44,7 @@ public class JSONHttpClient {
 //  !!!!!!!!!!!!!!!!!
 
 
-    public <T> T Get(String url, ContentValues params, final Type objectType, String dateFormat) { //final Class<T> objectClass
+    public <T> T Get(String url, HttpParams params, final Type objectType, String dateFormat) { //final Class<T> objectClass
         String query = paramsToQuery(params);
         try {
             this.Connection = (HttpURLConnection) new URL(url + query).openConnection();
@@ -192,7 +192,21 @@ public class JSONHttpClient {
 //        return false;
 //    }
 
-    private String paramsToQuery(ContentValues params) {
+    private String paramsToQuery(HttpParams params) {
+        List<String> paramStrings = new ArrayList<>();
+        if (params != null) {
+            for (HttpParam param : params.get()) {
+                try {
+                    paramStrings.add(StringHelper.join("=", Arrays.asList(param.getName(), URLEncoder.encode(param.getValue(), "UTF-8"))));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return paramStrings.size() > 0 ? "?" + StringHelper.join("&", paramStrings) : StringHelper.empty();
+    }
+
+    private String paramsToQuery1(ContentValues params) {
         List<String> paramStrings = new ArrayList<>();
         if (params != null) {
             for (Map.Entry<String, Object> param : params.valueSet()) {

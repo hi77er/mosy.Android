@@ -19,11 +19,11 @@ public class LocationHelper {
         if (distanceMeters == 0)
             text = StringHelper.empty();
         else if (distanceMeters < 5)
-            text = "in";
+            text = "you're inside";
         else if (distanceMeters < 50)
-            text = "< 50m";
+            text = "less than 50m";
         else if (distanceMeters < 100)
-            text = "< 100m";
+            text = "less than 100m";
         else if (distanceMeters < 1000) {
             long longValue =  (long) distanceMeters;
             text = String.valueOf(longValue) + "m";
@@ -48,7 +48,7 @@ public class LocationHelper {
         if (time > 0 && time < 1)
             text = StringHelper.empty();
         if (time > 0 && time < 1)
-            text = "< 1min";
+            text = "less than 1min";
         if (time > 1 && time < 59)
             text = (int)time + "min";
         if (time > 59 && time < 999999999)
