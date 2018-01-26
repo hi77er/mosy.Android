@@ -21,7 +21,7 @@ public class MenuListsAdapter
 
     public void setVenueId(String venueId){ this.venueId = venueId; }
 
-    public MenuListsAdapter(FragmentManager fm, ArrayList<MenuList> menuLists, String menuListId, int selectedListPostiion) {
+    public MenuListsAdapter(FragmentManager fm, ArrayList<MenuList> menuLists, String menuListId) {
         super(fm);
         this.menuLists = menuLists;
         this.selectedMenuListId = menuListId;

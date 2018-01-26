@@ -14,6 +14,7 @@ import com.mosy.kalin.mosy.Adapters.MenuListsAdapter;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueMenuAsyncTask;
 import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueMenuBindingModel;
 import com.mosy.kalin.mosy.Services.AzureBlobService;
 import com.mosy.kalin.mosy.Services.VenuesService;
@@ -66,29 +67,21 @@ public class VenueActivity extends AppCompatActivity {
             GetVenueMenuBindingModel model = new GetVenueMenuBindingModel(this.Venue.Id);
             ArrayList<MenuList> menuLists = new GetVenueMenuAsyncTask().execute(model).get();
 
-            int position = 0;
-            if (!this.SelectedMenuListId.equals("") && menuLists != null && menuLists.size() > 0) {
-                for (MenuList list : menuLists) {
-                    if (list.Id.equals(this.SelectedMenuListId)){
-                        position = menuLists.indexOf(list);
-                        this.Menu.setCurrentItem(position);
-                    }
-                }
-            }
-
-            MenuListsAdapter adapter = new MenuListsAdapter(getSupportFragmentManager(), menuLists, SelectedMenuListId, position);
+            MenuListsAdapter adapter = new MenuListsAdapter(getSupportFragmentManager(), menuLists, SelectedMenuListId);
             this.Menu.setAdapter(adapter);
-            int selectedMenuListIndex = 0;
-            for (MenuList list : menuLists) {
-                if (this.SelectedMenuListId.equals(list.Id))
-                    selectedMenuListIndex = menuLists.indexOf(list);
+
+            if (SelectedMenuListId != null && !SelectedMenuListId.equals(StringHelper.empty())) {
+                int selectedMenuListIndex = 0;
+                for (MenuList list : menuLists) {
+                    if (this.SelectedMenuListId.equals(list.Id))
+                        selectedMenuListIndex = menuLists.indexOf(list);
+                }
+                this.Menu.setCurrentItem(selectedMenuListIndex, false);
             }
-            this.Menu.setCurrentItem(selectedMenuListIndex, false);
         } catch (Exception e){
             e.printStackTrace();
         }
     }
-
 
     @Click(R.id.venue_lVenueTitle)
     void venueTitle_Click() {
