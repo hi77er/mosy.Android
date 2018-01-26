@@ -7,9 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.mosy.kalin.mosy.Async.Tasks.SearchMenuListItemsAsyncTask;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
-import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
 import com.mosy.kalin.mosy.Services.MenuListItemsService;
 import com.mosy.kalin.mosy.Views.DishItemView;
 import com.mosy.kalin.mosy.Views.DishItemView_;

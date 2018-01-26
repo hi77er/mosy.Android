@@ -7,17 +7,13 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mosy.kalin.mosy.Adapters.MenuListsAdapter;
-import com.mosy.kalin.mosy.Async.Tasks.GetVenueIndoorImageThumbnailAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.GetVenueMenuAsyncTask;
 import com.mosy.kalin.mosy.DTOs.MenuList;
-import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.Venue;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageThumbnailBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueMenuBindingModel;
 import com.mosy.kalin.mosy.Services.AzureBlobService;
 import com.mosy.kalin.mosy.Services.VenuesService;
@@ -36,6 +32,10 @@ public class VenueActivity extends AppCompatActivity {
 
     @Extra
     Venue Venue;
+
+    @Extra
+    String SelectedMenuListId; //if the page is navigated via Dishes ListView, this should have value
+
     @ViewById(resName = "venue_tvName")
     TextView Name;
     @ViewById(resName = "venue_tvClass")
@@ -45,11 +45,14 @@ public class VenueActivity extends AppCompatActivity {
     @ViewById(resName = "venue_vpMenu")
     ViewPager Menu;
 
+    ArrayList<MenuList> menuLists = null;
+
     @AfterViews
     void updateVenueWithData() {
         try {
             Name.setText(this.Venue.Name);
             Class.setText(this.Venue.Class);
+
             this.Venue.IndoorImage = new VenuesService().downloadVenueIndoorImageMeta(this.Venue.Id);
 
             if (this.Venue != null && this.Venue.IndoorImage != null && this.Venue.IndoorImage.Id != null && this.Venue.IndoorImage.Id.length() > 0) {
@@ -63,17 +66,29 @@ public class VenueActivity extends AppCompatActivity {
             GetVenueMenuBindingModel model = new GetVenueMenuBindingModel(this.Venue.Id);
             ArrayList<MenuList> menuLists = new GetVenueMenuAsyncTask().execute(model).get();
 
-            MenuListsAdapter adapter = new MenuListsAdapter(getSupportFragmentManager(), menuLists);
+            int position = 0;
+            if (!this.SelectedMenuListId.equals("") && menuLists != null && menuLists.size() > 0) {
+                for (MenuList list : menuLists) {
+                    if (list.Id.equals(this.SelectedMenuListId)){
+                        position = menuLists.indexOf(list);
+                        this.Menu.setCurrentItem(position);
+                    }
+                }
+            }
+
+            MenuListsAdapter adapter = new MenuListsAdapter(getSupportFragmentManager(), menuLists, SelectedMenuListId, position);
             this.Menu.setAdapter(adapter);
+            int selectedMenuListIndex = 0;
+            for (MenuList list : menuLists) {
+                if (this.SelectedMenuListId.equals(list.Id))
+                    selectedMenuListIndex = menuLists.indexOf(list);
+            }
+            this.Menu.setCurrentItem(selectedMenuListIndex, false);
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Click(R.id.venue_lVenueTitle)
     void venueTitle_Click() {

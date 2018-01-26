@@ -10,17 +10,26 @@ import com.mosy.kalin.mosy.Fragments.MenuListFragment_;
 
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MenuListsAdapter
         extends FragmentStatePagerAdapter {
 
     ArrayList<MenuList> menuLists;
-    String VenueId;
-    public void setVenueId(String venueId){ this.VenueId = venueId; }
+    String venueId;
+    String selectedMenuListId;
 
-    public MenuListsAdapter(FragmentManager fm, ArrayList<MenuList> menuLists) {
+    public void setVenueId(String venueId){ this.venueId = venueId; }
+
+    public MenuListsAdapter(FragmentManager fm, ArrayList<MenuList> menuLists, String menuListId, int selectedListPostiion) {
         super(fm);
         this.menuLists = menuLists;
+        this.selectedMenuListId = menuListId;
+    }
+
+    @Override
+    public CharSequence getPageTitle (int position) {
+        return this.menuLists.get(position).Name;
     }
 
     @Override
@@ -31,6 +40,11 @@ public class MenuListsAdapter
         Bundle bundle = new Bundle();
         bundle.putString("MenuListName", menuList.Name);
         bundle.putParcelableArrayList("MenuListItems", menuList.menuListItems);
+
+        if (menuList.Id.equals(selectedMenuListId)) {
+            if (!selectedMenuListId.equals(""))
+                bundle.putBoolean("IsSelected", true);
+        }
 
         fragment.setArguments(bundle);
         return fragment;

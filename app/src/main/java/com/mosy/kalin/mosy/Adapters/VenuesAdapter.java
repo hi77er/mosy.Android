@@ -7,10 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.mosy.kalin.mosy.Async.Tasks.SearchVenuesAsyncTask;
-import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
-import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
 import com.mosy.kalin.mosy.Services.VenuesService;
 import com.mosy.kalin.mosy.Views.VenueItemView;
 import com.mosy.kalin.mosy.Views.VenueItemView_;

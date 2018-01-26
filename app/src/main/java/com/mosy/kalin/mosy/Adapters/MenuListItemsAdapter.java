@@ -17,6 +17,7 @@ import org.androidannotations.annotations.RootContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 @EBean
 public class MenuListItemsAdapter
@@ -27,6 +28,7 @@ public class MenuListItemsAdapter
         this.menuListItems = menuListItems;
         this.setDetails(this.menuListItems);
     }
+
 
     HashMap<String, MenuListItem> Details;
     public void setDetails(ArrayList<MenuListItem> menuListItems){
@@ -103,6 +105,8 @@ public class MenuListItemsAdapter
             menuListItemView = (MenuListItemView) convertView;
 
         MenuListItem menuListItem = this.menuListItems.get(listPosition);
+
+        String listItemName = menuListItem.getName();
         menuListItemView.bind(menuListItem);
 
         return menuListItemView;

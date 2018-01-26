@@ -1,6 +1,7 @@
 package com.mosy.kalin.mosy.Views;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -9,10 +10,6 @@ import com.mosy.kalin.mosy.R;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
-
-/**
- * Created by kkras on 8/3/2017.
- */
 
 @EViewGroup(R.layout.activity_item_menulistitem)
 public class MenuListItemView
@@ -26,6 +23,10 @@ public class MenuListItemView
     }
 
     public void bind(MenuListItem menuListItem) {
-        this.Name.setText(menuListItem.Name);
+        String name = menuListItem.Name;
+        this.Name.setText(name);
+
+        // if (isSelected)
+        // this.setBackgroundColor(Color.WHITE);
     }
 }

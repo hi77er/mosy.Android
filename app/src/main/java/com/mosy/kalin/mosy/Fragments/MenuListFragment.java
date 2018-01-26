@@ -26,13 +26,14 @@ public class MenuListFragment extends Fragment {
     String MenuListName;
 
     @FragmentArg("MenuListItems")
-    ArrayList<MenuListItem> MenuListItems;
+    ArrayList<MenuListItem> menuListItems;
 
-//    @ViewById
-    @ViewById(R.id.menuList_tvName)
-    TextView menuList_tvName;
+    @FragmentArg("SelectedMenuListItemId")
+    String selectedMenuListItemId;
 
-//    @ViewById
+    @FragmentArg("IsSelected")
+    Boolean isSelected;
+
     @ViewById(R.id.menuList_lvItems)
     ExpandableListView menuList_lvItems;
 
@@ -41,10 +42,10 @@ public class MenuListFragment extends Fragment {
 
     @AfterViews
     void init() {
-        menuList_tvName.setText(this.MenuListName);
 
-        if (this.MenuListItems != null) {
-            menuListItemsAdapter.setMenuListItems(this.MenuListItems);
+        if (this.menuListItems != null) {
+            menuListItemsAdapter.setMenuListItems(this.menuListItems);
+
             menuList_lvItems.setAdapter(menuListItemsAdapter);
         }
     }

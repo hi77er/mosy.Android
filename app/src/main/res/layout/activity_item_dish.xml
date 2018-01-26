@@ -62,13 +62,12 @@
 
         <ImageView
             android:id="@+id/menuListItem_ivThumbnail"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginEnd="5dp"
             android:src="@drawable/eat_paprika" />
 
         <LinearLayout
-            android:layout_marginTop="20dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

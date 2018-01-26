@@ -227,6 +227,8 @@ public class VenuesActivity
         venue.Location = null;
         venue.VenueBusinessHours = null;
         intent.putExtra("Venue", venue);
+        intent.putExtra("SelectedMenuListId", listItem.BrochureId);
+
         startActivity(intent);
     }
 
