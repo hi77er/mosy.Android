@@ -13,6 +13,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewConfiguration;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -114,6 +115,7 @@ public class VenuesActivity
             });
 
             performVenueSearch(query);
+            venues.setFriction(ViewConfiguration.getScrollFriction() * 30); // slow down the scroll
             venues.setAdapter(venuesAdapter);
             venues.setOnScrollListener(new EndlessScrollListener() {
                 @Override
@@ -158,6 +160,8 @@ public class VenuesActivity
             });
 
             performDishesSearch(0, searchIsPromoted, query, CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
+
+            dishes.setFriction(ViewConfiguration.getScrollFriction() * 30); // slow down the scroll
             dishes.setAdapter(dishesAdapter);
             dishes.setOnScrollListener(endlessScrollListener);
         }
