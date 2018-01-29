@@ -5,7 +5,6 @@ import com.mosy.kalin.mosy.Async.Tasks.GetMenuListItemImageThumbnailAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.SearchMenuListItemsAsyncTask;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.MenuListItemImage;
-import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Models.BindingModels.GetMenuListItemImageBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetMenuListItemImageThumbnailBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
@@ -13,14 +12,13 @@ import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
 import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 @EBean
 public class MenuListItemsService {
 
     public ArrayList<MenuListItem> searchMenuListItems(
             int maxResultsCount,
+            int totalItemsOffset,
             double lastKnownLatitude,
             double lastKnownLongitude,
             Boolean isPromoted,
@@ -32,7 +30,8 @@ public class MenuListItemsService {
 
         try {
             SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(
-                    8,
+                    maxResultsCount,
+                    totalItemsOffset,
                     lastKnownLatitude,
                     lastKnownLongitude,
                     isPromoted,

@@ -26,11 +26,11 @@ import java.util.stream.Collectors;
 public class DishesAdapter
         extends BaseAdapter {
 
-    ArrayList<MenuListItem> menuListItems;
+    private ArrayList<MenuListItem> menuListItems;
+    private boolean hasMoreElements = true;
 
     @Bean
     MenuListItemsService menuListItemsService;
-
 
     @RootContext
     Context context;
@@ -64,7 +64,7 @@ public class DishesAdapter
 
     @AfterInject
     void initAdapter() {
-
+        if (this.menuListItems == null) this.menuListItems = new ArrayList<>();
     }
 
     @Override
@@ -97,10 +97,13 @@ public class DishesAdapter
         return position;
     }
 
-    public boolean findDishes(Boolean isPromoted, String query, ArrayList<String> phaseFilterIds, ArrayList<String> regionFilterIds, ArrayList<String> spectrumFilterIds){
+    public boolean findDishes(int totalItemsOffset, Boolean isPromoted, String query, ArrayList<String> phaseFilterIds, ArrayList<String> regionFilterIds, ArrayList<String> spectrumFilterIds){
+        int oldItemsCount = this.menuListItems.size();
+
         try {
-            this.menuListItems = this.menuListItemsService.searchMenuListItems(
-                    8,
+            ArrayList<MenuListItem> found = this.menuListItemsService.searchMenuListItems(
+                    5,
+                    totalItemsOffset,
                     this.DeviceLastKnownLatitude,
                     this.DeviceLastKnownLongitude,
                     isPromoted,
@@ -109,24 +112,39 @@ public class DishesAdapter
                     regionFilterIds,
                     spectrumFilterIds);
 
-            if (this.menuListItems != null && this.menuListItems.get(0) != null) {
+            if (found != null && found.size() > 0 &&  found.get(0) != null) {
                 MenuListItemsService mService = new MenuListItemsService();
-                mService.LoadMenuListItemImageThumbnails(menuListItems);
+                mService.LoadMenuListItemImageThumbnails(found);
 //                mService.sortMenuListItemsByDistanceToDevice(menuListItems);
-                DishesAdapter.super.notifyDataSetChanged();
+
+                this.menuListItems.addAll(oldItemsCount, found);
+                this.notifyDataSetChanged();
+
+                hasMoreElements = found.size() >= 5;
             }
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                Function<MenuListItem, String> transform = MenuListItem::getName;
-                List<String> result = this.menuListItems.stream().map(transform).collect(Collectors.toList());
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    String joined = String.join(", ", result);
-                    //DebugHelper.breakHere();
-                }
+            else
+            {
+                hasMoreElements = false;
             }
+
+//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+//                Function<MenuListItem, String> transform = MenuListItem::getName;
+//                List<String> result = found.stream().map(transform).collect(Collectors.toList());
+//                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+//                    String joined = String.join(", ", result);
+//                }
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return this.menuListItems != null && this.menuListItems.size() > 0;
+        return this.menuListItems.size() > oldItemsCount;
+    }
+
+    public void clearDishes(){
+        this.menuListItems = new ArrayList<>();
+    }
+    public boolean hasMoreElements(){
+        return hasMoreElements;
     }
 }

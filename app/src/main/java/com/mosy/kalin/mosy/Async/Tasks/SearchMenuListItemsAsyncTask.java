@@ -31,6 +31,7 @@ public class SearchMenuListItemsAsyncTask extends AsyncTask<SearchMenuListItemsB
         try {
             HttpParams params = new HttpParams();
             params.put("maxResultsCount", String.valueOf(model.MaxResultsCount));
+            params.put("totalItemsOffset", String.valueOf(model.TotalItemsOffset));
             params.put("latitude", String.valueOf(model.Latitude));
             params.put("longitude", String.valueOf(model.Longitude));
 

@@ -6,6 +6,7 @@ import java.util.List;
 public class SearchMenuListItemsBindingModel {
 
     public int MaxResultsCount;
+    public int TotalItemsOffset;
     public String Query;
     public double Latitude;
     public double Longitude;
@@ -17,6 +18,7 @@ public class SearchMenuListItemsBindingModel {
     public SearchMenuListItemsBindingModel() { }
     public SearchMenuListItemsBindingModel(
             int maxResultsCount,
+            int totalItemsOffset,
             double latitude,
             double longitude,
             Boolean isPromoted,
@@ -26,6 +28,7 @@ public class SearchMenuListItemsBindingModel {
             ArrayList<String> spectrumFilterIds)
     {
         this.MaxResultsCount = maxResultsCount;
+        this.TotalItemsOffset = totalItemsOffset;
         this.Latitude = latitude;
         this.Longitude = longitude;
         this.IsPromoted = isPromoted;
