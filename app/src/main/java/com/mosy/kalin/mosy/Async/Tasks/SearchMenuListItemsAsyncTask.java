@@ -33,6 +33,8 @@ public class SearchMenuListItemsAsyncTask extends AsyncTask<SearchMenuListItemsB
             params.put("maxResultsCount", String.valueOf(model.MaxResultsCount));
             params.put("latitude", String.valueOf(model.Latitude));
             params.put("longitude", String.valueOf(model.Longitude));
+
+            if (model.IsPromoted != null) params.put("isPromoted", String.valueOf(model.IsPromoted));
             if (!model.Query.equals(StringHelper.empty())) params.put("query", model.Query);
 
             if (model.SelectedCuisinePhaseIds != null)

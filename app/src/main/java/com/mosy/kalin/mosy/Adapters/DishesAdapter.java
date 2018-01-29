@@ -97,12 +97,13 @@ public class DishesAdapter
         return position;
     }
 
-    public boolean findDishes(String query, ArrayList<String> phaseFilterIds, ArrayList<String> regionFilterIds, ArrayList<String> spectrumFilterIds){
+    public boolean findDishes(Boolean isPromoted, String query, ArrayList<String> phaseFilterIds, ArrayList<String> regionFilterIds, ArrayList<String> spectrumFilterIds){
         try {
             this.menuListItems = this.menuListItemsService.searchMenuListItems(
                     8,
                     this.DeviceLastKnownLatitude,
                     this.DeviceLastKnownLongitude,
+                    isPromoted,
                     query,
                     phaseFilterIds,
                     regionFilterIds,

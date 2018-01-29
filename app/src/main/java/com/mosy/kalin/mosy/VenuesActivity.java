@@ -95,9 +95,13 @@ public class VenuesActivity
         this.filters.setOnClickListener(v -> openFilters());
 
         String query = "searchall";
+        Boolean searchIsPromoted = true; // Normally search only promoted dishes, but when using query then search among all dishes
         Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction()))
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query = intent.getStringExtra(SearchManager.QUERY);
+            searchIsPromoted = null; // Normally search only promoted dishes, but when using query then search among all dishes
+        }
 
         if (!DishesSearchModeActivated) {
             final SwipeRefreshLayout venuesSwipeContainer = findViewById(R.id.venues_lVenuesSwipeContainer);
@@ -125,11 +129,11 @@ public class VenuesActivity
             dishesAdapter.setSwipeRefreshLayout(dishesSwipeContainer);
             dishesAdapter.swipeContainer.setOnRefreshListener(() -> {
                 retrieveLocation();
-                performDishesSearch("searchall", CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
+                performDishesSearch(true,"searchall", CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
                 dishesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
             });
 
-            performDishesSearch(query, CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
+            performDishesSearch(searchIsPromoted, query, CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
             dishes.setAdapter(dishesAdapter);
             dishes.setOnScrollListener(new AbsListView.OnScrollListener() {
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
@@ -273,8 +277,8 @@ public class VenuesActivity
         Boolean found = venuesAdapter.findVenues(query);
     }
 
-    private void performDishesSearch(String query, ArrayList<String> phaseFilterIds, ArrayList<String> regionFilterIds, ArrayList<String> spectrumFilterIds) {
-        Boolean found = dishesAdapter.findDishes(query, phaseFilterIds, regionFilterIds, spectrumFilterIds);
+    private void performDishesSearch(Boolean isPromoted, String query, ArrayList<String> phaseFilterIds, ArrayList<String> regionFilterIds, ArrayList<String> spectrumFilterIds) {
+        Boolean found = dishesAdapter.findDishes(isPromoted, query, phaseFilterIds, regionFilterIds, spectrumFilterIds);
     }
 
     private void configureActionBar() {

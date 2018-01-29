@@ -3,16 +3,13 @@ package com.mosy.kalin.mosy.Models.BindingModels;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by kkras on 8/7/2017.
- */
-
 public class SearchMenuListItemsBindingModel {
 
     public int MaxResultsCount;
     public String Query;
     public double Latitude;
     public double Longitude;
+    public Boolean IsPromoted;
     public List<String> SelectedCuisinePhaseIds;
     public List<String> SelectedCuisineRegionIds;
     public List<String> SelectedCuisineSpectrumIds;
@@ -22,6 +19,7 @@ public class SearchMenuListItemsBindingModel {
             int maxResultsCount,
             double latitude,
             double longitude,
+            Boolean isPromoted,
             String query,
             ArrayList<String> phaseFilterIds,
             ArrayList<String> regionFilterIds,
@@ -30,6 +28,7 @@ public class SearchMenuListItemsBindingModel {
         this.MaxResultsCount = maxResultsCount;
         this.Latitude = latitude;
         this.Longitude = longitude;
+        this.IsPromoted = isPromoted;
         this.Query = query;
         this.SelectedCuisinePhaseIds = phaseFilterIds;
         this.SelectedCuisineRegionIds = regionFilterIds;

@@ -16,20 +16,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-/**
- * Created by kkras on 8/25/2017.
- */
-
 @EBean
 public class MenuListItemsService {
 
-    public ArrayList<MenuListItem> searchMenuListItems(int maxResultsCount, double lastKnownLatitude, double lastKnownLongitude, String query, ArrayList<String> phaseFilterIds, ArrayList<String> regionFilterIds, ArrayList<String> spectrumFilterIds) {
+    public ArrayList<MenuListItem> searchMenuListItems(
+            int maxResultsCount,
+            double lastKnownLatitude,
+            double lastKnownLongitude,
+            Boolean isPromoted,
+            String query,
+            ArrayList<String> phaseFilterIds,
+            ArrayList<String> regionFilterIds,
+            ArrayList<String> spectrumFilterIds) {
         ArrayList<MenuListItem> result = null;
+
         try {
             SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(
                     8,
                     lastKnownLatitude,
                     lastKnownLongitude,
+                    isPromoted,
                     query,
                     phaseFilterIds,
                     regionFilterIds,
