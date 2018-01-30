@@ -99,10 +99,10 @@ public class DishesAdapter
 
     public boolean findDishes(int totalItemsOffset, Boolean isPromoted, String query, ArrayList<String> phaseFilterIds, ArrayList<String> regionFilterIds, ArrayList<String> spectrumFilterIds){
         int oldItemsCount = this.menuListItems.size();
-
+        int searchedItemsCount = 5;
         try {
             ArrayList<MenuListItem> found = this.menuListItemsService.searchMenuListItems(
-                    5,
+                    searchedItemsCount,
                     totalItemsOffset,
                     this.DeviceLastKnownLatitude,
                     this.DeviceLastKnownLongitude,
@@ -120,7 +120,7 @@ public class DishesAdapter
                 this.menuListItems.addAll(oldItemsCount, found);
                 this.notifyDataSetChanged();
 
-                hasMoreElements = found.size() >= 5;
+                hasMoreElements = found.size() >= searchedItemsCount;
             }
             else
             {
@@ -144,6 +144,7 @@ public class DishesAdapter
     public void clearDishes(){
         this.menuListItems = new ArrayList<>();
     }
+
     public boolean hasMoreElements(){
         return hasMoreElements;
     }

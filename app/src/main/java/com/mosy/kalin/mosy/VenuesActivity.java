@@ -106,38 +106,41 @@ public class VenuesActivity
         }
 
         if (!DishesSearchModeActivated) {
-            final SwipeRefreshLayout venuesSwipeContainer = findViewById(R.id.venues_lVenuesSwipeContainer);
-            venuesAdapter.setSwipeRefreshLayout(venuesSwipeContainer);
-            venuesAdapter.swipeContainer.setOnRefreshListener(() -> {
-                retrieveLocation();
-                performVenueSearch("searchall");
-                venuesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
-            });
-
-            performVenueSearch(query);
-            venues.setFriction(ViewConfiguration.getScrollFriction() * 30); // slow down the scroll
-            venues.setAdapter(venuesAdapter);
-            venues.setOnScrollListener(new EndlessScrollListener() {
-                @Override
-                public boolean onLoadMore(int page, int totalItemsCount) {
-                    // Triggered only when new data needs to be appended to the list
-                    // Add whatever code is needed to append new items to your AdapterView
-
-                    //loadNextDataFromApi(page);
-
-                    return true; // ONLY if more data is actually being loaded; false otherwise.
-                }
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    if (scrollState == 0) filters.show();// scrolling stopped
-                    else filters.hide();
-                }
-            });
-        } else {
             EndlessScrollListener endlessScrollListener = new EndlessScrollListener() {
                 @Override
                 public boolean onLoadMore(int page, int totalItemsCount) {
                     // Triggered only when new data needs to be appended to the list
                     // Add whatever code is needed to append new items to your AdapterView
+                    boolean found = false;
+                    if (venuesAdapter.hasMoreElements())
+                        found = performVenueSearch(totalItemsCount, query);
+                    return found; // ONLY if more data is actually being loaded; false otherwise.
+                }
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    if (scrollState == 0) filters.show();// scrolling stopped
+                    else filters.hide();
+                }
+            };
+
+            final SwipeRefreshLayout venuesSwipeContainer = findViewById(R.id.venues_lVenuesSwipeContainer);
+            venuesAdapter.setSwipeRefreshLayout(venuesSwipeContainer);
+            venuesAdapter.swipeContainer.setOnRefreshListener(() -> {
+                retrieveLocation();
+                venuesAdapter.clearVenues();
+                performVenueSearch( 0, "searchall");
+                endlessScrollListener.resetState();
+                venuesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
+            });
+
+            performVenueSearch(0, query);
+
+            venues.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
+            venues.setAdapter(venuesAdapter);
+            venues.setOnScrollListener(endlessScrollListener);
+        } else {
+            EndlessScrollListener endlessScrollListener = new EndlessScrollListener() {
+                @Override
+                public boolean onLoadMore(int page, int totalItemsCount) {
                     boolean found = false;
                     if (dishesAdapter.hasMoreElements())
                         found = performDishesSearch(totalItemsCount, searchIsPromoted, query, CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
@@ -161,7 +164,7 @@ public class VenuesActivity
 
             performDishesSearch(0, searchIsPromoted, query, CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
 
-            dishes.setFriction(ViewConfiguration.getScrollFriction() * 30); // slow down the scroll
+            dishes.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
             dishes.setAdapter(dishesAdapter);
             dishes.setOnScrollListener(endlessScrollListener);
         }
@@ -292,9 +295,9 @@ public class VenuesActivity
         });
     }
 
-    private boolean performVenueSearch(String query) {
-        boolean found = venuesAdapter.findVenues(query);
-        return false;
+    private boolean performVenueSearch(int totalItemsOffset, String query) {
+        boolean found = venuesAdapter.findVenues(query, totalItemsOffset);
+        return found;
     }
 
     private boolean performDishesSearch(int totalItemsOffset, Boolean isPromoted, String query, ArrayList<String> phaseFilterIds, ArrayList<String> regionFilterIds, ArrayList<String> spectrumFilterIds) {

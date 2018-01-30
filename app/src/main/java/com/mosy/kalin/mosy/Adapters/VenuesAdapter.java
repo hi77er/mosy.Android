@@ -23,7 +23,8 @@ import java.util.ArrayList;
 public class VenuesAdapter
         extends BaseAdapter {
 
-    ArrayList<Venue> venues;
+    private ArrayList<Venue> venues;
+    private boolean hasMoreElements = true;
 
     @RootContext
     Context context;
@@ -32,19 +33,31 @@ public class VenuesAdapter
     VenuesService venuesService;
 
     private Location deviceLocation;
+
     public void setLocation(Location location) {
         this.deviceLocation = location;
         this.DeviceLastKnownLatitude = this.deviceLocation != null ? this.deviceLocation.getLatitude() : 0;
         this.DeviceLastKnownLongitude = this.deviceLocation != null ? this.deviceLocation.getLongitude() : 0;
     }
-    public Location getLocation() { return this.deviceLocation; }
+
+    public Location getLocation() {
+        return this.deviceLocation;
+    }
 
     private double DeviceLastKnownLatitude;
-    public double getDeviceLastKnownLatitude() { return this.DeviceLastKnownLatitude; }
+
+    public double getDeviceLastKnownLatitude() {
+        return this.DeviceLastKnownLatitude;
+    }
+
     private double DeviceLastKnownLongitude;
-    public double getDeviceLastKnownLongitude() { return this.DeviceLastKnownLongitude; }
+
+    public double getDeviceLastKnownLongitude() {
+        return this.DeviceLastKnownLongitude;
+    }
 
     public SwipeRefreshLayout swipeContainer;
+
     public void setSwipeRefreshLayout(SwipeRefreshLayout layout) {
         if (layout != null) {
             this.swipeContainer = layout;
@@ -60,7 +73,7 @@ public class VenuesAdapter
 
     @AfterInject
     void initAdapter() {
-
+        if (this.venues == null) this.venues = new ArrayList<>();
     }
 
     @Override
@@ -68,8 +81,7 @@ public class VenuesAdapter
         VenueItemView venueItemView = null;
         if (convertView == null) {
             venueItemView = VenueItemView_.build(context);
-        }
-        else
+        } else
             venueItemView = (VenueItemView) convertView;
 
         Venue venue = getItem(position);
@@ -84,29 +96,54 @@ public class VenuesAdapter
             return venues.size();
         else return 0;
     }
+
     @Override
     public Venue getItem(int position) {
         return venues.get(position);
     }
+
     @Override
     public long getItemId(int position) {
         return position;
     }
 
-    public boolean findVenues(String query){
-        try {
-            this.venues = venuesService.searchVenues(8, this.DeviceLastKnownLatitude, this.DeviceLastKnownLongitude, query);
+    public boolean findVenues(String query, int totalItemsOffset) {
+        int oldItemsCount = this.venues.size();
+        int searchedItemsCount = 5;
 
-            if (this.venues != null && this.venues.get(0) != null) {
+        try {
+            ArrayList<Venue> found = this.venuesService.searchVenues(
+                    searchedItemsCount,
+                    totalItemsOffset,
+                    this.DeviceLastKnownLatitude,
+                    this.DeviceLastKnownLongitude,
+                    query);
+
+            if (found != null && found.size() > 0 && found.get(0) != null) {
                 VenuesService vService = new VenuesService();
-                vService.LoadVenuesOutdoorImageThumbnails(venues);
-                vService.sortVenuesByDistanceToDevice(venues);
-                VenuesAdapter.super.notifyDataSetChanged();
+                vService.LoadVenuesOutdoorImageThumbnails(found);
+                vService.sortVenuesByDistanceToDevice(found);
+
+                this.venues.addAll(oldItemsCount, found);
+                this.notifyDataSetChanged();
+
+                hasMoreElements = found.size() >= searchedItemsCount;
+            }
+            else
+            {
+                hasMoreElements = false;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return this.venues != null && this.venues.size() > 0;
+        return this.venues.size() > oldItemsCount;
     }
 
+    public void clearVenues(){
+        this.venues = new ArrayList<>();
+    }
+
+    public boolean hasMoreElements() {
+        return hasMoreElements;
+    }
 }

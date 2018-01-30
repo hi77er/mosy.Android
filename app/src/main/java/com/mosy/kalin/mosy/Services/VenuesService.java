@@ -51,10 +51,10 @@ public class VenuesService {
         return result;
     }
 
-    public ArrayList<Venue> searchVenues(int maxResoultsCount, double deviceLastKnownLatitude, double deviceLastKnownLongitude, String query){
+    public ArrayList<Venue> searchVenues(int maxResoultsCount, int totalItemsOffset, double deviceLastKnownLatitude, double deviceLastKnownLongitude, String query){
         ArrayList<Venue> result = null;
         try {
-            SearchVenuesBindingModel model = new SearchVenuesBindingModel(maxResoultsCount, deviceLastKnownLatitude, deviceLastKnownLongitude, query);
+            SearchVenuesBindingModel model = new SearchVenuesBindingModel(maxResoultsCount, totalItemsOffset, deviceLastKnownLatitude, deviceLastKnownLongitude, query);
             result = new SearchVenuesAsyncTask().execute(model).get();
         } catch (Exception e) {
             e.printStackTrace();
