@@ -16,6 +16,7 @@ public class SearchMenuListItemsBindingModel {
     public List<String> SelectedCuisineSpectrumIds;
 
     public SearchMenuListItemsBindingModel() { }
+
     public SearchMenuListItemsBindingModel(
             int maxResultsCount,
             int totalItemsOffset,

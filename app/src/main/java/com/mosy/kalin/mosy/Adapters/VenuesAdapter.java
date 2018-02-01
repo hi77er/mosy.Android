@@ -1,7 +1,6 @@
 package com.mosy.kalin.mosy.Adapters;
 
 import android.content.Context;
-import android.location.Location;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,38 +22,34 @@ import java.util.ArrayList;
 public class VenuesAdapter
         extends BaseAdapter {
 
+    public boolean LoadingStillInAction; // used to prevent searching while another async search hasn't been finished
+    public boolean APICallStillReturnsElements = true;
+
     private ArrayList<Venue> venues;
-    private boolean hasMoreElements = true;
 
     @RootContext
     Context context;
 
     @Bean
     VenuesService venuesService;
-
-    private Location deviceLocation;
-
-    public void setLocation(Location location) {
-        this.deviceLocation = location;
-        this.DeviceLastKnownLatitude = this.deviceLocation != null ? this.deviceLocation.getLatitude() : 0;
-        this.DeviceLastKnownLongitude = this.deviceLocation != null ? this.deviceLocation.getLongitude() : 0;
-    }
-
-    public Location getLocation() {
-        return this.deviceLocation;
-    }
-
-    private double DeviceLastKnownLatitude;
-
-    public double getDeviceLastKnownLatitude() {
-        return this.DeviceLastKnownLatitude;
-    }
-
-    private double DeviceLastKnownLongitude;
-
-    public double getDeviceLastKnownLongitude() {
-        return this.DeviceLastKnownLongitude;
-    }
+//
+//    private Location deviceLocation;
+//    public void setLocation(Location location) {
+//        this.deviceLocation = location;
+//        this.DeviceLastKnownLatitude = this.deviceLocation != null ? this.deviceLocation.getLatitude() : 0;
+//        this.DeviceLastKnownLongitude = this.deviceLocation != null ? this.deviceLocation.getLongitude() : 0;
+//    }
+//    public Location getLocation() {
+//        return this.deviceLocation;
+//    }
+//    private double DeviceLastKnownLatitude;
+//    public double getDeviceLastKnownLatitude() {
+//        return this.DeviceLastKnownLatitude;
+//    }
+//    private double DeviceLastKnownLongitude;
+//    public double getDeviceLastKnownLongitude() {
+//        return this.DeviceLastKnownLongitude;
+//    }
 
     public SwipeRefreshLayout swipeContainer;
 
@@ -75,6 +70,8 @@ public class VenuesAdapter
     void initAdapter() {
         if (this.venues == null) this.venues = new ArrayList<>();
     }
+
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -107,43 +104,16 @@ public class VenuesAdapter
         return position;
     }
 
-    public boolean findVenues(String query, int totalItemsOffset) {
-        int oldItemsCount = this.venues.size();
-        int searchedItemsCount = 5;
 
-        try {
-            ArrayList<Venue> found = this.venuesService.searchVenues(
-                    searchedItemsCount,
-                    totalItemsOffset,
-                    this.DeviceLastKnownLatitude,
-                    this.DeviceLastKnownLongitude,
-                    query);
 
-            if (found != null && found.size() > 0 && found.get(0) != null) {
-                VenuesService vService = new VenuesService();
-                vService.LoadVenuesOutdoorImageThumbnails(found);
-                vService.sortVenuesByDistanceToDevice(found);
-
-                this.venues.addAll(oldItemsCount, found);
-                this.notifyDataSetChanged();
-
-                hasMoreElements = found.size() >= searchedItemsCount;
-            }
-            else
-            {
-                hasMoreElements = false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return this.venues.size() > oldItemsCount;
-    }
 
     public void clearVenues(){
         this.venues = new ArrayList<>();
     }
 
-    public boolean hasMoreElements() {
-        return hasMoreElements;
+    public void addItems(ArrayList<Venue> items){
+        int lastItemPosition = this.venues.size();
+        this.venues.addAll(lastItemPosition, items);
+        this.notifyDataSetChanged();
     }
 }

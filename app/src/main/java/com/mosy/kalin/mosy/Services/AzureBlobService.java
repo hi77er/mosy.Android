@@ -1,5 +1,7 @@
 package com.mosy.kalin.mosy.Services;
 
+import android.os.AsyncTask;
+
 import com.mosy.kalin.mosy.Async.Tasks.AzureBlobDownloadAsyncTask;
 import com.mosy.kalin.mosy.BuildConfig;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
@@ -19,7 +21,7 @@ public class AzureBlobService {
 
             AzureBlobDownloadAsyncTask task = new AzureBlobDownloadAsyncTask();
             DownloadBlobModel model = new DownloadBlobModel(blobId, containerName);
-            bufferArr = task.execute(model).get();
+            bufferArr = task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, model).get();
 
             if (BuildConfig.DEBUG) elapsed = System.currentTimeMillis() - execStart;
             if (BuildConfig.DEBUG) System.out.println("MOSYLOGS : AZURE BLOB DOWNLOAD" + containerName + " - " + blobId + " TOOK: " + elapsed + "ms;");

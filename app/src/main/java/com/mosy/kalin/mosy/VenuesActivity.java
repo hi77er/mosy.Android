@@ -13,8 +13,10 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.AbsListView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -22,7 +24,12 @@ import com.mosy.kalin.mosy.Adapters.DishesAdapter;
 import com.mosy.kalin.mosy.Adapters.VenuesAdapter;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Listeners.EndlessScrollListener;
+import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
+import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadMenuListItemsAsyncTask;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenuesAsyncTask;
 import com.mosy.kalin.mosy.Services.LocationResolver;
 import com.mosy.kalin.mosy.Services.VenuesService;
 
@@ -42,7 +49,6 @@ import java.util.ArrayList;
 @OptionsMenu(R.menu.menu)
 public class VenuesActivity
         extends AppCompatActivity {
-    long timeStarted = 0;
 
     @Extra
     static boolean DishesSearchModeActivated;
@@ -53,10 +59,15 @@ public class VenuesActivity
     @Extra
     static ArrayList<String> CuisineSpectrumFilterIds;
 
-    Boolean searchIsPromoted = true; // Normally search only promoted dishes, but when using query then search among all dishes
+    long timeStarted = 0;
+    Boolean searchIsPromoted = true; //INFO: Normally search only promoted dishes, but when using query then search among all dishes
     String query = "searchall";
+    int itemsInitialLoadCount = 8;
+    int itemsOnScrollLoadCount = 5;
 
-    LocationResolver mLocationResolver;
+
+    private LocationResolver mLocationResolver;
+    private Location lastKnownLocation;
 
     @SystemService
     SearchManager searchManager;
@@ -68,16 +79,19 @@ public class VenuesActivity
     @Bean
     DishesAdapter dishesAdapter;
 
-    SearchView searchView;
-
     @ViewById(R.id.toolbar)
     Toolbar toolbar;
     @ViewById(resName = "venues_lvVenues")
     ListView venues;
     @ViewById(resName = "venues_lvDishes")
     ListView dishes;
+    @ViewById(resName = "venues_llInitialLoadingProgress")
+    LinearLayout centralProgress;
 
+    SearchView searchView;
     FloatingActionButton filters;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,14 +100,12 @@ public class VenuesActivity
 
         mLocationResolver = new LocationResolver(this);
         mLocationResolver.onStart();
-        retrieveLocation();
+        refreshLastKnownLocation();
     }
 
     @AfterViews
     void afterViews() {
         configureActionBar();
-
-//        venuesService = new VenuesService();
 
         this.filters = findViewById(R.id.venues_ibFilters);
         this.filters.setOnClickListener(v -> openFilters());
@@ -102,74 +114,96 @@ public class VenuesActivity
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query = intent.getStringExtra(SearchManager.QUERY);
-            searchIsPromoted = null; // Normally search only promoted dishes, but when using query then search among all dishes
+            searchIsPromoted = null; //INFO: Normally search only promoted dishes, but when using query then search among all dishes
         }
 
-        if (!DishesSearchModeActivated) {
-            EndlessScrollListener endlessScrollListener = new EndlessScrollListener() {
-                @Override
-                public boolean onLoadMore(int page, int totalItemsCount) {
-                    // Triggered only when new data needs to be appended to the list
-                    // Add whatever code is needed to append new items to your AdapterView
-                    boolean found = false;
-                    if (venuesAdapter.hasMoreElements())
-                        found = performVenueSearch(totalItemsCount, query);
-                    return found; // ONLY if more data is actually being loaded; false otherwise.
-                }
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    if (scrollState == 0) filters.show();// scrolling stopped
-                    else filters.hide();
-                }
-            };
-
-            final SwipeRefreshLayout venuesSwipeContainer = findViewById(R.id.venues_lVenuesSwipeContainer);
-            venuesAdapter.setSwipeRefreshLayout(venuesSwipeContainer);
-            venuesAdapter.swipeContainer.setOnRefreshListener(() -> {
-                retrieveLocation();
-                venuesAdapter.clearVenues();
-                performVenueSearch( 0, "searchall");
-                endlessScrollListener.resetState();
-                venuesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
-            });
-
-            performVenueSearch(0, query);
-
-            venues.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
-            venues.setAdapter(venuesAdapter);
-            venues.setOnScrollListener(endlessScrollListener);
-        } else {
-            EndlessScrollListener endlessScrollListener = new EndlessScrollListener() {
-                @Override
-                public boolean onLoadMore(int page, int totalItemsCount) {
-                    boolean found = false;
-                    if (dishesAdapter.hasMoreElements())
-                        found = performDishesSearch(totalItemsCount, searchIsPromoted, query, CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
-
-                    return found; // ONLY if more data is actually being loaded; false otherwise.
-                }
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    if (scrollState == 0) filters.show();// scrolling stopped
-                    else filters.hide();
-                }
-            };
-            final SwipeRefreshLayout dishesSwipeContainer = findViewById(R.id.venues_lDishesSwipeContainer);
-            dishesAdapter.setSwipeRefreshLayout(dishesSwipeContainer);
-            dishesAdapter.swipeContainer.setOnRefreshListener(() -> {
-                retrieveLocation();
-                dishesAdapter.clearDishes();
-                performDishesSearch(0, true,"searchall", CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
-                endlessScrollListener.resetState();
-                dishesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
-            });
-
-            performDishesSearch(0, searchIsPromoted, query, CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
-
-            dishes.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
-            dishes.setAdapter(dishesAdapter);
-            dishes.setOnScrollListener(endlessScrollListener);
-        }
+        if (!DishesSearchModeActivated) adaptVenueItems();
+        else adaptDishItems();
     }
 
+    //INFO: Called in "afterViews"
+    private void adaptVenueItems() {
+        EndlessScrollListener endlessScrollListener = new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                if (!venuesAdapter.LoadingStillInAction && venuesAdapter.APICallStillReturnsElements)
+                {
+                    venuesAdapter.LoadingStillInAction = true;
+
+                    //INFO: WHILE SCROLLING LOAD
+                    loadMoreVenues(itemsOnScrollLoadCount, totalItemsCount, query);
+                }
+                return true;
+            }
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == 0) filters.show();// scrolling stopped
+                else filters.hide();
+            }
+        };
+
+        final SwipeRefreshLayout venuesSwipeContainer = findViewById(R.id.venues_lVenuesSwipeContainer);
+        venuesAdapter.setSwipeRefreshLayout(venuesSwipeContainer);
+        venuesAdapter.swipeContainer.setOnRefreshListener(() -> {
+            refreshLastKnownLocation();
+            venuesAdapter.clearVenues();
+
+            //INFO: REFRESH INITIAL LOAD
+            loadMoreVenues(itemsInitialLoadCount, 0, "searchall");
+
+            endlessScrollListener.resetState();
+            venuesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
+        });
+
+        //INFO: INITIAL LOAD
+        loadMoreVenues(itemsInitialLoadCount, 0, query);
+
+        venues.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
+        venues.setAdapter(venuesAdapter);
+        venues.setOnScrollListener(endlessScrollListener);
+    }
+
+    //INFO: Called in "afterViews"
+    private void adaptDishItems() {
+        EndlessScrollListener endlessScrollListener = new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                if (!dishesAdapter.loadingStillInAction && dishesAdapter.APICallStillReturnsElements) {
+                    dishesAdapter.loadingStillInAction = true;
+
+                    //INFO: WHILE SCROLLING LOAD
+                    loadMoreDishes(itemsOnScrollLoadCount, totalItemsCount, searchIsPromoted, query,
+                            CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
+                }
+                return true;
+            }
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == 0) filters.show();// scrolling stopped
+                else filters.hide();
+            }
+        };
+
+        final SwipeRefreshLayout dishesSwipeContainer = findViewById(R.id.venues_lDishesSwipeContainer);
+        dishesAdapter.setSwipeRefreshLayout(dishesSwipeContainer);
+        dishesAdapter.swipeContainer.setOnRefreshListener(() -> {
+            refreshLastKnownLocation();
+            dishesAdapter.clearDishes();
+
+            //INFO: REFRESH INITIAL LOAD
+            loadMoreDishes(itemsInitialLoadCount, 0, searchIsPromoted, query,
+                    CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
+
+            endlessScrollListener.resetState();
+            dishesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
+        });
+
+        //INFO: INITIAL LOAD
+        loadMoreDishes(itemsInitialLoadCount, 0, searchIsPromoted, query,
+                CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
+
+        dishes.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
+        dishes.setAdapter(dishesAdapter);
+        dishes.setOnScrollListener(endlessScrollListener);
+    }
 
     @Override
     protected void onStart() {
@@ -192,8 +226,7 @@ public class VenuesActivity
         searchView.setIconifiedByDefault(false);
 
         if (BuildConfig.DEBUG) {
-            System.out.println("MOSYLOGS : APP LOADED!" + " TOOK: " + ((System.currentTimeMillis() - timeStarted) / 1000) + " sec;");
-            Toast.makeText(this, "Loaded for: " + ((System.currentTimeMillis() - timeStarted) / 1000) + " sec", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Loading..", Toast.LENGTH_SHORT).show();
         }
         return true;
     }
@@ -232,7 +265,7 @@ public class VenuesActivity
     }
 
     @ItemClick(resName = "venues_lvVenues")
-    void openVenueMenu(Venue venue) {
+    void venueClicked(Venue venue) {
         Intent intent = new Intent(VenuesActivity.this, VenueActivity_.class);
         venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
         venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
@@ -242,9 +275,8 @@ public class VenuesActivity
         startActivity(intent);
     }
 
-
     @ItemClick(resName = "venues_lvDishes")
-    void openDishMenu(MenuListItem listItem) {
+    void dishClicked(MenuListItem listItem) {
         Intent intent = new Intent(VenuesActivity.this, VenueActivity_.class);
         Venue venue = venuesService.GetById(listItem.VenueId);
 
@@ -256,6 +288,62 @@ public class VenuesActivity
         intent.putExtra("SelectedMenuListId", listItem.BrochureId);
 
         startActivity(intent);
+    }
+
+
+    void loadMoreVenues(int maxResultsCount, int totalItemsOffset, String query){
+        AsyncTaskListener<ArrayList<Venue>> listener = new AsyncTaskListener<ArrayList<Venue>>() {
+            @Override
+            public void onPreExecute() {
+                centralProgress.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onPostExecute(ArrayList<Venue> result) {
+                venuesAdapter.addItems(result);
+
+                venuesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;
+                venuesAdapter.LoadingStillInAction = false;
+
+                centralProgress.setVisibility(View.GONE);
+            }
+        };
+
+        SearchVenuesBindingModel model =
+            new SearchVenuesBindingModel(maxResultsCount, totalItemsOffset, lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), query);
+
+        new LoadVenuesAsyncTask(listener).execute(model);
+    }
+
+    void loadMoreDishes(int maxResultsCount, int totalItemsOffset, Boolean isPromoted, String query,
+                        ArrayList<String> phaseFilterIds, ArrayList<String> regionFilterIds, ArrayList<String> spectrumFilterIds){
+        AsyncTaskListener<ArrayList<MenuListItem>> listener = new AsyncTaskListener<ArrayList<MenuListItem>>() {
+            @Override
+            public void onPreExecute() {
+                centralProgress.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onPostExecute(ArrayList<MenuListItem> result) {
+                dishesAdapter.addItems(result);
+
+                dishesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;;
+                dishesAdapter.loadingStillInAction = false;
+
+                centralProgress.setVisibility(View.GONE);
+            }
+        };
+
+        SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(
+                maxResultsCount,
+                totalItemsOffset,
+                lastKnownLocation.getLatitude(),
+                lastKnownLocation.getLongitude(),
+                isPromoted,
+                query,
+                phaseFilterIds,
+                regionFilterIds,
+                spectrumFilterIds);
+
+        new LoadMenuListItemsAsyncTask(listener).execute(model);
     }
 
     //    @ItemClick(resName = "venues_ibFilters")
@@ -285,30 +373,15 @@ public class VenuesActivity
         startActivity(intent);
     }
 
-    void retrieveLocation() {
-        mLocationResolver.resolveLocation(this, new LocationResolver.OnLocationResolved() {
-            @Override
-            public void onLocationResolved(Location location) {
-                venuesAdapter.setLocation(location);
-                dishesAdapter.setLocation(location);
-            }
+    void refreshLastKnownLocation() {
+        mLocationResolver.resolveLocation(this, location -> {
+            this.lastKnownLocation = location;
         });
-    }
-
-    private boolean performVenueSearch(int totalItemsOffset, String query) {
-        boolean found = venuesAdapter.findVenues(query, totalItemsOffset);
-        return found;
-    }
-
-    private boolean performDishesSearch(int totalItemsOffset, Boolean isPromoted, String query, ArrayList<String> phaseFilterIds, ArrayList<String> regionFilterIds, ArrayList<String> spectrumFilterIds) {
-        boolean found = dishesAdapter.findDishes(totalItemsOffset, isPromoted, query, phaseFilterIds, regionFilterIds, spectrumFilterIds);
-        return found;
     }
 
     private void configureActionBar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
     }
 
 }
