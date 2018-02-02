@@ -37,7 +37,6 @@ public class LoadVenuesAsyncTask
             results = new SearchVenuesAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, model).get();
 
             VenuesService vService = new VenuesService();
-            vService.LoadVenuesOutdoorImageThumbnails(results);
             vService.sortVenuesByDistanceToDevice(results);
         } catch (Exception e) {
             e.printStackTrace();

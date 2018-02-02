@@ -168,13 +168,6 @@ public class VenuesService {
         });
     }
 
-    public void LoadVenuesOutdoorImageThumbnails(ArrayList<Venue> venues) {
-        for (Venue venue: venues) {
-            if (venue.OutdoorImage != null && venue.OutdoorImage.Id != null && venue.OutdoorImage.Id.length() > 0)
-                venue.OutdoorImage.Bytes = new AzureBlobService().GetBlob(venue.OutdoorImage.Id, "userimages\\fboalbums\\100x100");
-        }
-    }
-
     public VenueImage downloadVenueIndoorImageMeta(String id) {
         GetVenueIndoorImageMetaBindingModel model = new GetVenueIndoorImageMetaBindingModel(id);
         VenueImage image = null;

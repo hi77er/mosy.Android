@@ -34,8 +34,11 @@ import org.androidannotations.annotations.ViewById;
 @EViewGroup(R.layout.activity_item_dish)
 public class DishItemView extends RelativeLayout {
 
-    String ImageId;
-    Boolean IsUsingDefaultImageThumbnail;
+    private static final String thumbnailBlobStorageContainerPath = "userimages\\requestablealbums\\100x100";
+    private static final String originalBlobStorageContainerPath = "userimages\\requestablealbums\\original";
+    private String ImageId;
+    private Boolean IsUsingDefaultImageThumbnail;
+    private LruCache<String, Bitmap> inMemoryCache;
 
     @Bean
     public com.mosy.kalin.mosy.Services.VenuesService VenuesService;
@@ -58,27 +61,13 @@ public class DishItemView extends RelativeLayout {
     @ViewById(resName = "menuListItem_tvRatingTag")
     TextView RatingTag;
 
-    private LruCache<String, Bitmap> mMemoryCache;
 
     public DishItemView(Context context) {
         super(context);
-
-        // final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-        // final int cacheSize = maxMemory / 8; // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = 10 * 1024 * 1024; // 10 MBs
-
-        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than
-                // number of items.
-                return bitmap.getByteCount() / 1024;
-            }
-        };
-        addBitmapToMemoryCache("default", BitmapFactory.decodeResource(getResources(), R.drawable.eat_paprika));
     }
 
-    public void bind(MenuListItem menuListItem) {
+    public void bind(MenuListItem menuListItem, LruCache<String, Bitmap> cache) {
+        this.inMemoryCache = cache;
         this.Name.setText(menuListItem.Name);
         this.VenueName.setText(menuListItem.VenueName);
         if (menuListItem.ImageThumbnail != null) this.ImageId = menuListItem.ImageThumbnail.Id;
@@ -116,7 +105,6 @@ public class DishItemView extends RelativeLayout {
             ImageThumbnail.setImageResource(R.drawable.eat_paprika);
             this.downloadMenuListItemThumbnail(imageKey);
         }
-
     }
 
     private void downloadMenuListItemThumbnail(String thumbnailId) {
@@ -142,31 +130,31 @@ public class DishItemView extends RelativeLayout {
             }
         };
 
-        DownloadBlobModel model = new DownloadBlobModel(thumbnailId, "userimages\\requestablealbums\\100x100");
+        DownloadBlobModel model = new DownloadBlobModel(thumbnailId, thumbnailBlobStorageContainerPath);
         new LoadMenuListItemThumbnailAsyncTask(listener).execute(model);
     }
 
     private void addBitmapToMemoryCache(String key, Bitmap bitmap) {
         if (getBitmapFromMemCache(key) == null) {
-            mMemoryCache.put(key, bitmap);
+            inMemoryCache.put(key, bitmap);
         }
     }
 
     private Bitmap getBitmapFromMemCache(String key) {
-        return mMemoryCache.get(key);
+        return inMemoryCache.get(key);
     }
 
     @Click(resName = "menuListItem_ivThumbnail")
     public void ImageClick()
     {
-        if (! IsUsingDefaultImageThumbnail){
+        if (!IsUsingDefaultImageThumbnail){
             final Dialog nagDialog = new Dialog(this.getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             nagDialog.setCancelable(true);
             nagDialog.setContentView(R.layout.image_preview_dialog);
 
             if (this.ImageId != null && this.ImageId.length() > 0) {
-                byte[] byteArray = new AzureBlobService().GetBlob(this.ImageId, "userimages\\requestablealbums\\original");
+                byte[] byteArray = new AzureBlobService().GetBlob(this.ImageId, originalBlobStorageContainerPath);
 
                 if (byteArray != null && byteArray.length > 0) {
                     Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);

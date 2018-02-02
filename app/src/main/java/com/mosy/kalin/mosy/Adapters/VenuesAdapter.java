@@ -1,12 +1,16 @@
 package com.mosy.kalin.mosy.Adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.LruCache;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.R;
 import com.mosy.kalin.mosy.Services.VenuesService;
 import com.mosy.kalin.mosy.Views.VenueItemView;
 import com.mosy.kalin.mosy.Views.VenueItemView_;
@@ -26,6 +30,7 @@ public class VenuesAdapter
     public boolean APICallStillReturnsElements = true;
 
     private ArrayList<Venue> venues;
+    private LruCache<String, Bitmap> mMemoryCache;
 
     public SwipeRefreshLayout swipeContainer;
 
@@ -50,6 +55,19 @@ public class VenuesAdapter
     @AfterInject
     void initAdapter() {
         if (this.venues == null) this.venues = new ArrayList<>();
+        // final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        // final int cacheSize = maxMemory / 8; // Use 1/8th of the available memory for this memory cache.
+        final int cacheSize = 10 * 1024 * 1024; // 10 MBs
+
+        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // The cache size will be measured in kilobytes rather than
+                // number of items.
+                return bitmap.getByteCount() / 1024;
+            }
+        };
+        addBitmapToMemoryCache("default", BitmapFactory.decodeResource(context.getResources(), R.drawable.eat_paprika));
     }
 
 
@@ -62,7 +80,7 @@ public class VenuesAdapter
             venueItemView = (VenueItemView) convertView;
 
         Venue venue = getItem(position);
-        venueItemView.bind(venue);
+        venueItemView.bind(venue, mMemoryCache);
 
         return venueItemView;
     }
@@ -94,5 +112,15 @@ public class VenuesAdapter
         int lastItemPosition = this.venues.size();
         this.venues.addAll(lastItemPosition, items);
         this.notifyDataSetChanged();
+    }
+
+    private void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) == null) {
+            mMemoryCache.put(key, bitmap);
+        }
+    }
+
+    private Bitmap getBitmapFromMemCache(String key) {
+        return mMemoryCache.get(key);
     }
 }
