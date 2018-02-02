@@ -35,10 +35,6 @@ public class LoadMenuListItemsAsyncTask
         try {
             SearchMenuListItemsBindingModel model = models[0];
             results = new SearchMenuListItemsAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, model).get();
-
-            MenuListItemsService mService = new MenuListItemsService();
-            mService.LoadMenuListItemImageThumbnails(results);
-            // mService.sortMenuListItemsByDistanceToDevice(menuListItems);
         } catch (Exception e) {
             e.printStackTrace();
         }

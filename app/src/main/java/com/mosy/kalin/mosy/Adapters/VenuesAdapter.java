@@ -27,31 +27,12 @@ public class VenuesAdapter
 
     private ArrayList<Venue> venues;
 
+    public SwipeRefreshLayout swipeContainer;
+
     @RootContext
     Context context;
-
     @Bean
     VenuesService venuesService;
-//
-//    private Location deviceLocation;
-//    public void setLocation(Location location) {
-//        this.deviceLocation = location;
-//        this.DeviceLastKnownLatitude = this.deviceLocation != null ? this.deviceLocation.getLatitude() : 0;
-//        this.DeviceLastKnownLongitude = this.deviceLocation != null ? this.deviceLocation.getLongitude() : 0;
-//    }
-//    public Location getLocation() {
-//        return this.deviceLocation;
-//    }
-//    private double DeviceLastKnownLatitude;
-//    public double getDeviceLastKnownLatitude() {
-//        return this.DeviceLastKnownLatitude;
-//    }
-//    private double DeviceLastKnownLongitude;
-//    public double getDeviceLastKnownLongitude() {
-//        return this.DeviceLastKnownLongitude;
-//    }
-
-    public SwipeRefreshLayout swipeContainer;
 
     public void setSwipeRefreshLayout(SwipeRefreshLayout layout) {
         if (layout != null) {
@@ -70,7 +51,6 @@ public class VenuesAdapter
     void initAdapter() {
         if (this.venues == null) this.venues = new ArrayList<>();
     }
-
 
 
     @Override
@@ -103,7 +83,6 @@ public class VenuesAdapter
     public long getItemId(int position) {
         return position;
     }
-
 
 
 

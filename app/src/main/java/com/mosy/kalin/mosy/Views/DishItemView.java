@@ -4,6 +4,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.util.LruCache;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -16,8 +19,12 @@ import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.BusinessHoursHelper;
 import com.mosy.kalin.mosy.Helpers.LocationHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
+import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.R;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadMenuListItemThumbnailAsyncTask;
 import com.mosy.kalin.mosy.Services.AzureBlobService;
+import com.mosy.kalin.mosy.Services.MenuListItemsService;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
@@ -25,8 +32,7 @@ import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
 @EViewGroup(R.layout.activity_item_dish)
-public class DishItemView
-        extends RelativeLayout {
+public class DishItemView extends RelativeLayout {
 
     String ImageId;
     Boolean IsUsingDefaultImageThumbnail;
@@ -52,8 +58,24 @@ public class DishItemView
     @ViewById(resName = "menuListItem_tvRatingTag")
     TextView RatingTag;
 
+    private LruCache<String, Bitmap> mMemoryCache;
+
     public DishItemView(Context context) {
         super(context);
+
+        // final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        // final int cacheSize = maxMemory / 8; // Use 1/8th of the available memory for this memory cache.
+        final int cacheSize = 10 * 1024 * 1024; // 10 MBs
+
+        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // The cache size will be measured in kilobytes rather than
+                // number of items.
+                return bitmap.getByteCount() / 1024;
+            }
+        };
+        addBitmapToMemoryCache("default", BitmapFactory.decodeResource(getResources(), R.drawable.eat_paprika));
     }
 
     public void bind(MenuListItem menuListItem) {
@@ -71,16 +93,6 @@ public class DishItemView
             this.WalkingTime.setText(timeWalking);
         }
 
-        if (menuListItem.ImageThumbnail != null && ArrayHelper.hasValidBitmapContent(menuListItem.ImageThumbnail.Bytes)){
-            Bitmap bmp = BitmapFactory.decodeByteArray(menuListItem.ImageThumbnail.Bytes, 0, menuListItem.ImageThumbnail.Bytes.length);
-            this.ImageThumbnail.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
-            IsUsingDefaultImageThumbnail = false;
-        }
-        else {
-            IsUsingDefaultImageThumbnail = true;
-            this.ImageThumbnail.setImageResource(R.drawable.eat_paprika);
-        }
-
         WorkingStatus status = BusinessHoursHelper.getWorkingStatus(menuListItem.VenueBusinessHours);
         switch (status){
             case Open:
@@ -95,6 +107,53 @@ public class DishItemView
             case Unknown: break;
         }
 
+        final String imageKey = menuListItem.ImageThumbnail != null ? menuListItem.ImageThumbnail.Id : "default";
+        final Bitmap bitmap = getBitmapFromMemCache(imageKey);
+
+        if (bitmap != null) {
+            ImageThumbnail.setImageBitmap(bitmap);
+        } else {
+            ImageThumbnail.setImageResource(R.drawable.eat_paprika);
+            this.downloadMenuListItemThumbnail(imageKey);
+        }
+
+    }
+
+    private void downloadMenuListItemThumbnail(String thumbnailId) {
+        AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
+            @Override
+            public void onPreExecute() {
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onPostExecute(byte[] bytes) {
+                if (ArrayHelper.hasValidBitmapContent(bytes)){
+                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    ImageThumbnail.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
+                    IsUsingDefaultImageThumbnail = false;
+                    addBitmapToMemoryCache(thumbnailId, bmp);
+                }
+                else {
+                    IsUsingDefaultImageThumbnail = true;
+                    ImageThumbnail.setImageResource(R.drawable.eat_paprika);
+                }
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+            }
+        };
+
+        DownloadBlobModel model = new DownloadBlobModel(thumbnailId, "userimages\\requestablealbums\\100x100");
+        new LoadMenuListItemThumbnailAsyncTask(listener).execute(model);
+    }
+
+    private void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) == null) {
+            mMemoryCache.put(key, bitmap);
+        }
+    }
+
+    private Bitmap getBitmapFromMemCache(String key) {
+        return mMemoryCache.get(key);
     }
 
     @Click(resName = "menuListItem_ivThumbnail")

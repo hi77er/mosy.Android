@@ -1,8 +1,6 @@
 package com.mosy.kalin.mosy.Adapters;
 
-import android.content.AsyncTaskLoader;
 import android.content.Context;
-import android.location.Location;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +17,6 @@ import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @EBean
 public class DishesAdapter
@@ -37,19 +32,6 @@ public class DishesAdapter
 
     @Bean
     MenuListItemsService menuListItemsService;
-
-
-//    private Location deviceLocation;
-//    public void setLocation(Location location) {
-//        this.deviceLocation = location;
-//        this.DeviceLastKnownLatitude = this.deviceLocation != null ? this.deviceLocation.getLatitude() : 0;
-//        this.DeviceLastKnownLongitude = this.deviceLocation != null ? this.deviceLocation.getLongitude() : 0;
-//    }
-//    public Location getLocation() { return this.deviceLocation; }
-//    private double DeviceLastKnownLatitude;
-//    public double getDeviceLastKnownLatitude() { return this.DeviceLastKnownLatitude; }
-//    private double DeviceLastKnownLongitude;
-//    public double getDeviceLastKnownLongitude() { return this.DeviceLastKnownLongitude; }
 
     public SwipeRefreshLayout swipeContainer;
     public void setSwipeRefreshLayout(SwipeRefreshLayout layout) {
@@ -70,14 +52,12 @@ public class DishesAdapter
         if (this.menuListItems == null) this.menuListItems = new ArrayList<>();
     }
 
-
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         DishItemView view = null;
-        if (convertView == null) {
+
+        if (convertView == null)
             view = DishItemView_.build(context);
-        }
         else
             view = (DishItemView) convertView;
 
