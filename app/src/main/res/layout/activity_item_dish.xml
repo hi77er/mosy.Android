@@ -130,7 +130,8 @@
                     android:textSize="19sp"
                     android:textColor="@color/colorPrimary"
                     android:text="0min"
-                    android:gravity="center_vertical" />
+                    android:gravity="center_vertical"
+                    android:visibility="gone"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

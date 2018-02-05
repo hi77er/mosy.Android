@@ -4,20 +4,22 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Base64;
+import android.util.LruCache;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mosy.kalin.mosy.DTOs.MenuListItemImage;
 import com.mosy.kalin.mosy.DTOs.Ingredient;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
+import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.R;
-import com.mosy.kalin.mosy.Services.MenuListItemsService;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadMenuListItemThumbnailAsyncTask;
+import com.mosy.kalin.mosy.Services.AzureBlobService;
 
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
@@ -27,68 +29,103 @@ import java.util.ArrayList;
 @EViewGroup(R.layout.activity_item_menulistitem_details)
 public class MenuListItemDetailsView
         extends RelativeLayout {
-
-    private boolean IsUsingDefaultOutdoorImageThumbnail = true;
-    private MenuListItem MenuListItem;
+    private static final String thumbnailBlobStorageContainerPath = "userimages\\requestablealbums\\100x100";
+    private static final String originalBlobStorageContainerPath = "userimages\\requestablealbums\\original";
+    private LruCache<String, Bitmap> inMemoryCache;
+    private boolean IsUsingDefaultImageThumbnail = true;
+    private String ImageId;
 
     public MenuListItemDetailsView(Context context) {
         super(context);
     }
 
-    @Bean
-    public MenuListItemsService MenuListItemsService;
-
     @ViewById(resName = "menuListItemDetails_ivMainImage")
-    ImageView MenuListItemMainImage;
+    ImageView ImageThumbnail;
 
     @ViewById(resName = "menuListItemDetails_tvIngredients")
     TextView Ingredients;
     ///Add more controls here
 
-    public void bind(MenuListItem menuListItem) {
-        if (menuListItem != null){
-            this.MenuListItem = menuListItem;
-            ArrayList<String> toJoin = new ArrayList<String>();
-            String joined = StringHelper.empty();
-            for (Ingredient ingredient: menuListItem.Ingredients)
-                toJoin.add(ingredient.Name);
-            joined = StringHelper.join(", ", toJoin);
-            this.Ingredients.setText(joined);
+    public void bind(MenuListItem menuListItem, LruCache<String, Bitmap> cache) {
+        this.inMemoryCache = cache;
+        if (menuListItem.ImageThumbnail != null)
+            this.ImageId = menuListItem.ImageThumbnail.Id;
 
-            MenuListItemImage mainImage = this.MenuListItemsService.downloadMenuListItemImageThumbnail(menuListItem.Id);
-            if (mainImage != null && mainImage.Bytes != null){
-                byte[] byteArray = Base64.decode(mainImage.Bytes, Base64.DEFAULT);
-                Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-                this.MenuListItemMainImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
-                this.IsUsingDefaultOutdoorImageThumbnail = false;
-            }
-            else {
-                this.IsUsingDefaultOutdoorImageThumbnail = true;
-                this.MenuListItemMainImage.setImageResource(R.drawable.eat_paprika);
-            }
+        ArrayList<String> toJoin = new ArrayList<String>();
+        String joined = StringHelper.empty();
+        for (Ingredient ingredient: menuListItem.Ingredients)
+            toJoin.add(ingredient.Name);
+        joined = StringHelper.join(", ", toJoin);
+        this.Ingredients.setText(joined);
+
+        final String imageKey = menuListItem.ImageThumbnail != null ? menuListItem.ImageThumbnail.Id : "default";
+        final Bitmap bitmap = getBitmapFromMemCache(imageKey);
+
+        if (bitmap != null) {
+            ImageThumbnail.setImageBitmap(bitmap);
+        } else {
+            ImageThumbnail.setImageResource(R.drawable.eat_paprika);
+            this.downloadMenuListItemThumbnail(imageKey);
         }
     }
 
+    private void downloadMenuListItemThumbnail(String thumbnailId) {
+        AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
+            @Override
+            public void onPreExecute() {
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onPostExecute(byte[] bytes) {
+                if (ArrayHelper.hasValidBitmapContent(bytes)){
+                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    ImageThumbnail.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
+                    IsUsingDefaultImageThumbnail = false;
+                    addBitmapToMemoryCache(thumbnailId, bmp);
+                }
+                else {
+                    IsUsingDefaultImageThumbnail = true;
+                    ImageThumbnail.setImageResource(R.drawable.eat_paprika);
+                }
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+            }
+        };
+
+        DownloadBlobModel model = new DownloadBlobModel(thumbnailId, thumbnailBlobStorageContainerPath);
+        new LoadMenuListItemThumbnailAsyncTask(listener).execute(model);
+    }
 
     @Click(resName = "menuListItemDetails_ivMainImage")
     public void ItemClick()
     {
-        if (! IsUsingDefaultOutdoorImageThumbnail){
+        if (!IsUsingDefaultImageThumbnail){
             final Dialog nagDialog = new Dialog(this.getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             nagDialog.setCancelable(true);
             nagDialog.setContentView(R.layout.image_preview_dialog);
 
-            MenuListItemImage image = this.MenuListItemsService.downloadMenuListItemImage(this.MenuListItem.Id);
-            if (image.Bytes != null){
-                byte[] byteArray = Base64.decode(image.Bytes, Base64.DEFAULT);
-                Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            if (this.ImageId != null && this.ImageId.length() > 0) {
+                byte[] byteArray = new AzureBlobService().GetBlob(this.ImageId, originalBlobStorageContainerPath);
 
-                ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
-                ivPreview.setImageBitmap(bmp);
-                nagDialog.show();
+                if (byteArray != null && byteArray.length > 0) {
+                    Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                    ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
+                    ivPreview.setImageBitmap(bmp);
+                    nagDialog.show();
+                }
             }
         }
+    }
+
+    private void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) == null) {
+            inMemoryCache.put(key, bitmap);
+        }
+    }
+
+    private Bitmap getBitmapFromMemCache(String key) {
+        return inMemoryCache.get(key);
     }
 
 }

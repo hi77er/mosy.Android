@@ -11,7 +11,6 @@ import android.widget.BaseAdapter;
 
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.R;
-import com.mosy.kalin.mosy.Services.MenuListItemsService;
 import com.mosy.kalin.mosy.Views.DishItemView;
 import com.mosy.kalin.mosy.Views.DishItemView_;
 
@@ -35,8 +34,6 @@ public class DishesAdapter
     @RootContext
     Context context;
 
-    @Bean
-    MenuListItemsService menuListItemsService;
 
     public SwipeRefreshLayout swipeContainer;
     public void setSwipeRefreshLayout(SwipeRefreshLayout layout) {

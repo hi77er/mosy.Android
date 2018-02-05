@@ -65,7 +65,6 @@ public class VenuesActivity
     int itemsInitialLoadCount = 8;
     int itemsOnScrollLoadCount = 5;
 
-
     private LocationResolver mLocationResolver;
     private Location lastKnownLocation;
 
@@ -262,17 +261,6 @@ public class VenuesActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         mLocationResolver.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    @ItemClick(resName = "venues_lvVenues")
-    void venueClicked(Venue venue) {
-        Intent intent = new Intent(VenuesActivity.this, VenueActivity_.class);
-        venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-        venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-        venue.Location = null;
-        venue.VenueBusinessHours = null;
-        intent.putExtra("Venue", venue);
-        startActivity(intent);
     }
 
     @ItemClick(resName = "venues_lvDishes")

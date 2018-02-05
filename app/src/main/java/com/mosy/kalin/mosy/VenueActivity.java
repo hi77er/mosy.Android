@@ -91,7 +91,7 @@ public class VenueActivity extends AppCompatActivity {
         this.Venue.Location = null;
         intent.putExtra("Venue", this.Venue);
         startActivity(intent);
-        overridePendingTransition( R.transition.slide_in_up, R.transition.slide_out_up );
+        overridePendingTransition( R.transition.slide_in_right, R.transition.slide_out_right );
     }
 
 }

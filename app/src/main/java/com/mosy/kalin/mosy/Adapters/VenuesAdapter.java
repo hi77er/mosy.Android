@@ -67,7 +67,7 @@ public class VenuesAdapter
                 return bitmap.getByteCount() / 1024;
             }
         };
-        addBitmapToMemoryCache("default", BitmapFactory.decodeResource(context.getResources(), R.drawable.eat_paprika));
+        addBitmapToMemoryCache("default", BitmapFactory.decodeResource(context.getResources(), R.drawable.venue_default_thumbnail));
     }
 
 

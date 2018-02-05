@@ -3,12 +3,12 @@ package com.mosy.kalin.mosy.DTOs;
 import com.google.gson.annotations.SerializedName;
 import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
 
-/**
- * Created by kkras on 8/9/2017.
- */
+import java.io.Serializable;
+
 
 public class MenuListItemImage
-        extends ResultBase {
+        extends ResultBase
+        implements Serializable {
 
     @SerializedName("Id")
     public String Id;

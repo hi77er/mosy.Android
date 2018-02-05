@@ -2,6 +2,7 @@ package com.mosy.kalin.mosy.Views;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.LruCache;
@@ -20,6 +21,10 @@ import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.R;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadMenuListItemThumbnailAsyncTask;
 import com.mosy.kalin.mosy.Services.AzureBlobService;
+import com.mosy.kalin.mosy.VenueActivity;
+import com.mosy.kalin.mosy.VenueActivity_;
+import com.mosy.kalin.mosy.VenueDetailsActivity_;
+import com.mosy.kalin.mosy.VenuesActivity;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
@@ -32,7 +37,7 @@ public class VenueItemView
 
     private static final String originalBlobStorageContainerPath = "userimages\\fboalbums\\original";
     private static final String thumbnailBlobStorageContainerPath = "userimages\\fboalbums\\100x100";
-    private String VenueId;
+    private Venue Venue;
     private String ImageId;
     private Boolean IsUsingDefaultThumbnail;
     private LruCache<String, Bitmap> mMemoryCache;
@@ -59,7 +64,7 @@ public class VenueItemView
 
     public void bind(Venue venue, LruCache<String, Bitmap> cache) {
         this.mMemoryCache = cache;
-        this.VenueId = venue.Id;
+        this.Venue = venue;
         if (venue.OutdoorImage != null)
             this.ImageId = venue.OutdoorImage.Id;
 
@@ -87,7 +92,13 @@ public class VenueItemView
 
             String timeWalking = LocationHelper.buildMinutesWalkingText(venue.DistanceToCurrentDeviceLocation);
             timeWalking = (timeWalking.length() > 0 ? timeWalking : StringHelper.empty());
-            this.WalkingMinutes.setText(timeWalking );
+
+            if (!timeWalking.equals(StringHelper.empty())) {
+                this.WalkingMinutes.setText(timeWalking);
+                this.WalkingMinutes.setVisibility(VISIBLE);
+            } else {
+                this.WalkingMinutes.setVisibility(GONE);
+            }
         }
 
         final String imageKey = venue.OutdoorImage != null ? venue.OutdoorImage.Id : "default";
@@ -149,6 +160,30 @@ public class VenueItemView
                 }
             }
         }
+    }
+
+    @Click(resName = "venueItem_ivMenu")
+    public void MenuLinkClick()
+    {
+        Intent intent = new Intent(this.getContext(), VenueActivity_.class);
+        this.Venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+        this.Venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+        this.Venue.Location = null;
+        this.Venue.VenueBusinessHours = null;
+        intent.putExtra("Venue", this.Venue);
+        this.getContext().startActivity(intent);
+    }
+
+    @Click(resName = "venueItem_ivInfo")
+    public void InfoLinkClick()
+    {
+        Intent intent = new Intent(this.getContext(), VenueDetailsActivity_.class);
+        this.Venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+        this.Venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+        this.Venue.Location = null;
+        this.Venue.VenueBusinessHours = null;
+        intent.putExtra("Venue", this.Venue);
+        this.getContext().startActivity(intent);
     }
 
     private void addBitmapToMemoryCache(String key, Bitmap bitmap) {

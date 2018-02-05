@@ -2,14 +2,10 @@ package com.mosy.kalin.mosy.Services.AsyncTasks;
 
 import android.os.AsyncTask;
 
-import com.mosy.kalin.mosy.Async.Tasks.SearchMenuListItemsAsyncTask;
 import com.mosy.kalin.mosy.Async.Tasks.SearchVenuesAsyncTask;
-import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
-import com.mosy.kalin.mosy.Services.MenuListItemsService;
 import com.mosy.kalin.mosy.Services.VenuesService;
 
 import java.util.ArrayList;

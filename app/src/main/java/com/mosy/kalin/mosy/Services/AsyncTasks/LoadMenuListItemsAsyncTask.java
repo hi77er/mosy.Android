@@ -1,16 +1,11 @@
 package com.mosy.kalin.mosy.Services.AsyncTasks;
 
 import android.os.AsyncTask;
-import android.text.Layout;
-import android.view.View;
-import android.widget.LinearLayout;
 
-import com.mosy.kalin.mosy.Adapters.DishesAdapter;
 import com.mosy.kalin.mosy.Async.Tasks.SearchMenuListItemsAsyncTask;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
-import com.mosy.kalin.mosy.Services.MenuListItemsService;
 
 import java.util.ArrayList;
 

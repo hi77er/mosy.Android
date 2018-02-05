@@ -64,41 +64,47 @@
             android:id="@+id/venueItem_ivOutdoorThumbnail"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="5dp"
             android:src="@drawable/venue_default_thumbnail" />
+
+        <ImageView
+            android:id="@+id/venueItem_ivMenu"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/menu_main_100x100" />
+
+        <ImageView
+            android:id="@+id/venueItem_ivInfo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/venue_info_100x100" />
 
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="match_parent">
-
-            <!--<TextView-->
-                <!--android:id="@+id/venueItem_tvOpenedSinceUntil"-->
-                <!--android:layout_gravity="start"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textStyle="bold"-->
-                <!--android:textSize="16sp"-->
-                <!--android:textColor="@color/soft" />-->
 
             <TextView
                 android:id="@+id/venueItem_tvDistance"
                 android:layout_gravity="start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableStart="@drawable/distance_paprika"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="@color/colorQuaternary" />
+                android:textColor="@color/colorPrimary" />
 
             <TextView
                 android:id="@+id/venueItem_tvWalkingMinutes"
                 android:layout_gravity="start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableStart="@drawable/walkingtime_paprika"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="@color/colorQuaternary" />
+                android:textColor="@color/colorPrimary"
+                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>

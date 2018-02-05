@@ -4,10 +4,6 @@ import android.location.Location;
 
 import java.text.DecimalFormat;
 
-/**
- * Created by kkras on 8/23/2017.
- */
-
 public class LocationHelper {
 
     private static final int APPROXIMATE_WALKING_SPEED = 5; // km per hour
@@ -29,11 +25,10 @@ public class LocationHelper {
             text = String.valueOf(longValue) + "m";
         } else if (distanceMeters >= 1000  && distanceMeters < 10000 ) {
             distanceMeters =  distanceMeters / 1000;
-//            text = new DecimalFormat("##.#").format(distanceMeters) + "km";
             text = new DecimalFormat("##.#").format(distanceMeters) + "km";
         } else if (distanceMeters >= 10000  && distanceMeters < 999999999 ) {
             distanceMeters =  distanceMeters / 1000;
-            text = distanceMeters + "km";
+            text = new DecimalFormat("##.#").format(distanceMeters) + "km";
         } else if (distanceMeters == 999999999)
             text = StringHelper.empty();
 

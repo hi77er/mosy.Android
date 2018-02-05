@@ -18,7 +18,7 @@ public class GetVenueMenuAsyncTask extends AsyncTask<GetVenueMenuBindingModel, S
     @Override
     protected ArrayList<MenuList> doInBackground(GetVenueMenuBindingModel... models) {
         GetVenueMenuBindingModel model = models[0];
-        String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint("Brochure/ByFBOIdWithRequestablesWithIngredients");
+        String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint("Brochure/ByFBOIdWithRequestablesWithIngredientsAndImage");
         ArrayList<MenuList> brochuresResult = new ArrayList<>();
 
         try {

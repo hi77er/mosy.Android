@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
-import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.BusinessHoursHelper;
 import com.mosy.kalin.mosy.Helpers.LocationHelper;
@@ -24,7 +23,6 @@ import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.R;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadMenuListItemThumbnailAsyncTask;
 import com.mosy.kalin.mosy.Services.AzureBlobService;
-import com.mosy.kalin.mosy.Services.MenuListItemsService;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
@@ -36,9 +34,9 @@ public class DishItemView extends RelativeLayout {
 
     private static final String thumbnailBlobStorageContainerPath = "userimages\\requestablealbums\\100x100";
     private static final String originalBlobStorageContainerPath = "userimages\\requestablealbums\\original";
+    private LruCache<String, Bitmap> inMemoryCache;
     private String ImageId;
     private Boolean IsUsingDefaultImageThumbnail;
-    private LruCache<String, Bitmap> inMemoryCache;
 
     @Bean
     public com.mosy.kalin.mosy.Services.VenuesService VenuesService;
@@ -79,7 +77,12 @@ public class DishItemView extends RelativeLayout {
 
             String timeWalking = LocationHelper.buildMinutesWalkingText(menuListItem.DistanceToCurrentDeviceLocation);
             timeWalking = (timeWalking.length() > 0 ? timeWalking : StringHelper.empty());
-            this.WalkingTime.setText(timeWalking);
+            if (!timeWalking.equals(StringHelper.empty())) {
+                this.WalkingTime.setText(timeWalking);
+                this.WalkingTime.setVisibility(VISIBLE);
+            } else {
+                this.WalkingTime.setVisibility(GONE);
+            }
         }
 
         WorkingStatus status = BusinessHoursHelper.getWorkingStatus(menuListItem.VenueBusinessHours);

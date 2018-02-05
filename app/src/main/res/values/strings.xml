@@ -52,7 +52,7 @@
     <string name="venueDetails_sundayHours">Sunday</string>
     <string name="venueDetailsBadge_freeWifiTooltip">Free WiFi available</string>
     <string name="venueDetailsBadge_workingFriendlyTooltip">Working friendly atmosphere. Quiet place. Electricity hubs available.</string>
-    <string name="venueDetailsBadge_bikeFriendlyTooltip">Reachable by bike. Secure bicicle parking in short distance.</string>
+    <string name="venueDetailsBadge_bikeFriendlyTooltip">Reachable by bike. Secure bicycle parking in short distance.</string>
     <string name="venueDetailsBadge_childFriendlyTooltip">Kid\'s corner available. Baby highchairs available.</string>
     <string name="venueDetailsBadge_funPlaceTooltip"><![CDATA[Disco & music. Gaming club. Fun place.]]></string>
     <string name="venueDetailsBadge_parkingSignTooltip">Parking available.</string>
@@ -65,7 +65,7 @@
     <string name="title_dishes_activity">Dishes</string>
     <string name="title_activity_landing">Foodoo</string>
     <string name="landing_btnVenues">VENUES</string>
-    <string name="landing_btnDishes">DISHES</string>
+    <string name="landing_btnDishes"><![CDATA[DISHES & DRINKS]]></string>
     <string name="venues_btnNavigateToVenuesText">Venues</string>
     <string name="venues_btnNavigateToDishesText">Dishes</string>
     <string name="menulist_item_name">Dish Name</string>
