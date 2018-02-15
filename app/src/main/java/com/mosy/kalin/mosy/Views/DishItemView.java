@@ -85,16 +85,21 @@ public class DishItemView extends RelativeLayout {
             }
         }
 
+        if (menuListItem.PriceDisplayText != null) {
+            this.PriceTag.setText(menuListItem.PriceDisplayText);
+            this.PriceTag.setVisibility(VISIBLE);
+        }
+
         WorkingStatus status = BusinessHoursHelper.getWorkingStatus(menuListItem.VenueBusinessHours);
         switch (status){
             case Open:
-                this.WorkingStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.open_moss, 0, 0, 0);
+                this.WorkingStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.open_moss_nopadding, 0, 0, 0);
                 break;
             case Open247:
-                this.WorkingStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.open247_emerald, 0, 0, 0);
+                this.WorkingStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.open247_emerald_nopadding, 0, 0, 0);
                 break;
             case Closed:
-                this.WorkingStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.closed_salmon, 0, 0, 0);
+                this.WorkingStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.closed_salmon_nopadding, 0, 0, 0);
                 break;
             case Unknown: break;
         }

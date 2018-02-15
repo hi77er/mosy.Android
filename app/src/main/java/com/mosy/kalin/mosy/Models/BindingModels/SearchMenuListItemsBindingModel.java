@@ -11,6 +11,7 @@ public class SearchMenuListItemsBindingModel {
     public double Latitude;
     public double Longitude;
     public Boolean IsPromoted;
+    public Boolean FilterByWorkingStatus;
     public List<String> SelectedCuisinePhaseIds;
     public List<String> SelectedCuisineRegionIds;
     public List<String> SelectedCuisineSpectrumIds;

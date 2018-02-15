@@ -50,9 +50,8 @@ public class MenuListItem
     @SerializedName("BusinessHours")
     public VenueBusinessHours VenueBusinessHours;
 
-//    @SerializedName("RequestableFBOPriceTag")
-//    public PriceTag PriceTag;
-
+    @SerializedName("PriceDisplayText")
+    public String PriceDisplayText;
 
 @SuppressWarnings("unchecked")
     protected MenuListItem(Parcel in) {

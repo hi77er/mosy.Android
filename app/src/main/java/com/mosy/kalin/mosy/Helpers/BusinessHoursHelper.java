@@ -51,7 +51,7 @@ public class BusinessHoursHelper {
         boolean closesAfterMidnight = from.after(to);
         boolean is247 = !closesAfterMidnight && !to.after(from);
 
-        if (is247) status = WorkingStatus.Open247;
+        if (is247) status = WorkingStatus.Open247   ;
         else if (!closesAfterMidnight){
             if (now.after(from) && (now.before(to)))
                 status = WorkingStatus.Open;
@@ -59,7 +59,7 @@ public class BusinessHoursHelper {
                 status = WorkingStatus.Closed;
         } else {
             if ((now.after(from) && (now.after(to)))
-                    || (now.before(from) && (now.before(to)))){
+             || (now.before(from) && (now.before(to)))){
                 status = WorkingStatus.Open;
             } else {
                 status = WorkingStatus.Closed;
