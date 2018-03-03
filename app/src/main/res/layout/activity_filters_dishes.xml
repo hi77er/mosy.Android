@@ -3,42 +3,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="15dp">
 
-        <TextView
-            android:id="@+id/filters_dishes_tvWorkingTimeLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:text="@string/filters_dishes_show_closed"
-            android:textColor="@color/colorPrimaryVeryLight" />
+        <LinearLayout
+            android:id="@+id/venues_llInitialLoadingProgress"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/filters_dishes_scWorkingTimeFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:checked="true" />
+            <ProgressBar
+                android:id="@+id/pbHeaderProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true" >
+            </ProgressBar>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/filters_dishes_tvRatingLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:text="@string/filters_dishes_tvRating"
-            android:textColor="@color/colorPrimaryVeryLight" />
+        <!--<TextView-->
+            <!--android:id="@+id/filters_dishes_tvRatingLabel"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="5dp"-->
+            <!--android:text="@string/filters_dishes_tvRating"-->
+            <!--android:textColor="@color/colorPrimaryVeryLight" />-->
 
-        <android.support.v7.widget.AppCompatSeekBar
-            android:id="@+id/filters_dishes_sbRatingFilter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:max="10"
-            android:min="1" />
+        <!--<android.support.v7.widget.AppCompatSeekBar-->
+            <!--android:id="@+id/filters_dishes_sbRatingFilter"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="15dp"-->
+            <!--android:max="10"-->
+            <!--android:min="1" />-->
 
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -167,6 +169,21 @@
         </LinearLayout>
         <!--</HorizontalScrollView>-->
 
+
+        <TextView
+            android:id="@+id/filters_dishes_tvWorkingTimeLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/filters_dishes_show_closed"
+            android:textColor="@color/colorPrimaryVeryLight" />
+
+        <Switch
+            android:id="@+id/filters_dishes_scWorkingTimeFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:checked="true" />
 
     </LinearLayout>
 </ScrollView>

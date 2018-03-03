@@ -26,12 +26,14 @@ import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Listeners.EndlessScrollListener;
+import com.mosy.kalin.mosy.Models.BindingModels.GetVenueByIdBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadMenuListItemsAsyncTask;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenuesAsyncTask;
-import com.mosy.kalin.mosy.Services.LocationResolver;
-import com.mosy.kalin.mosy.Services.VenuesService;
+import com.mosy.kalin.mosy.Services.Location.LocationResolver;
+import com.mosy.kalin.mosy.Services.VenueService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -43,6 +45,7 @@ import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_venues)
@@ -52,6 +55,10 @@ public class VenuesActivity
 
     @Extra
     static boolean DishesSearchModeActivated;
+    @Extra
+    static boolean ApplyWorkingStatusFilterToVenues = true;
+    @Extra
+    static boolean ApplyWorkingStatusFilterToDishes = true;
     @Extra
     static ArrayList<String> CuisinePhaseFilterIds;
     @Extra
@@ -72,25 +79,23 @@ public class VenuesActivity
     SearchManager searchManager;
 
     @Bean
-    VenuesService venuesService;
+    VenueService venuesService;
     @Bean
     VenuesAdapter venuesAdapter;
     @Bean
     DishesAdapter dishesAdapter;
 
+    @ViewById(resName = "venues_llInitialLoadingProgress")
+    LinearLayout centralProgress;
     @ViewById(R.id.toolbar)
     Toolbar toolbar;
     @ViewById(resName = "venues_lvVenues")
     ListView venues;
     @ViewById(resName = "venues_lvDishes")
     ListView dishes;
-    @ViewById(resName = "venues_llInitialLoadingProgress")
-    LinearLayout centralProgress;
 
     SearchView searchView;
     FloatingActionButton filters;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +118,7 @@ public class VenuesActivity
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query = intent.getStringExtra(SearchManager.QUERY);
-            searchIsPromoted = null; //INFO: Normally search only promoted dishes, but when using query then search among all dishes
+            searchIsPromoted = null; //INFO: Normally get only promoted dishes, but when searched - search among all dishes
         }
 
         if (!DishesSearchModeActivated) adaptVenueItems();
@@ -266,18 +271,29 @@ public class VenuesActivity
     @ItemClick(resName = "venues_lvDishes")
     void dishClicked(MenuListItem listItem) {
         Intent intent = new Intent(VenuesActivity.this, VenueActivity_.class);
-        Venue venue = venuesService.GetById(listItem.VenueId);
 
-        venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-        venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-        venue.Location = null;
-        venue.VenueBusinessHours = null;
-        intent.putExtra("Venue", venue);
-        intent.putExtra("SelectedMenuListId", listItem.BrochureId);
+        AsyncTaskListener<Venue> listener = new AsyncTaskListener<Venue>() {
+            @Override
+            public void onPreExecute() {
+                centralProgress.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onPostExecute(Venue result) {
+                Venue venue = result;
+                venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+                venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+                venue.Location = null;
+                venue.VenueBusinessHours = null;
+                intent.putExtra("Venue", venue);
+                intent.putExtra("SelectedMenuListId", listItem.BrochureId);
 
-        startActivity(intent);
+                startActivity(intent);
+            }
+        };
+
+        GetVenueByIdBindingModel model = new GetVenueByIdBindingModel(listItem.VenueId);
+        new LoadVenueAsyncTask(listener).execute(model);
     }
-
 
     void loadMoreVenues(int maxResultsCount, int totalItemsOffset, String query){
         AsyncTaskListener<ArrayList<Venue>> listener = new AsyncTaskListener<ArrayList<Venue>>() {
@@ -296,14 +312,35 @@ public class VenuesActivity
             }
         };
 
-        SearchVenuesBindingModel model =
-            new SearchVenuesBindingModel(maxResultsCount, totalItemsOffset, lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), query);
+        Integer localDayOfWeek = null;
+        String localTime = null;
+        if (ApplyWorkingStatusFilterToVenues)
+        {
+            Calendar localCalendar = Calendar.getInstance();
+            localTime = localCalendar.get(Calendar.HOUR_OF_DAY) + ":" + localCalendar.get(Calendar.MINUTE);
+            localDayOfWeek = localCalendar.get(Calendar.DAY_OF_WEEK);
+        }
+
+        SearchVenuesBindingModel model = new SearchVenuesBindingModel(
+                maxResultsCount,
+                totalItemsOffset,
+                lastKnownLocation.getLatitude(),
+                lastKnownLocation.getLongitude(),
+                query,
+                localDayOfWeek,
+                localTime);
 
         new LoadVenuesAsyncTask(listener).execute(model);
     }
 
-    void loadMoreDishes(int maxResultsCount, int totalItemsOffset, Boolean isPromoted, String query,
-                        ArrayList<String> phaseFilterIds, ArrayList<String> regionFilterIds, ArrayList<String> spectrumFilterIds){
+    void loadMoreDishes(int maxResultsCount,
+                        int totalItemsOffset,
+                        Boolean isPromoted,
+                        String query,
+                        ArrayList<String> phaseFilterIds,
+                        ArrayList<String> regionFilterIds,
+                        ArrayList<String> spectrumFilterIds){
+
         AsyncTaskListener<ArrayList<MenuListItem>> listener = new AsyncTaskListener<ArrayList<MenuListItem>>() {
             @Override
             public void onPreExecute() {
@@ -320,6 +357,15 @@ public class VenuesActivity
             }
         };
 
+        Integer localDayOfWeek = null;
+        String localTime = null;
+        if (ApplyWorkingStatusFilterToDishes)
+        {
+            Calendar localCalendar = Calendar.getInstance();
+            localTime = localCalendar.get(Calendar.HOUR_OF_DAY) + ":" + localCalendar.get(Calendar.MINUTE);
+            localDayOfWeek = localCalendar.get(Calendar.DAY_OF_WEEK);
+        }
+
         SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(
                 maxResultsCount,
                 totalItemsOffset,
@@ -329,21 +375,26 @@ public class VenuesActivity
                 query,
                 phaseFilterIds,
                 regionFilterIds,
-                spectrumFilterIds);
+                spectrumFilterIds,
+                localDayOfWeek,
+                localTime);
 
         new LoadMenuListItemsAsyncTask(listener).execute(model);
     }
 
-    //    @ItemClick(resName = "venues_ibFilters")
     void openFilters() {
         if (DishesSearchModeActivated) {
             Intent intent = new Intent(VenuesActivity.this, DishesFiltersActivity_.class);
             intent.putExtra("CuisinePhaseFilterIds", CuisinePhaseFilterIds);
             intent.putExtra("CuisineRegionFilterIds", CuisineRegionFilterIds);
             intent.putExtra("CuisineSpectrumFilterIds", CuisineSpectrumFilterIds);
+            intent.putExtra("ApplyWorkingStatusFilter", ApplyWorkingStatusFilterToDishes);
             startActivity(intent);
-        } else
-            startActivity(new Intent(VenuesActivity.this, VenuesFiltersActivity_.class));
+        } else {
+            Intent intent = new Intent(VenuesActivity.this, VenuesFiltersActivity_.class);
+            intent.putExtra("ApplyWorkingStatusFilter", ApplyWorkingStatusFilterToVenues);
+            startActivity(intent);
+        }
     }
 
     public void NavigateVenuesSearch() {

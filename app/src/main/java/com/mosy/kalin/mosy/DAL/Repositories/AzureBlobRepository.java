@@ -1,20 +1,21 @@
-package com.mosy.kalin.mosy.Async.Tasks;
-
-import android.os.AsyncTask;
+package com.mosy.kalin.mosy.DAL.Repositories;
 
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.blob.CloudBlob;
 import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
+import com.mosy.kalin.mosy.DTOs.Enums.AuthenticationResultStatus;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
+import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
+import com.mosy.kalin.mosy.Models.BindingModels.RegisterBindingModel;
+import com.mosy.kalin.mosy.Models.Responses.RequestableFiltersResponse;
 
-public class AzureBlobDownloadAsyncTask extends AsyncTask<DownloadBlobModel, Void, byte[]> {
+public class AzureBlobRepository {
 
     private static final String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=mosystorage;AccountKey=qhoQk3U2VUbobmyxpasPM8rqt78+YtkD20ulZRkT+lbpXTtVc1Njo9P4ep2HDl9oMSJ2ZsL6uNal3YMIfadgng==;EndpointSuffix=core.windows.net";
 
-    protected byte[] doInBackground(DownloadBlobModel... models) {
-        DownloadBlobModel model = models[0];
-        byte[] blobBytes = null;
+    public byte[] blobDownload(DownloadBlobModel model) {
+        byte[] blobBytes;
         try {
             CloudStorageAccount storageAccount = CloudStorageAccount.parse(storageConnectionString);
             CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
@@ -24,17 +25,12 @@ public class AzureBlobDownloadAsyncTask extends AsyncTask<DownloadBlobModel, Voi
             int blobSize = blob.getStreamWriteSizeInBytes();
             blobBytes = new byte[blobSize];
             blob.downloadToByteArray(blobBytes,0);
+            return blobBytes;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-
-        return blobBytes;
     }
 
-    protected void onPostExecute(byte[] result) {
-        // TODO: check this.exception
-        // TODO: do something with the feed
-    }
+
 }
-

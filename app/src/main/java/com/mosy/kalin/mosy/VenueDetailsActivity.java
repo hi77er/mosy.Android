@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -25,11 +24,22 @@ import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueBadgeEndorsement;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
+import com.mosy.kalin.mosy.DTOs.VenueLocation;
+import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.DateHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
-import com.mosy.kalin.mosy.Services.AzureBlobService;
-import com.mosy.kalin.mosy.Services.BadgeEndorsementsService;
-import com.mosy.kalin.mosy.Services.VenuesService;
+import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
+import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
+import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBadgeEndorsementsBindingModel;
+import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBusinessHoursBindingModel;
+import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageMetaBindingModel;
+import com.mosy.kalin.mosy.Models.BindingModels.GetVenueLocationBindingModel;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueBusinessHoursAsyncTask;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueEndorsementsAsyncTask;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueIndoorImageMetadataAsyncTask;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueLocationAsyncTask;
+import com.mosy.kalin.mosy.Services.VenueService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -49,16 +59,14 @@ public class VenueDetailsActivity
         extends AppCompatActivity
         implements OnMapReadyCallback {
 
-    Boolean IsUsingDefaultIndoorImageThumbnail;
+    private static final String x200BlobStorageContainerPath = "userimages\\fboalbums\\200x200";
+    private static final String originalBlobStorageContainerPath = "userimages\\fboalbums\\original";
+    boolean IsUsingDefaultIndoorImageThumbnail;
 
     @Extra
     public Venue Venue;
-
     @Bean
-    public VenuesService VenuesService;
-
-    @Bean
-    public BadgeEndorsementsService BadgeEndorsementsService;
+    public VenueService VenuesService;
 
     @FragmentById(R.id.venueDetails_frMap)
     SupportMapFragment VenueLocationMap;
@@ -130,26 +138,96 @@ public class VenueDetailsActivity
             Name.setText(this.Venue.Name);
             Class.setText(this.Venue.Class);
 
-            this.Venue.IndoorImage = new VenuesService().downloadVenueIndoorImageMeta(this.Venue.Id);
-
-            if (this.Venue != null && this.Venue.IndoorImage != null && this.Venue.IndoorImage.Id != null && this.Venue.IndoorImage.Id.length() > 0)
-                populateIndoorImageThumbnail(this.Venue.IndoorImage.Id);
-            populateContacts();
-
-            this.Venue.VenueBusinessHours = this.VenuesService.downloadVenuesBusinessHours(this.Venue.Id);
-            populateBusinessHours(this.Venue.VenueBusinessHours);
-
-            this.Venue.Location = this.VenuesService.downloadVenueLocation(this.Venue.Id);
-            this.VenueLocationMap.getMapAsync(this);
-
-            this.Venue.Endorsements = this.BadgeEndorsementsService.downloadVenueBadgeEndorsements(this.Venue.Id);
-            populateBadges(this.Venue.Endorsements);
-
+            loadIndoorImage();
+            loadContacts();
+            loadBusinessHours();
+            loadLocation();
+            loadEndorsements();
         }
         catch (Exception e){
             e.printStackTrace();
         }
     }
+
+    private void loadIndoorImage(){
+        AsyncTaskListener<VenueImage> listener = new AsyncTaskListener<VenueImage>() {
+            @Override
+            public void onPreExecute() {
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onPostExecute(VenueImage result) {
+                Venue.IndoorImage = result;
+                populateIndoorImageThumbnail();
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+            }
+        };
+        GetVenueIndoorImageMetaBindingModel model = new GetVenueIndoorImageMetaBindingModel(this.Venue.Id);
+        new LoadVenueIndoorImageMetadataAsyncTask(listener).execute(model);
+    }
+
+    private void loadContacts(){
+        populateContacts();
+    }
+
+    private void loadBusinessHours(){
+        AsyncTaskListener<VenueBusinessHours> listener = new AsyncTaskListener<VenueBusinessHours>() {
+            @Override
+            public void onPreExecute() {
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onPostExecute(VenueBusinessHours result) {
+                Venue.VenueBusinessHours = result;
+                populateBusinessHours();
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+            }
+        };
+        GetVenueBusinessHoursBindingModel model = new GetVenueBusinessHoursBindingModel(this.Venue.Id);
+        new LoadVenueBusinessHoursAsyncTask(listener).execute(model);
+    }
+
+    private void loadLocation(){
+        AsyncTaskListener<VenueLocation> listener = new AsyncTaskListener<VenueLocation>() {
+            @Override
+            public void onPreExecute() {
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onPostExecute(VenueLocation result) {
+                Venue.Location = result;
+                populateGoogleMap();
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+            }
+        };
+        GetVenueLocationBindingModel model = new GetVenueLocationBindingModel(this.Venue.Id);
+        new LoadVenueLocationAsyncTask(listener).execute(model);
+
+        // TODO: Decide weather this should be called here on onPostExecute of the upper task
+        populateGoogleMap();
+    }
+
+    private void loadEndorsements(){
+        AsyncTaskListener<ArrayList<VenueBadgeEndorsement>> listener = new AsyncTaskListener<ArrayList<VenueBadgeEndorsement>>() {
+            @Override
+            public void onPreExecute() {
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onPostExecute(ArrayList<VenueBadgeEndorsement> result) {
+                Venue.Endorsements =  result;
+                populateBadges();
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+            }
+        };
+        GetVenueBadgeEndorsementsBindingModel model = new GetVenueBadgeEndorsementsBindingModel(this.Venue.Id);
+        new LoadVenueEndorsementsAsyncTask(listener).execute(model);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,9 +238,9 @@ public class VenueDetailsActivity
         if (this.Venue != null && this.Venue.Location != null) {
             LatLng venueLocation = new LatLng(this.Venue.Location.Latitude, this.Venue.Location.Longitude);
             googleMap.addMarker(
-                new MarkerOptions()
-                    .position(venueLocation)
-                    .title(this.Venue.Name)
+                    new MarkerOptions()
+                            .position(venueLocation)
+                            .title(this.Venue.Name)
             );
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(venueLocation, 16.0f));
         }
@@ -189,25 +267,42 @@ public class VenueDetailsActivity
         }
     }
 
-    private void populateIndoorImageThumbnail(String blobId) {
-        if (blobId != null && blobId.length() > 0) {
-            byte[] byteAray = new AzureBlobService().GetBlob(blobId, "userimages\\fboalbums\\200x200");;
-            Bitmap bmp = BitmapFactory.decodeByteArray(byteAray, 0, byteAray.length);
-            this.IndoorImageThumbnail.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
-            this.IsUsingDefaultIndoorImageThumbnail = false;
+    private void populateIndoorImageThumbnail() {
+        if (this.Venue.IndoorImage != null && this.Venue.IndoorImage.Id != null && this.Venue.IndoorImage.Id.length() > 0) {
+            //INFO: TryGet Venue Image
+            AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
+                @Override
+                public void onPreExecute() {
+                    //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onPostExecute(byte[] bytes) {
+                    if (ArrayHelper.hasValidBitmapContent(bytes)){
+                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        IndoorImageThumbnail.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
+                        IsUsingDefaultIndoorImageThumbnail = false;
+                    }
+                    else
+                        IsUsingDefaultIndoorImageThumbnail = true;
+                    //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+                }
+            };
+
+            DownloadBlobModel model = new DownloadBlobModel(this.Venue.IndoorImage.Id, x200BlobStorageContainerPath);
+            new LoadAzureBlobAsyncTask(listener).execute(model);
         }
-        else
-            IsUsingDefaultIndoorImageThumbnail = true;
     }
 
     private void populateContacts() {
 
     }
 
-    private void populateBusinessHours(VenueBusinessHours businessHours) {
+    private void populateBusinessHours() {
+        VenueBusinessHours businessHours = this.Venue.VenueBusinessHours;
         SimpleDateFormat formatter =  new SimpleDateFormat("HH:mm");
         if (businessHours != null // and a single day has business hours set ->
-            && (businessHours.IsMondayDayOff || businessHours.IsTuesdayDayOff || businessHours.IsWednesdayDayOff ||
+                && (businessHours.IsMondayDayOff || businessHours.IsTuesdayDayOff || businessHours.IsWednesdayDayOff ||
                 businessHours.IsThursdayDayOff || businessHours.IsFridayDayOff || businessHours.IsSaturdayDayOff ||
                 businessHours.IsSundayDayOff || businessHours.MondayFrom != null || businessHours.MondayTo != null
                 || businessHours.TuesdayFrom != null || businessHours.TuesdayTo != null || businessHours.WednesdayFrom != null
@@ -217,25 +312,25 @@ public class VenueDetailsActivity
 
             String d1 = businessHours.IsMondayDayOff ? "Day Off" :
                     ((businessHours.MondayFrom != null ? DateHelper.ToString(businessHours.MondayFrom, formatter) : StringHelper.empty()) + " - " +
-                     (businessHours.MondayTo != null ? DateHelper.ToString(businessHours.MondayTo, formatter) : StringHelper.empty()));
+                            (businessHours.MondayTo != null ? DateHelper.ToString(businessHours.MondayTo, formatter) : StringHelper.empty()));
             String d2 = businessHours.IsTuesdayDayOff ? "Day Off" :
                     ((businessHours.TuesdayFrom != null ? DateHelper.ToString(businessHours.TuesdayFrom, formatter) : StringHelper.empty()) + " - " +
-                     (businessHours.TuesdayTo != null ? DateHelper.ToString(businessHours.TuesdayTo, formatter) : StringHelper.empty()));
+                            (businessHours.TuesdayTo != null ? DateHelper.ToString(businessHours.TuesdayTo, formatter) : StringHelper.empty()));
             String d3 = businessHours.IsWednesdayDayOff ? "Day Off" :
                     ((businessHours.WednesdayFrom != null ? DateHelper.ToString(businessHours.WednesdayFrom, formatter) : StringHelper.empty())+ " - " +
-                     (businessHours.WednesdayTo != null ? DateHelper.ToString(businessHours.WednesdayTo, formatter) : StringHelper.empty()));
+                            (businessHours.WednesdayTo != null ? DateHelper.ToString(businessHours.WednesdayTo, formatter) : StringHelper.empty()));
             String d4 = businessHours.IsThursdayDayOff ? "Day Off" :
                     ((businessHours.ThursdayFrom != null ? DateHelper.ToString(businessHours.ThursdayFrom, formatter) : StringHelper.empty()) + " - " +
-                     (businessHours.ThursdayTo != null ? DateHelper.ToString(businessHours.ThursdayTo, formatter) : StringHelper.empty()));
+                            (businessHours.ThursdayTo != null ? DateHelper.ToString(businessHours.ThursdayTo, formatter) : StringHelper.empty()));
             String d5 = businessHours.IsFridayDayOff ? "Day Off" :
                     ((businessHours.FridayFrom != null ? DateHelper.ToString(businessHours.FridayFrom, formatter) : StringHelper.empty()) + " - " +
-                     (businessHours.FridayTo != null ? DateHelper.ToString(businessHours.FridayTo, formatter) : StringHelper.empty()));
+                            (businessHours.FridayTo != null ? DateHelper.ToString(businessHours.FridayTo, formatter) : StringHelper.empty()));
             String d6 = businessHours.IsSaturdayDayOff ? "Day Off" :
                     ((businessHours.SaturdayFrom != null ? DateHelper.ToString(businessHours.SaturdayFrom, formatter) : StringHelper.empty())+ " - " +
-                     (businessHours.SaturdayTo != null ? DateHelper.ToString(businessHours.SaturdayTo, formatter) : StringHelper.empty()));
+                            (businessHours.SaturdayTo != null ? DateHelper.ToString(businessHours.SaturdayTo, formatter) : StringHelper.empty()));
             String d7 = businessHours.IsSundayDayOff ? "Day Off" :
                     ((businessHours.SundayFrom != null ? DateHelper.ToString(businessHours.SundayFrom, formatter) : StringHelper.empty())+ " - " +
-                     (businessHours.SundayTo != null ? DateHelper.ToString(businessHours.SundayTo, formatter) : StringHelper.empty()));
+                            (businessHours.SundayTo != null ? DateHelper.ToString(businessHours.SundayTo, formatter) : StringHelper.empty()));
 
             this.Monday.setText(d1);
             this.Tuesday.setText(d2);
@@ -248,7 +343,13 @@ public class VenueDetailsActivity
         }
     }
 
-    private void populateBadges(ArrayList<VenueBadgeEndorsement> badgeEndorsements) {
+    public void populateGoogleMap() {
+        this.VenueLocationMap.getMapAsync(this);
+    }
+
+    private void populateBadges() {
+        ArrayList<VenueBadgeEndorsement> badgeEndorsements = this.Venue.Endorsements;
+
         if (badgeEndorsements != null && badgeEndorsements.size() > 0)
         {
             boolean any = false;
@@ -302,24 +403,36 @@ public class VenueDetailsActivity
     @Click(resName = "venueDetails_ivIndoorThumbnail")
     public void ImageClick()
     {
-        if (!IsUsingDefaultIndoorImageThumbnail) {
+        if (!IsUsingDefaultIndoorImageThumbnail
+                && this.Venue.IndoorImage != null
+                && this.Venue.IndoorImage.Id != null
+                && this.Venue.IndoorImage.Id.length() > 0) {
             final Dialog nagDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             nagDialog.setCancelable(true);
             nagDialog.setContentView(R.layout.image_preview_dialog);
 
-            Bitmap bmp = null;
-            if (this.Venue != null && this.Venue.IndoorImage != null && this.Venue.IndoorImage.Id != null && this.Venue.IndoorImage.Id.length() > 0)
-            {
-                byte[] byteArray = new AzureBlobService().GetBlob(this.Venue.IndoorImage.Id, "userimages\\fboalbums\\original");
-                if (byteArray != null && byteArray.length > 0) {
-                    bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-                    ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
-                    ivPreview.setImageBitmap(bmp);
-                    nagDialog.show();
+            AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
+                @Override
+                public void onPreExecute() {
+                    //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
                 }
-            }
 
+                @Override
+                public void onPostExecute(byte[] bytes) {
+                    if (ArrayHelper.hasValidBitmapContent(bytes)){
+                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
+                        ivPreview.setImageBitmap(bmp);
+                        nagDialog.show();
+                    } else
+                        throw new NullPointerException("Image not found");
+                    //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+                }
+            };
+
+            DownloadBlobModel model = new DownloadBlobModel(this.Venue.IndoorImage.Id, originalBlobStorageContainerPath);
+            new LoadAzureBlobAsyncTask(listener).execute(model);
         }
     }
 

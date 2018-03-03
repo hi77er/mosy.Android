@@ -1,4 +1,4 @@
-package com.mosy.kalin.mosy.Services;
+package com.mosy.kalin.mosy.Services.Location;
 
 import android.Manifest;
 import android.app.Activity;

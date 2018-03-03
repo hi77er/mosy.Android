@@ -10,14 +10,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mosy.kalin.mosy.Async.Tasks.TokenLoginAsyncTask;
+import com.mosy.kalin.mosy.DTOs.Enums.AuthenticationResultStatus;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
+import com.mosy.kalin.mosy.Services.AsyncTasks.AccountTokenLoginAsyncTask;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
-
-import java.util.concurrent.ExecutionException;
 
 @EActivity(R.layout.activity_login)
 public class LoginActivity
@@ -36,9 +36,22 @@ public class LoginActivity
 
         if (!StringHelper.isNullOrWhitespace(email) && !StringHelper.isNullOrWhitespace(password)) {
             if (StringHelper.isEmailAddress(email)) {
-                LoginBindingModel model = new LoginBindingModel(email, password);
                 try {
-                    new TokenLoginAsyncTask(applicationContext).execute(model).get();
+                    AsyncTaskListener<AuthenticationResultStatus> listener = new AsyncTaskListener<AuthenticationResultStatus>() {
+                        @Override
+                        public void onPreExecute() {
+                            //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onPostExecute(final AuthenticationResultStatus result) {
+                            //TODO: Handle the case when no Internet connection
+                            //TODO: Handle the case when Server does not respond
+                            populateAuthenticationResult(result);
+                        }
+                    };
+                    LoginBindingModel model = new LoginBindingModel(email, password);
+                    new AccountTokenLoginAsyncTask(listener).execute(model);
 
                     Intent intent = new Intent(LoginActivity.this, VenuesActivity_.class);
                     startActivity(intent);
@@ -58,14 +71,13 @@ public class LoginActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // setContentView(R.layout.activity_login);
 
-        b1 = (Button)findViewById(R.id.login_btnLogin);
-        ed1 = (EditText)findViewById(R.id.login_etEmail);
-        ed2 = (EditText)findViewById(R.id.login_etPassword);
+        b1 = findViewById(R.id.login_btnLogin);
+        ed1 = findViewById(R.id.login_etEmail);
+        ed2 = findViewById(R.id.login_etPassword);
 
-        b2 = (Button)findViewById(R.id.login_btnCancel);
-        tx1 = (TextView)findViewById(R.id.login_tvAttemptsLeftPH);
+        b2 = findViewById(R.id.login_btnCancel);
+        tx1 = findViewById(R.id.login_tvAttemptsLeftPH);
         tx1.setVisibility(View.GONE);
 
         b1.setOnClickListener(new View.OnClickListener() {
@@ -90,12 +102,7 @@ public class LoginActivity
             }
         });
 
-        b2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        b2.setOnClickListener(v -> finish());
     }
 
     @Click(R.id.login_btnRegister)
@@ -103,5 +110,17 @@ public class LoginActivity
     {
         Intent intent = new Intent(LoginActivity.this, RegisterActivity_.class);
         startActivity(intent);
+    }
+
+
+    private void populateAuthenticationResult(AuthenticationResultStatus result) {
+        if (result == AuthenticationResultStatus.Failed ||
+                result == AuthenticationResultStatus.Unknown ||
+                result == AuthenticationResultStatus.ServerDoesNotRespond)
+            Toast.makeText(this, "Please try later. We are currently experiencing some troubles to connect you.", Toast.LENGTH_SHORT).show();
+        else if (result == AuthenticationResultStatus.Unauthorized)
+            Toast.makeText(this, "Wrong username or password.", Toast.LENGTH_SHORT).show();
+        else if (result == AuthenticationResultStatus.Authorized)
+            Toast.makeText(this, "Login successful.", Toast.LENGTH_SHORT).show();
     }
 }

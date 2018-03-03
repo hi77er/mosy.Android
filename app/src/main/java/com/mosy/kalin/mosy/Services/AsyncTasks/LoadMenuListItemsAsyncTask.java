@@ -2,7 +2,7 @@ package com.mosy.kalin.mosy.Services.AsyncTasks;
 
 import android.os.AsyncTask;
 
-import com.mosy.kalin.mosy.Async.Tasks.SearchMenuListItemsAsyncTask;
+import com.mosy.kalin.mosy.DAL.Repositories.MenuRepository;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
@@ -29,7 +29,7 @@ public class LoadMenuListItemsAsyncTask
 
         try {
             SearchMenuListItemsBindingModel model = models[0];
-            results = new SearchMenuListItemsAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, model).get();
+            results = new MenuRepository().searchMenuListItems(model);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -40,5 +40,4 @@ public class LoadMenuListItemsAsyncTask
     protected void onPostExecute(final ArrayList<MenuListItem> result) {
         asyncTaskListenerListener.onPostExecute(result);
     }
-
 }

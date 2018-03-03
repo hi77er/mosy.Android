@@ -1,4 +1,4 @@
-package com.mosy.kalin.mosy.Http;
+package com.mosy.kalin.mosy.DAL.Http;
 
 import java.security.InvalidParameterException;
 

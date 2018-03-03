@@ -17,7 +17,7 @@ import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.R;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadMenuListItemThumbnailAsyncTask;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
 import com.mosy.kalin.mosy.Services.AzureBlobService;
 
 import org.androidannotations.annotations.Click;
@@ -64,7 +64,7 @@ public class MenuListItemDetailsView
         if (bitmap != null) {
             ImageThumbnail.setImageBitmap(bitmap);
         } else {
-            ImageThumbnail.setImageResource(R.drawable.eat_paprika);
+            ImageThumbnail.setImageResource(R.drawable.eat_paprika_100x100);
             this.downloadMenuListItemThumbnail(imageKey);
         }
     }
@@ -86,34 +86,46 @@ public class MenuListItemDetailsView
                 }
                 else {
                     IsUsingDefaultImageThumbnail = true;
-                    ImageThumbnail.setImageResource(R.drawable.eat_paprika);
+                    ImageThumbnail.setImageResource(R.drawable.eat_paprika_100x100);
                 }
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
 
         DownloadBlobModel model = new DownloadBlobModel(thumbnailId, thumbnailBlobStorageContainerPath);
-        new LoadMenuListItemThumbnailAsyncTask(listener).execute(model);
+        new LoadAzureBlobAsyncTask(listener).execute(model);
     }
 
     @Click(resName = "menuListItemDetails_ivMainImage")
     public void ItemClick()
     {
-        if (!IsUsingDefaultImageThumbnail){
+        if (!IsUsingDefaultImageThumbnail && this.ImageId != null && !this.ImageId.equals(StringHelper.empty())){
             final Dialog nagDialog = new Dialog(this.getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             nagDialog.setCancelable(true);
             nagDialog.setContentView(R.layout.image_preview_dialog);
+            nagDialog.show();
 
             if (this.ImageId != null && this.ImageId.length() > 0) {
-                byte[] byteArray = new AzureBlobService().GetBlob(this.ImageId, originalBlobStorageContainerPath);
+                AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
+                    @Override
+                    public void onPreExecute() {
+//                        progressBar.setVisibility(View.VISIBLE);
+                    }
 
-                if (byteArray != null && byteArray.length > 0) {
-                    Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-                    ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
-                    ivPreview.setImageBitmap(bmp);
-                    nagDialog.show();
-                }
+                    @Override
+                    public void onPostExecute(byte[] bytes) {
+                        if (ArrayHelper.hasValidBitmapContent(bytes)){
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
+                            ivPreview.setImageBitmap(bmp);
+                        } else
+                            throw new NullPointerException("Image not found");
+                    }
+                };
+
+                DownloadBlobModel model = new DownloadBlobModel(this.ImageId, originalBlobStorageContainerPath);
+                new LoadAzureBlobAsyncTask(listener).execute(model);
             }
         }
     }

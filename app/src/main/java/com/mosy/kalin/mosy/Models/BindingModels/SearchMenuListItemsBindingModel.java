@@ -11,10 +11,11 @@ public class SearchMenuListItemsBindingModel {
     public double Latitude;
     public double Longitude;
     public Boolean IsPromoted;
-    public Boolean FilterByWorkingStatus;
-    public List<String> SelectedCuisinePhaseIds;
-    public List<String> SelectedCuisineRegionIds;
-    public List<String> SelectedCuisineSpectrumIds;
+    public List<String> CuisinePhaseIds;
+    public List<String> CuisineRegionIds;
+    public List<String> CuisineSpectrumIds;
+    public Integer LocalDayOfWeek;
+    public String LocalTime;
 
     public SearchMenuListItemsBindingModel() { }
 
@@ -27,7 +28,9 @@ public class SearchMenuListItemsBindingModel {
             String query,
             ArrayList<String> phaseFilterIds,
             ArrayList<String> regionFilterIds,
-            ArrayList<String> spectrumFilterIds)
+            ArrayList<String> spectrumFilterIds,
+            Integer localDayOfWeek,
+            String localTime)
     {
         this.MaxResultsCount = maxResultsCount;
         this.TotalItemsOffset = totalItemsOffset;
@@ -35,9 +38,11 @@ public class SearchMenuListItemsBindingModel {
         this.Longitude = longitude;
         this.IsPromoted = isPromoted;
         this.Query = query;
-        this.SelectedCuisinePhaseIds = phaseFilterIds;
-        this.SelectedCuisineRegionIds = regionFilterIds;
-        this.SelectedCuisineSpectrumIds = spectrumFilterIds;
+        this.CuisinePhaseIds = phaseFilterIds;
+        this.CuisineRegionIds = regionFilterIds;
+        this.CuisineSpectrumIds = spectrumFilterIds;
+        this.LocalDayOfWeek = localDayOfWeek;
+        this.LocalTime= localTime;
     }
 
 }

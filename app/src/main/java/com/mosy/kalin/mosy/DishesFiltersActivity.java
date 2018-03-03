@@ -2,17 +2,15 @@ package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SwitchCompat;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -22,8 +20,10 @@ import com.mosy.kalin.mosy.DTOs.CuisineSpectrum;
 import com.mosy.kalin.mosy.DTOs.DishFilter;
 import com.mosy.kalin.mosy.DTOs.Enums.DishFilterType;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
+import com.mosy.kalin.mosy.Models.BindingModels.GetRequestableFiltersBindingModel;
 import com.mosy.kalin.mosy.Models.Responses.RequestableFiltersResponse;
-import com.mosy.kalin.mosy.Services.FiltersService;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadMenuListFiltersAsyncTask;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -39,25 +39,29 @@ public class DishesFiltersActivity
         extends AppCompatActivity {
 
     @Extra
+    static boolean ApplyWorkingStatusFilter;
+    @Extra
     static ArrayList<String> CuisinePhaseFilterIds;
     @Extra
     static ArrayList<String> CuisineRegionFilterIds;
     @Extra
     static ArrayList<String> CuisineSpectrumFilterIds;
 
-    @ViewById(resName = "filters_dishes_scWorkingTimeFilter")
-    public SwitchCompat workingTimeFilter;
-    @ViewById(resName = "filters_dishes_tvRatingLabel")
-    public TextView ratingLabel;
-    @ViewById(resName = "filters_dishes_sbRatingFilter")
-    public SeekBar ratingFilter;
+    @ViewById(resName = "venues_llInitialLoadingProgress")
+    LinearLayout centralProgress;
 
+    @ViewById(resName = "filters_dishes_scWorkingTimeFilter")
+    public Switch workingStatusFilter;
     @ViewById(resName = "filters_dishes_lPhases")
     public LinearLayout PhasesFiltersLayout;
     @ViewById(resName = "filters_dishes_lRegions")
     public LinearLayout RegionsFiltersLayout;
     @ViewById(resName = "filters_dishes_lSpectrums")
     public LinearLayout SpectrumFiltersLayout;
+//    @ViewById(resName = "filters_dishes_tvRatingLabel")
+//    public TextView ratingLabel;
+//    @ViewById(resName = "filters_dishes_sbRatingFilter")
+//    public SeekBar ratingFilter;
 
     private RequestableFiltersResponse Filters;
 
@@ -74,25 +78,45 @@ public class DishesFiltersActivity
 
     @AfterViews
     public void InitializeComponents(){
-        this.ratingFilter.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
-        this.ratingFilter.getThumb().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
-        this.ratingFilter.setProgress(5);
-        this.ratingFilter.setMax(10);
+//        this.ratingFilter.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
+//        this.ratingFilter.getThumb().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
+//        this.ratingFilter.setProgress(5);
+//        this.ratingFilter.setMax(10);
+//        this.ratingFilter.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                ratingLabel.setText("Rating: higher than " + String.valueOf(progress));
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) { }
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) { }
+//        });
 
-        this.ratingFilter.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        this.workingStatusFilter.setChecked(ApplyWorkingStatusFilter);
+        this.workingStatusFilter.setOnCheckedChangeListener(
+                (compoundButton, b) -> {
+                    ApplyWorkingStatusFilter = compoundButton.isChecked();
+                }
+        );
+
+        AsyncTaskListener<RequestableFiltersResponse> listener = new AsyncTaskListener<RequestableFiltersResponse>() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                ratingLabel.setText("Rating: higher than " + String.valueOf(progress));
+            public void onPreExecute() {
+                centralProgress.setVisibility(View.VISIBLE);
             }
-
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) { }
-        });
+            public void onPostExecute(RequestableFiltersResponse result) {
+                Filters = result;
+                centralProgress.setVisibility(View.GONE);
+                InitializeFiltersLayouts(Filters);
+            }
+        };
+        GetRequestableFiltersBindingModel model = new GetRequestableFiltersBindingModel();
+        new LoadMenuListFiltersAsyncTask(listener).execute(model);
 
-        this.Filters = new FiltersService().getRequestableFilters();
-        this.InitializeFiltersLayouts(this.Filters);
+//        this.Filters = new MenuService().getRequestableFilters();
     }
 
     @Override
@@ -118,6 +142,7 @@ public class DishesFiltersActivity
     protected void onDestroy(){
         super.onDestroy();
         Intent intent = new Intent(DishesFiltersActivity.this, VenuesActivity_.class);
+        intent.putExtra("ApplyWorkingStatusFilterToDishes", ApplyWorkingStatusFilter);
         intent.putExtra("CuisinePhaseFilterIds", CuisinePhaseFilterIds);
         intent.putExtra("CuisineRegionFilterIds", CuisineRegionFilterIds);
         intent.putExtra("CuisineSpectrumFilterIds", CuisineSpectrumFilterIds);

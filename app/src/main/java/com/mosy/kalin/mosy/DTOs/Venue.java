@@ -1,10 +1,11 @@
 package com.mosy.kalin.mosy.DTOs;
 
 import com.google.gson.annotations.SerializedName;
+import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
 import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 
 // Implements Serializable in order to be passed between activities.
@@ -36,7 +37,8 @@ public class Venue
     @SerializedName("IndoorImageMeta")
     public VenueImage IndoorImage;
 
-    public BigDecimal Rating;
+    @SerializedName("WorkingStatus")
+    public String WorkingStatus;
 
     @SerializedName("FBOEndorsements")
     public ArrayList<VenueBadgeEndorsement> Endorsements;

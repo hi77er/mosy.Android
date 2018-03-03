@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/venueItemImageDialog"
+    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:id="@+id/venues_llInitialLoadingProgress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:scaleType="fitCenter"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:id="@+id/pbHeaderProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" >
+        </ProgressBar>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imagePreviewDialog_ivPreview"
@@ -11,4 +29,4 @@
         android:layout_height="match_parent"
         android:scaleType="fitCenter" />
 
-</RelativeLayout>
+</LinearLayout>

@@ -62,7 +62,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginEnd="5dp"
-            android:src="@drawable/eat_paprika" />
+            android:src="@drawable/eat_paprika_100x100" />
 
         <LinearLayout
             android:orientation="vertical"

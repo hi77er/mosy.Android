@@ -2,11 +2,10 @@ package com.mosy.kalin.mosy.Services.AsyncTasks;
 
 import android.os.AsyncTask;
 
-import com.mosy.kalin.mosy.Async.Tasks.SearchVenuesAsyncTask;
+import com.mosy.kalin.mosy.DAL.Repositories.VenueRepository;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
-import com.mosy.kalin.mosy.Services.VenuesService;
 
 import java.util.ArrayList;
 
@@ -30,10 +29,7 @@ public class LoadVenuesAsyncTask
 
         try {
             SearchVenuesBindingModel model = models[0];
-            results = new SearchVenuesAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, model).get();
-
-            VenuesService vService = new VenuesService();
-            vService.sortVenuesByDistanceToDevice(results);
+            results = new VenueRepository().searchVenues(model);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -44,5 +40,4 @@ public class LoadVenuesAsyncTask
     protected void onPostExecute(final ArrayList<Venue> result) {
         asyncTaskListenerListener.onPostExecute(result);
     }
-
 }

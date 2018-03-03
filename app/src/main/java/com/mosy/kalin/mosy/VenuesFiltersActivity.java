@@ -1,6 +1,7 @@
 package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Window;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.mosy.kalin.mosy.Helpers.StringHelper;
@@ -15,6 +17,7 @@ import com.mosy.kalin.mosy.Helpers.StringHelper;
 import org.androidannotations.annotations.AfterExtras;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 @SuppressLint("Registered")
@@ -22,16 +25,16 @@ import org.androidannotations.annotations.ViewById;
 public class VenuesFiltersActivity
         extends AppCompatActivity {
 
-//
-//    @ViewById(resName = "filters_venues_tvDistanceLabel")
-//    public TextView distanceLabel;
-//    @ViewById(resName = "filters_venues_sbDistanceFilter")
-//    public SeekBar distanceFilter;
 
-    @ViewById(resName = "filters_venues_tvRatingLabel")
-    public TextView ratingLabel;
-    @ViewById(resName = "filters_venues_sbRatingFilter")
-    public SeekBar ratingFilter;
+    @Extra
+    static boolean ApplyWorkingStatusFilter;
+
+//    @ViewById(resName = "filters_venues_tvRatingLabel")
+//    public TextView ratingLabel;
+//    @ViewById(resName = "filters_venues_sbRatingFilter")
+//    public SeekBar ratingFilter;
+    @ViewById(resName = "filters_venues_sbWorkingTimeFilter")
+    public Switch workingStatusFilter;
 
 
     @Override
@@ -47,22 +50,28 @@ public class VenuesFiltersActivity
 
     @AfterViews
     public void InitializeComponents(){
-        this.ratingFilter.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
-        this.ratingFilter.getThumb().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
-        this.ratingFilter.setProgress(5);
-        this.ratingFilter.setMax(10);
+//        this.ratingFilter.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
+//        this.ratingFilter.getThumb().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
+//        this.ratingFilter.setProgress(5);
+//        this.ratingFilter.setMax(10);
+//        this.ratingFilter.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                ratingLabel.setText("Rating: higher than " + String.valueOf(progress));
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) { }
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) { }
+//        });
 
-        this.ratingFilter.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                ratingLabel.setText("Rating: higher than " + String.valueOf(progress));
+        this.workingStatusFilter.setChecked(ApplyWorkingStatusFilter);
+        this.workingStatusFilter.setOnCheckedChangeListener(
+            (compoundButton, b) -> {
+                ApplyWorkingStatusFilter = compoundButton.isChecked();
             }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) { }
-        });
+        );
     }
 
     @Override
@@ -76,7 +85,9 @@ public class VenuesFiltersActivity
     @Override
     protected void onDestroy(){
         super.onDestroy();
-
+        Intent intent = new Intent(VenuesFiltersActivity.this, VenuesActivity_.class);
+        intent.putExtra("ApplyWorkingStatusFilterToVenues", ApplyWorkingStatusFilter);
+        startActivity(intent);
     }
 
 

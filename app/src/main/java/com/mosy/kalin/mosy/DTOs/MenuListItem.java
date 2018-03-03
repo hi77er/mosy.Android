@@ -4,7 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
 import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
 
 import java.util.ArrayList;
 
@@ -40,6 +42,9 @@ public class MenuListItem
 
     @SerializedName("FBOName")
     public String VenueName;
+
+    @SerializedName("WorkingStatus")
+    public String VenueWorkingStatus;
 
     @SerializedName("RequestableImageMeta")
     public MenuListItemImage ImageThumbnail;

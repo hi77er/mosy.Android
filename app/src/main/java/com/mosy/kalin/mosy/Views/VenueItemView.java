@@ -19,12 +19,10 @@ import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.R;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadMenuListItemThumbnailAsyncTask;
-import com.mosy.kalin.mosy.Services.AzureBlobService;
-import com.mosy.kalin.mosy.VenueActivity;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
+import com.mosy.kalin.mosy.Services.VenueService;
 import com.mosy.kalin.mosy.VenueActivity_;
 import com.mosy.kalin.mosy.VenueDetailsActivity_;
-import com.mosy.kalin.mosy.VenuesActivity;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
@@ -39,11 +37,11 @@ public class VenueItemView
     private static final String thumbnailBlobStorageContainerPath = "userimages\\fboalbums\\100x100";
     private Venue Venue;
     private String ImageId;
-    private Boolean IsUsingDefaultThumbnail;
+    private boolean IsUsingDefaultThumbnail;
     private LruCache<String, Bitmap> mMemoryCache;
 
     @Bean
-    public com.mosy.kalin.mosy.Services.VenuesService VenuesService;
+    public VenueService VenuesService;
 
     @ViewById(resName = "venueItem_tvName")
     TextView Name;
@@ -137,27 +135,39 @@ public class VenueItemView
         };
 
         DownloadBlobModel model = new DownloadBlobModel(thumbnailId, thumbnailBlobStorageContainerPath);
-        new LoadMenuListItemThumbnailAsyncTask(listener).execute(model);
+        new LoadAzureBlobAsyncTask(listener).execute(model);
     }
 
     @Click(resName = "venueItem_ivOutdoorThumbnail")
     public void OutdoorThumbnailClick()
     {
-        if (!IsUsingDefaultThumbnail){
+        if (!IsUsingDefaultThumbnail && this.ImageId != null && !this.ImageId.equals(StringHelper.empty())){
             final Dialog nagDialog = new Dialog(this.getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             nagDialog.setCancelable(true);
             nagDialog.setContentView(R.layout.image_preview_dialog);
+            nagDialog.show();
 
             if (this.ImageId != null && this.ImageId.length() > 0) {
-                byte[] byteArray = new AzureBlobService().GetBlob(this.ImageId, originalBlobStorageContainerPath);
+                AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
+                    @Override
+                    public void onPreExecute() {
+//                        progressBar.setVisibility(View.VISIBLE);
+                    }
 
-                if (byteArray != null && byteArray.length > 0) {
-                    Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-                    ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
-                    ivPreview.setImageBitmap(bmp);
-                    nagDialog.show();
-                }
+                    @Override
+                    public void onPostExecute(byte[] bytes) {
+                        if (ArrayHelper.hasValidBitmapContent(bytes)){
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
+                            ivPreview.setImageBitmap(bmp);
+                        } else
+                            throw new NullPointerException("Image not found");
+                    }
+                };
+
+                DownloadBlobModel model = new DownloadBlobModel(this.ImageId, originalBlobStorageContainerPath);
+                new LoadAzureBlobAsyncTask(listener).execute(model);
             }
         }
     }

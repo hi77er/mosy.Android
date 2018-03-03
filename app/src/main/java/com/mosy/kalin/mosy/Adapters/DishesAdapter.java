@@ -65,7 +65,7 @@ public class DishesAdapter
                 return bitmap.getByteCount() / 1024;
             }
         };
-        addBitmapToMemoryCache("default", BitmapFactory.decodeResource(context.getResources(), R.drawable.eat_paprika));
+        addBitmapToMemoryCache("default", BitmapFactory.decodeResource(context.getResources(), R.drawable.eat_paprika_100x100));
     }
 
     @Override

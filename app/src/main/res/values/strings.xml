@@ -76,7 +76,7 @@
     <string name="filters_venues_title_venues_sbRating">Rating: higher than 5</string>
     <string name="filters_dishes_tvDistance">Distance: off</string>
     <string name="filters_dishes_tvRating">Rating: higher than 5</string>
-    <string name="filters_dishes_show_closed">Show closed venues</string>
+    <string name="filters_dishes_show_closed">Show dishes only from open venues</string>
     <string name="filters_dishes_tvCuisinePhase">Phase:</string>
     <string name="filters_dishes_tvCuisineRegion">Region:</string>
     <string name="filters_dishes_tvCuisineSpectrum">Spectrum:</string>

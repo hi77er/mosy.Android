@@ -4,20 +4,26 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mosy.kalin.mosy.Adapters.MenuListsAdapter;
-import com.mosy.kalin.mosy.Async.Tasks.GetVenueMenuAsyncTask;
 import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.DTOs.VenueImage;
+import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
+import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
+import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageMetaBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueMenuBindingModel;
-import com.mosy.kalin.mosy.Services.AzureBlobService;
-import com.mosy.kalin.mosy.Services.VenuesService;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueIndoorImageMetadataAsyncTask;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueMenuAsyncTask;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -37,6 +43,8 @@ public class VenueActivity extends AppCompatActivity {
     @Extra
     String SelectedMenuListId; //if the page is navigated via Dishes ListView, this should have value
 
+    @ViewById(resName = "venues_llInitialLoadingProgress")
+    LinearLayout centralProgress;
     @ViewById(resName = "venue_tvName")
     TextView Name;
     @ViewById(resName = "venue_tvClass")
@@ -46,7 +54,7 @@ public class VenueActivity extends AppCompatActivity {
     @ViewById(resName = "venue_vpMenu")
     ViewPager Menu;
 
-    ArrayList<MenuList> menuLists = null;
+    private static final String storageContainer = "userimages\\fboalbums\\200x200";
 
     @AfterViews
     void updateVenueWithData() {
@@ -54,32 +62,82 @@ public class VenueActivity extends AppCompatActivity {
             Name.setText(this.Venue.Name);
             Class.setText(this.Venue.Class);
 
-            this.Venue.IndoorImage = new VenuesService().downloadVenueIndoorImageMeta(this.Venue.Id);
+            loadIndoorImageMeta();
+            loadMenu();
 
-            if (this.Venue != null && this.Venue.IndoorImage != null && this.Venue.IndoorImage.Id != null && this.Venue.IndoorImage.Id.length() > 0) {
-                //INFO: TryGet Venue Image
-                byte[] indoorImageBytes = new AzureBlobService().GetBlob(this.Venue.IndoorImage.Id, "userimages\\fboalbums\\200x200");
-                if (indoorImageBytes != null && indoorImageBytes.length > 0) {
-                    Bitmap bmp = BitmapFactory.decodeByteArray(indoorImageBytes, 0, indoorImageBytes.length);
-                    this.IndoorImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
-                }
-            }
-            GetVenueMenuBindingModel model = new GetVenueMenuBindingModel(this.Venue.Id);
-            ArrayList<MenuList> menuLists = new GetVenueMenuAsyncTask().execute(model).get();
-
-            MenuListsAdapter adapter = new MenuListsAdapter(getSupportFragmentManager(), menuLists, SelectedMenuListId);
-            this.Menu.setAdapter(adapter);
-
-            if (SelectedMenuListId != null && !SelectedMenuListId.equals(StringHelper.empty())) {
-                int selectedMenuListIndex = 0;
-                for (MenuList list : menuLists) {
-                    if (this.SelectedMenuListId.equals(list.Id))
-                        selectedMenuListIndex = menuLists.indexOf(list);
-                }
-                this.Menu.setCurrentItem(selectedMenuListIndex, false);
-            }
         } catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    private void loadIndoorImageMeta() {
+        AsyncTaskListener<VenueImage> listener = new AsyncTaskListener<VenueImage>() {
+            @Override
+            public void onPreExecute() {
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onPostExecute(VenueImage result) {
+                Venue.IndoorImage = result;
+                populateIndoorImageThumbnail();
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+            }
+        };
+        GetVenueIndoorImageMetaBindingModel iiModel = new GetVenueIndoorImageMetaBindingModel(this.Venue.Id);
+        new LoadVenueIndoorImageMetadataAsyncTask(listener).execute(iiModel);
+    }
+
+    private void loadMenu(){
+        AsyncTaskListener<ArrayList<MenuList>> mListener = new AsyncTaskListener<ArrayList<MenuList>>() {
+            @Override
+            public void onPreExecute() {
+                centralProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onPostExecute(ArrayList<MenuList> result) {
+                ArrayList<MenuList> menuLists = result;
+                MenuListsAdapter adapter = new MenuListsAdapter(getSupportFragmentManager(), menuLists, SelectedMenuListId);
+                Menu.setAdapter(adapter);
+
+                if (SelectedMenuListId != null && !SelectedMenuListId.equals(StringHelper.empty())) {
+                    int selectedMenuListIndex = 0;
+                    for (MenuList list : menuLists) {
+                        if (SelectedMenuListId.equals(list.Id))
+                            selectedMenuListIndex = menuLists.indexOf(list);
+                    }
+                    Menu.setCurrentItem(selectedMenuListIndex, false);
+                }
+                centralProgress.setVisibility(View.GONE);
+            }
+        };
+
+        GetVenueMenuBindingModel mModel = new GetVenueMenuBindingModel(this.Venue.Id);
+        new LoadVenueMenuAsyncTask(mListener).execute(mModel);
+    }
+
+    private void populateIndoorImageThumbnail() {
+        if (this.Venue.IndoorImage != null && this.Venue.IndoorImage.Id != null && this.Venue.IndoorImage.Id.length() > 0) {
+            //INFO: TryGet Venue Image
+            AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
+                @Override
+                public void onPreExecute() {
+                    //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onPostExecute(byte[] bytes) {
+                    if (ArrayHelper.hasValidBitmapContent(bytes)){
+                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        IndoorImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
+                    }
+                    //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+                }
+            };
+
+            DownloadBlobModel model = new DownloadBlobModel(this.Venue.IndoorImage.Id, storageContainer);
+            new LoadAzureBlobAsyncTask(listener).execute(model);
         }
     }
 

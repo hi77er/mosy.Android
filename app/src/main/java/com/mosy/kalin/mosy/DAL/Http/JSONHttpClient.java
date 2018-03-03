@@ -1,4 +1,4 @@
-package com.mosy.kalin.mosy.Http;
+package com.mosy.kalin.mosy.DAL.Http;
 
 import android.content.ContentValues;
 
@@ -20,7 +20,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -91,13 +90,21 @@ public class JSONHttpClient {
             this.Connection.setRequestProperty("Accept", "application/json");
             this.Connection.setRequestProperty("Content-Type", "application/json");
 
+            long execStart = 0;
+            long elapsed = 0;
+
             String str = new GsonBuilder().create().toJson(object);
             byte[] outputInBytes = str.getBytes("UTF-8");
             OutputStream os = this.Connection.getOutputStream();
             os.write( outputInBytes );
             os.close();
 
+            if (BuildConfig.DEBUG) execStart = System.currentTimeMillis();
             int httpResult = this.Connection.getResponseCode();
+            if (BuildConfig.DEBUG) elapsed = System.currentTimeMillis() - execStart;
+            if (BuildConfig.DEBUG) System.out.println("MOSYLOGS : REST CALL - " + url + " TOOK: " + elapsed + "ms;");
+
+
             if (httpResult == HttpURLConnection.HTTP_OK) {
                 String jsonString = convertStreamToString(this.Connection.getInputStream());
 
@@ -108,8 +115,8 @@ public class JSONHttpClient {
                 return builder.create().fromJson(jsonString, objectType);
             } else {
                 System.out.println(this.Connection.getResponseMessage());
+                throw new Exception(this.Connection.getResponseMessage());
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
