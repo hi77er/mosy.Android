@@ -15,7 +15,6 @@ import com.mosy.kalin.mosy.Views.DishItemView;
 import com.mosy.kalin.mosy.Views.DishItemView_;
 
 import org.androidannotations.annotations.AfterInject;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 

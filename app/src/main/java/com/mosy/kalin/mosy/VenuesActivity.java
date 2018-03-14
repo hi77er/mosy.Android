@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.mosy.kalin.mosy.Adapters.DishesAdapter;
 import com.mosy.kalin.mosy.Adapters.VenuesAdapter;
+import com.mosy.kalin.mosy.DTOs.DishFilter;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
@@ -44,6 +46,7 @@ import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -60,11 +63,11 @@ public class VenuesActivity
     @Extra
     static boolean ApplyWorkingStatusFilterToDishes = true;
     @Extra
-    static ArrayList<String> CuisinePhaseFilterIds;
+    static ArrayList<String> SelectedPhaseFilterIds;
     @Extra
-    static ArrayList<String> CuisineRegionFilterIds;
+    static ArrayList<String> SelectedRegionFilterIds;
     @Extra
-    static ArrayList<String> CuisineSpectrumFilterIds;
+    static ArrayList<String> SelectedSpectrumFilterIds;
 
     long timeStarted = 0;
     Boolean searchIsPromoted = true; //INFO: Normally search only promoted dishes, but when using query then search among all dishes
@@ -176,7 +179,7 @@ public class VenuesActivity
 
                     //INFO: WHILE SCROLLING LOAD
                     loadMoreDishes(itemsOnScrollLoadCount, totalItemsCount, searchIsPromoted, query,
-                            CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
+                            SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds);
                 }
                 return true;
             }
@@ -194,7 +197,7 @@ public class VenuesActivity
 
             //INFO: REFRESH INITIAL LOAD
             loadMoreDishes(itemsInitialLoadCount, 0, searchIsPromoted, query,
-                    CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
+                    SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds);
 
             endlessScrollListener.resetState();
             dishesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
@@ -202,7 +205,7 @@ public class VenuesActivity
 
         //INFO: INITIAL LOAD
         loadMoreDishes(itemsInitialLoadCount, 0, searchIsPromoted, query,
-                CuisinePhaseFilterIds, CuisineRegionFilterIds, CuisineSpectrumFilterIds);
+                SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds);
 
         dishes.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
         dishes.setAdapter(dishesAdapter);
@@ -296,41 +299,43 @@ public class VenuesActivity
     }
 
     void loadMoreVenues(int maxResultsCount, int totalItemsOffset, String query){
-        AsyncTaskListener<ArrayList<Venue>> listener = new AsyncTaskListener<ArrayList<Venue>>() {
-            @Override
-            public void onPreExecute() {
-                centralProgress.setVisibility(View.VISIBLE);
+        if (lastKnownLocation != null) {
+            AsyncTaskListener<ArrayList<Venue>> listener = new AsyncTaskListener<ArrayList<Venue>>() {
+                @Override
+                public void onPreExecute() {
+                    centralProgress.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onPostExecute(ArrayList<Venue> result) {
+                    venuesAdapter.addItems(result);
+
+                    venuesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;
+                    venuesAdapter.LoadingStillInAction = false;
+
+                    centralProgress.setVisibility(View.GONE);
+                }
+            };
+
+            Integer localDayOfWeek = null;
+            String localTime = null;
+            if (ApplyWorkingStatusFilterToVenues) {
+                Calendar localCalendar = Calendar.getInstance();
+                localTime = localCalendar.get(Calendar.HOUR_OF_DAY) + ":" + localCalendar.get(Calendar.MINUTE);
+                localDayOfWeek = localCalendar.get(Calendar.DAY_OF_WEEK);
             }
-            @Override
-            public void onPostExecute(ArrayList<Venue> result) {
-                venuesAdapter.addItems(result);
 
-                venuesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;
-                venuesAdapter.LoadingStillInAction = false;
+            SearchVenuesBindingModel model = new SearchVenuesBindingModel(
+                    maxResultsCount,
+                    totalItemsOffset,
+                    lastKnownLocation.getLatitude(),
+                    lastKnownLocation.getLongitude(),
+                    query,
+                    localDayOfWeek,
+                    localTime);
 
-                centralProgress.setVisibility(View.GONE);
-            }
-        };
-
-        Integer localDayOfWeek = null;
-        String localTime = null;
-        if (ApplyWorkingStatusFilterToVenues)
-        {
-            Calendar localCalendar = Calendar.getInstance();
-            localTime = localCalendar.get(Calendar.HOUR_OF_DAY) + ":" + localCalendar.get(Calendar.MINUTE);
-            localDayOfWeek = localCalendar.get(Calendar.DAY_OF_WEEK);
+            new LoadVenuesAsyncTask(listener).execute(model);
         }
-
-        SearchVenuesBindingModel model = new SearchVenuesBindingModel(
-                maxResultsCount,
-                totalItemsOffset,
-                lastKnownLocation.getLatitude(),
-                lastKnownLocation.getLongitude(),
-                query,
-                localDayOfWeek,
-                localTime);
-
-        new LoadVenuesAsyncTask(listener).execute(model);
     }
 
     void loadMoreDishes(int maxResultsCount,
@@ -341,53 +346,55 @@ public class VenuesActivity
                         ArrayList<String> regionFilterIds,
                         ArrayList<String> spectrumFilterIds){
 
-        AsyncTaskListener<ArrayList<MenuListItem>> listener = new AsyncTaskListener<ArrayList<MenuListItem>>() {
-            @Override
-            public void onPreExecute() {
-                centralProgress.setVisibility(View.VISIBLE);
+        if (lastKnownLocation != null){
+            AsyncTaskListener<ArrayList<MenuListItem>> listener = new AsyncTaskListener<ArrayList<MenuListItem>>() {
+                @Override
+                public void onPreExecute() {
+                    centralProgress.setVisibility(View.VISIBLE);
+                }
+                @Override
+                public void onPostExecute(ArrayList<MenuListItem> result) {
+                    dishesAdapter.addItems(result);
+
+                    dishesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;;
+                    dishesAdapter.loadingStillInAction = false;
+
+                    centralProgress.setVisibility(View.GONE);
+                }
+            };
+
+            Integer localDayOfWeek = null;
+            String localTime = null;
+            if (ApplyWorkingStatusFilterToDishes)
+            {
+                Calendar localCalendar = Calendar.getInstance();
+                localTime = localCalendar.get(Calendar.HOUR_OF_DAY) + ":" + localCalendar.get(Calendar.MINUTE);
+                localDayOfWeek = localCalendar.get(Calendar.DAY_OF_WEEK);
             }
-            @Override
-            public void onPostExecute(ArrayList<MenuListItem> result) {
-                dishesAdapter.addItems(result);
 
-                dishesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;;
-                dishesAdapter.loadingStillInAction = false;
+            SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(
+                    maxResultsCount,
+                    totalItemsOffset,
+                    lastKnownLocation.getLatitude(),
+                    lastKnownLocation.getLongitude(),
+                    isPromoted,
+                    query,
+                    phaseFilterIds,
+                    regionFilterIds,
+                    spectrumFilterIds,
+                    localDayOfWeek,
+                    localTime);
 
-                centralProgress.setVisibility(View.GONE);
-            }
-        };
-
-        Integer localDayOfWeek = null;
-        String localTime = null;
-        if (ApplyWorkingStatusFilterToDishes)
-        {
-            Calendar localCalendar = Calendar.getInstance();
-            localTime = localCalendar.get(Calendar.HOUR_OF_DAY) + ":" + localCalendar.get(Calendar.MINUTE);
-            localDayOfWeek = localCalendar.get(Calendar.DAY_OF_WEEK);
+            new LoadMenuListItemsAsyncTask(listener).execute(model);
         }
-
-        SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(
-                maxResultsCount,
-                totalItemsOffset,
-                lastKnownLocation.getLatitude(),
-                lastKnownLocation.getLongitude(),
-                isPromoted,
-                query,
-                phaseFilterIds,
-                regionFilterIds,
-                spectrumFilterIds,
-                localDayOfWeek,
-                localTime);
-
-        new LoadMenuListItemsAsyncTask(listener).execute(model);
     }
 
     void openFilters() {
         if (DishesSearchModeActivated) {
             Intent intent = new Intent(VenuesActivity.this, DishesFiltersActivity_.class);
-            intent.putExtra("CuisinePhaseFilterIds", CuisinePhaseFilterIds);
-            intent.putExtra("CuisineRegionFilterIds", CuisineRegionFilterIds);
-            intent.putExtra("CuisineSpectrumFilterIds", CuisineSpectrumFilterIds);
+            intent.putExtra("SelectedPhaseFilterIds", SelectedPhaseFilterIds);
+            intent.putExtra("SelectedRegionFilterIds", SelectedRegionFilterIds);
+            intent.putExtra("SelectedSpectrumFilterIds", SelectedSpectrumFilterIds);
             intent.putExtra("ApplyWorkingStatusFilter", ApplyWorkingStatusFilterToDishes);
             startActivity(intent);
         } else {
@@ -406,15 +413,16 @@ public class VenuesActivity
     public void NavigateDishesSearch() {
         Intent intent = new Intent(VenuesActivity.this, VenuesActivity_.class);
         intent.putExtra("DishesSearchModeActivated", true);
-//        intent.putExtra("CuisinePhaseFilterIds", CuisinePhaseFilterIds);
-//        intent.putExtra("CuisineRegionFilterIds", CuisineRegionFilterIds);
-//        intent.putExtra("CuisineSpectrumFilterIds", CuisineRegionFilterIds);
+
         startActivity(intent);
     }
 
     void refreshLastKnownLocation() {
         mLocationResolver.resolveLocation(this, location -> {
             this.lastKnownLocation = location;
+
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+            Log.v("LOCATION CHANGE", timeStamp + " - IN ON_LOCATION_CHANGE, lat=" + location.getLatitude() + ", lon=" + location.getLongitude());
         });
     }
 

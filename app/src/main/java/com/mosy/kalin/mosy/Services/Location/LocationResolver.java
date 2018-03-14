@@ -60,7 +60,7 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
         this.mOnLocationResolved = onLocationResolved;
         this.mActivity=activity;
 
-        if (isEveryThingEnabled()){
+        if (hasAllLocationPermissions()){
             startLocationPooling();
         }
     }
@@ -70,7 +70,7 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
     }
 
     /* Checking every criteria are enabled for getting location from device */
-    public boolean isEveryThingEnabled() {
+    public boolean hasAllLocationPermissions() {
         if (!isLocationPermissionEnabled()) {
             showPermissionRequestDialog();
             return false;
@@ -309,8 +309,6 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
 
     private void getLocation() {
         try {
-
-
             // getting GPS status
             Boolean isGPSEnabled = mLocationManager
                     .isProviderEnabled(LocationManager.GPS_PROVIDER);

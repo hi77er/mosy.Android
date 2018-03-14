@@ -247,7 +247,6 @@
                 android:layout_gravity="start"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_marginRight="10dp"
                 android:layout_marginEnd="10dp">
 
                 <LinearLayout
@@ -358,7 +357,6 @@
                 android:layout_gravity="start"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_marginRight="10dp"
                 android:layout_marginEnd="10dp">
 
                 <LinearLayout

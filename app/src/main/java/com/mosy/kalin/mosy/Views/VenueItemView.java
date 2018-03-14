@@ -141,7 +141,10 @@ public class VenueItemView
     @Click(resName = "venueItem_ivOutdoorThumbnail")
     public void OutdoorThumbnailClick()
     {
-        if (!IsUsingDefaultThumbnail && this.ImageId != null && !this.ImageId.equals(StringHelper.empty())){
+        if (!IsUsingDefaultThumbnail
+                && this.ImageId != null
+                && !this.ImageId.equals(StringHelper.empty())){
+
             final Dialog nagDialog = new Dialog(this.getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             nagDialog.setCancelable(true);

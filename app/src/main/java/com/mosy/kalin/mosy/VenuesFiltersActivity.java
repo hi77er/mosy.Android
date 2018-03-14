@@ -29,13 +29,13 @@ public class VenuesFiltersActivity
     @Extra
     static boolean ApplyWorkingStatusFilter;
 
+    @ViewById(resName = "filters_venues_sbWorkingTimeFilter")
+    public Switch workingStatusFilter;
+
 //    @ViewById(resName = "filters_venues_tvRatingLabel")
 //    public TextView ratingLabel;
 //    @ViewById(resName = "filters_venues_sbRatingFilter")
 //    public SeekBar ratingFilter;
-    @ViewById(resName = "filters_venues_sbWorkingTimeFilter")
-    public Switch workingStatusFilter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -50,6 +50,13 @@ public class VenuesFiltersActivity
 
     @AfterViews
     public void InitializeComponents(){
+        this.workingStatusFilter.setChecked(ApplyWorkingStatusFilter);
+        this.workingStatusFilter.setOnCheckedChangeListener(
+            (compoundButton, b) -> {
+                ApplyWorkingStatusFilter = compoundButton.isChecked();
+            }
+        );
+
 //        this.ratingFilter.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
 //        this.ratingFilter.getThumb().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
 //        this.ratingFilter.setProgress(5);
@@ -65,13 +72,6 @@ public class VenuesFiltersActivity
 //            @Override
 //            public void onStopTrackingTouch(SeekBar seekBar) { }
 //        });
-
-        this.workingStatusFilter.setChecked(ApplyWorkingStatusFilter);
-        this.workingStatusFilter.setOnCheckedChangeListener(
-            (compoundButton, b) -> {
-                ApplyWorkingStatusFilter = compoundButton.isChecked();
-            }
-        );
     }
 
     @Override
@@ -81,7 +81,6 @@ public class VenuesFiltersActivity
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_activity_filters_venues);
     }
 
-
     @Override
     protected void onDestroy(){
         super.onDestroy();
@@ -89,6 +88,8 @@ public class VenuesFiltersActivity
         intent.putExtra("ApplyWorkingStatusFilterToVenues", ApplyWorkingStatusFilter);
         startActivity(intent);
     }
+
+
 
 
 //    @Override

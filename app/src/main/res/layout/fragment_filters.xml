@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.MenuListPage_"
-    android:background="@color/colorMenuBackground"
+    tools:context=".Fragments.FiltersPage_"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
 
-    <ExpandableListView android:id="@+id/menuList_lvItems"
+    <ListView android:id="@+id/lv_Filters"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -19,6 +19,6 @@
         android:groupIndicator="@null"
         android:divider="@null"
         android:dividerHeight="0dp">
-    </ExpandableListView>
+    </ListView>
 
 </LinearLayout>

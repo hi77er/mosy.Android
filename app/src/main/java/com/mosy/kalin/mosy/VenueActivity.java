@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.mosy.kalin.mosy.Adapters.MenuListsAdapter;
+import com.mosy.kalin.mosy.Adapters.MenuListsPagerAdapter;
 import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
@@ -98,7 +98,7 @@ public class VenueActivity extends AppCompatActivity {
             @Override
             public void onPostExecute(ArrayList<MenuList> result) {
                 ArrayList<MenuList> menuLists = result;
-                MenuListsAdapter adapter = new MenuListsAdapter(getSupportFragmentManager(), menuLists, SelectedMenuListId);
+                MenuListsPagerAdapter adapter = new MenuListsPagerAdapter(getSupportFragmentManager(), menuLists, SelectedMenuListId);
                 Menu.setAdapter(adapter);
 
                 if (SelectedMenuListId != null && !SelectedMenuListId.equals(StringHelper.empty())) {

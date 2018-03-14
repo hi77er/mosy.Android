@@ -10,10 +10,6 @@ import com.mosy.kalin.mosy.Helpers.StringHelper;
 
 import java.util.ArrayList;
 
-/**
- * Created by kkras on 8/10/2017.
- */
-
 public class MenuListItem
         extends ResultBase
         implements Parcelable {
@@ -60,7 +56,7 @@ public class MenuListItem
 
 @SuppressWarnings("unchecked")
     protected MenuListItem(Parcel in) {
-        String[] data = new String[4];
+        String[] data = new String[7];
 
         in.readStringArray(data);
         // the order needs to be the same as in writeToParcel() method

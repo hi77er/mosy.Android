@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class MenuRepository {
 
     private static final String searchMenuListItemsEndpointEnding = "Requestable/QueryClosestRequestables";
-    private static final String getMenuListItemFiltersEndpointEnding = "RequestableFilters/All";
+    private static final String getMenuListItemFiltersEndpointEnding = "filters/All";
 
 
     public ArrayList<MenuListItem> searchMenuListItems(SearchMenuListItemsBindingModel model){

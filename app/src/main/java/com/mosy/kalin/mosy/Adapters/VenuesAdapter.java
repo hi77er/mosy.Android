@@ -103,16 +103,16 @@ public class VenuesAdapter
     }
 
 
-
-    public void clearVenues(){
-        this.venues = new ArrayList<>();
-    }
-
     public void addItems(ArrayList<Venue> items){
         int lastItemPosition = this.venues.size();
         this.venues.addAll(lastItemPosition, items);
         this.notifyDataSetChanged();
     }
+
+    public void clearVenues(){
+        this.venues = new ArrayList<>();
+    }
+
 
     private void addBitmapToMemoryCache(String key, Bitmap bitmap) {
         if (getBitmapFromMemCache(key) == null) {

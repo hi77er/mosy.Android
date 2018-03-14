@@ -2,7 +2,6 @@ package com.mosy.kalin.mosy.Fragments;
 
 import android.support.v4.app.Fragment;
 import android.widget.ExpandableListView;
-import android.widget.TextView;
 
 import com.mosy.kalin.mosy.Adapters.MenuListItemsAdapter;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
@@ -16,11 +15,9 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 @EFragment(R.layout.fragment_menulist)
-public class MenuListFragment extends Fragment {
+public class MenuListPage
+        extends Fragment {
 
     @FragmentArg("MenuListName")
     String MenuListName;
@@ -42,7 +39,6 @@ public class MenuListFragment extends Fragment {
 
     @AfterViews
     void init() {
-
         if (this.menuListItems != null) {
             menuListItemsAdapter.setMenuListItems(this.menuListItems);
 
@@ -50,6 +46,6 @@ public class MenuListFragment extends Fragment {
         }
     }
 
-    public MenuListFragment() { }
+    public MenuListPage() { }
 
 }

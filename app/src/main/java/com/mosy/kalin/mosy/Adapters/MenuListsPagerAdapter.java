@@ -6,13 +6,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mosy.kalin.mosy.DTOs.MenuList;
-import com.mosy.kalin.mosy.Fragments.MenuListFragment_;
+import com.mosy.kalin.mosy.Fragments.MenuListPage_;
 
 
 import java.util.ArrayList;
-import java.util.Objects;
 
-public class MenuListsAdapter
+public class MenuListsPagerAdapter
         extends FragmentStatePagerAdapter {
 
     ArrayList<MenuList> menuLists;
@@ -21,7 +20,7 @@ public class MenuListsAdapter
 
     public void setVenueId(String venueId){ this.venueId = venueId; }
 
-    public MenuListsAdapter(FragmentManager fm, ArrayList<MenuList> menuLists, String menuListId) {
+    public MenuListsPagerAdapter(FragmentManager fm, ArrayList<MenuList> menuLists, String menuListId) {
         super(fm);
         this.menuLists = menuLists;
         this.selectedMenuListId = menuListId;
@@ -34,7 +33,7 @@ public class MenuListsAdapter
 
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = new MenuListFragment_();
+        Fragment fragment = new MenuListPage_();
         MenuList menuList = this.menuLists.get(position);
 
         Bundle bundle = new Bundle();

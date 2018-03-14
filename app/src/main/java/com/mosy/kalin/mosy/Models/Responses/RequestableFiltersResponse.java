@@ -1,9 +1,7 @@
 package com.mosy.kalin.mosy.Models.Responses;
 
 import com.google.gson.annotations.SerializedName;
-import com.mosy.kalin.mosy.DTOs.CuisinePhase;
-import com.mosy.kalin.mosy.DTOs.CuisineRegion;
-import com.mosy.kalin.mosy.DTOs.CuisineSpectrum;
+import com.mosy.kalin.mosy.DTOs.DishFilter;
 import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
 
 import java.io.Serializable;
@@ -14,12 +12,12 @@ public class RequestableFiltersResponse
         implements Serializable {
 
     @SerializedName("CuisinePhaseFilters")
-    public ArrayList<CuisinePhase> CuisinePhaseFilters;
+    public ArrayList<DishFilter> CuisinePhaseFilters;
 
     @SerializedName("CuisineRegionFilters")
-    public ArrayList<CuisineRegion> CuisineRegionFilters;
+    public ArrayList<DishFilter> CuisineRegionFilters;
 
     @SerializedName("CuisineSpectrumFilters")
-    public ArrayList<CuisineSpectrum> CuisineSpectrumFilters;
+    public ArrayList<DishFilter> CuisineSpectrumFilters;
 
 }

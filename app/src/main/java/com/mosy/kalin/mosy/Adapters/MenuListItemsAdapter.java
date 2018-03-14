@@ -22,7 +22,6 @@ import org.androidannotations.annotations.RootContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 @EBean
 public class MenuListItemsAdapter
