@@ -16,15 +16,18 @@ public class DishFiltersPagerAdapter
     public ArrayList<DishFilter> PhasesFilters;
     public ArrayList<DishFilter> RegionsFilters;
     public ArrayList<DishFilter> SpectrumFilters;
+    public ArrayList<DishFilter> AllergensFilters;
 
     public DishFiltersPagerAdapter(FragmentManager manager,
                                    ArrayList<DishFilter> phases,
                                    ArrayList<DishFilter> regions,
-                                   ArrayList<DishFilter> spectrums) {
+                                   ArrayList<DishFilter> spectrums,
+                                   ArrayList<DishFilter> allergens) {
         super(manager);
         PhasesFilters = phases;
         RegionsFilters = regions;
         SpectrumFilters = spectrums;
+        AllergensFilters = allergens;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class DishFiltersPagerAdapter
                 filters = this.SpectrumFilters;
                 break;
             case 3:
-                filters = this.SpectrumFilters;
+                filters = this.AllergensFilters;
                 break;
         }
 

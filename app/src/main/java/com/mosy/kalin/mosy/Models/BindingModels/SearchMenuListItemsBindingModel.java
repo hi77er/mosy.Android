@@ -14,6 +14,7 @@ public class SearchMenuListItemsBindingModel {
     public List<String> CuisinePhaseIds;
     public List<String> CuisineRegionIds;
     public List<String> CuisineSpectrumIds;
+    public List<String> CuisineAllergensIds;
     public Integer LocalDayOfWeek;
     public String LocalTime;
 
@@ -29,6 +30,7 @@ public class SearchMenuListItemsBindingModel {
             ArrayList<String> phaseFilterIds,
             ArrayList<String> regionFilterIds,
             ArrayList<String> spectrumFilterIds,
+            ArrayList<String> allergensFilterIds,
             Integer localDayOfWeek,
             String localTime)
     {
@@ -41,6 +43,7 @@ public class SearchMenuListItemsBindingModel {
         this.CuisinePhaseIds = phaseFilterIds;
         this.CuisineRegionIds = regionFilterIds;
         this.CuisineSpectrumIds = spectrumFilterIds;
+        this.CuisineAllergensIds = allergensFilterIds;
         this.LocalDayOfWeek = localDayOfWeek;
         this.LocalTime= localTime;
     }

@@ -28,12 +28,14 @@ public class FilterItemView
     }
 
     public void bind(DishFilter filter) {
-        this.checkBox.setChecked(filter.IsChecked);
-        this.checkBox.setText(filter.Name);
+        //INFO: It's obligatory the listener to be assigned before the setChecked,
+        // otherwise another checkbox listener is being hit immediately after setChecked
         this.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             selected = isChecked;
             filter.IsChecked = isChecked;
         });
+        this.checkBox.setChecked(filter.IsChecked);
+        this.checkBox.setText(filter.Name);
     }
 
 

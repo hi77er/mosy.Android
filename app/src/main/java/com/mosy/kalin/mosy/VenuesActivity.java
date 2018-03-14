@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.mosy.kalin.mosy.Adapters.DishesAdapter;
 import com.mosy.kalin.mosy.Adapters.VenuesAdapter;
-import com.mosy.kalin.mosy.DTOs.DishFilter;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
@@ -68,6 +67,8 @@ public class VenuesActivity
     static ArrayList<String> SelectedRegionFilterIds;
     @Extra
     static ArrayList<String> SelectedSpectrumFilterIds;
+    @Extra
+    static ArrayList<String> SelectedAllergensFilterIds;
 
     long timeStarted = 0;
     Boolean searchIsPromoted = true; //INFO: Normally search only promoted dishes, but when using query then search among all dishes
@@ -179,7 +180,7 @@ public class VenuesActivity
 
                     //INFO: WHILE SCROLLING LOAD
                     loadMoreDishes(itemsOnScrollLoadCount, totalItemsCount, searchIsPromoted, query,
-                            SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds);
+                            SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds, SelectedAllergensFilterIds);
                 }
                 return true;
             }
@@ -197,7 +198,7 @@ public class VenuesActivity
 
             //INFO: REFRESH INITIAL LOAD
             loadMoreDishes(itemsInitialLoadCount, 0, searchIsPromoted, query,
-                    SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds);
+                    SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds, SelectedAllergensFilterIds);
 
             endlessScrollListener.resetState();
             dishesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
@@ -205,7 +206,7 @@ public class VenuesActivity
 
         //INFO: INITIAL LOAD
         loadMoreDishes(itemsInitialLoadCount, 0, searchIsPromoted, query,
-                SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds);
+                SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds, SelectedAllergensFilterIds);
 
         dishes.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
         dishes.setAdapter(dishesAdapter);
@@ -344,7 +345,8 @@ public class VenuesActivity
                         String query,
                         ArrayList<String> phaseFilterIds,
                         ArrayList<String> regionFilterIds,
-                        ArrayList<String> spectrumFilterIds){
+                        ArrayList<String> spectrumFilterIds,
+                        ArrayList<String> allergensFilterIds){
 
         if (lastKnownLocation != null){
             AsyncTaskListener<ArrayList<MenuListItem>> listener = new AsyncTaskListener<ArrayList<MenuListItem>>() {
@@ -382,6 +384,7 @@ public class VenuesActivity
                     phaseFilterIds,
                     regionFilterIds,
                     spectrumFilterIds,
+                    allergensFilterIds,
                     localDayOfWeek,
                     localTime);
 
@@ -395,6 +398,7 @@ public class VenuesActivity
             intent.putExtra("SelectedPhaseFilterIds", SelectedPhaseFilterIds);
             intent.putExtra("SelectedRegionFilterIds", SelectedRegionFilterIds);
             intent.putExtra("SelectedSpectrumFilterIds", SelectedSpectrumFilterIds);
+            intent.putExtra("SelectedAllergensFilterIds", SelectedAllergensFilterIds);
             intent.putExtra("ApplyWorkingStatusFilter", ApplyWorkingStatusFilterToDishes);
             startActivity(intent);
         } else {

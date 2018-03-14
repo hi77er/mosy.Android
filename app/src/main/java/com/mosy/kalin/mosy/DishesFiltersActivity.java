@@ -3,26 +3,18 @@ package com.mosy.kalin.mosy;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.ToggleButton;
 
-import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.mosy.kalin.mosy.Adapters.DishFiltersPagerAdapter;
 import com.mosy.kalin.mosy.DTOs.DishFilter;
-import com.mosy.kalin.mosy.DTOs.Enums.DishFilterType;
-import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.GetRequestableFiltersBindingModel;
 import com.mosy.kalin.mosy.Models.Responses.RequestableFiltersResponse;
@@ -34,7 +26,6 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -53,6 +44,8 @@ public class DishesFiltersActivity
     static ArrayList<String> SelectedRegionFilterIds;
     @Extra
     static ArrayList<String> SelectedSpectrumFilterIds;
+    @Extra
+    static ArrayList<String> SelectedAllergensFilterIds;
 
     @ViewById(resName = "venues_llInitialLoadingProgress")
     LinearLayout centralProgress;
@@ -98,11 +91,18 @@ public class DishesFiltersActivity
             public void onPostExecute(RequestableFiltersResponse result) {
                 RequestableFiltersResponse filters = result;
 
+                SetAlreadySelectedFilters(
+                        filters.CuisinePhaseFilters,
+                        filters.CuisineRegionFilters,
+                        filters.CuisineSpectrumFilters,
+                        filters.CuisineAllergensFilters);
+
                 DFAdapter = new DishFiltersPagerAdapter(
                         getSupportFragmentManager(),
                         filters.CuisinePhaseFilters,
                         filters.CuisineRegionFilters,
-                        filters.CuisineSpectrumFilters);
+                        filters.CuisineSpectrumFilters,
+                        filters.CuisineAllergensFilters);
 
                 DishesFiltersPager.setAdapter(DFAdapter);
                 DishesFiltersTabs.setupWithViewPager(DishesFiltersPager);
@@ -133,6 +133,34 @@ public class DishesFiltersActivity
 
     }
 
+    private void SetAlreadySelectedFilters(
+            ArrayList<DishFilter> cuisinePhaseFilters,
+            ArrayList<DishFilter> cuisineRegionFilters,
+            ArrayList<DishFilter> cuisineSpectrumFilters,
+            ArrayList<DishFilter> cuisineAllergensFilters) {
+
+        Stream.of(SelectedPhaseFilterIds).forEach(filterId -> {
+            DishFilter matchingFilter = Stream.of(cuisinePhaseFilters).filter(filter -> filter.Id.equals(filterId)).single();
+            matchingFilter.IsChecked = true;
+        });
+
+        Stream.of(SelectedRegionFilterIds).forEach(filterId -> {
+            DishFilter matchingFilter = Stream.of(cuisineRegionFilters).filter(filter -> filter.Id.equals(filterId)).single();
+            matchingFilter.IsChecked = true;
+        });
+
+        Stream.of(SelectedSpectrumFilterIds).forEach(filterId -> {
+            DishFilter matchingFilter = Stream.of(cuisineSpectrumFilters).filter(filter -> filter.Id.equals(filterId)).single();
+            matchingFilter.IsChecked = true;
+        });
+
+        Stream.of(SelectedAllergensFilterIds).forEach(filterId -> {
+            DishFilter matchingFilter = Stream.of(cuisineAllergensFilters).filter(filter -> filter.Id.equals(filterId)).single();
+            matchingFilter.IsChecked = true;
+        });
+
+    }
+
     @Override
     protected void onStart(){
         super.onStart();
@@ -141,6 +169,7 @@ public class DishesFiltersActivity
         if (SelectedPhaseFilterIds == null) SelectedPhaseFilterIds = new ArrayList<>();
         if (SelectedRegionFilterIds == null) SelectedRegionFilterIds = new ArrayList<>();
         if (SelectedSpectrumFilterIds == null) SelectedSpectrumFilterIds = new ArrayList<>();
+        if (SelectedAllergensFilterIds == null) SelectedAllergensFilterIds = new ArrayList<>();
 
     }
 
@@ -156,9 +185,6 @@ public class DishesFiltersActivity
         super.onDestroy();
         Intent intent = new Intent(DishesFiltersActivity.this, VenuesActivity_.class);
         intent.putExtra("ApplyWorkingStatusFilterToDishes", ApplyWorkingStatusFilter);
-//        intent.putExtra("CuisinePhaseFilterIds", CuisinePhaseFilterIds);
-//        intent.putExtra("CuisineRegionFilterIds", CuisineRegionFilterIds);
-//        intent.putExtra("CuisineSpectrumFilterIds", CuisineSpectrumFilterIds);
 
         List<String> selectedPhasesFilterIds = Stream
                 .of(DFAdapter.PhasesFilters)
@@ -175,10 +201,16 @@ public class DishesFiltersActivity
                 .filter(x -> x.IsChecked)
                 .map(x -> x.Id)
                 .toList();
+        List<String> selectedAllergensFilterIds = Stream
+                .of(DFAdapter.AllergensFilters)
+                .filter(x -> x.IsChecked)
+                .map(x -> x.Id)
+                .toList();
 
         intent.putExtra("SelectedPhaseFilterIds", new ArrayList<>(selectedPhasesFilterIds));
         intent.putExtra("SelectedRegionFilterIds", new ArrayList<>(selectedRegionsFilterIds));
         intent.putExtra("SelectedSpectrumFilterIds", new ArrayList<>(selectedSpectrumFilterIds));
+        intent.putExtra("SelectedAllergensFilterIds", new ArrayList<>(selectedAllergensFilterIds));
 
         startActivity(intent);
     }

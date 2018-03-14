@@ -20,4 +20,7 @@ public class RequestableFiltersResponse
     @SerializedName("CuisineSpectrumFilters")
     public ArrayList<DishFilter> CuisineSpectrumFilters;
 
+    @SerializedName("CuisineAllergensFilters")
+    public ArrayList<DishFilter> CuisineAllergensFilters;
+
 }
