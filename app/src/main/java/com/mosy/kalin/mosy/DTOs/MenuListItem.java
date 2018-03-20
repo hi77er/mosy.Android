@@ -54,6 +54,9 @@ public class MenuListItem
     @SerializedName("PriceDisplayText")
     public String PriceDisplayText;
 
+    @SerializedName("QuantityDisplayText")
+    public String QuantityDisplayText;
+
 @SuppressWarnings("unchecked")
     protected MenuListItem(Parcel in) {
         String[] data = new String[7];

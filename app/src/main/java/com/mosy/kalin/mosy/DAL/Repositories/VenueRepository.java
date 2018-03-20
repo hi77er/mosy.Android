@@ -1,6 +1,7 @@
 package com.mosy.kalin.mosy.DAL.Repositories;
 
 import com.google.gson.reflect.TypeToken;
+import com.mosy.kalin.mosy.DTOs.Contact;
 import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueBadgeEndorsement;
@@ -14,11 +15,13 @@ import com.mosy.kalin.mosy.DAL.Http.JSONHttpClient;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBadgeEndorsementsBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBusinessHoursBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueByIdBindingModel;
+import com.mosy.kalin.mosy.Models.BindingModels.GetVenueContactsBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageMetaBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueLocationBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueMenuBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -27,6 +30,7 @@ public class VenueRepository {
     private static final String searchVenuesEndpointEnding = "FBO/QueryClosestFBOs";
     private static final String getVenueByIdEndpointEnding = "FBO/ById";
     private static final String getVenueIndoorImageMetaEndpointEnding = "FBOFiles/IndoorMetaByFBOId";
+    private static final String getVenueContactsEndpointEnding = "FBOContacts/ByFBOId";
     private static final String getVenueBusinessHoursEndpointEnding = "FBOBusinessHours/ByFBOId";
     private static final String getVenueBadgeEndorsementsEndpointEnding = "FBOEndorsements/ByFBOId";
     private static final String getVenueLocationEndpointEnding = "FBOLocation/ByFBOId";
@@ -106,6 +110,27 @@ public class VenueRepository {
             return errResult;
         }
         return businessHours;
+    }
+
+    public ArrayList<Contact> getVenueContacts(GetVenueContactsBindingModel model){
+        String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint(getVenueContactsEndpointEnding);
+        ArrayList<Contact> result = null;
+
+        try {
+            HttpParams params = new HttpParams();
+            params.put("fboId", model.VenueId);
+
+            JSONHttpClient jsonHttpClient = new JSONHttpClient();
+            result = jsonHttpClient.Get(endpoint, params, new TypeToken<ArrayList<Contact>>(){}.getType(), "HH:mm:ss");
+        } catch(Exception e) {
+            e.printStackTrace();
+            ArrayList<Contact> errResult = new ArrayList<Contact>();
+            Contact contact = new Contact();
+            contact.ErrorMessage = e.getMessage();
+            errResult.add(contact);
+            return errResult;
+        }
+        return result;
     }
 
     public ArrayList<VenueBadgeEndorsement> getVenueBadgeEndorsements(GetVenueBadgeEndorsementsBindingModel model){

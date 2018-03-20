@@ -42,6 +42,9 @@ public class MenuListItemDetailsView
     @ViewById(resName = "menuListItemDetails_ivMainImage")
     ImageView ImageThumbnail;
 
+    @ViewById(resName = "menuListItemDetails_tvQuantityLabel")
+    TextView QuantityLabel;
+
     @ViewById(resName = "menuListItemDetails_tvIngredients")
     TextView Ingredients;
     ///Add more controls here
@@ -51,12 +54,20 @@ public class MenuListItemDetailsView
         if (menuListItem.ImageThumbnail != null)
             this.ImageId = menuListItem.ImageThumbnail.Id;
 
+        if (StringHelper.isNotNullOrEmpty(menuListItem.QuantityDisplayText)){
+            this.QuantityLabel.setText(menuListItem.QuantityDisplayText);
+            this.QuantityLabel.setVisibility(VISIBLE);
+        }
+
         ArrayList<String> toJoin = new ArrayList<String>();
         String joined = StringHelper.empty();
         for (Ingredient ingredient: menuListItem.Ingredients)
             toJoin.add(ingredient.Name);
         joined = StringHelper.join(", ", toJoin);
-        this.Ingredients.setText(joined);
+        if (StringHelper.isNotNullOrEmpty(joined)){
+            this.Ingredients.setText(joined);
+            this.Ingredients.setVisibility(VISIBLE);
+        }
 
         final String imageKey = menuListItem.ImageThumbnail != null ? menuListItem.ImageThumbnail.Id : "default";
         final Bitmap bitmap = getBitmapFromMemCache(imageKey);

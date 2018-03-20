@@ -32,7 +32,7 @@ public class DishFiltersPagerAdapter
 
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = new FiltersPage_();
+        FiltersPage_ fragment = new FiltersPage_();
 
         Bundle bundle = new Bundle();
         ArrayList<DishFilter> filters = new ArrayList<>();
@@ -48,6 +48,7 @@ public class DishFiltersPagerAdapter
                 break;
             case 3:
                 filters = this.AllergensFilters;
+                fragment.setNote("* Selected Allergens will reduce the appearance priority of dishes associated to them.");
                 break;
         }
 
@@ -64,11 +65,11 @@ public class DishFiltersPagerAdapter
     @Override
     public CharSequence getPageTitle(int position) {
         if (position == 0)
-            return "Phases";
+            return "Type";
         if (position == 1)
-            return "Regions";
+            return "Region";
         if (position == 2)
-            return "Spectrums";
+            return "Ingredients";
         if (position == 3)
             return "Allergens";
         return null;

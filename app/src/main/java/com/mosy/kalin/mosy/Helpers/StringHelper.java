@@ -25,6 +25,10 @@ public class StringHelper {
         return s == null || s.length() == 0;
     }
 
+    public static boolean isNotNullOrEmpty(String s) {
+        return s != null && s.length() > 0;
+    }
+
     public static boolean isNullOrWhitespace(String s) {
         return s == null || isWhitespace(s);
     }

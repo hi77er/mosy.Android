@@ -2,7 +2,12 @@ package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,19 +17,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daasuu.bl.ArrowDirection;
+import com.daasuu.bl.BubbleLayout;
+import com.daasuu.bl.BubblePopupHelper;
 import com.mosy.kalin.mosy.Adapters.DishesAdapter;
 import com.mosy.kalin.mosy.Adapters.VenuesAdapter;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.Helpers.DimensionsHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Listeners.EndlessScrollListener;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueByIdBindingModel;
@@ -98,12 +113,17 @@ public class VenuesActivity
     @ViewById(resName = "venues_lvDishes")
     ListView dishes;
 
+    @ViewById(resName = "venues_ibFilters")
+    FloatingActionButton filtersButton;
+
     SearchView searchView;
-    FloatingActionButton filters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        incrementActivityUsagesCount();
+
+
         timeStarted = System.currentTimeMillis();
 
         mLocationResolver = new LocationResolver(this);
@@ -115,9 +135,6 @@ public class VenuesActivity
     void afterViews() {
         configureActionBar();
 
-        this.filters = findViewById(R.id.venues_ibFilters);
-        this.filters.setOnClickListener(v -> openFilters());
-
         Intent intent = getIntent();
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -127,6 +144,12 @@ public class VenuesActivity
 
         if (!DishesSearchModeActivated) adaptVenueItems();
         else adaptDishItems();
+
+        this.filtersButton.setOnClickListener(v -> openFilters());
+
+        int activityUsagesCount = getActivityUsagesCount();
+        if (activityUsagesCount <= 15)
+            showFiltersPopupLabel();
     }
 
     //INFO: Called in "afterViews"
@@ -144,8 +167,8 @@ public class VenuesActivity
                 return true;
             }
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == 0) filters.show();// scrolling stopped
-                else filters.hide();
+                if (scrollState == 0) filtersButton.show();// scrolling stopped
+                else filtersButton.hide();
             }
         };
 
@@ -185,8 +208,8 @@ public class VenuesActivity
                 return true;
             }
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == 0) filters.show();// scrolling stopped
-                else filters.hide();
+                if (scrollState == 0) filtersButton.show();// scrolling stopped
+                else filtersButton.hide();
             }
         };
 
@@ -433,6 +456,69 @@ public class VenuesActivity
     private void configureActionBar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+    }
+
+
+    private void incrementActivityUsagesCount() {
+        SharedPreferences mPreferences = this.getSharedPreferences(getString(R.string.pref_walls_visited), Context.MODE_PRIVATE);
+        int activityUsagesCount = mPreferences.getInt(getString(R.string.pref_walls_visited), 0);
+
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putInt(getString(R.string.pref_walls_visited), activityUsagesCount + 1);
+        editor.apply();
+    }
+
+    private int getActivityUsagesCount() {
+        SharedPreferences mPreferences = this.getSharedPreferences(getString(R.string.pref_walls_visited), Context.MODE_PRIVATE);
+        return mPreferences.getInt(getString(R.string.pref_walls_visited), 0);
+    }
+
+    private void showFiltersPopupLabel() {
+        ViewTreeObserver vto = this.filtersButton.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                BubbleLayout bubbleLayout = (BubbleLayout) LayoutInflater.from(VenuesActivity.this).inflate(R.layout.popup_bubble, null);
+                PopupWindow popupWindow = BubblePopupHelper.create(VenuesActivity.this, bubbleLayout);
+                bubbleLayout.setArrowDirection(ArrowDirection.RIGHT);
+
+                filtersButton.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+
+                int[] location = new int[2];
+                filtersButton.getLocationOnScreen(location);
+
+                Paint mPaint = new Paint();
+                mPaint.setTextSize(20);
+                String labelText = getResources().getString(R.string.filters_settings);
+                float width = mPaint.measureText(labelText, 0, labelText.length());
+
+                int filtersButtonStartingY = location[1];
+                int popupMarginTop = DimensionsHelper.dpToPx(3, VenuesActivity.this);
+
+                int filtersButtonStartingX = location[0];
+                int textWidth = (int)width;
+                int textViewMarginEnd = DimensionsHelper.dpToPx(4, VenuesActivity.this);;
+                int filtersButtonWidth = filtersButton.getWidth();
+                int filtersButtonMarginEnd = DimensionsHelper.dpToPx(25, VenuesActivity.this);
+                int popupSidePadding = DimensionsHelper.dpToPx(24, VenuesActivity.this);
+                int popupMarginRight = DimensionsHelper.dpToPx(20, VenuesActivity.this);
+                int arrowWidth = DimensionsHelper.dpToPx(8, VenuesActivity.this);
+
+                int popupX = filtersButtonStartingX -
+                        filtersButtonWidth -
+                        filtersButtonMarginEnd -
+                        popupSidePadding -
+                        textWidth -
+                        textViewMarginEnd -
+                        popupMarginRight -
+                        arrowWidth;
+                int popupY = filtersButtonStartingY + popupMarginTop;
+
+                filtersButton.post(() ->
+                        popupWindow.showAtLocation(filtersButton, Gravity.NO_GRAVITY, popupX, popupY)
+                );
+            }
+        });
     }
 
 }

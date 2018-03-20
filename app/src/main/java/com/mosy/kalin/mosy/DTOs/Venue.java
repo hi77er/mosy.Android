@@ -40,11 +40,14 @@ public class Venue
     @SerializedName("WorkingStatus")
     public String WorkingStatus;
 
+    @SerializedName("DistanceToDevice")
+    public double DistanceToCurrentDeviceLocation;
+
     @SerializedName("FBOEndorsements")
     public ArrayList<VenueBadgeEndorsement> Endorsements;
 
-    @SerializedName("DistanceToDevice")
-    public double DistanceToCurrentDeviceLocation;
+    @SerializedName("Contacts")
+    public ArrayList<Contact> Contacts;
 
 //    public boolean AllowUploadFBOPictures;
 //    public boolean AllowUploadMenuPictures;

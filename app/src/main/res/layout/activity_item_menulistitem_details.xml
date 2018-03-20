@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:paddingBottom="2dp" >
+    android:paddingBottom="2dp">
 
     <ImageView
         android:id="@+id/menuListItemDetails_ivMainImage"
@@ -14,16 +14,36 @@
         android:layout_marginStart="20dp"
         android:contentDescription="@string/dishDetails_ivIcon" />
 
-    <TextView
-        android:id="@+id/menuListItemDetails_tvIngredients"
-        android:ellipsize="none"
-        android:scrollHorizontally="false"
-        android:layout_weight="1"
-        android:layout_width="0dp"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:text="@string/requestable_item_name"
-        android:textSize="15sp"
-        android:textStyle="italic" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/menuListItemDetails_tvQuantityLabel"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:paddingBottom="5dp"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="normal"
+            android:visibility="gone"
+            android:ellipsize="none"
+            android:scrollHorizontally="false" />
+
+        <TextView
+            android:id="@+id/menuListItemDetails_tvIngredients"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textSize="15sp"
+            android:textStyle="italic"
+            android:visibility="gone"
+            android:ellipsize="none"
+            android:scrollHorizontally="false" />
+
+    </LinearLayout>
+
 
 </LinearLayout>

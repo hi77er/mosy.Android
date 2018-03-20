@@ -17,14 +17,16 @@ public class MenuListItemView
 
     @ViewById(resName = "menuListItem_tvName")
     TextView Name;
+    @ViewById(resName = "menuListItem_tvPrice")
+    TextView Price;
 
     public MenuListItemView(Context context) {
         super(context);
     }
 
     public void bind(MenuListItem menuListItem) {
-        String name = menuListItem.Name;
-        this.Name.setText(name);
+        this.Name.setText(menuListItem.Name);
+        this.Price.setText(menuListItem.PriceDisplayText);
 
         // if (isSelected)
         // this.setBackgroundColor(Color.WHITE);

@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mosy.kalin.mosy.DTOs.Contact;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueBadgeEndorsement;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
@@ -27,15 +29,18 @@ import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.VenueLocation;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.DateHelper;
+import com.mosy.kalin.mosy.Helpers.DimensionsHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBadgeEndorsementsBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBusinessHoursBindingModel;
+import com.mosy.kalin.mosy.Models.BindingModels.GetVenueContactsBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageMetaBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueLocationBindingModel;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueBusinessHoursAsyncTask;
+import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueContactsAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueEndorsementsAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueIndoorImageMetadataAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueLocationAsyncTask;
@@ -77,14 +82,6 @@ public class VenueDetailsActivity
     LinearLayout LayoutContacts;
     @ViewById(resName = "venueDetails_lBusinessHours")
     LinearLayout LayoutBusinessHours;
-    @ViewById(resName = "venueDetails_lFacebook")
-    LinearLayout LayoutFacebook;
-    @ViewById(resName = "venueDetails_lAddress")
-    LinearLayout LayoutAddress;
-    @ViewById(resName = "venueDetails_lTelephone")
-    LinearLayout LayoutTelephone;
-    @ViewById(resName = "venueDetails_lEmail")
-    LinearLayout LayoutEmail;
 
     @ViewById(resName = "venueDetails_svMain")
     ScrollView ScrollViewMain;
@@ -168,7 +165,22 @@ public class VenueDetailsActivity
     }
 
     private void loadContacts(){
-        populateContacts();
+        AsyncTaskListener<ArrayList<Contact>> listener = new AsyncTaskListener<ArrayList<Contact>>() {
+            @Override
+            public void onPreExecute() {
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onPostExecute(ArrayList<Contact> result) {
+                Venue.Contacts = result;
+                populateContacts();
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+            }
+        };
+        GetVenueContactsBindingModel model = new GetVenueContactsBindingModel(this.Venue.Id);
+        new LoadVenueContactsAsyncTask(listener).execute(model);
+
     }
 
     private void loadBusinessHours(){
@@ -295,7 +307,63 @@ public class VenueDetailsActivity
     }
 
     private void populateContacts() {
+        ArrayList<Contact> contacts = this.Venue.Contacts;
+        if (contacts != null && contacts.size() > 0){
+            this.LayoutContacts.setVisibility(View.VISIBLE);
+            for (Contact contact : contacts) {
+                switch (contact.Type){
+                    case 1: //email
+                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
+                        break;
+                    case 2: //telephone
+                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
+                        break;
+                    case 3: //instagram
+                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
+                        break;
+                    case 4: //facebook
+                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
+                        break;
+                    case 5: //skype
+                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
+                        break;
+                    case 6: //twitter
+                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
+                        break;
+                    case 7: //forsquare
+                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
+                        break;
+                    case 8: //google+
+                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
+                        break;
+                    case 9: //address
+                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
+                        break;
+                }
+            }
+        }
+        else{
+            this.LayoutContacts.setVisibility(View.GONE);
+        }
+    }
 
+    private void addContact(String value, @DrawableRes int iconId) {
+        LinearLayout contactLayout = new LinearLayout(this);
+        contactLayout.setOrientation(LinearLayout.HORIZONTAL);
+        contactLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        ImageView iv = new ImageView(this);
+        iv.setLayoutParams(new LinearLayout.LayoutParams(DimensionsHelper.dpToPx(25, this), DimensionsHelper.dpToPx(25, this)));
+        iv.setImageResource(iconId);
+
+        TextView tv = new TextView(this);
+        tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        tv.setTextSize(15);
+        tv.setText(value);
+
+        contactLayout.addView(iv);
+        contactLayout.addView(tv);
+        this.LayoutContacts.addView(contactLayout);
     }
 
     private void populateBusinessHours() {

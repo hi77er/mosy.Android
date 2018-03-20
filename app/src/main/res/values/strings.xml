@@ -64,23 +64,19 @@
     <string name="dishDetails_ivIcon">Default Dish Icon</string>
     <string name="title_dishes_activity">Dishes</string>
     <string name="title_activity_landing">Foodoo</string>
-    <string name="landing_btnVenues">VENUES</string>
-    <string name="landing_btnDishes"><![CDATA[DISHES & DRINKS]]></string>
+    <string name="landing_btnVenues"><![CDATA[VENUES & MENUS]]></string>
+    <string name="landing_btnDishes"><![CDATA[FIND DISHES & DRINKS]]></string>
     <string name="venues_btnNavigateToVenuesText">Venues</string>
     <string name="venues_btnNavigateToDishesText">Dishes</string>
     <string name="menulist_item_name">Dish Name</string>
     <string name="menulist_item_venueName">Venue Name</string>
     <string name="title_activity_filters_venues">Filter venues</string>
-    <string name="title_activity_filters_dishes">Filter dishes</string>
+    <string name="title_activity_filters_dishes"><![CDATA[Filter dishes & drinks]]></string>
     <string name="filters_venues_title_venues_sbDistance">Distance: off</string>
     <string name="filters_venues_title_venues_sbRating">Rating: higher than 5</string>
     <string name="filters_dishes_tvDistance">Distance: off</string>
     <string name="filters_dishes_tvRating">Rating: higher than 5</string>
     <string name="filters_dishes_show_closed">Show dishes only from open venues</string>
-    <string name="filters_dishes_tvCuisinePhase">Phase:</string>
-    <string name="filters_dishes_tvCuisineRegion">Region:</string>
-    <string name="filters_dishes_tvCuisineSpectrum">Spectrum:</string>
-    <string name="filters_dishes_tvCuisineEndorsements">Endorsements:</string>
 
 
 
@@ -110,5 +106,7 @@
 
     <string name="CuisineSpectrumKosher">Kosher</string>
     <string name="CuisineSpectrumHalal">Halal</string>
+    <string name="filters_settings">Filters Settings</string>
+    <string name="pref_walls_visited">prefWallsVisited</string>
 
 </resources>
