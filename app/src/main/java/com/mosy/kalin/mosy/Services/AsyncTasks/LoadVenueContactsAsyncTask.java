@@ -3,20 +3,18 @@ package com.mosy.kalin.mosy.Services.AsyncTasks;
 import android.os.AsyncTask;
 
 import com.mosy.kalin.mosy.DAL.Repositories.VenueRepository;
-import com.mosy.kalin.mosy.DTOs.Contact;
-import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
+import com.mosy.kalin.mosy.DTOs.VenueContacts;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBusinessHoursBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueContactsBindingModel;
 
 import java.util.ArrayList;
 
 public class LoadVenueContactsAsyncTask
-    extends AsyncTask<GetVenueContactsBindingModel, String, ArrayList<Contact>>
+    extends AsyncTask<GetVenueContactsBindingModel, String, VenueContacts>
 {
-    private final AsyncTaskListener<ArrayList<Contact>> asyncTaskListenerListener;
+    private final AsyncTaskListener<VenueContacts> asyncTaskListenerListener;
 
-    public LoadVenueContactsAsyncTask(AsyncTaskListener<ArrayList<Contact>> listener) {
+    public LoadVenueContactsAsyncTask(AsyncTaskListener<VenueContacts> listener) {
         asyncTaskListenerListener = listener;
     }
 
@@ -26,8 +24,8 @@ public class LoadVenueContactsAsyncTask
     }
 
     @Override
-    protected ArrayList<Contact> doInBackground(GetVenueContactsBindingModel... models) {
-        ArrayList<Contact> results = null;
+    protected VenueContacts doInBackground(GetVenueContactsBindingModel... models) {
+        VenueContacts results = null;
 
         try {
             GetVenueContactsBindingModel model = models[0];
@@ -39,7 +37,7 @@ public class LoadVenueContactsAsyncTask
     }
 
     @Override
-    protected void onPostExecute(final ArrayList<Contact> result) {
+    protected void onPostExecute(final VenueContacts result) {
         asyncTaskListenerListener.onPostExecute(result);
     }
 }

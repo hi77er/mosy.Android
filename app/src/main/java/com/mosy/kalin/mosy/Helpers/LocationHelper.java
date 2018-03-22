@@ -15,7 +15,7 @@ public class LocationHelper {
         if (distanceMeters == 0)
             text = StringHelper.empty();
         else if (distanceMeters < 5)
-            text = "you're inside";
+            text = "currently inside";
         else if (distanceMeters < 50)
             text = "less than 50m";
         else if (distanceMeters < 100)
@@ -23,13 +23,10 @@ public class LocationHelper {
         else if (distanceMeters < 1000) {
             long longValue =  (long) distanceMeters;
             text = String.valueOf(longValue) + "m";
-        } else if (distanceMeters >= 1000  && distanceMeters < 10000 ) {
+        } else if (distanceMeters >= 1000  && distanceMeters < 999999 ) {       // 1km > d < 999km
             distanceMeters =  distanceMeters / 1000;
             text = new DecimalFormat("##.#").format(distanceMeters) + "km";
-        } else if (distanceMeters >= 10000  && distanceMeters < 999999999 ) {
-            distanceMeters =  distanceMeters / 1000;
-            text = new DecimalFormat("##.#").format(distanceMeters) + "km";
-        } else if (distanceMeters == 999999999)
+        } else if (distanceMeters >= 999999  && distanceMeters < 999999999 )    // d > 999km
             text = StringHelper.empty();
 
         return text;

@@ -1,15 +1,24 @@
 package com.mosy.kalin.mosy;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -21,7 +30,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.mosy.kalin.mosy.DTOs.Contact;
+import com.mosy.kalin.mosy.DTOs.VenueContacts;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueBadgeEndorsement;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
@@ -64,9 +73,11 @@ public class VenueDetailsActivity
         extends AppCompatActivity
         implements OnMapReadyCallback {
 
+    private static final int REQUEST_PHONE_CALL = 1;
     private static final String x200BlobStorageContainerPath = "userimages\\fboalbums\\200x200";
     private static final String originalBlobStorageContainerPath = "userimages\\fboalbums\\original";
     boolean IsUsingDefaultIndoorImageThumbnail;
+    public String PhoneNumber;
 
     @Extra
     public Venue Venue;
@@ -83,12 +94,15 @@ public class VenueDetailsActivity
     @ViewById(resName = "venueDetails_lBusinessHours")
     LinearLayout LayoutBusinessHours;
 
+
     @ViewById(resName = "venueDetails_svMain")
     ScrollView ScrollViewMain;
     @ViewById(resName = "venueDetails_tvName")
     TextView Name;
     @ViewById(resName = "venueDetails_tvClass")
     TextView Class;
+    @ViewById(resName = "venueDetails_btnPhone")
+    Button PhoneButton;
     @ViewById(resName = "venueDetails_ivIndoorThumbnail")
     ImageView IndoorImageThumbnail;
     @ViewById(resName = "venueDetails_tvBHMondayTime")
@@ -140,13 +154,12 @@ public class VenueDetailsActivity
             loadBusinessHours();
             loadLocation();
             loadEndorsements();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void loadIndoorImage(){
+    private void loadIndoorImage() {
         AsyncTaskListener<VenueImage> listener = new AsyncTaskListener<VenueImage>() {
             @Override
             public void onPreExecute() {
@@ -164,16 +177,16 @@ public class VenueDetailsActivity
         new LoadVenueIndoorImageMetadataAsyncTask(listener).execute(model);
     }
 
-    private void loadContacts(){
-        AsyncTaskListener<ArrayList<Contact>> listener = new AsyncTaskListener<ArrayList<Contact>>() {
+    private void loadContacts() {
+        AsyncTaskListener<VenueContacts> listener = new AsyncTaskListener<VenueContacts>() {
             @Override
             public void onPreExecute() {
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
             }
 
             @Override
-            public void onPostExecute(ArrayList<Contact> result) {
-                Venue.Contacts = result;
+            public void onPostExecute(VenueContacts result) {
+                Venue.VenueContacts = result;
                 populateContacts();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
@@ -183,7 +196,7 @@ public class VenueDetailsActivity
 
     }
 
-    private void loadBusinessHours(){
+    private void loadBusinessHours() {
         AsyncTaskListener<VenueBusinessHours> listener = new AsyncTaskListener<VenueBusinessHours>() {
             @Override
             public void onPreExecute() {
@@ -201,7 +214,7 @@ public class VenueDetailsActivity
         new LoadVenueBusinessHoursAsyncTask(listener).execute(model);
     }
 
-    private void loadLocation(){
+    private void loadLocation() {
         AsyncTaskListener<VenueLocation> listener = new AsyncTaskListener<VenueLocation>() {
             @Override
             public void onPreExecute() {
@@ -222,7 +235,7 @@ public class VenueDetailsActivity
         populateGoogleMap();
     }
 
-    private void loadEndorsements(){
+    private void loadEndorsements() {
         AsyncTaskListener<ArrayList<VenueBadgeEndorsement>> listener = new AsyncTaskListener<ArrayList<VenueBadgeEndorsement>>() {
             @Override
             public void onPreExecute() {
@@ -231,7 +244,7 @@ public class VenueDetailsActivity
 
             @Override
             public void onPostExecute(ArrayList<VenueBadgeEndorsement> result) {
-                Venue.Endorsements =  result;
+                Venue.Endorsements = result;
                 populateBadges();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
@@ -249,6 +262,9 @@ public class VenueDetailsActivity
     public void onMapReady(GoogleMap googleMap) {
         if (this.Venue != null && this.Venue.Location != null) {
             LatLng venueLocation = new LatLng(this.Venue.Location.Latitude, this.Venue.Location.Longitude);
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+            googleMap.getUiSettings().setMapToolbarEnabled(true);
             googleMap.addMarker(
                     new MarkerOptions()
                             .position(venueLocation)
@@ -290,12 +306,11 @@ public class VenueDetailsActivity
 
                 @Override
                 public void onPostExecute(byte[] bytes) {
-                    if (ArrayHelper.hasValidBitmapContent(bytes)){
+                    if (ArrayHelper.hasValidBitmapContent(bytes)) {
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         IndoorImageThumbnail.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
                         IsUsingDefaultIndoorImageThumbnail = false;
-                    }
-                    else
+                    } else
                         IsUsingDefaultIndoorImageThumbnail = true;
                     //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
                 }
@@ -307,68 +322,71 @@ public class VenueDetailsActivity
     }
 
     private void populateContacts() {
-        ArrayList<Contact> contacts = this.Venue.Contacts;
-        if (contacts != null && contacts.size() > 0){
-            this.LayoutContacts.setVisibility(View.VISIBLE);
-            for (Contact contact : contacts) {
-                switch (contact.Type){
-                    case 1: //email
-                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
-                        break;
-                    case 2: //telephone
-                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
-                        break;
-                    case 3: //instagram
-                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
-                        break;
-                    case 4: //facebook
-                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
-                        break;
-                    case 5: //skype
-                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
-                        break;
-                    case 6: //twitter
-                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
-                        break;
-                    case 7: //forsquare
-                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
-                        break;
-                    case 8: //google+
-                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
-                        break;
-                    case 9: //address
-                        addContact(contact.Value, R.drawable.venue_default_thumbnail);
-                        break;
-                }
+        VenueContacts venueContacts = this.Venue.VenueContacts;
+        if (venueContacts != null) {
+            if (StringHelper.isNotNullOrEmpty(venueContacts.Phone)) {
+                this.PhoneNumber = venueContacts.Phone;
+                this.PhoneButton.setText(venueContacts.Phone);
+                this.PhoneButton.setVisibility(View.VISIBLE);
             }
-        }
-        else{
+            if (StringHelper.isNotNullOrEmpty(venueContacts.Address)) {
+                addContact(venueContacts.Address, R.drawable.contact_address_paprica, false);
+            }
+            if (StringHelper.isNotNullOrEmpty(venueContacts.WebPage)) {
+                addContact(venueContacts.WebPage, R.drawable.contact_webpage_paprica, true);
+            }
+            if (StringHelper.isNotNullOrEmpty(venueContacts.FacebookUrl)) {
+                addContact(venueContacts.FacebookUrl, R.drawable.contact_facebook_paprica, true);
+            }
+            if (StringHelper.isNotNullOrEmpty(venueContacts.Foursquare)) {
+                addContact(venueContacts.Foursquare, R.drawable.contact_foursquare_paprica, true);
+            }
+            if (StringHelper.isNotNullOrEmpty(venueContacts.Instagram)) {
+                addContact(venueContacts.Instagram, R.drawable.contact_instagram_paprica, true);
+            }
+            if (StringHelper.isNotNullOrEmpty(venueContacts.Email)) {
+                addContact(venueContacts.Email, R.drawable.contact_email_paprica, true);
+            }
+        } else {
             this.LayoutContacts.setVisibility(View.GONE);
         }
     }
 
-    private void addContact(String value, @DrawableRes int iconId) {
+    private void addContact(String value, @DrawableRes int iconId, boolean isLink) {
         LinearLayout contactLayout = new LinearLayout(this);
         contactLayout.setOrientation(LinearLayout.HORIZONTAL);
-        contactLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, 0, 0, DimensionsHelper.dpToPx(5, this));
+        contactLayout.setLayoutParams(layoutParams);
 
         ImageView iv = new ImageView(this);
-        iv.setLayoutParams(new LinearLayout.LayoutParams(DimensionsHelper.dpToPx(25, this), DimensionsHelper.dpToPx(25, this)));
+        LinearLayout.LayoutParams ivLayoutParams = new LinearLayout.LayoutParams(DimensionsHelper.dpToPx(25, this), DimensionsHelper.dpToPx(25, this));
+        ivLayoutParams.setMargins(0, 0, DimensionsHelper.dpToPx(3, this), 0);
+        iv.setLayoutParams(ivLayoutParams);
         iv.setImageResource(iconId);
 
         TextView tv = new TextView(this);
         tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         tv.setTextSize(15);
         tv.setText(value);
+        if (isLink) {
+            tv.setClickable(true);
+            tv.setMovementMethod(LinkMovementMethod.getInstance());
+            String text = "<a href='" + value + "'> " + value + "</a>";
+            tv.setText(Html.fromHtml(text));
+        }
 
         contactLayout.addView(iv);
         contactLayout.addView(tv);
         this.LayoutContacts.addView(contactLayout);
+        if (this.LayoutContacts.getVisibility() != View.VISIBLE)
+                this.LayoutContacts.setVisibility(View.VISIBLE);
     }
 
     private void populateBusinessHours() {
         VenueBusinessHours businessHours = this.Venue.VenueBusinessHours;
-        SimpleDateFormat formatter =  new SimpleDateFormat("HH:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
         if (businessHours != null // and a single day has business hours set ->
                 && (businessHours.IsMondayDayOff || businessHours.IsTuesdayDayOff || businessHours.IsWednesdayDayOff ||
                 businessHours.IsThursdayDayOff || businessHours.IsFridayDayOff || businessHours.IsSaturdayDayOff ||
@@ -385,7 +403,7 @@ public class VenueDetailsActivity
                     ((businessHours.TuesdayFrom != null ? DateHelper.ToString(businessHours.TuesdayFrom, formatter) : StringHelper.empty()) + " - " +
                             (businessHours.TuesdayTo != null ? DateHelper.ToString(businessHours.TuesdayTo, formatter) : StringHelper.empty()));
             String d3 = businessHours.IsWednesdayDayOff ? "Day Off" :
-                    ((businessHours.WednesdayFrom != null ? DateHelper.ToString(businessHours.WednesdayFrom, formatter) : StringHelper.empty())+ " - " +
+                    ((businessHours.WednesdayFrom != null ? DateHelper.ToString(businessHours.WednesdayFrom, formatter) : StringHelper.empty()) + " - " +
                             (businessHours.WednesdayTo != null ? DateHelper.ToString(businessHours.WednesdayTo, formatter) : StringHelper.empty()));
             String d4 = businessHours.IsThursdayDayOff ? "Day Off" :
                     ((businessHours.ThursdayFrom != null ? DateHelper.ToString(businessHours.ThursdayFrom, formatter) : StringHelper.empty()) + " - " +
@@ -394,10 +412,10 @@ public class VenueDetailsActivity
                     ((businessHours.FridayFrom != null ? DateHelper.ToString(businessHours.FridayFrom, formatter) : StringHelper.empty()) + " - " +
                             (businessHours.FridayTo != null ? DateHelper.ToString(businessHours.FridayTo, formatter) : StringHelper.empty()));
             String d6 = businessHours.IsSaturdayDayOff ? "Day Off" :
-                    ((businessHours.SaturdayFrom != null ? DateHelper.ToString(businessHours.SaturdayFrom, formatter) : StringHelper.empty())+ " - " +
+                    ((businessHours.SaturdayFrom != null ? DateHelper.ToString(businessHours.SaturdayFrom, formatter) : StringHelper.empty()) + " - " +
                             (businessHours.SaturdayTo != null ? DateHelper.ToString(businessHours.SaturdayTo, formatter) : StringHelper.empty()));
             String d7 = businessHours.IsSundayDayOff ? "Day Off" :
-                    ((businessHours.SundayFrom != null ? DateHelper.ToString(businessHours.SundayFrom, formatter) : StringHelper.empty())+ " - " +
+                    ((businessHours.SundayFrom != null ? DateHelper.ToString(businessHours.SundayFrom, formatter) : StringHelper.empty()) + " - " +
                             (businessHours.SundayTo != null ? DateHelper.ToString(businessHours.SundayTo, formatter) : StringHelper.empty()));
 
             this.Monday.setText(d1);
@@ -418,16 +436,15 @@ public class VenueDetailsActivity
     private void populateBadges() {
         ArrayList<VenueBadgeEndorsement> badgeEndorsements = this.Venue.Endorsements;
 
-        if (badgeEndorsements != null && badgeEndorsements.size() > 0)
-        {
+        if (badgeEndorsements != null && badgeEndorsements.size() > 0) {
             boolean any = false;
             //INFO: Weak code! Strong dependency to badge ids here.
             for (VenueBadgeEndorsement endorsement : badgeEndorsements) {
-                if (endorsement.BadgeId.toUpperCase().equals("E48D0871-500E-4D41-8620-840308901970")){
+                if (endorsement.BadgeId.toUpperCase().equals("E48D0871-500E-4D41-8620-840308901970")) {
                     this.FreeWiFi.setVisibility(View.VISIBLE);
                     any = true;
                 }
-                if (endorsement.BadgeId.toUpperCase().equals("93252A33-D2A7-44A6-B375-0496EB3B5F9E")){
+                if (endorsement.BadgeId.toUpperCase().equals("93252A33-D2A7-44A6-B375-0496EB3B5F9E")) {
                     this.WorkingFriendly.setVisibility(View.VISIBLE);
                     any = true;
                 }
@@ -435,7 +452,7 @@ public class VenueDetailsActivity
                     this.BikeFriendly.setVisibility(View.VISIBLE);
                     any = true;
                 }
-                if (endorsement.BadgeId.toUpperCase().equals("4F952337-5F15-4EFA-934A-7A948800B93F")){
+                if (endorsement.BadgeId.toUpperCase().equals("4F952337-5F15-4EFA-934A-7A948800B93F")) {
                     this.ChildFriendly.setVisibility(View.VISIBLE);
                     any = true;
                 }
@@ -443,7 +460,7 @@ public class VenueDetailsActivity
                     this.FunPlace.setVisibility(View.VISIBLE);
                     any = true;
                 }
-                if (endorsement.BadgeId.toUpperCase().equals("245733F1-35C4-4497-B188-59B1A69480AA")){
+                if (endorsement.BadgeId.toUpperCase().equals("245733F1-35C4-4497-B188-59B1A69480AA")) {
                     this.ParkingSign.setVisibility(View.VISIBLE);
                     any = true;
                 }
@@ -469,8 +486,7 @@ public class VenueDetailsActivity
     }
 
     @Click(resName = "venueDetails_ivIndoorThumbnail")
-    public void ImageClick()
-    {
+    public void ImageClick() {
         if (!IsUsingDefaultIndoorImageThumbnail
                 && this.Venue.IndoorImage != null
                 && this.Venue.IndoorImage.Id != null
@@ -488,7 +504,7 @@ public class VenueDetailsActivity
 
                 @Override
                 public void onPostExecute(byte[] bytes) {
-                    if (ArrayHelper.hasValidBitmapContent(bytes)){
+                    if (ArrayHelper.hasValidBitmapContent(bytes)) {
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
                         ivPreview.setImageBitmap(bmp);
@@ -501,6 +517,15 @@ public class VenueDetailsActivity
 
             DownloadBlobModel model = new DownloadBlobModel(this.Venue.IndoorImage.Id, originalBlobStorageContainerPath);
             new LoadAzureBlobAsyncTask(listener).execute(model);
+        }
+    }
+
+    @Click(resName = "venueDetails_btnPhone")
+    public void phoneCall() {
+        if (StringHelper.isNotNullOrEmpty(this.PhoneNumber))
+        {
+            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", this.PhoneNumber, null));
+            startActivity(intent);
         }
     }
 

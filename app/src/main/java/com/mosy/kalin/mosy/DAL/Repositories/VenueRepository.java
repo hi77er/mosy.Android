@@ -1,7 +1,7 @@
 package com.mosy.kalin.mosy.DAL.Repositories;
 
 import com.google.gson.reflect.TypeToken;
-import com.mosy.kalin.mosy.DTOs.Contact;
+import com.mosy.kalin.mosy.DTOs.VenueContacts;
 import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueBadgeEndorsement;
@@ -21,7 +21,6 @@ import com.mosy.kalin.mosy.Models.BindingModels.GetVenueLocationBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueMenuBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -112,23 +111,21 @@ public class VenueRepository {
         return businessHours;
     }
 
-    public ArrayList<Contact> getVenueContacts(GetVenueContactsBindingModel model){
+    public VenueContacts getVenueContacts(GetVenueContactsBindingModel model){
         String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint(getVenueContactsEndpointEnding);
-        ArrayList<Contact> result = null;
+        VenueContacts result = null;
 
         try {
             HttpParams params = new HttpParams();
             params.put("fboId", model.VenueId);
 
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            result = jsonHttpClient.Get(endpoint, params, new TypeToken<ArrayList<Contact>>(){}.getType(), "HH:mm:ss");
+            result = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueContacts>(){}.getType(), "HH:mm:ss");
         } catch(Exception e) {
             e.printStackTrace();
-            ArrayList<Contact> errResult = new ArrayList<Contact>();
-            Contact contact = new Contact();
-            contact.ErrorMessage = e.getMessage();
-            errResult.add(contact);
-            return errResult;
+            VenueContacts venueContacts = new VenueContacts();
+            venueContacts.ErrorMessage = e.getMessage();
+            return venueContacts;
         }
         return result;
     }

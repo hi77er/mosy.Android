@@ -54,6 +54,22 @@
                     android:text="@string/venue_item_class"
                     android:layout_marginTop="5dp"
                     android:textSize="19sp" />
+
+                <Button
+                    android:id="@+id/venueDetails_btnPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/colorWhite"
+                    android:layout_marginTop="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:textSize="14sp"
+                    android:visibility="gone"
+                    android:drawableStart="@drawable/contact_phone_50px_white_padding" />
             </LinearLayout>
         </LinearLayout>
 

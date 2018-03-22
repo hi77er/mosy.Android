@@ -311,6 +311,7 @@ public class VenuesActivity
                 venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
                 venue.Location = null;
                 venue.VenueBusinessHours = null;
+                venue.VenueContacts = null;
                 intent.putExtra("Venue", venue);
                 intent.putExtra("SelectedMenuListId", listItem.BrochureId);
 

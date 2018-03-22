@@ -1,9 +1,7 @@
 package com.mosy.kalin.mosy.DTOs;
 
 import com.google.gson.annotations.SerializedName;
-import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
 import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
-import com.mosy.kalin.mosy.Helpers.StringHelper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -46,8 +44,8 @@ public class Venue
     @SerializedName("FBOEndorsements")
     public ArrayList<VenueBadgeEndorsement> Endorsements;
 
-    @SerializedName("Contacts")
-    public ArrayList<Contact> Contacts;
+    @SerializedName("FBOContacts")
+    public VenueContacts VenueContacts;
 
 //    public boolean AllowUploadFBOPictures;
 //    public boolean AllowUploadMenuPictures;
@@ -61,7 +59,7 @@ public class Venue
 //    public UnassignedBrochures As IEnumerable(Of MenuList)
 //    public List<FBOVisit> Visits;
 //    public List<FBORate> Rates;
-//    public List<FBOContact> Contacts;
+//    public List<FBOContact> venueContacts;
 //    public List<FBOImageMeta> Images;
 //    public TablesAndCount List<object>;
 
