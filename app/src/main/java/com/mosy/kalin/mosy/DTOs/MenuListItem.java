@@ -30,9 +30,6 @@ public class MenuListItem
     @SerializedName("PreparationEstimateSeconds")
     public int PreparationEstimateSeconds;
 
-    @SerializedName("Ingredients")
-    public ArrayList<Ingredient> Ingredients;
-
     @SerializedName("FBOId")
     public String VenueId;
 
@@ -57,9 +54,15 @@ public class MenuListItem
     @SerializedName("QuantityDisplayText")
     public String QuantityDisplayText;
 
+    @SerializedName("Ingredients")
+    public ArrayList<Ingredient> Ingredients;
+
+    @SerializedName("CusineAllergens")
+    public ArrayList<DishFilter> CuisineAllergens;
+
 @SuppressWarnings("unchecked")
     protected MenuListItem(Parcel in) {
-        String[] data = new String[7];
+        String[] data = new String[8];
 
         in.readStringArray(data);
         // the order needs to be the same as in writeToParcel() method
@@ -71,6 +74,7 @@ public class MenuListItem
         this.VenueId = data[5];
         this.VenueName = data[6];
         this.Ingredients = in.readArrayList(null);
+        this.CuisineAllergens = in.readArrayList(null);
     }
 
     @Override
@@ -83,6 +87,7 @@ public class MenuListItem
         parcel.writeString(VenueId);
         parcel.writeString(VenueName);
         parcel.writeList(Ingredients);
+        parcel.writeList(CuisineAllergens);
 
     }
 

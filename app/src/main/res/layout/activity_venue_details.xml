@@ -65,8 +65,8 @@
                     android:background="@color/colorPrimary"
                     android:textColor="@color/colorWhite"
                     android:layout_marginTop="10dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
+                    android:paddingTop="0dp"
+                    android:paddingBottom="0dp"
                     android:textSize="14sp"
                     android:visibility="gone"
                     android:drawableStart="@drawable/contact_phone_50px_white_padding" />

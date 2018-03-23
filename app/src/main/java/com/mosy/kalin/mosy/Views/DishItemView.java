@@ -20,9 +20,7 @@ import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.R;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
-import com.mosy.kalin.mosy.Services.VenueService;
 
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
@@ -36,8 +34,6 @@ public class DishItemView extends RelativeLayout {
     private String ImageId;
     private boolean IsUsingDefaultImageThumbnail;
 
-    @Bean
-    public VenueService VenuesService;
 
     @ViewById(resName = "menuListItem_tvName")
     TextView Name;

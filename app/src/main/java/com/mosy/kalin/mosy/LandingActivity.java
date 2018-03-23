@@ -29,14 +29,14 @@ public class LandingActivity
     @Click(resName = "landing_btnVenues")
     public void NavigateVenuesSearch(){
         Intent intent = new Intent(LandingActivity.this, VenuesActivity_.class);
-        intent.putExtra("DishesSearchModeActivated", false); //else find dishes
+        intent.putExtra("DishesSearchModeActivated", false); //else find dishesWall
         startActivity(intent);
     }
 
     @Click(resName = "landing_btnDishes")
     public void NavigateDishesSearch(){
         Intent intent = new Intent(LandingActivity.this, VenuesActivity_.class);
-        intent.putExtra("DishesSearchModeActivated", true); //else find dishes
+        intent.putExtra("DishesSearchModeActivated", true); //else find dishesWall
         startActivity(intent);
     }
 }

@@ -1,49 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
     android:paddingBottom="2dp">
-
-    <ImageView
-        android:id="@+id/menuListItemDetails_ivMainImage"
-        android:src="@drawable/eat_paprika_100x100"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="20dp"
-        android:contentDescription="@string/dishDetails_ivIcon" />
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/menuListItemDetails_tvQuantityLabel"
+        <ImageView
+            android:id="@+id/menuListItemDetails_ivMainImage"
+            android:src="@drawable/eat_paprika_100x100"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:contentDescription="@string/dishDetails_ivIcon" />
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:paddingBottom="5dp"
-            android:textSize="20sp"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="normal"
-            android:visibility="gone"
-            android:ellipsize="none"
-            android:scrollHorizontally="false" />
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/menuListItemDetails_tvIngredients"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:textSize="15sp"
-            android:textStyle="italic"
-            android:visibility="gone"
-            android:ellipsize="none"
-            android:scrollHorizontally="false" />
+            <TextView
+                android:id="@+id/menuListItemDetails_tvQuantityLabel"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:paddingBottom="5dp"
+                android:textSize="20sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="normal"
+                android:visibility="gone"
+                android:ellipsize="none"
+                android:scrollHorizontally="false" />
 
+            <TextView
+                android:id="@+id/menuListItemDetails_tvIngredients"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:textSize="15sp"
+                android:textStyle="italic"
+                android:visibility="gone"
+                android:ellipsize="none"
+                android:scrollHorizontally="false" />
+
+        </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end">
+
+        <ImageButton
+            android:id="@+id/menuListItemDetails_btnAllergens"
+            android:layout_height="35dp"
+            android:layout_width="35dp"
+            android:padding="0dp"
+            android:background="@color/transparent"
+            android:src="@drawable/allergens_info"
+            android:scaleType="fitCenter"
+            android:visibility="gone" />
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -20,11 +20,9 @@ import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.R;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
-import com.mosy.kalin.mosy.Services.VenueService;
 import com.mosy.kalin.mosy.VenueActivity_;
 import com.mosy.kalin.mosy.VenueDetailsActivity_;
 
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
@@ -40,8 +38,6 @@ public class VenueItemView
     private boolean IsUsingDefaultThumbnail;
     private LruCache<String, Bitmap> mMemoryCache;
 
-    @Bean
-    public VenueService VenuesService;
 
     @ViewById(resName = "venueItem_tvName")
     TextView Name;

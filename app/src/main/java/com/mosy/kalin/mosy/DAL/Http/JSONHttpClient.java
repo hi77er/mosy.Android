@@ -56,8 +56,9 @@ public class JSONHttpClient {
 
             if (BuildConfig.DEBUG) execStart = System.currentTimeMillis();
             int httpStatusCode = this.Connection.getResponseCode();
+
             if (BuildConfig.DEBUG) elapsed = System.currentTimeMillis() - execStart;
-            if (BuildConfig.DEBUG) System.out.println("MOSYLOGS : REST CALL - " + url + " TOOK: " + elapsed + "ms;");
+            if (BuildConfig.DEBUG) System.out.println("MOSYLOGS : REST CALL - " + url + " with params: " + query + " TOOK: " + elapsed + "ms;");
 
             if (httpStatusCode == HttpURLConnection.HTTP_OK) {
                 String jsonString = convertStreamToString(this.Connection.getInputStream());

@@ -177,4 +177,5 @@ public class MenuListItemsAdapter
     private Bitmap getBitmapFromMemCache(String key) {
         return mMemoryCache.get(key);
     }
+
 }

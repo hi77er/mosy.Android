@@ -11,12 +11,10 @@ import android.widget.BaseAdapter;
 
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.R;
-import com.mosy.kalin.mosy.Services.VenueService;
 import com.mosy.kalin.mosy.Views.VenueItemView;
 import com.mosy.kalin.mosy.Views.VenueItemView_;
 
 import org.androidannotations.annotations.AfterInject;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
@@ -36,8 +34,6 @@ public class VenuesAdapter
 
     @RootContext
     Context context;
-    @Bean
-    VenueService venuesService;
 
     public void setSwipeRefreshLayout(SwipeRefreshLayout layout) {
         if (layout != null) {

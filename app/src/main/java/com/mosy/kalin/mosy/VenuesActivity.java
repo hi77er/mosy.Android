@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,13 +21,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daasuu.bl.ArrowDirection;
@@ -49,7 +45,6 @@ import com.mosy.kalin.mosy.Services.AsyncTasks.LoadMenuListItemsAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenuesAsyncTask;
 import com.mosy.kalin.mosy.Services.Location.LocationResolver;
-import com.mosy.kalin.mosy.Services.VenueService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -86,7 +81,7 @@ public class VenuesActivity
     static ArrayList<String> SelectedAllergensFilterIds;
 
     long timeStarted = 0;
-    Boolean searchIsPromoted = true; //INFO: Normally search only promoted dishes, but when using query then search among all dishes
+    Boolean searchIsPromoted = true; //INFO: Normally search only promoted dishesWall, but when using query then search among all dishesWall
     String query = "searchall";
     int itemsInitialLoadCount = 8;
     int itemsOnScrollLoadCount = 5;
@@ -98,8 +93,6 @@ public class VenuesActivity
     SearchManager searchManager;
 
     @Bean
-    VenueService venuesService;
-    @Bean
     VenuesAdapter venuesAdapter;
     @Bean
     DishesAdapter dishesAdapter;
@@ -109,9 +102,9 @@ public class VenuesActivity
     @ViewById(R.id.toolbar)
     Toolbar toolbar;
     @ViewById(resName = "venues_lvVenues")
-    ListView venues;
+    ListView venuesWall;
     @ViewById(resName = "venues_lvDishes")
-    ListView dishes;
+    ListView dishesWall;
 
     @ViewById(resName = "venues_ibFilters")
     FloatingActionButton filtersButton;
@@ -139,8 +132,12 @@ public class VenuesActivity
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query = intent.getStringExtra(SearchManager.QUERY);
-            searchIsPromoted = null; //INFO: Normally get only promoted dishes, but when searched - search among all dishes
+            searchIsPromoted = null; //INFO: Normally get only promoted dishesWall, but when searched - search among all dishesWall
         }
+
+        LinearLayout emptyViewLayout = (LinearLayout) LayoutInflater.from(VenuesActivity.this).inflate(R.layout.empty_listview_venues, null);
+        dishesWall.setEmptyView(emptyViewLayout);
+        venuesWall.setEmptyView(emptyViewLayout);
 
         if (!DishesSearchModeActivated) adaptVenueItems();
         else adaptDishItems();
@@ -188,9 +185,9 @@ public class VenuesActivity
         //INFO: INITIAL LOAD
         loadMoreVenues(itemsInitialLoadCount, 0, query);
 
-        venues.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
-        venues.setAdapter(venuesAdapter);
-        venues.setOnScrollListener(endlessScrollListener);
+        venuesWall.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
+        venuesWall.setAdapter(venuesAdapter);
+        venuesWall.setOnScrollListener(endlessScrollListener);
     }
 
     //INFO: Called in "afterViews"
@@ -231,9 +228,9 @@ public class VenuesActivity
         loadMoreDishes(itemsInitialLoadCount, 0, searchIsPromoted, query,
                 SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds, SelectedAllergensFilterIds);
 
-        dishes.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
-        dishes.setAdapter(dishesAdapter);
-        dishes.setOnScrollListener(endlessScrollListener);
+        dishesWall.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
+        dishesWall.setAdapter(dishesAdapter);
+        dishesWall.setOnScrollListener(endlessScrollListener);
     }
 
     @Override
@@ -333,12 +330,11 @@ public class VenuesActivity
 
                 @Override
                 public void onPostExecute(ArrayList<Venue> result) {
-                    venuesAdapter.addItems(result);
+                    centralProgress.setVisibility(View.GONE);
 
+                    venuesAdapter.addItems(result);
                     venuesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;
                     venuesAdapter.LoadingStillInAction = false;
-
-                    centralProgress.setVisibility(View.GONE);
                 }
             };
 
@@ -380,12 +376,11 @@ public class VenuesActivity
                 }
                 @Override
                 public void onPostExecute(ArrayList<MenuListItem> result) {
-                    dishesAdapter.addItems(result);
-
-                    dishesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;;
-                    dishesAdapter.loadingStillInAction = false;
-
                     centralProgress.setVisibility(View.GONE);
+
+                    dishesAdapter.addItems(result);
+                    dishesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;
+                    dishesAdapter.loadingStillInAction = false;
                 }
             };
 

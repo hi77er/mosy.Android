@@ -53,10 +53,8 @@ import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueContactsAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueEndorsementsAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueIndoorImageMetadataAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueLocationAsyncTask;
-import com.mosy.kalin.mosy.Services.VenueService;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -81,8 +79,6 @@ public class VenueDetailsActivity
 
     @Extra
     public Venue Venue;
-    @Bean
-    public VenueService VenuesService;
 
     @FragmentById(R.id.venueDetails_frMap)
     SupportMapFragment VenueLocationMap;

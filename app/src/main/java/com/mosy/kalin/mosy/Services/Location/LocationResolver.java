@@ -95,42 +95,6 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
                 coarseLocationPermission == PackageManager.PERMISSION_GRANTED);
     }
 
-    /* Previous location permissions were denied , this function opens app settings page
-    *  So user can enable permission manually */
-    private void startAppDetailsActivity() {
-        final Intent i = new Intent();
-        i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        i.addCategory(Intent.CATEGORY_DEFAULT);
-        i.setData(Uri.parse("package:" + mActivity.getPackageName()));
-
-        mActivity.startActivity(i);
-    }
-
-    private void showLocationSettingsDialog() {
-        if (alertDialog != null) alertDialog.cancel();
-
-        alertDialog = new AlertDialog.Builder(mActivity, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Need Location")
-                .setMessage("In order for the app to work seamlessly.Please  enable Location Service.")
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        startLocationSettings();
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    }
-
-    private void startLocationSettings() {
-        mActivity.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-    }
-
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case REQUEST_LOCATION: {
@@ -198,10 +162,25 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
     }
 
 
+    private static boolean isLocationEnabled(Context context) {
+        int locationMode = 0;
+        String locationProviders;
 
-    @Override
-    public void onConnected(Bundle bundle) {
-        // startLocationPooling();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            try {
+                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+
+        } else {
+            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !TextUtils.isEmpty(locationProviders);
+        }
     }
 
     /* checks whether the device connected or not*/
@@ -213,6 +192,11 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        // startLocationPooling();
     }
 
     @Override
@@ -384,21 +368,72 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
     private void showWifiSettingsDialog(final Context context) {
         if (alertDialog != null) alertDialog.cancel();
 
-        alertDialog = new AlertDialog.Builder(mActivity, android.R.style.Theme_Material_Dialog_Alert)
+        alertDialog = new AlertDialog.Builder(mActivity)
             .setTitle("Need Internet")
             .setMessage("Please enable your internet connection")
-            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                    startWifiSettings(context);
-                }
+            .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                dialog.cancel();
+                startWifiSettings(context);
             })
-            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
+            .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel())
+            .show();
+//            .setIcon(android.R.drawable.ic_dialog_alert)
+    }
+
+    /* location permissions were denied with "do not show"  unchecked.. this function shows a dialog describing why this app
+    *  need location permission. */
+    private void showPermissionRequestDialog() {
+        if (alertDialog != null) alertDialog.cancel();
+
+        alertDialog = new AlertDialog.Builder(mActivity)
+            .setTitle("You need location permission")
+            .setMessage("Enable location permission")
+            .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                dialog.cancel();
+                ActivityCompat.requestPermissions(mActivity,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+
+                mActivity.recreate();
             })
-            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel())
+            .show();
+//          .setIcon(android.R.drawable.ic_dialog_alert)
+    }
+
+    private void showLocationSettingsDialog() {
+        if (alertDialog != null) alertDialog.cancel();
+
+        alertDialog = new AlertDialog.Builder(mActivity)
+                .setTitle("Need Location")
+                .setMessage("In order for the app to work seamlessly.Please  enable Location Service.")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        startLocationSettings();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
+//                .setIcon(android.R.drawable.ic_dialog_alert)
+    }
+
+    /*  Previously Permission Request was cancelled with 'Dont Ask Again',
+    *   Redirect to Settings after showing Information about why you need the permission */
+    private void showPermissionDeniedDialog() {
+        if (alertDialog != null) alertDialog.cancel();
+
+        alertDialog = new AlertDialog.Builder(mActivity)
+            .setTitle("Need Location Permission")
+            .setMessage("Enable location permission")
+            .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                dialog.cancel();
+                startAppDetailsActivity();
+            })
+            .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel())
             .show();
     }
 
@@ -410,72 +445,20 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
         }
     }
 
-    private static boolean isLocationEnabled(Context context) {
-        int locationMode = 0;
-        String locationProviders;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            try {
-                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
-
-            } catch (Settings.SettingNotFoundException e) {
-                e.printStackTrace();
-                return false;
-            }
-
-            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
-
-        } else {
-            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-            return !TextUtils.isEmpty(locationProviders);
-        }
+    private void startLocationSettings() {
+        mActivity.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
     }
 
-    /* location permissions were denied with "do not show"  unchecked.. this function shows a dialog describing why this app
-    *  need location permission. */
-    private void showPermissionRequestDialog() {
-        if (alertDialog != null) alertDialog.cancel();
+    /* Previous location permissions were denied , this function opens app settings page
+    *  So user can enable permission manually */
+    private void startAppDetailsActivity() {
+        final Intent i = new Intent();
+        i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        i.addCategory(Intent.CATEGORY_DEFAULT);
+        i.setData(Uri.parse("package:" + mActivity.getPackageName()));
 
-        alertDialog = new AlertDialog.Builder(mActivity, android.R.style.Theme_Material_Dialog_Alert)
-            .setTitle("You need location permission")
-            .setMessage("Enable location permission")
-            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                    ActivityCompat.requestPermissions(mActivity,
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-                }
-            })
-            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            })
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .show();
+        mActivity.startActivity(i);
     }
 
-    /*  Previously Permission Request was cancelled with 'Dont Ask Again',
-    *   Redirect to Settings after showing Information about why you need the permission */
-    private void showPermissionDeniedDialog() {
-        if (alertDialog != null) alertDialog.cancel();
-
-        alertDialog = new AlertDialog.Builder(mActivity, android.R.style.Theme_Material_Dialog_Alert)
-            .setTitle("Need Location Permission")
-            .setMessage("Enable location permission")
-            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                    startAppDetailsActivity();
-                }
-            })
-            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            })
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .show();
-    }
 
 }
