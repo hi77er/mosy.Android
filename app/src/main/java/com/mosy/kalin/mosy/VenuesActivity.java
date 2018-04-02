@@ -41,6 +41,7 @@ import com.mosy.kalin.mosy.Listeners.EndlessScrollListener;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueByIdBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
+import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadMenuListItemsAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenuesAsyncTask;
@@ -65,6 +66,26 @@ import java.util.Calendar;
 public class VenuesActivity
         extends AppCompatActivity {
 
+    long timeStarted = 0;
+    Boolean searchIsPromoted = true; //INFO: Normally search only promoted dishesWall, but when using query then search among all dishesWall
+    String query = "searchall";
+    int itemsInitialLoadCount = 8;
+    int itemsOnScrollLoadCount = 5;
+
+    private Context applicationContext;
+    private LocationResolver mLocationResolver;
+    private Location lastKnownLocation;
+
+    @SystemService
+    SearchManager searchManager;
+
+    @Bean
+    AccountService accountService;
+    @Bean
+    VenuesAdapter venuesAdapter;
+    @Bean
+    DishesAdapter dishesAdapter;
+
     @Extra
     static boolean DishesSearchModeActivated;
     @Extra
@@ -79,23 +100,6 @@ public class VenuesActivity
     static ArrayList<String> SelectedSpectrumFilterIds;
     @Extra
     static ArrayList<String> SelectedAllergensFilterIds;
-
-    long timeStarted = 0;
-    Boolean searchIsPromoted = true; //INFO: Normally search only promoted dishesWall, but when using query then search among all dishesWall
-    String query = "searchall";
-    int itemsInitialLoadCount = 8;
-    int itemsOnScrollLoadCount = 5;
-
-    private LocationResolver mLocationResolver;
-    private Location lastKnownLocation;
-
-    @SystemService
-    SearchManager searchManager;
-
-    @Bean
-    VenuesAdapter venuesAdapter;
-    @Bean
-    DishesAdapter dishesAdapter;
 
     @ViewById(resName = "venues_llInitialLoadingProgress")
     LinearLayout centralProgress;
@@ -114,30 +118,31 @@ public class VenuesActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         incrementActivityUsagesCount();
-
-
         timeStarted = System.currentTimeMillis();
-
-        mLocationResolver = new LocationResolver(this);
-        mLocationResolver.onStart();
-        refreshLastKnownLocation();
+        this.applicationContext = getApplicationContext();
+        this.accountService.refreshApiAuthenticationToken(applicationContext, () -> {
+            Toast.makeText(applicationContext, "WebApi authToken refreshed!", Toast.LENGTH_LONG).show();
+        });
     }
 
     @AfterViews
     void afterViews() {
         configureActionBar();
 
-        Intent intent = getIntent();
+        dishesWall.setEmptyView(findViewById(R.id.venues_llSwipeToRefresh));
+        venuesWall.setEmptyView(findViewById(R.id.venues_llSwipeToRefresh));
 
+        mLocationResolver = new LocationResolver(this);
+        mLocationResolver.onStart();
+        refreshLastKnownLocation();
+
+        Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query = intent.getStringExtra(SearchManager.QUERY);
             searchIsPromoted = null; //INFO: Normally get only promoted dishesWall, but when searched - search among all dishesWall
         }
-
-        LinearLayout emptyViewLayout = (LinearLayout) LayoutInflater.from(VenuesActivity.this).inflate(R.layout.empty_listview_venues, null);
-        dishesWall.setEmptyView(emptyViewLayout);
-        venuesWall.setEmptyView(emptyViewLayout);
 
         if (!DishesSearchModeActivated) adaptVenueItems();
         else adaptDishItems();
@@ -253,9 +258,6 @@ public class VenuesActivity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
 
-        if (BuildConfig.DEBUG) {
-            Toast.makeText(this, "Loading..", Toast.LENGTH_SHORT).show();
-        }
         return true;
     }
 
@@ -331,6 +333,7 @@ public class VenuesActivity
                 @Override
                 public void onPostExecute(ArrayList<Venue> result) {
                     centralProgress.setVisibility(View.GONE);
+                    venuesWall.setVisibility(View.VISIBLE);
 
                     venuesAdapter.addItems(result);
                     venuesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;
@@ -377,6 +380,7 @@ public class VenuesActivity
                 @Override
                 public void onPostExecute(ArrayList<MenuListItem> result) {
                     centralProgress.setVisibility(View.GONE);
+                    dishesWall.setVisibility(View.VISIBLE);
 
                     dishesAdapter.addItems(result);
                     dishesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;
@@ -414,15 +418,15 @@ public class VenuesActivity
     void openFilters() {
         if (DishesSearchModeActivated) {
             Intent intent = new Intent(VenuesActivity.this, DishesFiltersActivity_.class);
-            intent.putExtra("SelectedPhaseFilterIds", SelectedPhaseFilterIds);
-            intent.putExtra("SelectedRegionFilterIds", SelectedRegionFilterIds);
-            intent.putExtra("SelectedSpectrumFilterIds", SelectedSpectrumFilterIds);
-            intent.putExtra("SelectedAllergensFilterIds", SelectedAllergensFilterIds);
-            intent.putExtra("ApplyWorkingStatusFilter", ApplyWorkingStatusFilterToDishes);
+            intent.putExtra("PreselectedPhaseFilterIds", SelectedPhaseFilterIds);
+            intent.putExtra("PreselectedRegionFilterIds", SelectedRegionFilterIds);
+            intent.putExtra("PreselectedSpectrumFilterIds", SelectedSpectrumFilterIds);
+            intent.putExtra("PreselectedAllergensFilterIds", SelectedAllergensFilterIds);
+            intent.putExtra("PreselectedApplyWorkingStatusFilter", ApplyWorkingStatusFilterToDishes);
             startActivity(intent);
         } else {
             Intent intent = new Intent(VenuesActivity.this, VenuesFiltersActivity_.class);
-            intent.putExtra("ApplyWorkingStatusFilter", ApplyWorkingStatusFilterToVenues);
+            intent.putExtra("PreselectedApplyWorkingStatusFilter", ApplyWorkingStatusFilterToVenues);
             startActivity(intent);
         }
     }
@@ -516,5 +520,6 @@ public class VenuesActivity
             }
         });
     }
+
 
 }

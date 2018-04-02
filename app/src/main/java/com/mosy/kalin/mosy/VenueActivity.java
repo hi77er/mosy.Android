@@ -1,15 +1,18 @@
 package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mosy.kalin.mosy.Adapters.MenuListsPagerAdapter;
 import com.mosy.kalin.mosy.DTOs.MenuList;
@@ -21,11 +24,13 @@ import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageMetaBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueMenuBindingModel;
+import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueIndoorImageMetadataAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueMenuAsyncTask;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -36,6 +41,8 @@ import java.util.ArrayList;
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_venue)
 public class VenueActivity extends AppCompatActivity {
+
+    private static final String storageContainer = "userimages\\fboalbums\\200x200";
 
     @Extra
     Venue Venue;
@@ -53,8 +60,6 @@ public class VenueActivity extends AppCompatActivity {
     ImageView IndoorImage;
     @ViewById(resName = "venue_vpMenu")
     ViewPager Menu;
-
-    private static final String storageContainer = "userimages\\fboalbums\\200x200";
 
     @AfterViews
     void updateVenueWithData() {

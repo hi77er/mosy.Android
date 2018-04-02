@@ -12,6 +12,7 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.mosy.kalin.mosy.Helpers.ListHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 
 import org.androidannotations.annotations.AfterExtras;
@@ -20,14 +21,18 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.ArrayList;
+
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_filters_venues)
 public class VenuesFiltersActivity
         extends AppCompatActivity {
 
 
+    private boolean SelectedApplyWorkingStatusFilter;
+
     @Extra
-    static boolean ApplyWorkingStatusFilter;
+    static boolean PreselectedApplyWorkingStatusFilter;
 
     @ViewById(resName = "filters_venues_sbWorkingTimeFilter")
     public Switch workingStatusFilter;
@@ -50,11 +55,9 @@ public class VenuesFiltersActivity
 
     @AfterViews
     public void InitializeComponents(){
-        this.workingStatusFilter.setChecked(ApplyWorkingStatusFilter);
+        this.workingStatusFilter.setChecked(PreselectedApplyWorkingStatusFilter);
         this.workingStatusFilter.setOnCheckedChangeListener(
-            (compoundButton, b) -> {
-                ApplyWorkingStatusFilter = compoundButton.isChecked();
-            }
+            (compoundButton, b) -> SelectedApplyWorkingStatusFilter = compoundButton.isChecked()
         );
 
 //        this.ratingFilter.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
@@ -85,10 +88,24 @@ public class VenuesFiltersActivity
     protected void onDestroy(){
         super.onDestroy();
         Intent intent = new Intent(VenuesFiltersActivity.this, VenuesActivity_.class);
-        intent.putExtra("ApplyWorkingStatusFilterToVenues", ApplyWorkingStatusFilter);
-        startActivity(intent);
+
+        SelectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
+
+        if (checkFiltersStateChanged(SelectedApplyWorkingStatusFilter)) {
+            intent.putExtra("ApplyWorkingStatusFilterToVenues", SelectedApplyWorkingStatusFilter);
+            startActivity(intent);
+        }
+        else{
+            // Do nothing. Simply close this activity.
+        }
     }
 
+
+    private boolean checkFiltersStateChanged(boolean selectedApplyWorkingStatusFilter) {
+        boolean applyWorkingStatusChanged = selectedApplyWorkingStatusFilter != PreselectedApplyWorkingStatusFilter;
+
+        return applyWorkingStatusChanged;
+    }
 
 
 

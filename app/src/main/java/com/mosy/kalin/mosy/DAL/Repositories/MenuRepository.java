@@ -24,7 +24,7 @@ public class MenuRepository {
         try {
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
             Type returnType = new TypeToken<ArrayList<MenuListItem>>(){}.getType();
-            menuItemsResult = jsonHttpClient.PostObject(endpoint, model, returnType, "HH:mm:ss");
+            menuItemsResult = jsonHttpClient.PostObject(endpoint, model, returnType, "HH:mm:ss", StringHelper.empty());
             return menuItemsResult;
         } catch(Exception e) {
             e.printStackTrace();
@@ -39,7 +39,7 @@ public class MenuRepository {
         try {
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
             Type returnType = new TypeToken<RequestableFiltersResponse>(){}.getType();
-            response = jsonHttpClient.Get(endpoint, null, returnType, StringHelper.empty());
+            response = jsonHttpClient.Get(endpoint, null, returnType, StringHelper.empty(), StringHelper.empty());
         } catch(Exception e) {
             e.printStackTrace();
             RequestableFiltersResponse errResult = new RequestableFiltersResponse ();

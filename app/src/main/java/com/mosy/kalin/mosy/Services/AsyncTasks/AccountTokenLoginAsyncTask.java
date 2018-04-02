@@ -4,14 +4,15 @@ import android.os.AsyncTask;
 
 import com.mosy.kalin.mosy.DAL.Repositories.AccountRepository;
 import com.mosy.kalin.mosy.DTOs.Enums.AuthenticationResultStatus;
+import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
 
-public class AccountTokenLoginAsyncTask extends AsyncTask<LoginBindingModel, String, AuthenticationResultStatus> {
+public class AccountTokenLoginAsyncTask extends AsyncTask<LoginBindingModel, String, TokenResult> {
 
-    private final AsyncTaskListener<AuthenticationResultStatus> asyncTaskListenerListener;
+    private final AsyncTaskListener<TokenResult> asyncTaskListenerListener;
 
-    public AccountTokenLoginAsyncTask(AsyncTaskListener<AuthenticationResultStatus> listener) {
+    public AccountTokenLoginAsyncTask(AsyncTaskListener<TokenResult> listener) {
         this.asyncTaskListenerListener = listener;
     }
 
@@ -21,8 +22,8 @@ public class AccountTokenLoginAsyncTask extends AsyncTask<LoginBindingModel, Str
     }
 
     @Override
-    protected AuthenticationResultStatus doInBackground(LoginBindingModel... models) {
-        AuthenticationResultStatus results = null;
+    protected TokenResult doInBackground(LoginBindingModel... models) {
+        TokenResult results = null;
 
         try {
             LoginBindingModel model = models[0];
@@ -34,7 +35,7 @@ public class AccountTokenLoginAsyncTask extends AsyncTask<LoginBindingModel, Str
     }
 
     @Override
-    protected void onPostExecute(final AuthenticationResultStatus result) {
+    protected void onPostExecute(final TokenResult result) {
         asyncTaskListenerListener.onPostExecute(result);
     }
 

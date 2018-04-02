@@ -14,30 +14,16 @@ public class AccountRepository {
     private static final String registerEndpointEnding = "Account/Register";
 
 
-    public AuthenticationResultStatus tokenLogin(LoginBindingModel model) {
+    public TokenResult tokenLogin(LoginBindingModel model) {
         String tokenEndpoint = new ServiceEndpointFactory().getMosyWebAPIDevTokenEndpoint();
-
+        TokenResult tokenResult = null;
         try {
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            TokenResult tokenResult = jsonHttpClient.GetToken(tokenEndpoint, model.Email, model.Password);
-
-            //TODO: Handle the case when no Internet connection
-            //TODO: Handle the case when Server does not respond
-            switch (tokenResult.Status){
-                case Unknown:
-                    return AuthenticationResultStatus.Unknown;
-                case Unauthorized:
-                    return AuthenticationResultStatus.Unauthorized;
-                case Success:
-                    return AuthenticationResultStatus.Authorized;
-                case Fail:
-                    return AuthenticationResultStatus.Failed;
-            }
+            tokenResult = jsonHttpClient.GetToken(tokenEndpoint, model.Email, model.Password);
         } catch(Exception e) {
             e.printStackTrace();
-            return AuthenticationResultStatus.Failed;
         }
-        return AuthenticationResultStatus.Failed;
+        return tokenResult;
     }
 
     public RegisterResult register(RegisterBindingModel model) {
@@ -45,7 +31,7 @@ public class AccountRepository {
         JSONHttpClient jsonHttpClient = new JSONHttpClient();
 
         try {
-            String result = jsonHttpClient.PostObject(registerEndpoint, model, String.class, StringHelper.empty());
+            String result = jsonHttpClient.PostObject(registerEndpoint, model, String.class, StringHelper.empty(), StringHelper.empty());
             return new RegisterResult(true, result);
         }
         catch(Exception e)

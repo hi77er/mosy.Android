@@ -1,28 +1,26 @@
 package com.mosy.kalin.mosy;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -47,14 +45,17 @@ import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBusinessHoursBindingMode
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueContactsBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageMetaBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueLocationBindingModel;
+import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueBusinessHoursAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueContactsAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueEndorsementsAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueIndoorImageMetadataAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueLocationAsyncTask;
+import com.mosy.kalin.mosy.Services.EndorsementsService;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -74,9 +75,13 @@ public class VenueDetailsActivity
     private static final int REQUEST_PHONE_CALL = 1;
     private static final String x200BlobStorageContainerPath = "userimages\\fboalbums\\200x200";
     private static final String originalBlobStorageContainerPath = "userimages\\fboalbums\\original";
+
+    private Context applicationContext;
     boolean IsUsingDefaultIndoorImageThumbnail;
     public String PhoneNumber;
 
+    @Bean
+    public EndorsementsService venueEndorsementsService;
     @Extra
     public Venue Venue;
 
@@ -89,7 +94,6 @@ public class VenueDetailsActivity
     LinearLayout LayoutContacts;
     @ViewById(resName = "venueDetails_lBusinessHours")
     LinearLayout LayoutBusinessHours;
-
 
     @ViewById(resName = "venueDetails_svMain")
     ScrollView ScrollViewMain;
@@ -138,6 +142,13 @@ public class VenueDetailsActivity
     ImageView WheelchairFriendly;
     @ViewById(resName = "venueDetailsBadge_noSmoking")
     ImageView NoSmoking;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+
+        this.applicationContext = getApplicationContext();
+    }
 
     @AfterViews
     void updateVenueWithData() {
@@ -233,25 +244,17 @@ public class VenueDetailsActivity
 
     private void loadEndorsements() {
         AsyncTaskListener<ArrayList<VenueBadgeEndorsement>> listener = new AsyncTaskListener<ArrayList<VenueBadgeEndorsement>>() {
-            @Override
-            public void onPreExecute() {
+            @Override public void onPreExecute() {
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
             }
 
-            @Override
-            public void onPostExecute(ArrayList<VenueBadgeEndorsement> result) {
+            @Override public void onPostExecute(ArrayList<VenueBadgeEndorsement> result) {
                 Venue.Endorsements = result;
                 populateBadges();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        GetVenueBadgeEndorsementsBindingModel model = new GetVenueBadgeEndorsementsBindingModel(this.Venue.Id);
-        new LoadVenueEndorsementsAsyncTask(listener).execute(model);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        this.venueEndorsementsService.loadVenueEndorsements(applicationContext, listener, this.Venue.Id);
     }
 
     @Override

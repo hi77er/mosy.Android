@@ -108,5 +108,10 @@
     <string name="CuisineSpectrumHalal">Halal</string>
     <string name="filters_settings">Filters Settings</string>
     <string name="pref_walls_visited">prefWallsVisited</string>
+    <string name="pref_authToken_webApi">prefAuthTokenWebApi</string>
+    <string name="pref_authTokenType_webApi">prefAuthTokenType</string>
+    <string name="pref_authTokenExpiresInSeconds_webApi">prefAuthTokenExpiresInSeconds</string>
+    <string name="pref_authTokenExpiresAt_webApi">prefAuthTokenExpiresAt</string>
+    <string name="pref_collectionName_webApi">WebApi</string>
 
 </resources>

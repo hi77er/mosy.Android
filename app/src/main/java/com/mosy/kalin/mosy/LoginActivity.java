@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mosy.kalin.mosy.DTOs.Enums.AuthenticationResultStatus;
+import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
+import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
@@ -37,14 +39,14 @@ public class LoginActivity
         if (!StringHelper.isNullOrWhitespace(email) && !StringHelper.isNullOrWhitespace(password)) {
             if (StringHelper.isEmailAddress(email)) {
                 try {
-                    AsyncTaskListener<AuthenticationResultStatus> listener = new AsyncTaskListener<AuthenticationResultStatus>() {
+                    AsyncTaskListener<TokenResult> listener = new AsyncTaskListener<TokenResult>() {
                         @Override
                         public void onPreExecute() {
                             //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
                         }
 
                         @Override
-                        public void onPostExecute(final AuthenticationResultStatus result) {
+                        public void onPostExecute(final TokenResult result) {
                             //TODO: Handle the case when no Internet connection
                             //TODO: Handle the case when Server does not respond
                             populateAuthenticationResult(result);
@@ -113,14 +115,14 @@ public class LoginActivity
     }
 
 
-    private void populateAuthenticationResult(AuthenticationResultStatus result) {
-        if (result == AuthenticationResultStatus.Failed ||
-                result == AuthenticationResultStatus.Unknown ||
-                result == AuthenticationResultStatus.ServerDoesNotRespond)
+    private void populateAuthenticationResult(TokenResult result) {
+        if (result.Status == TokenResultStatus.Fail ||
+                result.Status  == TokenResultStatus.Unknown ||
+                result.Status  == TokenResultStatus.InvalidHosName)
             Toast.makeText(this, "Please try later. We are currently experiencing some troubles to connect you.", Toast.LENGTH_SHORT).show();
-        else if (result == AuthenticationResultStatus.Unauthorized)
+        else if (result.Status  == TokenResultStatus.Unauthorized)
             Toast.makeText(this, "Wrong username or password.", Toast.LENGTH_SHORT).show();
-        else if (result == AuthenticationResultStatus.Authorized)
+        else if (result.Status  == TokenResultStatus.Success)
             Toast.makeText(this, "Login successful.", Toast.LENGTH_SHORT).show();
     }
 }

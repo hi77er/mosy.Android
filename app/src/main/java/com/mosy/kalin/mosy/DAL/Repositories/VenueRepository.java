@@ -42,7 +42,7 @@ public class VenueRepository {
         try {
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
             Type returnType = new TypeToken<ArrayList<Venue>>(){}.getType();
-            venuesResult = jsonHttpClient.PostObject(endpoint, model, returnType, "HH:mm:ss");
+            venuesResult = jsonHttpClient.PostObject(endpoint, model, returnType, "HH:mm:ss", StringHelper.empty());
             return venuesResult;
         } catch(Exception e) {
             e.printStackTrace();
@@ -63,7 +63,7 @@ public class VenueRepository {
 
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
             Type returnType = new TypeToken<Venue>(){}.getType();
-            venue = jsonHttpClient.Get(endpoint, params, returnType, "yyyy-MM-dd'T'HH:mm:ss.");
+            venue = jsonHttpClient.Get(endpoint, params, returnType, "yyyy-MM-dd'T'HH:mm:ss.", StringHelper.empty());
         } catch(Exception e) {
             e.printStackTrace();
             Venue errResult = new Venue();
@@ -82,7 +82,7 @@ public class VenueRepository {
             params.put("Id", model.VenueId);
 
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            imageResult = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueImage>(){}.getType(), StringHelper.empty());
+            imageResult = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueImage>(){}.getType(), StringHelper.empty(), StringHelper.empty());
         } catch(Exception e) {
             e.printStackTrace();
             VenueImage errResult = new VenueImage();
@@ -101,7 +101,7 @@ public class VenueRepository {
             params.put("fboId", model.VenueId);
 
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            businessHours = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueBusinessHours>(){}.getType(), "HH:mm:ss");
+            businessHours = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueBusinessHours>(){}.getType(), "HH:mm:ss", StringHelper.empty());
         } catch(Exception e) {
             e.printStackTrace();
             VenueBusinessHours errResult = new VenueBusinessHours();
@@ -120,7 +120,7 @@ public class VenueRepository {
             params.put("fboId", model.VenueId);
 
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            result = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueContacts>(){}.getType(), "HH:mm:ss");
+            result = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueContacts>(){}.getType(), "HH:mm:ss", StringHelper.empty());
         } catch(Exception e) {
             e.printStackTrace();
             VenueContacts venueContacts = new VenueContacts();
@@ -138,7 +138,7 @@ public class VenueRepository {
             params.put("fboId", model.VenueId);
 
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            badgeEndorsements = jsonHttpClient.Get(endpoint, params, new TypeToken<ArrayList<VenueBadgeEndorsement>>(){}.getType(), StringHelper.empty());
+            badgeEndorsements = jsonHttpClient.Get(endpoint, params, new TypeToken<ArrayList<VenueBadgeEndorsement>>(){}.getType(), StringHelper.empty(), model.AuthTokenHeader);
         } catch(Exception e) {
             e.printStackTrace();
             VenueBadgeEndorsement errResult = new VenueBadgeEndorsement();
@@ -158,7 +158,7 @@ public class VenueRepository {
             params.put("fboId", model.VenueId);
 
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            location = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueLocation>(){}.getType(), StringHelper.empty());
+            location = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueLocation>(){}.getType(), StringHelper.empty(), StringHelper.empty());
         } catch(Exception e) {
             e.printStackTrace();
             VenueLocation errResult = new VenueLocation();
@@ -177,7 +177,7 @@ public class VenueRepository {
             params.put("Id", model.VenueId);
 
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            brochuresResult = jsonHttpClient.Get(endpoint, params, new TypeToken<ArrayList<MenuList>>(){}.getType(), StringHelper.empty());
+            brochuresResult = jsonHttpClient.Get(endpoint, params, new TypeToken<ArrayList<MenuList>>(){}.getType(), StringHelper.empty(), StringHelper.empty());
         } catch(Exception e) {
             e.printStackTrace();
             MenuList errResult = new MenuList();

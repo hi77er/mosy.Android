@@ -1,7 +1,5 @@
 package com.mosy.kalin.mosy.DAL.Http;
 
-import android.content.ContentValues;
-
 import com.google.gson.GsonBuilder;
 import com.mosy.kalin.mosy.BuildConfig;
 import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
@@ -22,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -30,26 +27,18 @@ public class JSONHttpClient {
 
     private HttpURLConnection Connection;
 
-//  !!!!!!!!!!!!!!!!!
-//  INFO: HOW TO SET TOKEN TO "HttpURLConnection" WHEN WEB API NEEDS IT:
-//    URL url = new URL(strings[0]);
-//    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-//    String token = "" + new String(accessToken);
-//    this.Connection.setRequestMethod("GET"/"POST");
-//    this.Connection.setRequestProperty("AuthToken", token);
-//    this.Connection.setReadTimeout(15000);
-//    this.Connection.setConnectTimeout(15000);
-//    this.Connection.setDoOutput(false);
-//  !!!!!!!!!!!!!!!!!
-
-
-    public <T> T Get(String url, HttpParams params, final Type objectType, String dateFormat) { //final Class<T> objectClass
+    public <T> T Get(String url, HttpParams params, final Type objectType, String dateFormat, String authToken) { //final Class<T> objectClass
         String query = paramsToQuery(params);
+
         try {
             this.Connection = (HttpURLConnection) new URL(url + query).openConnection();
             this.Connection.setRequestMethod("GET");
+            this.Connection.setReadTimeout(15000);
+            this.Connection.setConnectTimeout(15000);
             this.Connection.setRequestProperty("Accept", "application/json");
             this.Connection.setRequestProperty("Content-Type", "application/json");
+            if (StringHelper.isNotNullOrEmpty(authToken))
+                this.Connection.setRequestProperty("authorization", authToken);
 
             long execStart = 0;
             long elapsed = 0;
@@ -81,15 +70,19 @@ public class JSONHttpClient {
         return null;
     }
 
-    public <T> T PostObject(final String url, final Object object, final Type objectType, String dateFormat) { //final Class<T> objectClass
+    public <T> T PostObject(final String url, final Object object, final Type objectType, String dateFormat, String authToken) { //final Class<T> objectClass
         try {
             URL theUrl = new URL(url);
             this.Connection = (HttpURLConnection) theUrl.openConnection();
+            this.Connection.setRequestMethod("POST");
+            this.Connection.setReadTimeout(15000);
+            this.Connection.setConnectTimeout(15000);
             this.Connection.setDoInput(true);
             this.Connection.setDoOutput(true);
-            this.Connection.setRequestMethod("POST");
             this.Connection.setRequestProperty("Accept", "application/json");
             this.Connection.setRequestProperty("Content-Type", "application/json");
+            if (StringHelper.isNotNullOrEmpty(authToken))
+                this.Connection.setRequestProperty("authorization", authToken);
 
             long execStart = 0;
             long elapsed = 0;
@@ -139,8 +132,8 @@ public class JSONHttpClient {
             URL authUrl = new URL(url);
 
             // Generate the HTTPS connection. You cannot make a connection over HTTP.
-            HttpsURLConnection con = (HttpsURLConnection) authUrl.openConnection();
-            con.setDoOutput( true );
+            HttpURLConnection con = (HttpURLConnection) authUrl.openConnection();
+            con.setDoOutput(true);
             con.setRequestMethod( "POST" );
 
             // Set the Content-Type header.
@@ -212,21 +205,6 @@ public class JSONHttpClient {
             }
         }
         return paramStrings.size() > 0 ? "?" + StringHelper.join("&", paramStrings) : StringHelper.empty();
-    }
-
-    private String paramsToQuery1(ContentValues params) {
-        List<String> paramStrings = new ArrayList<>();
-        if (params != null) {
-            for (Map.Entry<String, Object> param : params.valueSet()) {
-                try {
-                    paramStrings.add(StringHelper.join("=", Arrays.asList(param.getKey(), URLEncoder.encode(param.getValue().toString(), "UTF-8"))));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        String result = paramStrings.size() > 0 ? "?" + StringHelper.join("&", paramStrings) : StringHelper.empty();
-        return result;
     }
 
     private String convertStreamToString(InputStream inputStream) {

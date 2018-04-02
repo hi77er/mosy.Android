@@ -28,7 +28,7 @@ public class MenuListItemRepository {
 
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
             Type returnType = new TypeToken<ArrayList<DishFilter>>(){}.getType();
-            result = jsonHttpClient.Get(endpoint, params, returnType, "HH:mm:ss");
+            result = jsonHttpClient.Get(endpoint, params, returnType, "HH:mm:ss", StringHelper.empty());
             return result;
         } catch(Exception e) {
             e.printStackTrace();
