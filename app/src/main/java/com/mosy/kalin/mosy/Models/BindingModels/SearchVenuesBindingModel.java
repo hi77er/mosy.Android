@@ -2,6 +2,7 @@ package com.mosy.kalin.mosy.Models.BindingModels;
 
 public class SearchVenuesBindingModel {
 
+    public String AuthTokenHeader;
     public double Latitude;
     public double Longitude;
     public String Query;
@@ -15,6 +16,7 @@ public class SearchVenuesBindingModel {
     public SearchVenuesBindingModel() { }
 
     public SearchVenuesBindingModel(
+            String authTokenHeader,
             int maxResultsCount,
             int totalItemsOffset,
             double latitude,
@@ -23,6 +25,7 @@ public class SearchVenuesBindingModel {
             Integer localDayOfWeek,
             String localTime) {
 
+        this.AuthTokenHeader = authTokenHeader;
         this.Latitude = latitude;
         this.Longitude = longitude;
         this.Query = query;

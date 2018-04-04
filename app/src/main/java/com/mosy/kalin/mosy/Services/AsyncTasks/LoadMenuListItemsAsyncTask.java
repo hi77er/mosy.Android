@@ -2,7 +2,7 @@ package com.mosy.kalin.mosy.Services.AsyncTasks;
 
 import android.os.AsyncTask;
 
-import com.mosy.kalin.mosy.DAL.Repositories.MenuRepository;
+import com.mosy.kalin.mosy.DAL.Repositories.DishesRepository;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
@@ -29,7 +29,7 @@ public class LoadMenuListItemsAsyncTask
 
         try {
             SearchMenuListItemsBindingModel model = models[0];
-            results = new MenuRepository().searchMenuListItems(model);
+            results = new DishesRepository().loadDishes(model);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -2,7 +2,7 @@ package com.mosy.kalin.mosy.Services.AsyncTasks;
 
 import android.os.AsyncTask;
 
-import com.mosy.kalin.mosy.DAL.Repositories.VenueRepository;
+import com.mosy.kalin.mosy.DAL.Repositories.VenuesRepository;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
@@ -29,7 +29,7 @@ public class LoadVenuesAsyncTask
 
         try {
             SearchVenuesBindingModel model = models[0];
-            results = new VenueRepository().searchVenues(model);
+            results = new VenuesRepository().loadVenues(model);
         } catch (Exception e) {
             e.printStackTrace();
         }

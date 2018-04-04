@@ -2,7 +2,7 @@ package com.mosy.kalin.mosy.Services.AsyncTasks;
 
 import android.os.AsyncTask;
 
-import com.mosy.kalin.mosy.DAL.Repositories.VenueRepository;
+import com.mosy.kalin.mosy.DAL.Repositories.VenuesRepository;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageMetaBindingModel;
@@ -27,7 +27,7 @@ public class LoadVenueIndoorImageMetadataAsyncTask
 
         try {
             GetVenueIndoorImageMetaBindingModel model = models[0];
-            results = new VenueRepository().getVenueIndoorImageMeta(model);
+            results = new VenuesRepository().getImageMetaIndoor(model);
         } catch (Exception e) {
             e.printStackTrace();
         }

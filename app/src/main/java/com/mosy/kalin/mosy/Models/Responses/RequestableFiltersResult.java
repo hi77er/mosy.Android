@@ -7,7 +7,7 @@ import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class RequestableFiltersResponse
+public class RequestableFiltersResult //INFO: Name coming from WebApi specifics
         extends ResultBase
         implements Serializable {
 

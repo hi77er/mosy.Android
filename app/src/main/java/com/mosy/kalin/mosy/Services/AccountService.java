@@ -35,7 +35,6 @@ public class AccountService {
 
     public void refreshApiAuthenticationToken(Context applicationContext, Runnable postExecute, Runnable preExecute) {
         SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_webApi), Context.MODE_PRIVATE);
-        String token = mPreferences.getString(applicationContext.getString(R.string.pref_authToken_webApi), StringHelper.empty());
         LoginBindingModel model = new LoginBindingModel("webapiadmin@mosy.com", "!23Qwe");
 
         boolean tokenIsValid = this.checkTokenValid(applicationContext);
@@ -61,7 +60,6 @@ public class AccountService {
             new AccountTokenLoginAsyncTask(listener).execute(model);
 
             SharedPreferences.Editor editor = mPreferences.edit();
-            editor.putString(applicationContext.getString(R.string.pref_authToken_webApi), "bearer " + token);
             editor.apply();
         }
     }

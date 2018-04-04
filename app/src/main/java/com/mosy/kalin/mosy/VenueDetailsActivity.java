@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -40,19 +39,10 @@ import com.mosy.kalin.mosy.Helpers.DimensionsHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBadgeEndorsementsBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBusinessHoursBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueContactsBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageMetaBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueLocationBindingModel;
-import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueBusinessHoursAsyncTask;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueContactsAsyncTask;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueEndorsementsAsyncTask;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueIndoorImageMetadataAsyncTask;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueLocationAsyncTask;
-import com.mosy.kalin.mosy.Services.EndorsementsService;
+import com.mosy.kalin.mosy.Services.VenuesService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -81,7 +71,8 @@ public class VenueDetailsActivity
     public String PhoneNumber;
 
     @Bean
-    public EndorsementsService venueEndorsementsService;
+    VenuesService venueService;
+
     @Extra
     public Venue Venue;
 
@@ -151,7 +142,7 @@ public class VenueDetailsActivity
     }
 
     @AfterViews
-    void updateVenueWithData() {
+    void afterViews() {
         try {
             Name.setText(this.Venue.Name);
             Class.setText(this.Venue.Class);
@@ -180,63 +171,52 @@ public class VenueDetailsActivity
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        GetVenueIndoorImageMetaBindingModel model = new GetVenueIndoorImageMetaBindingModel(this.Venue.Id);
-        new LoadVenueIndoorImageMetadataAsyncTask(listener).execute(model);
+        this.venueService.getImageMetaIndoor(this.applicationContext, listener, this.Venue.Id);
     }
 
     private void loadContacts() {
         AsyncTaskListener<VenueContacts> listener = new AsyncTaskListener<VenueContacts>() {
-            @Override
-            public void onPreExecute() {
+            @Override public void onPreExecute() {
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
             }
 
-            @Override
-            public void onPostExecute(VenueContacts result) {
+            @Override public void onPostExecute(VenueContacts result) {
                 Venue.VenueContacts = result;
                 populateContacts();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        GetVenueContactsBindingModel model = new GetVenueContactsBindingModel(this.Venue.Id);
-        new LoadVenueContactsAsyncTask(listener).execute(model);
-
+        this.venueService.getContacts(this.applicationContext, listener, this.Venue.Id);
     }
 
     private void loadBusinessHours() {
         AsyncTaskListener<VenueBusinessHours> listener = new AsyncTaskListener<VenueBusinessHours>() {
-            @Override
-            public void onPreExecute() {
+            @Override public void onPreExecute() {
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
             }
 
-            @Override
-            public void onPostExecute(VenueBusinessHours result) {
+            @Override public void onPostExecute(VenueBusinessHours result) {
                 Venue.VenueBusinessHours = result;
                 populateBusinessHours();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        GetVenueBusinessHoursBindingModel model = new GetVenueBusinessHoursBindingModel(this.Venue.Id);
-        new LoadVenueBusinessHoursAsyncTask(listener).execute(model);
+        this.venueService.getBusinessHours(applicationContext, listener, this.Venue.Id);
     }
 
     private void loadLocation() {
         AsyncTaskListener<VenueLocation> listener = new AsyncTaskListener<VenueLocation>() {
-            @Override
-            public void onPreExecute() {
+            @Override public void onPreExecute() {
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
             }
 
-            @Override
-            public void onPostExecute(VenueLocation result) {
+            @Override public void onPostExecute(VenueLocation result) {
                 Venue.Location = result;
                 populateGoogleMap();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        GetVenueLocationBindingModel model = new GetVenueLocationBindingModel(this.Venue.Id);
-        new LoadVenueLocationAsyncTask(listener).execute(model);
+        this.venueService.getLocation(applicationContext, listener, this.Venue.Id);
 
         // TODO: Decide weather this should be called here on onPostExecute of the upper task
         populateGoogleMap();
@@ -254,7 +234,7 @@ public class VenueDetailsActivity
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueEndorsementsService.loadVenueEndorsements(applicationContext, listener, this.Venue.Id);
+        this.venueService.getEndorsements(applicationContext, listener, this.Venue.Id);
     }
 
     @Override
@@ -296,15 +276,12 @@ public class VenueDetailsActivity
 
     private void populateIndoorImageThumbnail() {
         if (this.Venue.IndoorImage != null && this.Venue.IndoorImage.Id != null && this.Venue.IndoorImage.Id.length() > 0) {
-            //INFO: TryGet Venue Image
             AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
-                @Override
-                public void onPreExecute() {
+                @Override public void onPreExecute() {
                     //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
                 }
 
-                @Override
-                public void onPostExecute(byte[] bytes) {
+                @Override public void onPostExecute(byte[] bytes) {
                     if (ArrayHelper.hasValidBitmapContent(bytes)) {
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         IndoorImageThumbnail.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
@@ -428,7 +405,7 @@ public class VenueDetailsActivity
         }
     }
 
-    public void populateGoogleMap() {
+    private void populateGoogleMap() {
         this.VenueLocationMap.getMapAsync(this);
     }
 
@@ -484,25 +461,26 @@ public class VenueDetailsActivity
         }
     }
 
+    private boolean hasValidIndoorImageMetadata() {
+        return this.Venue.IndoorImage != null
+                && this.Venue.IndoorImage.Id != null
+                && this.Venue.IndoorImage.Id.length() > 0;
+    }
+
     @Click(resName = "venueDetails_ivIndoorThumbnail")
     public void ImageClick() {
-        if (!IsUsingDefaultIndoorImageThumbnail
-                && this.Venue.IndoorImage != null
-                && this.Venue.IndoorImage.Id != null
-                && this.Venue.IndoorImage.Id.length() > 0) {
+        if (!IsUsingDefaultIndoorImageThumbnail && hasValidIndoorImageMetadata()) {
             final Dialog nagDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             nagDialog.setCancelable(true);
             nagDialog.setContentView(R.layout.image_preview_dialog);
 
             AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
-                @Override
-                public void onPreExecute() {
+                @Override public void onPreExecute() {
                     //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
                 }
 
-                @Override
-                public void onPostExecute(byte[] bytes) {
+                @Override public void onPostExecute(byte[] bytes) {
                     if (ArrayHelper.hasValidBitmapContent(bytes)) {
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);

@@ -7,24 +7,24 @@ import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.DAL.Http.JSONHttpClient;
 import com.mosy.kalin.mosy.Models.BindingModels.GetRequestableFiltersBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
-import com.mosy.kalin.mosy.Models.Responses.RequestableFiltersResponse;
+import com.mosy.kalin.mosy.Models.Responses.RequestableFiltersResult;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class MenuRepository {
+public class DishesRepository {
 
-    private static final String searchMenuListItemsEndpointEnding = "Requestable/QueryClosestRequestables";
-    private static final String getMenuListItemFiltersEndpointEnding = "filters/All";
+    private static final String searchMenuListItemsEndpointEnding = "dishes/closest";
+    private static final String getMenuListItemFiltersEndpointEnding = "dishes/filters/all";
 
 
-    public ArrayList<MenuListItem> searchMenuListItems(SearchMenuListItemsBindingModel model){
+    public ArrayList<MenuListItem> loadDishes(SearchMenuListItemsBindingModel model){
         String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint(searchMenuListItemsEndpointEnding);
         ArrayList<MenuListItem> menuItemsResult = new ArrayList<>();
         try {
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
             Type returnType = new TypeToken<ArrayList<MenuListItem>>(){}.getType();
-            menuItemsResult = jsonHttpClient.PostObject(endpoint, model, returnType, "HH:mm:ss", StringHelper.empty());
+            menuItemsResult = jsonHttpClient.PostObject(endpoint, model, returnType, "HH:mm:ss", model.AuthTokenHeader);
             return menuItemsResult;
         } catch(Exception e) {
             e.printStackTrace();
@@ -32,17 +32,17 @@ public class MenuRepository {
         return menuItemsResult;
     }
 
-    public RequestableFiltersResponse getMenuListItemFilters(GetRequestableFiltersBindingModel model){
+    public RequestableFiltersResult getFilters(GetRequestableFiltersBindingModel model){
         String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint(getMenuListItemFiltersEndpointEnding);
-        RequestableFiltersResponse response;
+        RequestableFiltersResult response;
 
         try {
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            Type returnType = new TypeToken<RequestableFiltersResponse>(){}.getType();
-            response = jsonHttpClient.Get(endpoint, null, returnType, StringHelper.empty(), StringHelper.empty());
+            Type returnType = new TypeToken<RequestableFiltersResult>(){}.getType();
+            response = jsonHttpClient.Get(endpoint, null, returnType, StringHelper.empty(), model.AuthTokenHeader);
         } catch(Exception e) {
             e.printStackTrace();
-            RequestableFiltersResponse errResult = new RequestableFiltersResponse ();
+            RequestableFiltersResult errResult = new RequestableFiltersResult();
             errResult.ErrorMessage = e.getMessage();
             return errResult ;
         }

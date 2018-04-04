@@ -5,6 +5,7 @@ import java.util.List;
 
 public class SearchMenuListItemsBindingModel {
 
+    public String AuthTokenHeader;
     public int MaxResultsCount;
     public int TotalItemsOffset;
     public String Query;
@@ -19,8 +20,8 @@ public class SearchMenuListItemsBindingModel {
     public String LocalTime;
 
     public SearchMenuListItemsBindingModel() { }
-
     public SearchMenuListItemsBindingModel(
+            String authTokenHeader,
             int maxResultsCount,
             int totalItemsOffset,
             double latitude,
@@ -34,6 +35,7 @@ public class SearchMenuListItemsBindingModel {
             Integer localDayOfWeek,
             String localTime)
     {
+        this.AuthTokenHeader = authTokenHeader;
         this.MaxResultsCount = maxResultsCount;
         this.TotalItemsOffset = totalItemsOffset;
         this.Latitude = latitude;

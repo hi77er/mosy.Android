@@ -26,7 +26,6 @@ import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.Toast;
 
 import com.daasuu.bl.ArrowDirection;
 import com.daasuu.bl.BubbleLayout;
@@ -38,14 +37,10 @@ import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.DimensionsHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Listeners.EndlessScrollListener;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueByIdBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
 import com.mosy.kalin.mosy.Services.AccountService;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadMenuListItemsAsyncTask;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueAsyncTask;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenuesAsyncTask;
+import com.mosy.kalin.mosy.Services.DishesService;
 import com.mosy.kalin.mosy.Services.Location.LocationResolver;
+import com.mosy.kalin.mosy.Services.VenuesService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -81,6 +76,10 @@ public class VenuesActivity
 
     @Bean
     AccountService accountService;
+    @Bean
+    VenuesService venueService;
+    @Bean
+    DishesService dishesService;
     @Bean
     VenuesAdapter venuesAdapter;
     @Bean
@@ -122,9 +121,6 @@ public class VenuesActivity
         incrementActivityUsagesCount();
         timeStarted = System.currentTimeMillis();
         this.applicationContext = getApplicationContext();
-        this.accountService.refreshApiAuthenticationToken(applicationContext, () -> {
-            Toast.makeText(applicationContext, "WebApi authToken refreshed!", Toast.LENGTH_LONG).show();
-        });
     }
 
     @AfterViews
@@ -238,6 +234,84 @@ public class VenuesActivity
         dishesWall.setOnScrollListener(endlessScrollListener);
     }
 
+    void loadMoreVenues(int maxResultsCount, int totalItemsOffset, String query){
+        if (lastKnownLocation != null) {
+            AsyncTaskListener<ArrayList<Venue>> listener = new AsyncTaskListener<ArrayList<Venue>>() {
+                @Override public void onPreExecute() {
+                    centralProgress.setVisibility(View.VISIBLE);
+                }
+                @Override public void onPostExecute(ArrayList<Venue> result) {
+                    centralProgress.setVisibility(View.GONE);
+                    venuesWall.setVisibility(View.VISIBLE);
+
+                    venuesAdapter.addItems(result);
+                    venuesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;
+                    venuesAdapter.LoadingStillInAction = false;
+                }
+            };
+
+            Integer localDayOfWeek = null;
+            String localTime = null;
+            if (ApplyWorkingStatusFilterToVenues) {
+                Calendar localCalendar = Calendar.getInstance();
+                localTime = localCalendar.get(Calendar.HOUR_OF_DAY) + ":" + localCalendar.get(Calendar.MINUTE);
+                localDayOfWeek = localCalendar.get(Calendar.DAY_OF_WEEK);
+            }
+
+            this.venueService.getVenues(
+                    applicationContext, listener, maxResultsCount, totalItemsOffset,
+                    lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
+                    query, localDayOfWeek, localTime);
+        }
+    }
+
+    void loadMoreDishes(int maxResultsCount,
+                        int totalItemsOffset,
+                        Boolean isPromoted,
+                        String query,
+                        ArrayList<String> phaseFilterIds,
+                        ArrayList<String> regionFilterIds,
+                        ArrayList<String> spectrumFilterIds,
+                        ArrayList<String> allergensFilterIds){
+
+        if (lastKnownLocation != null){
+            AsyncTaskListener<ArrayList<MenuListItem>> listener = new AsyncTaskListener<ArrayList<MenuListItem>>() {
+                @Override
+                public void onPreExecute() {
+                    centralProgress.setVisibility(View.VISIBLE);
+                }
+                @Override
+                public void onPostExecute(ArrayList<MenuListItem> result) {
+                    centralProgress.setVisibility(View.GONE);
+                    dishesWall.setVisibility(View.VISIBLE);
+
+                    if (result != null) {
+                        dishesAdapter.addItems(result);
+                        dishesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;
+                        dishesAdapter.loadingStillInAction = false;
+                    }
+                }
+            };
+
+            Integer localDayOfWeek = null;
+            String localTime = null;
+            if (ApplyWorkingStatusFilterToDishes)
+            {
+                Calendar localCalendar = Calendar.getInstance();
+                localTime = localCalendar.get(Calendar.HOUR_OF_DAY) + ":" + localCalendar.get(Calendar.MINUTE);
+                localDayOfWeek = localCalendar.get(Calendar.DAY_OF_WEEK);
+            }
+
+            this.dishesService.getDishes(
+                    applicationContext, listener,
+                    maxResultsCount, totalItemsOffset,
+                    lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
+                    isPromoted, query,
+                    phaseFilterIds, regionFilterIds, spectrumFilterIds, allergensFilterIds,
+                    localDayOfWeek, localTime);
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -299,12 +373,10 @@ public class VenuesActivity
         Intent intent = new Intent(VenuesActivity.this, VenueActivity_.class);
 
         AsyncTaskListener<Venue> listener = new AsyncTaskListener<Venue>() {
-            @Override
-            public void onPreExecute() {
+            @Override public void onPreExecute() {
                 centralProgress.setVisibility(View.VISIBLE);
             }
-            @Override
-            public void onPostExecute(Venue result) {
+            @Override public void onPostExecute(Venue result) {
                 Venue venue = result;
                 venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
                 venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
@@ -318,101 +390,7 @@ public class VenuesActivity
             }
         };
 
-        GetVenueByIdBindingModel model = new GetVenueByIdBindingModel(listItem.VenueId);
-        new LoadVenueAsyncTask(listener).execute(model);
-    }
-
-    void loadMoreVenues(int maxResultsCount, int totalItemsOffset, String query){
-        if (lastKnownLocation != null) {
-            AsyncTaskListener<ArrayList<Venue>> listener = new AsyncTaskListener<ArrayList<Venue>>() {
-                @Override
-                public void onPreExecute() {
-                    centralProgress.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onPostExecute(ArrayList<Venue> result) {
-                    centralProgress.setVisibility(View.GONE);
-                    venuesWall.setVisibility(View.VISIBLE);
-
-                    venuesAdapter.addItems(result);
-                    venuesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;
-                    venuesAdapter.LoadingStillInAction = false;
-                }
-            };
-
-            Integer localDayOfWeek = null;
-            String localTime = null;
-            if (ApplyWorkingStatusFilterToVenues) {
-                Calendar localCalendar = Calendar.getInstance();
-                localTime = localCalendar.get(Calendar.HOUR_OF_DAY) + ":" + localCalendar.get(Calendar.MINUTE);
-                localDayOfWeek = localCalendar.get(Calendar.DAY_OF_WEEK);
-            }
-
-            SearchVenuesBindingModel model = new SearchVenuesBindingModel(
-                    maxResultsCount,
-                    totalItemsOffset,
-                    lastKnownLocation.getLatitude(),
-                    lastKnownLocation.getLongitude(),
-                    query,
-                    localDayOfWeek,
-                    localTime);
-
-            new LoadVenuesAsyncTask(listener).execute(model);
-        }
-    }
-
-    void loadMoreDishes(int maxResultsCount,
-                        int totalItemsOffset,
-                        Boolean isPromoted,
-                        String query,
-                        ArrayList<String> phaseFilterIds,
-                        ArrayList<String> regionFilterIds,
-                        ArrayList<String> spectrumFilterIds,
-                        ArrayList<String> allergensFilterIds){
-
-        if (lastKnownLocation != null){
-            AsyncTaskListener<ArrayList<MenuListItem>> listener = new AsyncTaskListener<ArrayList<MenuListItem>>() {
-                @Override
-                public void onPreExecute() {
-                    centralProgress.setVisibility(View.VISIBLE);
-                }
-                @Override
-                public void onPostExecute(ArrayList<MenuListItem> result) {
-                    centralProgress.setVisibility(View.GONE);
-                    dishesWall.setVisibility(View.VISIBLE);
-
-                    dishesAdapter.addItems(result);
-                    dishesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;
-                    dishesAdapter.loadingStillInAction = false;
-                }
-            };
-
-            Integer localDayOfWeek = null;
-            String localTime = null;
-            if (ApplyWorkingStatusFilterToDishes)
-            {
-                Calendar localCalendar = Calendar.getInstance();
-                localTime = localCalendar.get(Calendar.HOUR_OF_DAY) + ":" + localCalendar.get(Calendar.MINUTE);
-                localDayOfWeek = localCalendar.get(Calendar.DAY_OF_WEEK);
-            }
-
-            SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(
-                    maxResultsCount,
-                    totalItemsOffset,
-                    lastKnownLocation.getLatitude(),
-                    lastKnownLocation.getLongitude(),
-                    isPromoted,
-                    query,
-                    phaseFilterIds,
-                    regionFilterIds,
-                    spectrumFilterIds,
-                    allergensFilterIds,
-                    localDayOfWeek,
-                    localTime);
-
-            new LoadMenuListItemsAsyncTask(listener).execute(model);
-        }
+        this.venueService.getById(applicationContext, listener, listItem.VenueId);
     }
 
     void openFilters() {
@@ -457,7 +435,6 @@ public class VenuesActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
-
 
     private void incrementActivityUsagesCount() {
         SharedPreferences mPreferences = this.getSharedPreferences(getString(R.string.pref_walls_visited), Context.MODE_PRIVATE);

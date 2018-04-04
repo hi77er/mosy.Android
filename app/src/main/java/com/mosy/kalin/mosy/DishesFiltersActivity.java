@@ -1,6 +1,7 @@
 package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,7 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -18,18 +18,16 @@ import com.mosy.kalin.mosy.Adapters.DishFiltersPagerAdapter;
 import com.mosy.kalin.mosy.DTOs.DishFilter;
 import com.mosy.kalin.mosy.Helpers.ListHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Models.BindingModels.GetRequestableFiltersBindingModel;
-import com.mosy.kalin.mosy.Models.Responses.RequestableFiltersResponse;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadMenuListFiltersAsyncTask;
+import com.mosy.kalin.mosy.Models.Responses.RequestableFiltersResult;
+import com.mosy.kalin.mosy.Services.DishesService;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 
 
 @SuppressLint("Registered")
@@ -39,6 +37,11 @@ public class DishesFiltersActivity
 
     private DishFiltersPagerAdapter DFAdapter;
     private boolean SelectedApplyWorkingStatusFilter;
+
+    private Context applicationContext;
+
+    @Bean
+    DishesService dishesService;
 
     @Extra
     static boolean PreselectedApplyWorkingStatusFilter;
@@ -70,6 +73,8 @@ public class DishesFiltersActivity
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
+        this.applicationContext = getApplicationContext();
+
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         getWindow().setLayout((int)(dm.widthPixels*.9), (int)(dm.heightPixels*.7));
@@ -78,7 +83,7 @@ public class DishesFiltersActivity
     }
 
     @AfterViews
-    public void InitializeComponents(){
+    public void afterViews(){
         this.workingStatusFilter.setChecked(PreselectedApplyWorkingStatusFilter);
         this.workingStatusFilter.setOnCheckedChangeListener(
                 (compoundButton, b) -> {
@@ -86,16 +91,36 @@ public class DishesFiltersActivity
                 }
         );
 
-        AsyncTaskListener<RequestableFiltersResponse> listener = new AsyncTaskListener<RequestableFiltersResponse>() {
-            @Override
-            public void onPreExecute() {
+        loadMenuListItemFilters();
+
+//        this.ratingFilter.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
+//        this.ratingFilter.getThumb().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
+//        this.ratingFilter.setProgress(5);
+//        this.ratingFilter.setMax(10);
+//        this.ratingFilter.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                ratingLabel.setText("Rating: higher than " + String.valueOf(progress));
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) { }
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) { }
+//        });
+    }
+
+    private void loadMenuListItemFilters() {
+
+        AsyncTaskListener<RequestableFiltersResult> listener = new AsyncTaskListener<RequestableFiltersResult>() {
+            @Override public void onPreExecute() {
                 centralProgress.setVisibility(View.VISIBLE);
             }
-            @Override
-            public void onPostExecute(RequestableFiltersResponse result) {
-                RequestableFiltersResponse filters = result;
 
-                SetAlreadySelectedFilters(
+            @Override public void onPostExecute(RequestableFiltersResult result) {
+                RequestableFiltersResult filters = result;
+
+                populateAlreadySelectedFilters(
                         filters.CuisinePhaseFilters,
                         filters.CuisineRegionFilters,
                         filters.CuisineSpectrumFilters,
@@ -114,30 +139,11 @@ public class DishesFiltersActivity
                 centralProgress.setVisibility(View.GONE);
             }
         };
-        new LoadMenuListFiltersAsyncTask(listener).execute(new GetRequestableFiltersBindingModel());
-
-
-
-
-//        this.ratingFilter.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
-//        this.ratingFilter.getThumb().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
-//        this.ratingFilter.setProgress(5);
-//        this.ratingFilter.setMax(10);
-//        this.ratingFilter.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                ratingLabel.setText("Rating: higher than " + String.valueOf(progress));
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) { }
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) { }
-//        });
+        this.dishesService.getFilters(this.applicationContext, listener);
 
     }
 
-    private void SetAlreadySelectedFilters(
+    private void populateAlreadySelectedFilters(
             ArrayList<DishFilter> cuisinePhaseFilters,
             ArrayList<DishFilter> cuisineRegionFilters,
             ArrayList<DishFilter> cuisineSpectrumFilters,
@@ -174,13 +180,6 @@ public class DishesFiltersActivity
         if (PreselectedRegionFilterIds == null) PreselectedRegionFilterIds = new ArrayList<>();
         if (PreselectedSpectrumFilterIds == null) PreselectedSpectrumFilterIds = new ArrayList<>();
         if (PreselectedAllergensFilterIds == null) PreselectedAllergensFilterIds = new ArrayList<>();
-
-    }
-
-    @Override
-    protected void onStop(){
-        super.onStop();
-
 
     }
 

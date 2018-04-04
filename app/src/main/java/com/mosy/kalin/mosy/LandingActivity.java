@@ -1,10 +1,15 @@
 package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
+import com.mosy.kalin.mosy.Services.AccountService;
+
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 
@@ -14,16 +19,20 @@ public class LandingActivity
         extends AppCompatActivity
 {
 
+    private Context applicationContext;
+
+    @Bean
+    AccountService accountService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // setContentView(R.layout.activity_landing);
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // setContentView(R.layout.activity_landing);
+        this.applicationContext = getApplicationContext();
+        this.accountService.refreshApiAuthenticationToken(applicationContext, () -> {
+            //TODO: Delete before deploying to production!
+            Toast.makeText(applicationContext, "WebApi authToken refreshed!", Toast.LENGTH_LONG).show();
+        });
     }
 
     @Click(resName = "landing_btnVenues")

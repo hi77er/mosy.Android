@@ -2,17 +2,17 @@ package com.mosy.kalin.mosy.Services.AsyncTasks;
 
 import android.os.AsyncTask;
 
-import com.mosy.kalin.mosy.DAL.Repositories.MenuRepository;
+import com.mosy.kalin.mosy.DAL.Repositories.DishesRepository;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.GetRequestableFiltersBindingModel;
-import com.mosy.kalin.mosy.Models.Responses.RequestableFiltersResponse;
+import com.mosy.kalin.mosy.Models.Responses.RequestableFiltersResult;
 
 public class LoadMenuListFiltersAsyncTask
-    extends AsyncTask<GetRequestableFiltersBindingModel, String, RequestableFiltersResponse>
+    extends AsyncTask<GetRequestableFiltersBindingModel, String, RequestableFiltersResult>
 {
-    private final AsyncTaskListener<RequestableFiltersResponse> asyncTaskListenerListener;
+    private final AsyncTaskListener<RequestableFiltersResult> asyncTaskListenerListener;
 
-    public LoadMenuListFiltersAsyncTask(AsyncTaskListener<RequestableFiltersResponse> listener) {
+    public LoadMenuListFiltersAsyncTask(AsyncTaskListener<RequestableFiltersResult> listener) {
         asyncTaskListenerListener = listener;
     }
 
@@ -22,12 +22,12 @@ public class LoadMenuListFiltersAsyncTask
     }
 
     @Override
-    protected RequestableFiltersResponse doInBackground(GetRequestableFiltersBindingModel... models) {
-        RequestableFiltersResponse results = null;
+    protected RequestableFiltersResult doInBackground(GetRequestableFiltersBindingModel... models) {
+        RequestableFiltersResult results = null;
 
         try {
             GetRequestableFiltersBindingModel model = models[0];
-            results = new MenuRepository().getMenuListItemFilters(model);
+            results = new DishesRepository().getFilters(model);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -35,7 +35,7 @@ public class LoadMenuListFiltersAsyncTask
     }
 
     @Override
-    protected void onPostExecute(final RequestableFiltersResponse result) {
+    protected void onPostExecute(final RequestableFiltersResult result) {
         asyncTaskListenerListener.onPostExecute(result);
     }
 }

@@ -90,7 +90,9 @@ public class DishesAdapter
 
     @Override
     public MenuListItem getItem(int position) {
-        return menuListItems.get(position);
+        if (this.menuListItems != null)
+            return menuListItems.get(position);
+        else return null;
     }
 
     @Override
@@ -98,12 +100,12 @@ public class DishesAdapter
         return position;
     }
 
-
-
     public void addItems(ArrayList<MenuListItem> items){
-        int lastItemPosition = this.menuListItems.size();
-        this.menuListItems.addAll(lastItemPosition, items);
-        this.notifyDataSetChanged();
+        if (this.menuListItems != null){
+            int lastItemPosition = this.menuListItems.size();
+            this.menuListItems.addAll(lastItemPosition, items);
+            this.notifyDataSetChanged();
+        }
     }
 
     public void clearDishes(){

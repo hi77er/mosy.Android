@@ -2,7 +2,7 @@ package com.mosy.kalin.mosy.Services.AsyncTasks;
 
 import android.os.AsyncTask;
 
-import com.mosy.kalin.mosy.DAL.Repositories.VenueRepository;
+import com.mosy.kalin.mosy.DAL.Repositories.VenuesRepository;
 import com.mosy.kalin.mosy.DTOs.VenueLocation;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueLocationBindingModel;
@@ -27,7 +27,7 @@ public class LoadVenueLocationAsyncTask
 
         try {
             GetVenueLocationBindingModel model = models[0];
-            results = new VenueRepository().getVenueLocation(model);
+            results = new VenuesRepository().getLocation(model);
         } catch (Exception e) {
             e.printStackTrace();
         }

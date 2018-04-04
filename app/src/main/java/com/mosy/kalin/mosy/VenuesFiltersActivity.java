@@ -54,7 +54,7 @@ public class VenuesFiltersActivity
     }
 
     @AfterViews
-    public void InitializeComponents(){
+    public void afterViews(){
         this.workingStatusFilter.setChecked(PreselectedApplyWorkingStatusFilter);
         this.workingStatusFilter.setOnCheckedChangeListener(
             (compoundButton, b) -> SelectedApplyWorkingStatusFilter = compoundButton.isChecked()

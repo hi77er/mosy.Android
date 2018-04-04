@@ -90,7 +90,9 @@ public class VenuesAdapter
 
     @Override
     public Venue getItem(int position) {
-        return venues.get(position);
+        if (this.venues != null)
+            return venues.get(position);
+        else return null;
     }
 
     @Override
@@ -100,9 +102,11 @@ public class VenuesAdapter
 
 
     public void addItems(ArrayList<Venue> items){
-        int lastItemPosition = this.venues.size();
-        this.venues.addAll(lastItemPosition, items);
-        this.notifyDataSetChanged();
+        if (this.venues != null) {
+            int lastItemPosition = this.venues.size();
+            this.venues.addAll(lastItemPosition, items);
+            this.notifyDataSetChanged();
+        }
     }
 
     public void clearVenues(){

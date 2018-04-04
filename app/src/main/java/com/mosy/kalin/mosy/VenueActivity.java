@@ -28,6 +28,7 @@ import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueIndoorImageMetadataAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueMenuAsyncTask;
+import com.mosy.kalin.mosy.Services.VenuesService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -44,9 +45,13 @@ public class VenueActivity extends AppCompatActivity {
 
     private static final String storageContainer = "userimages\\fboalbums\\200x200";
 
+    private Context applicationContext;
+
+    @Bean
+    VenuesService venueService;
+
     @Extra
     Venue Venue;
-
     @Extra
     String SelectedMenuListId; //if the page is navigated via Dishes ListView, this should have value
 
@@ -61,15 +66,20 @@ public class VenueActivity extends AppCompatActivity {
     @ViewById(resName = "venue_vpMenu")
     ViewPager Menu;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.applicationContext = getApplicationContext();
+    }
+
     @AfterViews
-    void updateVenueWithData() {
+    void afterViews() {
         try {
             Name.setText(this.Venue.Name);
             Class.setText(this.Venue.Class);
 
             loadIndoorImageMeta();
             loadMenu();
-
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -77,31 +87,25 @@ public class VenueActivity extends AppCompatActivity {
 
     private void loadIndoorImageMeta() {
         AsyncTaskListener<VenueImage> listener = new AsyncTaskListener<VenueImage>() {
-            @Override
-            public void onPreExecute() {
+            @Override public void onPreExecute() {
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
             }
-
-            @Override
-            public void onPostExecute(VenueImage result) {
+            @Override public void onPostExecute(VenueImage result) {
                 Venue.IndoorImage = result;
                 populateIndoorImageThumbnail();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        GetVenueIndoorImageMetaBindingModel iiModel = new GetVenueIndoorImageMetaBindingModel(this.Venue.Id);
-        new LoadVenueIndoorImageMetadataAsyncTask(listener).execute(iiModel);
+        this.venueService.getImageMetaIndoor(this.applicationContext, listener, this.Venue.Id);
     }
 
     private void loadMenu(){
-        AsyncTaskListener<ArrayList<MenuList>> mListener = new AsyncTaskListener<ArrayList<MenuList>>() {
-            @Override
-            public void onPreExecute() {
+        AsyncTaskListener<ArrayList<MenuList>> listener = new AsyncTaskListener<ArrayList<MenuList>>() {
+            @Override public void onPreExecute() {
                 centralProgress.setVisibility(View.VISIBLE);
             }
 
-            @Override
-            public void onPostExecute(ArrayList<MenuList> result) {
+            @Override public void onPostExecute(ArrayList<MenuList> result) {
                 ArrayList<MenuList> menuLists = result;
                 MenuListsPagerAdapter adapter = new MenuListsPagerAdapter(getSupportFragmentManager(), menuLists, SelectedMenuListId);
                 Menu.setAdapter(adapter);
@@ -117,22 +121,18 @@ public class VenueActivity extends AppCompatActivity {
                 centralProgress.setVisibility(View.GONE);
             }
         };
-
-        GetVenueMenuBindingModel mModel = new GetVenueMenuBindingModel(this.Venue.Id);
-        new LoadVenueMenuAsyncTask(mListener).execute(mModel);
+        this.venueService.getMenu(this.applicationContext, listener, this.Venue.Id);
     }
 
     private void populateIndoorImageThumbnail() {
         if (this.Venue.IndoorImage != null && this.Venue.IndoorImage.Id != null && this.Venue.IndoorImage.Id.length() > 0) {
             //INFO: TryGet Venue Image
             AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
-                @Override
-                public void onPreExecute() {
+                @Override public void onPreExecute() {
                     //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
                 }
 
-                @Override
-                public void onPostExecute(byte[] bytes) {
+                @Override public void onPostExecute(byte[] bytes) {
                     if (ArrayHelper.hasValidBitmapContent(bytes)){
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         IndoorImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));

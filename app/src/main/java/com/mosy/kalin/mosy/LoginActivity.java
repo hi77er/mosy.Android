@@ -30,6 +30,43 @@ public class LoginActivity
     TextView tx1;
     int counter = 3;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        b1 = findViewById(R.id.login_btnLogin);
+        ed1 = findViewById(R.id.login_etEmail);
+        ed2 = findViewById(R.id.login_etPassword);
+
+        b2 = findViewById(R.id.login_btnCancel);
+        tx1 = findViewById(R.id.login_tvAttemptsLeftPH);
+        tx1.setVisibility(View.GONE);
+
+        b1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ed1.getText().toString().equals("admin") &&
+                        ed2.getText().toString().equals("admin")) {
+                    Toast.makeText(getApplicationContext(),
+                            "Redirecting...",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Wrong Credentials",Toast.LENGTH_SHORT).show();
+
+                    tx1.setVisibility(View.VISIBLE);
+                    tx1.setBackgroundColor(Color.RED);
+                    counter--;
+                    tx1.setText(Integer.toString(counter));
+
+                    if (counter == 0) {
+                        b1.setEnabled(false);
+                    }
+                }
+            }
+        });
+
+        b2.setOnClickListener(v -> finish());
+    }
+
     @Click(R.id.login_btnLogin)
     public void Login() {
         String email = ((EditText)findViewById(R.id.login_etEmail)).getText().toString();
@@ -68,43 +105,6 @@ public class LoginActivity
             Toast.makeText(applicationContext,
                     "Email and password are required.",
                     Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        b1 = findViewById(R.id.login_btnLogin);
-        ed1 = findViewById(R.id.login_etEmail);
-        ed2 = findViewById(R.id.login_etPassword);
-
-        b2 = findViewById(R.id.login_btnCancel);
-        tx1 = findViewById(R.id.login_tvAttemptsLeftPH);
-        tx1.setVisibility(View.GONE);
-
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(ed1.getText().toString().equals("admin") &&
-                   ed2.getText().toString().equals("admin")) {
-                    Toast.makeText(getApplicationContext(),
-                            "Redirecting...",Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Wrong Credentials",Toast.LENGTH_SHORT).show();
-
-                    tx1.setVisibility(View.VISIBLE);
-                    tx1.setBackgroundColor(Color.RED);
-                    counter--;
-                    tx1.setText(Integer.toString(counter));
-
-                    if (counter == 0) {
-                        b1.setEnabled(false);
-                    }
-                }
-            }
-        });
-
-        b2.setOnClickListener(v -> finish());
     }
 
     @Click(R.id.login_btnRegister)

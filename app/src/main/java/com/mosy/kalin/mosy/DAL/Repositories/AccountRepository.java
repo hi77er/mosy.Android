@@ -1,6 +1,5 @@
 package com.mosy.kalin.mosy.DAL.Repositories;
 
-import com.mosy.kalin.mosy.DTOs.Enums.AuthenticationResultStatus;
 import com.mosy.kalin.mosy.DTOs.Results.RegisterResult;
 import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
@@ -11,7 +10,7 @@ import com.mosy.kalin.mosy.Models.BindingModels.RegisterBindingModel;
 
 public class AccountRepository {
 
-    private static final String registerEndpointEnding = "Account/Register";
+    private static final String registerEndpointEnding = "account/register";
 
 
     public TokenResult tokenLogin(LoginBindingModel model) {

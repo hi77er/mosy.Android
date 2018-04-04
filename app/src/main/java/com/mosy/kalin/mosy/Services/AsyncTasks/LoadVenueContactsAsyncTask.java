@@ -2,12 +2,10 @@ package com.mosy.kalin.mosy.Services.AsyncTasks;
 
 import android.os.AsyncTask;
 
-import com.mosy.kalin.mosy.DAL.Repositories.VenueRepository;
+import com.mosy.kalin.mosy.DAL.Repositories.VenuesRepository;
 import com.mosy.kalin.mosy.DTOs.VenueContacts;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueContactsBindingModel;
-
-import java.util.ArrayList;
 
 public class LoadVenueContactsAsyncTask
     extends AsyncTask<GetVenueContactsBindingModel, String, VenueContacts>
@@ -29,7 +27,7 @@ public class LoadVenueContactsAsyncTask
 
         try {
             GetVenueContactsBindingModel model = models[0];
-            results = new VenueRepository().getVenueContacts(model);
+            results = new VenuesRepository().getContacts(model);
         } catch (Exception e) {
             e.printStackTrace();
         }

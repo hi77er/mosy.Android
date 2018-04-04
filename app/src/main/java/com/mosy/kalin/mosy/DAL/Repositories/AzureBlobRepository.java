@@ -4,11 +4,7 @@ import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.blob.CloudBlob;
 import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
-import com.mosy.kalin.mosy.DTOs.Enums.AuthenticationResultStatus;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
-import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.RegisterBindingModel;
-import com.mosy.kalin.mosy.Models.Responses.RequestableFiltersResponse;
 
 public class AzureBlobRepository {
 

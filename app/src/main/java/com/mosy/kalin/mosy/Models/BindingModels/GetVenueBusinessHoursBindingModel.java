@@ -2,13 +2,12 @@ package com.mosy.kalin.mosy.Models.BindingModels;
 
 public class GetVenueBusinessHoursBindingModel {
 
+    public String AuthTokenHeader;
     public String VenueId;
-    public String getVenueId() { return VenueId; }
-    public void setVenueId(String venueId) { this.VenueId = venueId; }
 
     public GetVenueBusinessHoursBindingModel() { }
-
-    public GetVenueBusinessHoursBindingModel(String venueId) {
+    public GetVenueBusinessHoursBindingModel(String authTokenHeader, String venueId) {
+        this.AuthTokenHeader = authTokenHeader;
         this.VenueId = venueId;
     }
 

@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.annimon.stream.Stream;
 import com.mosy.kalin.mosy.DTOs.DishFilter;
 import com.mosy.kalin.mosy.DTOs.Ingredient;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
@@ -20,18 +19,11 @@ import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
-import com.mosy.kalin.mosy.Models.BindingModels.GetDishAllergensBindingModel;
 import com.mosy.kalin.mosy.R;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadDishAllergensAsyncTask;
-import com.mosy.kalin.mosy.Services.AzureBlobService;
-import com.mosy.kalin.mosy.VenueActivity;
-import com.mosy.kalin.mosy.VenueActivity_;
 
 import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.annotations.RootContext;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
