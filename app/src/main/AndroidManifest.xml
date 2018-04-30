@@ -7,8 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- <uses-permission android:name="android.permission.WAKE_LOCK" /> -->
 
+    <!-- <uses-permission android:name="android.permission.WAKE_LOCK" /> -->
     <application
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
@@ -17,21 +17,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-
         <activity
             android:name=".LandingActivity_"
             android:label="@string/title_activity_landing"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-               <action android:name="android.intent.action.MAIN" />
-               <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".LoginActivity_"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar">
+
             <!--
              <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,7 +43,6 @@
             android:name=".RegisterActivity_"
             android:label="@string/title_activity_register"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".VenuesActivity_"
             android:label="@string/title_venues_activity"
@@ -51,13 +50,14 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <action android:name="android.intent.action.VIEW" />
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+                <!-- <action android:name="android.intent.action.MAIN" /> -->
+                <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             </intent-filter>
 
-            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
-
         <activity
             android:name=".VenueActivity_"
             android:theme="@style/AppTheme.NoActionBar">
@@ -71,20 +71,16 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".VenueDetailsActivity_"
             android:label="@string/title_activity_venue_details"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".VenuesFiltersActivity_"
             android:theme="@style/Theme.AppCompat.PopUp" />
-
         <activity
             android:name=".DishesFiltersActivity_"
             android:theme="@style/Theme.AppCompat.PopUp" />
-
 
         <meta-data
             android:name="com.google.android.gms.version"

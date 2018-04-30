@@ -1,7 +1,6 @@
 package com.mosy.kalin.mosy.Services;
 
 import android.content.Context;
-import android.view.View;
 
 import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;

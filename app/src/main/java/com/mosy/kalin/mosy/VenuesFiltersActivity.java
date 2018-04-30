@@ -17,6 +17,7 @@ import com.mosy.kalin.mosy.Helpers.StringHelper;
 
 import org.androidannotations.annotations.AfterExtras;
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
@@ -98,6 +99,11 @@ public class VenuesFiltersActivity
         else{
             // Do nothing. Simply close this activity.
         }
+    }
+
+    @Click(R.id.filterDishes_GoButton)
+    public void GoButton_Clicked(){
+        VenuesFiltersActivity.this.finish();
     }
 
 

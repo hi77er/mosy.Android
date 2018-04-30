@@ -21,26 +21,24 @@ import java.util.Date;
 @EBean
 public class AccountService {
 
-    public void refreshApiAuthenticationToken(Context applicationContext){
-        refreshApiAuthenticationToken(applicationContext, null, null);
+    public boolean refreshApiAuthenticationTokenExists(Context applicationContext){
+        return refreshApiAuthenticationTokenExists(applicationContext, null, null);
     }
 
-    public void refreshApiAuthenticationToken(Runnable preExecute, Context applicationContext){
-        refreshApiAuthenticationToken(applicationContext, null, preExecute);
+    public boolean refreshApiAuthenticationTokenExists(Runnable preExecute, Context applicationContext){
+        return refreshApiAuthenticationTokenExists(applicationContext, null, preExecute);
     }
 
-    public void refreshApiAuthenticationToken(Context applicationContext, Runnable postExecute){
-        refreshApiAuthenticationToken(applicationContext, postExecute, null);
+    public boolean refreshApiAuthenticationTokenExists(Context applicationContext, Runnable postExecute){
+        return refreshApiAuthenticationTokenExists(applicationContext, postExecute, null);
     }
 
-    public void refreshApiAuthenticationToken(Context applicationContext, Runnable postExecute, Runnable preExecute) {
+    public boolean refreshApiAuthenticationTokenExists(Context applicationContext, Runnable postExecute, Runnable preExecute) {
         SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_webApi), Context.MODE_PRIVATE);
         LoginBindingModel model = new LoginBindingModel("webapiadmin@mosy.com", "!23Qwe");
+        boolean tokenExistsAndIsValid = this.checkTokenValid(applicationContext);
 
-        boolean tokenIsValid = this.checkTokenValid(applicationContext);
-        if (tokenIsValid) {
-            // DoNothing
-        } else {
+        if (!tokenExistsAndIsValid) {
             AsyncTaskListener<TokenResult> listener = new AsyncTaskListener<TokenResult>() {
                 @Override
                 public void onPreExecute() {
@@ -62,6 +60,8 @@ public class AccountService {
             SharedPreferences.Editor editor = mPreferences.edit();
             editor.apply();
         }
+
+        return tokenExistsAndIsValid;
     }
 
     private boolean checkTokenValid(Context applicationContext) {

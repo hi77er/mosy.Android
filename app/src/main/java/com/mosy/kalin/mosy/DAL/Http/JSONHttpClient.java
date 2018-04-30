@@ -5,6 +5,7 @@ import com.mosy.kalin.mosy.BuildConfig;
 import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
 import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Services.AccountService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,7 +57,10 @@ public class JSONHttpClient {
                 if (!dateFormat.equals(StringHelper.empty()))
                     builder.setDateFormat(dateFormat);
 
+                System.out.println("StatusCode: " + httpStatusCode + ". " + this.Connection.getResponseMessage());
                 return builder.create().fromJson(jsonString, objectType);
+            } else if (httpStatusCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                System.out.println("StatusCode: " + httpStatusCode + ". " + this.Connection.getResponseMessage());
             } else {
                 System.out.println("StatusCode: " + httpStatusCode + ". " + this.Connection.getResponseMessage());
             }

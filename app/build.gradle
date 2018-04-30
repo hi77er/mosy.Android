@@ -78,11 +78,12 @@ android {
 }
 
 android.applicationVariants.all {
-    variant -> variant.variantData.variantConfiguration.javaCompileOptions.annotationProcessorOptions.arguments =
-            [
-                    'androidManifestFile': variant.outputs[0]?.processResources?.manifestFile?.absolutePath,
-                    'resourcePackageName': android.defaultConfig.applicationId
-            ]
+    variant ->
+        variant.variantData.variantConfiguration.javaCompileOptions.annotationProcessorOptions.arguments =
+                [
+                        'androidManifestFile': variant.outputs[0]?.processResources?.manifestFile?.absolutePath,
+                        'resourcePackageName': android.defaultConfig.applicationId
+                ]
 }
 
 configurations { all*.exclude group: 'com.android.support', module: 'support-v4' }

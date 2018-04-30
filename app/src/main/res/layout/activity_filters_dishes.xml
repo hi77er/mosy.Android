@@ -1,55 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tl_filters_dishes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabTextColor="#FFF"
-            app:tabSelectedTextColor="@color/colorAccent"
-            android:background="@color/colorPrimaryVeryDark"
-            android:minHeight="?attr/actionBarSize"
-            app:tabGravity="center"
-            app:tabMode="scrollable" />
-
-        <LinearLayout
-            android:id="@+id/venues_llInitialLoadingProgress"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:layout_margin="20dp">
-
-            <ProgressBar
-                android:id="@+id/pbHeaderProgress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminate="true" >
-            </ProgressBar>
-        </LinearLayout>
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/vp_filters_dishes"
-            android:layout_width="match_parent"
-            android:layout_height="1000dp" />
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="8">
 
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tl_filters_dishes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabTextColor="#FFF"
+                app:tabSelectedTextColor="@color/colorAccent"
+                android:background="@color/colorPrimaryVeryDark"
+                android:minHeight="?attr/actionBarSize"
+                app:tabGravity="center"
+                app:tabMode="scrollable" />
+
+            <LinearLayout
+                android:id="@+id/venues_llInitialLoadingProgress"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_margin="20dp">
+
+                <ProgressBar
+                    android:id="@+id/pbHeaderProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true" >
+                </ProgressBar>
+            </LinearLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vp_filters_dishes"
+                android:layout_width="match_parent"
+                android:layout_height="1000dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="15dp">
+            android:layout_gravity="start"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentStart="true">
 
             <!--<TextView-->
             <!--android:id="@+id/filters_dishes_tvRatingLabel"-->
@@ -69,7 +87,7 @@
 
             <TextView
                 android:id="@+id/filters_dishes_tvWorkingTimeLabel"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="@string/filters_dishes_show_closed"
@@ -79,9 +97,20 @@
                 android:id="@+id/filters_dishes_scWorkingTimeFilter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
                 android:checked="true" />
         </LinearLayout>
 
-    </LinearLayout>
-</ScrollView>
+        <Button
+            android:id="@+id/filterDishes_GoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/universal_go"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>

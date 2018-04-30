@@ -79,8 +79,6 @@
     <string name="filters_dishes_show_closed">Show dishes only from open venues</string>
 
 
-
-
     <!--Filters-->
     <string name="CuisinePhaseSalads">Salads</string>
     <string name="CuisinePhaseAppetizersAndSnacks">Appet</string>
@@ -113,5 +111,6 @@
     <string name="pref_authTokenExpiresInSeconds_webApi">prefAuthTokenExpiresInSeconds</string>
     <string name="pref_authTokenExpiresAt_webApi">prefAuthTokenExpiresAt</string>
     <string name="pref_collectionName_webApi">WebApi</string>
+    <string name="universal_go">Go</string>
 
 </resources>

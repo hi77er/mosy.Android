@@ -244,9 +244,11 @@ public class VenuesActivity
                     centralProgress.setVisibility(View.GONE);
                     venuesWall.setVisibility(View.VISIBLE);
 
-                    venuesAdapter.addItems(result);
-                    venuesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;
-                    venuesAdapter.LoadingStillInAction = false;
+                    if (result != null) {
+                        venuesAdapter.addItems(result);
+                        venuesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;
+                        venuesAdapter.LoadingStillInAction = false;
+                    }
                 }
             };
 
