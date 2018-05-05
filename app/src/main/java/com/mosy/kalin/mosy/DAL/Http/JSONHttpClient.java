@@ -54,7 +54,7 @@ public class JSONHttpClient {
                 String jsonString = convertStreamToString(this.Connection.getInputStream());
 
                 GsonBuilder builder  = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer());
-                if (!dateFormat.equals(StringHelper.empty()))
+                if (!StringHelper.isNotNullOrEmpty(dateFormat))
                     builder.setDateFormat(dateFormat);
 
                 System.out.println("StatusCode: " + httpStatusCode + ". " + this.Connection.getResponseMessage());
@@ -107,7 +107,7 @@ public class JSONHttpClient {
                 String jsonString = convertStreamToString(this.Connection.getInputStream());
 
                 GsonBuilder builder  = new GsonBuilder();
-                if (!dateFormat.equals(StringHelper.empty()))
+                if (!StringHelper.isNotNullOrEmpty(dateFormat))
                     builder.setDateFormat(dateFormat);
 
                 return builder.create().fromJson(jsonString, objectType);
