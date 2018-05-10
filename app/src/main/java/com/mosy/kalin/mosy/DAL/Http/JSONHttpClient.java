@@ -17,6 +17,7 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -53,9 +54,10 @@ public class JSONHttpClient {
             if (httpStatusCode == HttpURLConnection.HTTP_OK) {
                 String jsonString = convertStreamToString(this.Connection.getInputStream());
 
-                GsonBuilder builder  = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer());
-                if (!StringHelper.isNotNullOrEmpty(dateFormat))
-                    builder.setDateFormat(dateFormat);
+                GsonBuilder builder  = new GsonBuilder();
+                builder.registerTypeAdapter(Date.class, new JsonDateDeserializer());
+                builder.registerTypeAdapter(Date.class, new JsonDateDeserializer2());
+                builder.registerTypeAdapter(Time.class, new JsonTimeDeserializer());
 
                 System.out.println("StatusCode: " + httpStatusCode + ". " + this.Connection.getResponseMessage());
                 return builder.create().fromJson(jsonString, objectType);
@@ -107,8 +109,9 @@ public class JSONHttpClient {
                 String jsonString = convertStreamToString(this.Connection.getInputStream());
 
                 GsonBuilder builder  = new GsonBuilder();
-                if (!StringHelper.isNotNullOrEmpty(dateFormat))
-                    builder.setDateFormat(dateFormat);
+                builder.registerTypeAdapter(Date.class, new JsonDateDeserializer());
+                builder.registerTypeAdapter(Date.class, new JsonDateDeserializer2());
+                builder.registerTypeAdapter(Time.class, new JsonTimeDeserializer());
 
                 return builder.create().fromJson(jsonString, objectType);
             } else {
