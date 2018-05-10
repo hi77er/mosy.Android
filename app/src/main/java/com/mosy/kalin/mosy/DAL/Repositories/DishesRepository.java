@@ -24,7 +24,7 @@ public class DishesRepository {
         try {
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
             Type returnType = new TypeToken<ArrayList<MenuListItem>>(){}.getType();
-            menuItemsResult = jsonHttpClient.PostObject(endpoint, model, returnType, "HH:mm:ss", model.AuthTokenHeader);
+            menuItemsResult = jsonHttpClient.PostObject(endpoint, model, returnType, "yyyy-MM-dd'T'HH:mm:ss.", model.AuthTokenHeader);
             return menuItemsResult;
         } catch(Exception e) {
             e.printStackTrace();
