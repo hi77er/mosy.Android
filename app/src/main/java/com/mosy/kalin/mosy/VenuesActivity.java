@@ -260,7 +260,7 @@ public class VenuesActivity
                 localDayOfWeek = localCalendar.get(Calendar.DAY_OF_WEEK);
             }
 
-            this.venueService.getVenues(
+            this.venueService.getVenuesRetrofit(
                     applicationContext, listener, maxResultsCount, totalItemsOffset,
                     lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
                     query, localDayOfWeek, localTime);

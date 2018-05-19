@@ -2,6 +2,8 @@ package com.mosy.kalin.mosy.Services;
 
 import android.content.Context;
 
+import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClient;
+import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IVenuesRepository;
 import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueBadgeEndorsement;
@@ -31,18 +33,62 @@ import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 @EBean
 public class VenuesService {
+
 
     public void getById(Context applicationContext, AsyncTaskListener<Venue> listener, String venueId)
     {
         String authTokenHeader = new AccountService().getAuthTokenHeader(applicationContext);
+        IVenuesRepository repository = RetrofitAPIClient.getClient().create(IVenuesRepository.class);
 
-        GetVenueByIdBindingModel model = new GetVenueByIdBindingModel(authTokenHeader, venueId);
-        new LoadVenueAsyncTask(listener).execute(model);
+        Venue result = null;
+        try {
+            Call<Venue> callResult =  repository.getById(authTokenHeader, venueId);
+            callResult.enqueue(new Callback<Venue>() {
+                @Override
+                public void onResponse(Call<Venue> call, Response<Venue> response) {
+                    Venue venue = response.body();
+                    listener.onPostExecute(venue);
+                }
+                @Override
+                public void onFailure(Call<Venue> call, Throwable t) {
+                    call.cancel();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void getVenues(Context applicationContext,
+                          AsyncTaskListener<ArrayList<Venue>> listener,
+                          int maxResultsCount,
+                          int totalItemsOffset,
+                          double latitude,
+                          double longitude,
+                          String query,
+                          Integer localDayOfWeek,
+                          String localTime) {
+        String authTokenHeader = new AccountService().getAuthTokenHeader(applicationContext);
+        SearchVenuesBindingModel model = new SearchVenuesBindingModel(
+                authTokenHeader,
+                maxResultsCount,
+                totalItemsOffset,
+                latitude,
+                longitude,
+                query,
+                localDayOfWeek,
+                localTime);
+
+        new LoadVenuesAsyncTask(listener).execute(model);
+    }
+
+    public void getVenuesRetrofit(Context applicationContext,
                           AsyncTaskListener<ArrayList<Venue>> listener,
                           int maxResultsCount,
                           int totalItemsOffset,
@@ -63,7 +109,25 @@ public class VenuesService {
                 localDayOfWeek,
                 localTime);
 
-        new LoadVenuesAsyncTask(listener).execute(model);
+        IVenuesRepository repository = RetrofitAPIClient.getClient().create(IVenuesRepository.class);
+
+        ArrayList<Venue> result = null;
+        try {
+            Call<ArrayList<Venue>> callResult =  repository.loadVenuesRetrofit(authTokenHeader, model);
+            callResult.enqueue(new Callback<ArrayList<Venue>>() {
+                @Override
+                public void onResponse(Call<ArrayList<Venue>> call, Response<ArrayList<Venue>> response) {
+                    ArrayList<Venue> venues = response.body();
+                    listener.onPostExecute(venues);
+                }
+                @Override
+                public void onFailure(Call<ArrayList<Venue>> call, Throwable t) {
+                    call.cancel();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void getImageMetaIndoor(Context applicationContext, AsyncTaskListener<VenueImage> listener, String venueId)

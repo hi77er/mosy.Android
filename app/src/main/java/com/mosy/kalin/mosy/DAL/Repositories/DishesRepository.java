@@ -19,7 +19,7 @@ public class DishesRepository {
 
 
     public ArrayList<MenuListItem> loadDishes(SearchMenuListItemsBindingModel model){
-        String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint(searchMenuListItemsEndpointEnding);
+        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(searchMenuListItemsEndpointEnding);
         ArrayList<MenuListItem> menuItemsResult = new ArrayList<>();
         try {
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
@@ -33,7 +33,7 @@ public class DishesRepository {
     }
 
     public RequestableFiltersResult getFilters(GetRequestableFiltersBindingModel model){
-        String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint(getMenuListItemFiltersEndpointEnding);
+        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getMenuListItemFiltersEndpointEnding);
         RequestableFiltersResult response;
 
         try {

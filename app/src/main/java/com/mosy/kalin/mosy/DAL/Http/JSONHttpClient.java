@@ -76,7 +76,7 @@ public class JSONHttpClient {
         return null;
     }
 
-    public <T> T PostObject(final String url, final Object object, final Type objectType, String dateFormat, String authToken) { //final Class<T> objectClass
+    public <T> T PostObject(final String url, final Object bodyObject, final Type objectType, String dateFormat, String authToken) { //final Class<T> objectClass
         try {
             URL theUrl = new URL(url);
             this.Connection = (HttpURLConnection) theUrl.openConnection();
@@ -93,10 +93,10 @@ public class JSONHttpClient {
             long execStart = 0;
             long elapsed = 0;
 
-            String str = new GsonBuilder().create().toJson(object);
-            byte[] outputInBytes = str.getBytes("UTF-8");
+            String requestBodyJson = new GsonBuilder().create().toJson(bodyObject);
+            byte[] requestBodyBytes = requestBodyJson.getBytes("UTF-8");
             OutputStream os = this.Connection.getOutputStream();
-            os.write( outputInBytes );
+            os.write( requestBodyBytes );
             os.close();
 
             if (BuildConfig.DEBUG) execStart = System.currentTimeMillis();
