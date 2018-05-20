@@ -1,5 +1,6 @@
 package com.mosy.kalin.mosy.DAL.Http;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mosy.kalin.mosy.BuildConfig;
 import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
