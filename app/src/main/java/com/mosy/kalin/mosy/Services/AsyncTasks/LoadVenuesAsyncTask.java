@@ -29,7 +29,7 @@ public class LoadVenuesAsyncTask
 
         try {
             SearchVenuesBindingModel model = models[0];
-            results = new VenuesRepository().loadVenues(model);
+//            results = new VenuesRepository().loadVenues(model);
         } catch (Exception e) {
             e.printStackTrace();
         }

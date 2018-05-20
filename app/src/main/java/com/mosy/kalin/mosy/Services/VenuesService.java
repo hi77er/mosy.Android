@@ -46,7 +46,6 @@ public class VenuesService {
         String authTokenHeader = new AccountService().getAuthTokenHeader(applicationContext);
         IVenuesRepository repository = RetrofitAPIClient.getClient().create(IVenuesRepository.class);
 
-        Venue result = null;
         try {
             Call<Venue> callResult =  repository.getById(authTokenHeader, venueId);
             callResult.enqueue(new Callback<Venue>() {
@@ -73,29 +72,6 @@ public class VenuesService {
                           double longitude,
                           String query,
                           Integer localDayOfWeek,
-                          String localTime) {
-        String authTokenHeader = new AccountService().getAuthTokenHeader(applicationContext);
-        SearchVenuesBindingModel model = new SearchVenuesBindingModel(
-                authTokenHeader,
-                maxResultsCount,
-                totalItemsOffset,
-                latitude,
-                longitude,
-                query,
-                localDayOfWeek,
-                localTime);
-
-        new LoadVenuesAsyncTask(listener).execute(model);
-    }
-
-    public void getVenuesRetrofit(Context applicationContext,
-                          AsyncTaskListener<ArrayList<Venue>> listener,
-                          int maxResultsCount,
-                          int totalItemsOffset,
-                          double latitude,
-                          double longitude,
-                          String query,
-                          Integer localDayOfWeek,
                           String localTime)
     {
         String authTokenHeader = new AccountService().getAuthTokenHeader(applicationContext);
@@ -111,7 +87,6 @@ public class VenuesService {
 
         IVenuesRepository repository = RetrofitAPIClient.getClient().create(IVenuesRepository.class);
 
-        ArrayList<Venue> result = null;
         try {
             Call<ArrayList<Venue>> callResult =  repository.loadVenuesRetrofit(authTokenHeader, model);
             callResult.enqueue(new Callback<ArrayList<Venue>>() {
@@ -174,14 +149,31 @@ public class VenuesService {
         new LoadVenueContactsAsyncTask(listener).execute(model);
     }
 
-    public void getBusinessHours(Context applicationContext,
-                            AsyncTaskListener<VenueBusinessHours> listener,
-                            String venueId)
+    public void getBusinessHoursRetrofit(Context applicationContext,
+                                 AsyncTaskListener<VenueBusinessHours> listener,
+                                 String venueId)
     {
         String authToken = new AccountService().getAuthTokenHeader(applicationContext);
 
-        GetVenueBusinessHoursBindingModel model = new GetVenueBusinessHoursBindingModel(authToken, venueId);
-        new LoadVenueBusinessHoursAsyncTask(listener).execute(model);
+        IVenuesRepository repository = RetrofitAPIClient.getClient().create(IVenuesRepository.class);
+
+       try {
+            Call<VenueBusinessHours> callResult =  repository.getBusinessHoursRetrofit(authToken, venueId);
+            callResult.enqueue(new Callback<VenueBusinessHours>() {
+                @Override
+                public void onResponse(Call<VenueBusinessHours> call, Response<VenueBusinessHours> response) {
+                    VenueBusinessHours venues = response.body();
+                    listener.onPostExecute(venues);
+                }
+                @Override
+                public void onFailure(Call<VenueBusinessHours> call, Throwable t) {
+                    call.cancel();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
 }

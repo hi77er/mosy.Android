@@ -40,64 +40,6 @@ public class VenuesRepository {
     private static final String getVenueLocationEndpointEnding = "fbo/location";
     private static final String getVenueMenuEndpointEnding = "fbo/publicmenu";
 
-    public ArrayList<Venue> loadVenues(SearchVenuesBindingModel model){
-        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(searchVenuesEndpointEnding);
-        ArrayList<Venue> venuesResult = new ArrayList<>();
-
-        try {
-            JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            Type returnType = new TypeToken<ArrayList<Venue>>(){}.getType();
-            venuesResult = jsonHttpClient.PostObject(endpoint, model, returnType, "HH:mm:ss", model.AuthTokenHeader);
-            return venuesResult;
-        } catch(Exception e) {
-            e.printStackTrace();
-            Venue errResult = new Venue();
-            errResult.ErrorMessage = e.getMessage();
-            venuesResult.add(errResult);
-            return venuesResult;
-        }
-    }
-
-
-
-//    public Venue getById(GetVenueByIdBindingModel model){
-//        String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint(getVenueByIdEndpointEnding);
-//        Venue venue;
-//
-//        try {
-//            HttpParams params = new HttpParams();
-//            params.put("id", model.VenueId);
-//
-//            JSONHttpClient jsonHttpClient = new JSONHttpClient();
-//            Type returnType = new TypeToken<Venue>(){}.getType();
-//            venue = jsonHttpClient.Get(endpoint, params, returnType, "yyyy-MM-dd'T'HH:mm:ss.", model.AuthTokenHeader);
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//            Venue errResult = new Venue();
-//            errResult.ErrorMessage = e.getMessage();
-//            return errResult;
-//        }
-//        return venue;
-//    }
-
-    public VenueBusinessHours getBusinessHours(GetVenueBusinessHoursBindingModel model){
-        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getVenueBusinessHoursEndpointEnding);
-        VenueBusinessHours businessHours = null;
-
-        try {
-            HttpParams params = new HttpParams();
-            params.put("fboId", model.VenueId);
-
-            JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            businessHours = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueBusinessHours>(){}.getType(), "HH:mm:ss", model.AuthTokenHeader);
-        } catch(Exception e) {
-            e.printStackTrace();
-            VenueBusinessHours errResult = new VenueBusinessHours();
-            errResult.ErrorMessage = e.getMessage();
-            return errResult;
-        }
-        return businessHours;
-    }
 
     public VenueContacts getContacts(GetVenueContactsBindingModel model){
         String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getVenueContactsEndpointEnding);
@@ -195,4 +137,65 @@ public class VenuesRepository {
         }
         return brochuresResult;
     }
+
+
+//    public ArrayList<Venue> loadVenues(SearchVenuesBindingModel model){
+//        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(searchVenuesEndpointEnding);
+//        ArrayList<Venue> venuesResult = new ArrayList<>();
+//
+//        try {
+//            JSONHttpClient jsonHttpClient = new JSONHttpClient();
+//            Type returnType = new TypeToken<ArrayList<Venue>>(){}.getType();
+//            venuesResult = jsonHttpClient.PostObject(endpoint, model, returnType, "HH:mm:ss", model.AuthTokenHeader);
+//            return venuesResult;
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//            Venue errResult = new Venue();
+//            errResult.ErrorMessage = e.getMessage();
+//            venuesResult.add(errResult);
+//            return venuesResult;
+//        }
+//    }
+
+
+
+//    public Venue getById(GetVenueByIdBindingModel model){
+//        String endpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint(getVenueByIdEndpointEnding);
+//        Venue venue;
+//
+//        try {
+//            HttpParams params = new HttpParams();
+//            params.put("id", model.VenueId);
+//
+//            JSONHttpClient jsonHttpClient = new JSONHttpClient();
+//            Type returnType = new TypeToken<Venue>(){}.getType();
+//            venue = jsonHttpClient.Get(endpoint, params, returnType, "yyyy-MM-dd'T'HH:mm:ss.", model.AuthTokenHeader);
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//            Venue errResult = new Venue();
+//            errResult.ErrorMessage = e.getMessage();
+//            return errResult;
+//        }
+//        return venue;
+//    }
+
+//    public VenueBusinessHours getBusinessHours(GetVenueBusinessHoursBindingModel model){
+//        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getVenueBusinessHoursEndpointEnding);
+//        VenueBusinessHours businessHours = null;
+//
+//        try {
+//            HttpParams params = new HttpParams();
+//            params.put("fboId", model.VenueId);
+//
+//            JSONHttpClient jsonHttpClient = new JSONHttpClient();
+//            businessHours = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueBusinessHours>(){}.getType(), "HH:mm:ss", model.AuthTokenHeader);
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//            VenueBusinessHours errResult = new VenueBusinessHours();
+//            errResult.ErrorMessage = e.getMessage();
+//            return errResult;
+//        }
+//        return businessHours;
+//    }
+
 }

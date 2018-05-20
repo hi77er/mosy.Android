@@ -201,7 +201,7 @@ public class VenueDetailsActivity
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getBusinessHours(applicationContext, listener, this.Venue.Id);
+        this.venueService.getBusinessHoursRetrofit(applicationContext, listener, this.Venue.Id);
     }
 
     private void loadLocation() {

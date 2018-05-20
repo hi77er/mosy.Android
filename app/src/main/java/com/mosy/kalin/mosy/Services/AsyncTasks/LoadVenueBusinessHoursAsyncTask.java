@@ -27,7 +27,7 @@ public class LoadVenueBusinessHoursAsyncTask
 
         try {
             GetVenueBusinessHoursBindingModel model = models[0];
-            results = new VenuesRepository().getBusinessHours(model);
+//            results = new VenuesRepository().getBusinessHours(model);
         } catch (Exception e) {
             e.printStackTrace();
         }
