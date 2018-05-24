@@ -1,113 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--App Level-->
-    <string name="google_maps_key" translatable="false">AIzaSyDkyNsNMAi8VoxWrLnI-8pp0W5P54r2Dvs</string>
-    <string name="app_name">Foodoo</string>
+<string name="app_name">"Foodoooo"</string>
 
-    <!--Login Activity-->
-    <string name="title_activity_login">Login to</string>
-    <string name="email_activity_login">Enter Email</string>
-    <string name="password_activity_login">Password</string>
-    <string name="cancel_activity_login">Cancel</string>
-    <string name="login_activity_login">Login</string>
-    <string name="register_activity_login">Register</string>
+<!-- App Level -->
+<string name="google_maps_key">"AIzaSyDkyNsNMAi8VoxWrLnI-8pp0W5P54r2Dvs"</string>
 
-    <!--Register Activity-->
-    <string name="title_activity_register">Register to</string>
-    <string name="email_activity_register">Enter Email</string>
-    <string name="password_activity_register">Password</string>
-    <string name="repeat_pass_activity_register">Repeat password</string>
-    <string name="cancel_activity_register">Cancel</string>
-    <string name="register_activity_register">Register</string>
+<!-- Login Activity -->
+<string name="title_activity_login">"Login to"</string>
+<string name="email_activity_login">"Enter Email"</string>
+<string name="password_activity_login">"Password"</string>
+<string name="attempts_left_activity_login"></string>
+<string name="attempts_left_ph_activity_login"></string>
+<string name="cancel_activity_login">"Cancel"</string>
+<string name="login_activity_login">"Login"</string>
+<string name="register_activity_login">"Register"</string>
 
-    <!--Venue Activity-->
+<!-- Register Activity -->
+<string name="title_activity_register">"Register to"</string>
+<string name="email_activity_register">"Enter Email"</string>
+<string name="password_activity_register">"Password"</string>
+<string name="repeat_pass_activity_register">"Repeat password"</string>
+<string name="cancel_activity_register">"Cancel"</string>
+<string name="register_activity_register">"Register"</string>
 
-    <!--Venues Activity-->
-    <string name="title_venues_activity">Venues</string>
+<!-- Venue Activity
+Venues Activity -->
+<string name="title_venues_activity">"Venues"</string>
 
-    <!-- Venue Item -->
-    <string name="venue_item_name"><b>Venue Name</b></string>
-    <string name="venue_item_class">Class</string>
-    <string name="venues_tvNothingLoaded">No venues loaded.</string>
-    <string name="venue_class">Venue class</string>
-    <string name="venue_name">Venue name</string>
-    <string name="title_activity_venue">VenueActivity</string>
+<!-- Venue Item -->
+<string name="venue_item_name">"&lt;b&gt;Venue Name&lt;/b&gt;"</string>
+<string name="venue_item_class">"Class"</string>
+<string name="venues_tvNothingLoaded">"No venues loaded."</string>
+<string name="venue_class">"Venue class"</string>
+<string name="venue_name">"Venue name"</string>
+<string name="title_activity_venue">"VenueActivity"</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="brochure_tvName">Brochure Name</string>
-    <string name="requestable_item_name">Requestable Name</string>
-    <string name="requestable_btnAddToOrder">+ order</string>
-    <string name="title_activity_venue_details">VenueDetailsActivity</string>
-    <string name="search_venues_hint">Search venues …</string>
-    <string name="search_dishes_hint">Search dishes …</string>
-    <string name="menu_search">Search</string>
-    <string name="venueDetails_mondayHours">Mon</string>
-    <string name="venueDetails_tuesdayHours">Tue</string>
-    <string name="venueDetails_wednesdayHours">Wed</string>
-    <string name="venueDetails_thursdayHours">Thu</string>
-    <string name="venueDetails_fridayHours">Fri</string>
-    <string name="venueDetails_saturdayHours">Sat</string>
-    <string name="venueDetails_sundayHours">Sun</string>
-    <string name="venueDetailsBadge_freeWifiTooltip">Free WiFi available</string>
-    <string name="venueDetailsBadge_workingFriendlyTooltip">Working friendly atmosphere. Quiet place. Electricity hubs available.</string>
-    <string name="venueDetailsBadge_bikeFriendlyTooltip">Reachable by bike. Secure bicycle parking in short distance.</string>
-    <string name="venueDetailsBadge_childFriendlyTooltip">Kid\'s corner available. Baby highchairs available.</string>
-    <string name="venueDetailsBadge_funPlaceTooltip"><![CDATA[Disco & music. Gaming club. Fun place.]]></string>
-    <string name="venueDetailsBadge_parkingSignTooltip">Parking available.</string>
-    <string name="venueDetailsBadge_petFriendlyTooltip">Pet friendly place.</string>
-    <string name="venueDetailsBadge_romanticPlaceTooltip">Romantic place. Romantic view. Romantic music.</string>
-    <string name="venueDetailsBadge_wheelchairFriendlyTooltip">Wheelchair accessible.</string>
-    <string name="venueDetailsBadge_noSmokingTooltip">No smoking allowed.</string>
-    <string name="venue_default_thumbnail">venueDefaultThumbnailContentDescription</string>
-    <string name="dishDetails_ivIcon">Default Dish Icon</string>
-    <string name="title_dishes_activity">Dishes</string>
-    <string name="title_activity_landing">Foodoo</string>
-    <string name="landing_btnVenues"><![CDATA[VENUES & MENUS]]></string>
-    <string name="landing_btnDishes"><![CDATA[FIND DISHES & DRINKS]]></string>
-    <string name="venues_btnNavigateToVenuesText">Venues</string>
-    <string name="venues_btnNavigateToDishesText">Dishes</string>
-    <string name="menulist_item_name">Dish Name</string>
-    <string name="menulist_item_venueName">Venue Name</string>
-    <string name="title_activity_filters_venues">Filter venues</string>
-    <string name="title_activity_filters_dishes"><![CDATA[Filter dishes & drinks]]></string>
-    <string name="filters_venues_title_venues_sbDistance">Distance: off</string>
-    <string name="filters_venues_title_venues_sbRating">Rating: higher than 5</string>
-    <string name="filters_dishes_tvDistance">Distance: off</string>
-    <string name="filters_dishes_tvRating">Rating: higher than 5</string>
-    <string name="filters_dishes_show_closed">Show dishes only from open venues</string>
+<!-- TODO: Remove or change this placeholder text -->
+<string name="brochure_tvName">"Brochure Name"</string>
+<string name="requestable_item_name">"Requestable Name"</string>
+<string name="requestable_btnAddToOrder">"+ order"</string>
+<string name="title_activity_venue_details">"VenueDetailsActivity"</string>
+<string name="search_venues_hint">"Search venues …"</string>
+<string name="search_dishes_hint">"Search dishes …"</string>
+<string name="menu_search">"Search"</string>
+<string name="venueDetails_mondayHours">"Mon"</string>
+<string name="venueDetails_tuesdayHours">"Tue"</string>
+<string name="venueDetails_wednesdayHours">"Wed"</string>
+<string name="venueDetails_thursdayHours">"Thu"</string>
+<string name="venueDetails_fridayHours">"Fri"</string>
+<string name="venueDetails_saturdayHours">"Sat"</string>
+<string name="venueDetails_sundayHours">"Sun"</string>
+<string name="venueDetailsBadge_freeWifiTooltip">"Free WiFi available"</string>
+<string name="venueDetailsBadge_workingFriendlyTooltip">"Working friendly atmosphere. Quiet place. Electricity hubs available."</string>
+<string name="venueDetailsBadge_bikeFriendlyTooltip">"Reachable by bike. Secure bicycle parking in short distance."</string>
+<string name="venueDetailsBadge_childFriendlyTooltip">"Kid's corner available. Baby highchairs available."</string>
+<string name="venueDetailsBadge_funPlaceTooltip"><![CDATA[Disco & music. Gaming club. Fun place.]]></string>
+<string name="venueDetailsBadge_parkingSignTooltip">"Parking available."</string>
+<string name="venueDetailsBadge_petFriendlyTooltip">"Pet friendly place."</string>
+<string name="venueDetailsBadge_romanticPlaceTooltip">"Romantic place. Romantic view. Romantic music."</string>
+<string name="venueDetailsBadge_wheelchairFriendlyTooltip">"Wheelchair accessible."</string>
+<string name="venueDetailsBadge_noSmokingTooltip">"No smoking allowed."</string>
+<string name="venue_default_thumbnail">"venueDefaultThumbnailContentDescription"</string>
+<string name="dishDetails_ivIcon">"Default Dish Icon"</string>
+<string name="title_dishes_activity">"Dishes"</string>
+<string name="title_activity_landing">"Foodoo"</string>
+<string name="landing_btnVenues"><![CDATA[VENUES & MENUS]]></string>
+<string name="landing_btnDishes"><![CDATA[FIND DISHES & DRINKS]]></string>
+<string name="venues_btnNavigateToVenuesText">"Venues"</string>
+<string name="venues_btnNavigateToDishesText">"Dishes"</string>
+<string name="menulist_item_name">"Dish Name"</string>
+<string name="menulist_item_venueName">"Venue Name"</string>
+<string name="title_activity_filters_venues">"Filter venues"</string>
+<string name="title_activity_filters_dishes"><![CDATA[Filter dishes & drinks]]></string>
+<string name="filters_venues_title_venues_sbDistance">"Distance: off"</string>
+<string name="filters_venues_title_venues_sbRating">"Rating: higher than 5"</string>
+<string name="filters_dishes_tvDistance">"Distance: off"</string>
+<string name="filters_dishes_tvRating">"Rating: higher than 5"</string>
+<string name="filters_dishes_show_closed">"Show dishes only from open venues"</string>
 
-
-    <!--Filters-->
-    <string name="CuisinePhaseSalads">Salads</string>
-    <string name="CuisinePhaseAppetizersAndSnacks">Appet</string>
-    <string name="CuisinePhaseDrinks">Drinks</string>
-    <string name="CuisinePhaseBreakfast">Snacks</string>
-    <string name="CuisinePhaseMains">Mains</string>
-    <string name="CuisinePhaseDeserts">Deserts</string>
-
-    <string name="CuisineRegionAsian">Asia</string>
-    <string name="CuisineRegionMiddleEastern">Eastern</string>
-    <string name="CuisineRegionEuropean">Europe</string>
-    <string name="CuisineRegionAfrican">Africa</string>
-    <string name="CuisineRegionAmerican">America</string>
-    <string name="CuisineRegionOther">Other</string>
-
-    <string name="CuisineSpectrumFishAndSeafood">Fish &amp; sea</string>
-    <string name="CuisineSpectrumWhiteMeat">White meat</string>
-    <string name="CuisineSpectrumVegan">Vegan</string>
-    <string name="CuisineSpectrumGlutenFree">Gluten free</string>
-    <string name="CuisineSpectrumRedMeat">Red meat</string>
-    <string name="CuisineSpectrumRawVegan">Raw vegan</string>
-    <string name="CuisineSpectrumVegetarian">Vegetarian</string>
-
-    <string name="CuisineSpectrumKosher">Kosher</string>
-    <string name="CuisineSpectrumHalal">Halal</string>
-    <string name="filters_settings">Filters Settings</string>
-    <string name="pref_walls_visited">prefWallsVisited</string>
-    <string name="pref_authToken_webApi">prefAuthTokenWebApi</string>
-    <string name="pref_authTokenType_webApi">prefAuthTokenType</string>
-    <string name="pref_authTokenExpiresInSeconds_webApi">prefAuthTokenExpiresInSeconds</string>
-    <string name="pref_authTokenExpiresAt_webApi">prefAuthTokenExpiresAt</string>
-    <string name="pref_collectionName_webApi">WebApi</string>
-    <string name="universal_go">Go</string>
-
+<!-- Filters -->
+<string name="CuisinePhaseSalads">"Salads"</string>
+<string name="CuisinePhaseAppetizersAndSnacks">"Appet"</string>
+<string name="CuisinePhaseDrinks">"Drinks"</string>
+<string name="CuisinePhaseBreakfast">"Snacks"</string>
+<string name="CuisinePhaseMains">"Mains"</string>
+<string name="CuisinePhaseDeserts">"Deserts"</string>
+<string name="CuisineRegionAsian">"Asia"</string>
+<string name="CuisineRegionMiddleEastern">"Eastern"</string>
+<string name="CuisineRegionEuropean">"Europe"</string>
+<string name="CuisineRegionAfrican">"Africa"</string>
+<string name="CuisineRegionAmerican">"America"</string>
+<string name="CuisineRegionOther">"Other"</string>
+<string name="CuisineSpectrumFishAndSeafood">"Fish &amp; sea"</string>
+<string name="CuisineSpectrumWhiteMeat">"White meat"</string>
+<string name="CuisineSpectrumVegan">"Vegan"</string>
+<string name="CuisineSpectrumGlutenFree">"Gluten free"</string>
+<string name="CuisineSpectrumRedMeat">"Red meat"</string>
+<string name="CuisineSpectrumRawVegan">"Raw vegan"</string>
+<string name="CuisineSpectrumVegetarian">"Vegetarian"</string>
+<string name="CuisineSpectrumKosher">"Kosher"</string>
+<string name="CuisineSpectrumHalal">"Halal"</string>
+<string name="filters_settings">"Filters Settings"</string>
+<string name="pref_walls_visited">"prefWallsVisited"</string>
+<string name="pref_authToken_webApi">"prefAuthTokenWebApi"</string>
+<string name="pref_authTokenType_webApi">"prefAuthTokenType"</string>
+<string name="pref_authTokenExpiresInSeconds_webApi">"prefAuthTokenExpiresInSeconds"</string>
+<string name="pref_authTokenExpiresAt_webApi">"prefAuthTokenExpiresAt"</string>
+<string name="pref_collectionName_webApi">"WebApi"</string>
+<string name="universal_go">"Go"</string>
 </resources>
