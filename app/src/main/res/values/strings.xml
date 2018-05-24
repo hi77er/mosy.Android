@@ -3,7 +3,7 @@
 <string name="app_name">"Foodoo"</string>
 
 <!-- App Level -->
-<string name="google_maps_key" translatable="true">"AIzaSyDkyNsNMAi8VoxWrLnI-8pp0W5P54r2Dvs"</string>
+<string name="google_maps_key" translatable="false">"AIzaSyDkyNsNMAi8VoxWrLnI-8pp0W5P54r2Dvs"</string>
 
 <!-- Login Activity -->
 <string name="title_activity_login">"Login to"</string>
