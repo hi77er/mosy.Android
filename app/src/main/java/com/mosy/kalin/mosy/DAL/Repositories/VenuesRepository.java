@@ -41,24 +41,6 @@ public class VenuesRepository {
     private static final String getVenueMenuEndpointEnding = "fbo/publicmenu";
 
 
-    public VenueContacts getContacts(GetVenueContactsBindingModel model){
-        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getVenueContactsEndpointEnding);
-        VenueContacts result = null;
-
-        try {
-            HttpParams params = new HttpParams();
-            params.put("fboId", model.VenueId);
-
-            JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            result = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueContacts>(){}.getType(), "HH:mm:ss", model.AuthTokenHeader);
-        } catch(Exception e) {
-            e.printStackTrace();
-            VenueContacts venueContacts = new VenueContacts();
-            venueContacts.ErrorMessage = e.getMessage();
-            return venueContacts;
-        }
-        return result;
-    }
 
     public ArrayList<VenueBadgeEndorsement> getBadgeEndorsements(GetVenueBadgeEndorsementsBindingModel model){
         String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getVenueBadgeEndorsementsEndpointEnding);
@@ -198,4 +180,23 @@ public class VenuesRepository {
 //        return businessHours;
 //    }
 
+
+//    public VenueContacts getContacts(GetVenueContactsBindingModel model){
+//        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getVenueContactsEndpointEnding);
+//        VenueContacts result = null;
+//
+//        try {
+//            HttpParams params = new HttpParams();
+//            params.put("fboId", model.VenueId);
+//
+//            JSONHttpClient jsonHttpClient = new JSONHttpClient();
+//            result = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueContacts>(){}.getType(), "HH:mm:ss", model.AuthTokenHeader);
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//            VenueContacts venueContacts = new VenueContacts();
+//            venueContacts.ErrorMessage = e.getMessage();
+//            return venueContacts;
+//        }
+//        return result;
+//    }
 }

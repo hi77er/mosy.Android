@@ -1,7 +1,9 @@
 package com.mosy.kalin.mosy.DAL.Repositories.Interfaces;
 
 import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.DTOs.VenueBadgeEndorsement;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
+import com.mosy.kalin.mosy.DTOs.VenueContacts;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
 
 import java.util.ArrayList;
@@ -20,9 +22,15 @@ public interface IVenuesRepository {
     Call<Venue> getById(@Header("Authorization") String authorization, @Query("id") String venueId);
 
     @GET("fbo/businesshours")
-    Call<VenueBusinessHours> getBusinessHoursRetrofit(@Header("Authorization") String authorization, @Query("fboId") String venueId);
+    Call<VenueBusinessHours> getBusinessHours(@Header("Authorization") String authorization, @Query("fboId") String venueId);
 
     @POST("fbo/closest")
-    Call<ArrayList<Venue>> loadVenuesRetrofit(@Header("Authorization") String authorization, @Body SearchVenuesBindingModel model);
+    Call<ArrayList<Venue>> loadVenues(@Header("Authorization") String authorization, @Body SearchVenuesBindingModel model);
+
+    @GET("fbo/contacts")
+    Call<VenueContacts> getContacts(@Header("Authorization") String authorization, @Query("fboId") String venueId);
+
+    @GET("fbo/endorsements")
+    Call<ArrayList<VenueBadgeEndorsement>> getBadgeEndorsementsRetrofit(@Header("Authorization") String authorization, @Query("fboId") String venueId);
 
 }

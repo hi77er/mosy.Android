@@ -2,7 +2,7 @@ package com.mosy.kalin.mosy.Services;
 
 import android.content.Context;
 
-import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClient;
+import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IVenuesRepository;
 import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;
@@ -13,21 +13,14 @@ import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.VenueLocation;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBadgeEndorsementsBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBusinessHoursBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueByIdBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueContactsBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageMetaBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueLocationBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.GetVenueMenuBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueAsyncTask;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueBusinessHoursAsyncTask;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueContactsAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueEndorsementsAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueIndoorImageMetadataAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueLocationAsyncTask;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueMenuAsyncTask;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenuesAsyncTask;
 
 import org.androidannotations.annotations.EBean;
 
@@ -44,7 +37,7 @@ public class VenuesService {
     public void getById(Context applicationContext, AsyncTaskListener<Venue> listener, String venueId)
     {
         String authTokenHeader = new AccountService().getAuthTokenHeader(applicationContext);
-        IVenuesRepository repository = RetrofitAPIClient.getClient().create(IVenuesRepository.class);
+        IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
         try {
             Call<Venue> callResult =  repository.getById(authTokenHeader, venueId);
@@ -85,10 +78,10 @@ public class VenuesService {
                 localDayOfWeek,
                 localTime);
 
-        IVenuesRepository repository = RetrofitAPIClient.getClient().create(IVenuesRepository.class);
+        IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
         try {
-            Call<ArrayList<Venue>> callResult =  repository.loadVenuesRetrofit(authTokenHeader, model);
+            Call<ArrayList<Venue>> callResult =  repository.loadVenues(authTokenHeader, model);
             callResult.enqueue(new Callback<ArrayList<Venue>>() {
                 @Override
                 public void onResponse(Call<ArrayList<Venue>> call, Response<ArrayList<Venue>> response) {
@@ -144,21 +137,39 @@ public class VenuesService {
                                      String venueId)
     {
         String authToken = new AccountService().getAuthTokenHeader(applicationContext);
+        IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
-        GetVenueContactsBindingModel model = new GetVenueContactsBindingModel(authToken, venueId);
-        new LoadVenueContactsAsyncTask(listener).execute(model);
+        try {
+            Call<VenueContacts> call = repository.getContacts(authToken, venueId);
+            call.enqueue(new Callback<VenueContacts>() {
+                @Override
+                public void onResponse(Call<VenueContacts> call, Response<VenueContacts> response) {
+                    VenueContacts result = response.body();
+                    listener.onPostExecute(result);
+
+                }
+
+                @Override
+                public void onFailure(Call<VenueContacts> call, Throwable t) {
+                    call.cancel();
+                }
+            });
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
-    public void getBusinessHoursRetrofit(Context applicationContext,
+    public void getBusinessHours(Context applicationContext,
                                  AsyncTaskListener<VenueBusinessHours> listener,
                                  String venueId)
     {
         String authToken = new AccountService().getAuthTokenHeader(applicationContext);
 
-        IVenuesRepository repository = RetrofitAPIClient.getClient().create(IVenuesRepository.class);
+        IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
        try {
-            Call<VenueBusinessHours> callResult =  repository.getBusinessHoursRetrofit(authToken, venueId);
+            Call<VenueBusinessHours> callResult =  repository.getBusinessHours(authToken, venueId);
             callResult.enqueue(new Callback<VenueBusinessHours>() {
                 @Override
                 public void onResponse(Call<VenueBusinessHours> call, Response<VenueBusinessHours> response) {
