@@ -26,7 +26,7 @@ public class LoadVenueAsyncTask
         Venue results = null;
         try {
             GetVenueByIdBindingModel model = models[0];
-            results = new VenuesRepository().getById(model);
+//            results = new VenuesRepository().getById(model);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -77,7 +77,7 @@ public class VenuesActivity
     @Bean
     AccountService accountService;
     @Bean
-    VenuesService venueService;
+    VenuesService venuesService;
     @Bean
     DishesService dishesService;
     @Bean
@@ -260,7 +260,7 @@ public class VenuesActivity
                 localDayOfWeek = localCalendar.get(Calendar.DAY_OF_WEEK);
             }
 
-            this.venueService.getVenues(
+            this.venuesService.getVenues(
                     applicationContext, listener, maxResultsCount, totalItemsOffset,
                     lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
                     query, localDayOfWeek, localTime);
@@ -392,7 +392,7 @@ public class VenuesActivity
             }
         };
 
-        this.venueService.getById(applicationContext, listener, listItem.VenueId);
+        this.venuesService.getById(applicationContext, listener, listItem.VenueId);
     }
 
     void openFilters() {

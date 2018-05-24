@@ -14,7 +14,7 @@ public class AccountRepository {
 
 
     public TokenResult tokenLogin(LoginBindingModel model) {
-        String tokenEndpoint = new ServiceEndpointFactory().getMosyWebAPIDevTokenEndpoint();
+        String tokenEndpoint = ServiceEndpointFactory.apiTokenEndpoint;
         TokenResult tokenResult = null;
         try {
             JSONHttpClient jsonHttpClient = new JSONHttpClient();
@@ -26,7 +26,7 @@ public class AccountRepository {
     }
 
     public RegisterResult register(RegisterBindingModel model) {
-        String registerEndpoint = new ServiceEndpointFactory().getMosyWebAPIDevEndpoint(registerEndpointEnding);
+        String registerEndpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(registerEndpointEnding);
         JSONHttpClient jsonHttpClient = new JSONHttpClient();
 
         try {
