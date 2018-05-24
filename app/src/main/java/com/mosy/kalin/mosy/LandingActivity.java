@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.mosy.kalin.mosy.Helpers.LocaleHelper;
 import com.mosy.kalin.mosy.Services.AccountService;
 
 import org.androidannotations.annotations.AfterViews;
@@ -35,6 +36,11 @@ public class LandingActivity
     Button buttonDishes;
     @ViewById(resName = "landing_btnVenues")
     Button buttonVenues;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.onAttach(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
