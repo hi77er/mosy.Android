@@ -1,14 +1,12 @@
 <resources>
     <!--App Level-->
-    <string name="google_maps_key">AIzaSyDkyNsNMAi8VoxWrLnI-8pp0W5P54r2Dvs</string>
+    <string name="google_maps_key" translatable="false">AIzaSyDkyNsNMAi8VoxWrLnI-8pp0W5P54r2Dvs</string>
     <string name="app_name">Foodoo</string>
 
     <!--Login Activity-->
     <string name="title_activity_login">Login to</string>
     <string name="email_activity_login">Enter Email</string>
     <string name="password_activity_login">Password</string>
-    <string name="attempts_left_activity_login">Attempts Left:</string>
-    <string name="attempts_left_ph_activity_login">attempts_ph</string>
     <string name="cancel_activity_login">Cancel</string>
     <string name="login_activity_login">Login</string>
     <string name="register_activity_login">Register</string>
@@ -20,7 +18,6 @@
     <string name="repeat_pass_activity_register">Repeat password</string>
     <string name="cancel_activity_register">Cancel</string>
     <string name="register_activity_register">Register</string>
-
 
     <!--Venue Activity-->
 
