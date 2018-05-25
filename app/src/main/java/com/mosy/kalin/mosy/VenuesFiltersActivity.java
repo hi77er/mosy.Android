@@ -27,7 +27,7 @@ import java.util.ArrayList;
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_filters_venues)
 public class VenuesFiltersActivity
-        extends AppCompatActivity {
+        extends BaseActivity {
 
 
     private boolean SelectedApplyWorkingStatusFilter;

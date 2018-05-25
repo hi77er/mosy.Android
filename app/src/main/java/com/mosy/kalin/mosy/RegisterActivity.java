@@ -20,7 +20,7 @@ import org.androidannotations.annotations.EActivity;
 
 @EActivity(R.layout.activity_register)
 public class RegisterActivity
-        extends AppCompatActivity {
+        extends BaseActivity {
 
     @Click(R.id.btnRegister)
     public void Register() {

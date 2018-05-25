@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">"Foodoo"</string>
-
-    <!-- App Level - translatable="false" -->
-    //TODO: Move this to Preferences
-    <string name="google_maps_key" translatable="false">"AIzaSyDkyNsNMAi8VoxWrLnI-8pp0W5P54r2Dvs"</string>
 
     <!--Preferences-->
+    //TODO: Move this to Preferences
+    <string name="google_maps_key" translatable="false">"AIzaSyDkyNsNMAi8VoxWrLnI-8pp0W5P54r2Dvs"</string>
     <string name="pref_walls_visited" translatable="false">"prefWallsVisited"</string>
-    <string name="pref_authToken_webApi">"prefAuthTokenWebApi"</string>
-    <string name="pref_authTokenType_webApi">"prefAuthTokenType"</string>
-    <string name="pref_authTokenExpiresInSeconds_webApi">"prefAuthTokenExpiresInSeconds"</string>
-    <string name="pref_authTokenExpiresAt_webApi">"prefAuthTokenExpiresAt"</string>
-    <string name="pref_collectionName_webApi">"WebApi"</string>
+    <string name="pref_authToken_webApi" translatable="false">"prefAuthTokenWebApi"</string>
+    <string name="pref_authTokenType_webApi" translatable="false">"prefAuthTokenType"</string>
+    <string name="pref_authTokenExpiresInSeconds_webApi" translatable="false">"prefAuthTokenExpiresInSeconds"</string>
+    <string name="pref_authTokenExpiresAt_webApi" translatable="false">"prefAuthTokenExpiresAt"</string>
+    <string name="pref_collectionName_webApi" translatable="false">"WebApi"</string>
 
     <!-- AndroidManifest -->
-    <string name="manifest_landingActivityTitle">"Foodoo"</string>
-    <string name="manifest_venuesActivityTitle">"Venues"</string>
-    <string name="manifest_venueDetailsActivityTitle">"Venue Details"</string>
+    <string name="app_name">"Foodoo"</string>
+    <string name="manifest_landingActivityTitle" translatable="false">"Foodoo"</string>
+    <string name="manifest_venuesActivityTitle" translatable="false">"Venues"</string>
+    <string name="manifest_venueDetailsActivityTitle" translatable="false">"Venue Details"</string>
 
     <!-- Activity Landing -->
     <string name="activity_landing_venuesBtn"><![CDATA[VENUES & MENUS]]></string>
@@ -48,7 +46,7 @@
     <string name="activity_venues_searchDishesHint">"Search dishes …"</string>
     <string name="activity_venues_filtersSettingsTextView">"Filters Settings"</string>
     <string name="activity_venues_swipeDownToRefreshMessageTextView">SWIPE DOWN TO REFRESH</string>
-    <string name="activity_venues_locationNotResolvedToast">Location was not resolved..</string>
+    <string name="activity_venues_locationNotResolvedToast">Location was not resolved …</string>
 
     <!-- Activity Venue Details -->
     <string name="activity_venueDetails_mondayHoursTextView">"Mon"</string>
@@ -85,7 +83,7 @@
     <string name="activity_dishesFilters_title"><![CDATA[Filter dishes & drinks]]></string>
     <string name="activity_dishesFilters_showClosedTextView">"Show dishes only from open venues"</string>
     <string name="activity_dishesFilters_CuisinePhaseSalads">"Salads"</string>
-    <string name="activity_dishesFilters_CuisinePhaseAppetizersAndSnacks">"Appet"</string>
+    <string name="activity_dishesFilters_CuisinePhaseAppetizersAndSnacks">Appetizers</string>
     <string name="activity_dishesFilters_CuisinePhaseDrinks">"Drinks"</string>
     <string name="activity_dishesFilters_CuisinePhaseBreakfast">"Snacks"</string>
     <string name="activity_dishesFilters_CuisinePhaseMains">"Mains"</string>

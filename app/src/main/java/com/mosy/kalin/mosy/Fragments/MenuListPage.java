@@ -1,6 +1,5 @@
 package com.mosy.kalin.mosy.Fragments;
 
-import android.support.v4.app.Fragment;
 import android.widget.ExpandableListView;
 
 import com.mosy.kalin.mosy.Adapters.MenuListItemsAdapter;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 
 @EFragment(R.layout.fragment_menulist)
 public class MenuListPage
-        extends Fragment {
+        extends BaseFragment {
 
     @FragmentArg("MenuListName")
     String MenuListName;

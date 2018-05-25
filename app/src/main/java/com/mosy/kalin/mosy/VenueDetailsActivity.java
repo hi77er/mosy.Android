@@ -59,7 +59,7 @@ import java.util.ArrayList;
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_venue_details)
 public class VenueDetailsActivity
-        extends AppCompatActivity
+        extends BaseActivity
         implements OnMapReadyCallback {
 
     private static final int REQUEST_PHONE_CALL = 1;
