@@ -41,7 +41,8 @@ import java.util.ArrayList;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_venue)
-public class VenueActivity extends AppCompatActivity {
+public class VenueActivity
+        extends BaseActivity {
 
     private static final String storageContainer = "userimages\\fboalbums\\200x200";
 

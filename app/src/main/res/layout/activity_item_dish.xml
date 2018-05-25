@@ -28,7 +28,7 @@
                 android:layout_gravity="start"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/menulist_item_name"
+                android:text="@string/item_dish_nameTextView"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
@@ -37,7 +37,7 @@
                 android:layout_gravity="start"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/menulist_item_venueName"
+                android:text="@string/item_dish_venueNameTextView"
                 android:textSize="14sp"
                 android:textColor="@color/soft"
                 android:textStyle="bold" />

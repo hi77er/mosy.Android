@@ -1,7 +1,5 @@
 package com.mosy.kalin.mosy.Fragments;
 
-import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,10 +17,9 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
-
 @EFragment(R.layout.fragment_filters)
 public class FiltersPage
-        extends Fragment {
+        extends BaseFragment {
 
     @Bean
     FilterListAdapter filtersAdapter;
