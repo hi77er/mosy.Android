@@ -37,7 +37,7 @@ import java.util.ArrayList;
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_filters_dishes)
 public class DishesFiltersActivity
-        extends AppCompatActivity {
+        extends BaseActivity {
 
     private DishFiltersPagerAdapter DFAdapter;
     private boolean SelectedApplyWorkingStatusFilter;

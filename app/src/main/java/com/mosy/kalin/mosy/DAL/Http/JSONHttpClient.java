@@ -1,12 +1,13 @@
 package com.mosy.kalin.mosy.DAL.Http;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mosy.kalin.mosy.BuildConfig;
+import com.mosy.kalin.mosy.DAL.Http.Deserializers.JsonDateDeserializer;
+import com.mosy.kalin.mosy.DAL.Http.Deserializers.JsonTimeDeserializer;
+import com.mosy.kalin.mosy.DAL.Http.Deserializers.TimeOnlyDateDeserializer;
 import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
 import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
-import com.mosy.kalin.mosy.Services.AccountService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class JSONHttpClient {
 
@@ -57,7 +56,7 @@ public class JSONHttpClient {
 
                 GsonBuilder builder  = new GsonBuilder();
                 builder.registerTypeAdapter(Date.class, new JsonDateDeserializer());
-                builder.registerTypeAdapter(Date.class, new JsonDateDeserializer2());
+                builder.registerTypeAdapter(Date.class, new TimeOnlyDateDeserializer());
                 builder.registerTypeAdapter(Time.class, new JsonTimeDeserializer());
 
                 System.out.println("StatusCode: " + httpStatusCode + ". " + this.Connection.getResponseMessage());
@@ -111,7 +110,7 @@ public class JSONHttpClient {
 
                 GsonBuilder builder  = new GsonBuilder();
                 builder.registerTypeAdapter(Date.class, new JsonDateDeserializer());
-                builder.registerTypeAdapter(Date.class, new JsonDateDeserializer2());
+                builder.registerTypeAdapter(Date.class, new TimeOnlyDateDeserializer());
                 builder.registerTypeAdapter(Time.class, new JsonTimeDeserializer());
 
                 return builder.create().fromJson(jsonString, objectType);

@@ -1,4 +1,4 @@
-package com.mosy.kalin.mosy.DAL.Http;
+package com.mosy.kalin.mosy.DAL.Http.Deserializers;
 
 
 import com.google.gson.JsonDeserializationContext;

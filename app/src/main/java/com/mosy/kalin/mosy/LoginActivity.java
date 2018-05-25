@@ -23,7 +23,7 @@ import org.androidannotations.annotations.EActivity;
 
 @EActivity(R.layout.activity_login)
 public class LoginActivity
-        extends AppCompatActivity {
+        extends BaseActivity {
     Button b1,b2;
     EditText ed1,ed2;
 
@@ -39,7 +39,6 @@ public class LoginActivity
         ed2 = findViewById(R.id.login_etPassword);
 
         b2 = findViewById(R.id.login_btnCancel);
-        tx1 = findViewById(R.id.login_tvAttemptsLeftPH);
         tx1.setVisibility(View.GONE);
 
         b1.setOnClickListener(new View.OnClickListener() {

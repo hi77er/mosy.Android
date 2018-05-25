@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 
 @EBean
@@ -75,7 +76,7 @@ public class AccountService {
 
         try {
             Date now = Calendar.getInstance().getTime();
-            Date expirationDate = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy").parse(expiresAt);
+            Date expirationDate = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US).parse(expiresAt);
             return now.before(expirationDate);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -92,7 +93,7 @@ public class AccountService {
         //We calc expiresAt here to avoid tracking Server time zone difference.
 
         try {
-            Date issuedAtDate = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").parse(issuedAt);
+            Date issuedAtDate = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US).parse(issuedAt);
             Long expiresAtMilliseconds = issuedAtDate.getTime() + expiresIn * 1000;
             Date expiresAtDate = new Date(expiresAtMilliseconds);
             String expiresAt = expiresAtDate.toString();
