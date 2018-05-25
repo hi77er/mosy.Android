@@ -1,4 +1,4 @@
-package com.mosy.kalin.mosy.DAL.Http;
+package com.mosy.kalin.mosy.DAL.Http.Deserializers;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class JsonDateDeserializer2 implements JsonDeserializer<Date> {
+public class TimeOnlyDateDeserializer implements JsonDeserializer<Date> {
 
     @Override
     public Date deserialize(JsonElement jsonElement, Type typeOF,
@@ -21,7 +21,7 @@ public class JsonDateDeserializer2 implements JsonDeserializer<Date> {
         } catch (ParseException e) {
         }
 
-        throw new JsonParseException("Unparseable date: \"" + jsonElement.getAsString()
+        throw new JsonParseException("Imparseable date: \"" + jsonElement.getAsString()
                 + "\". Supported formats: " + "HH:mm:ss");
     }
 }

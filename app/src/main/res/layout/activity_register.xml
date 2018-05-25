@@ -15,7 +15,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_activity_register"
+        android:text="@string/activity_register_titleTextView"
         android:textSize="35sp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
@@ -34,7 +34,7 @@
         android:id = "@+id/etEmail"
         android:layout_width = "wrap_content"
         android:layout_height = "wrap_content"
-        android:hint = "@string/email_activity_register"
+        android:hint = "@string/activity_register_emailEditText"
         android:focusable = "true"
         android:textColorHighlight = "#ff7eff15"
         android:textColorHint = "#ffff299f"
@@ -58,13 +58,13 @@
         android:layout_alignRight="@+id/etEmail"
         android:layout_alignEnd="@+id/etEmail"
         android:textColorHint="#ffff299f"
-        android:hint="@string/password_activity_register" />
+        android:hint="@string/activity_register_passwordEditText" />
 
     <Button
         android:id="@+id/btnRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/register_activity_register"
+        android:text="@string/activity_register_registerBtn"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/tvAppName"
         android:layout_toStartOf="@+id/tvAppName" />
@@ -73,7 +73,7 @@
         android:id="@+id/btnCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/cancel_activity_register"
+        android:text="@string/activity_register_cancelBtn"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/tvAppName"
         android:layout_toEndOf="@+id/tvAppName" />

@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/venue_item_name"
+                android:text="Venue Name"
                 android:textSize="20sp"
                 android:textStyle="bold"/>
 
@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/venue_item_class"
+                android:text="Class"
                 android:layout_marginTop="5dp"
                 android:textSize="18sp" />
         </LinearLayout>

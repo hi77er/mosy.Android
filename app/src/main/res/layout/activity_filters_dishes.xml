@@ -92,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="@string/filters_dishes_show_closed"
+                android:text="@string/activity_dishesFilters_showClosedTextView"
                 android:textColor="@color/colorPrimaryVeryLight" />
 
             <Switch
@@ -106,7 +106,7 @@
             android:id="@+id/filterDishes_GoButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/universal_go"
+            android:text="@string/activity_dishesFilters_goBtn"
             android:layout_marginBottom="10dp"
             android:layout_alignParentEnd="true"
             android:background="@color/transparent"

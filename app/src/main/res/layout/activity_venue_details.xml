@@ -42,7 +42,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/venue_item_name"
+                    android:text="Venue Name"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
 
@@ -51,7 +51,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/venue_item_class"
+                    android:text="Class"
                     android:layout_marginTop="5dp"
                     android:textSize="19sp" />
 
@@ -86,53 +86,53 @@
 
             <ImageView android:id="@+id/venueDetailsBadge_freeWiFi" android:src="@drawable/free_wifi"
                        android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
-                       android:tooltipText="@string/venueDetailsBadge_freeWifiTooltip" android:visibility="gone"
-                       android:contentDescription="@string/venueDetailsBadge_freeWifiTooltip" />
+                       android:tooltipText="@string/activity_venueDetails_freeWiFiTooltip" android:visibility="gone"
+                       android:contentDescription="@string/activity_venueDetails_freeWiFiTooltip" />
 
             <ImageView android:id="@+id/venueDetailsBadge_workingFriendly" android:src="@drawable/working_friendly"
                        android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
-                       android:tooltipText="@string/venueDetailsBadge_workingFriendlyTooltip" android:visibility="gone"
-                       android:contentDescription="@string/venueDetailsBadge_workingFriendlyTooltip" />
+                       android:tooltipText="@string/activity_venueDetails_quietPlaceTooltip" android:visibility="gone"
+                       android:contentDescription="@string/activity_venueDetails_quietPlaceTooltip" />
 
             <ImageView android:id="@+id/venueDetailsBadge_bikeFriendly" android:src="@drawable/bike_friendly"
                        android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
-                       android:tooltipText="@string/venueDetailsBadge_bikeFriendlyTooltip" android:visibility="gone"
-                       android:contentDescription="@string/venueDetailsBadge_bikeFriendlyTooltip" />
+                       android:tooltipText="@string/activity_venueDetails_bikeFriendlyTooltip" android:visibility="gone"
+                       android:contentDescription="@string/activity_venueDetails_bikeFriendlyTooltip" />
 
             <ImageView android:id="@+id/venueDetailsBadge_childFriendly" android:src="@drawable/child_friendly"
                        android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
-                       android:tooltipText="@string/venueDetailsBadge_childFriendlyTooltip" android:visibility="gone"
-                       android:contentDescription="@string/venueDetailsBadge_childFriendlyTooltip" />
+                       android:tooltipText="@string/activity_venueDetails_childrenFriendlyTooltip" android:visibility="gone"
+                       android:contentDescription="@string/activity_venueDetails_childrenFriendlyTooltip" />
 
             <ImageView android:id="@+id/venueDetailsBadge_funPlace" android:src="@drawable/fun_place"
                        android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
-                       android:tooltipText="@string/venueDetailsBadge_funPlaceTooltip" android:visibility="gone"
-                       android:contentDescription="@string/venueDetailsBadge_funPlaceTooltip" />
+                       android:tooltipText="@string/activity_venueDetails_funPlaceTooltip" android:visibility="gone"
+                       android:contentDescription="@string/activity_venueDetails_funPlaceTooltip" />
 
             <ImageView android:id="@+id/venueDetailsBadge_parkingSign" android:src="@drawable/parking_sign"
                        android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
-                       android:tooltipText="@string/venueDetailsBadge_parkingSignTooltip" android:visibility="gone"
-                       android:contentDescription="@string/venueDetailsBadge_parkingSignTooltip" />
+                       android:tooltipText="@string/activity_venueDetails_parkingSignTooltip" android:visibility="gone"
+                       android:contentDescription="@string/activity_venueDetails_parkingSignTooltip" />
 
             <ImageView android:id="@+id/venueDetailsBadge_petFriendly" android:src="@drawable/pet_friendly"
                        android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
-                       android:tooltipText="@string/venueDetailsBadge_petFriendlyTooltip" android:visibility="gone"
-                       android:contentDescription="@string/venueDetailsBadge_petFriendlyTooltip" />
+                       android:tooltipText="@string/activity_venueDetails_petFriendlyTooltip" android:visibility="gone"
+                       android:contentDescription="@string/activity_venueDetails_petFriendlyTooltip" />
 
             <ImageView android:id="@+id/venueDetailsBadge_romanticPlace" android:src="@drawable/romantic_place"
                        android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
-                       android:tooltipText="@string/venueDetailsBadge_romanticPlaceTooltip" android:visibility="gone"
-                       android:contentDescription="@string/venueDetailsBadge_romanticPlaceTooltip" />
+                       android:tooltipText="@string/activity_venueDetails_romanticPlaceTooltip" android:visibility="gone"
+                       android:contentDescription="@string/activity_venueDetails_romanticPlaceTooltip" />
 
             <ImageView android:id="@+id/venueDetailsBadge_wheelchairFriendly" android:src="@drawable/wheelchair_friendly"
                        android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
-                       android:tooltipText="@string/venueDetailsBadge_wheelchairFriendlyTooltip" android:visibility="gone"
-                       android:contentDescription="@string/venueDetailsBadge_wheelchairFriendlyTooltip" />
+                       android:tooltipText="@string/activity_venueDetails_wheelchairFriendlyTooltip" android:visibility="gone"
+                       android:contentDescription="@string/activity_venueDetails_wheelchairFriendlyTooltip" />
 
             <ImageView android:id="@+id/venueDetailsBadge_noSmoking" android:src="@drawable/no_smoking"
                        android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
-                       android:tooltipText="@string/venueDetailsBadge_noSmokingTooltip" android:visibility="gone"
-                       android:contentDescription="@string/venueDetailsBadge_noSmokingTooltip" />
+                       android:tooltipText="@string/activity_venueDetails_noSmokingTooltip" android:visibility="gone"
+                       android:contentDescription="@string/activity_venueDetails_noSmokingTooltip" />
 
         </LinearLayout>
 
@@ -182,7 +182,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:text="@string/venueDetails_mondayHours"
+                        android:text="@string/activity_venueDetails_mondayHoursTextView"
                         android:layout_marginRight="5dp"
                         android:layout_marginEnd="5dp" />
 
@@ -207,7 +207,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:text="@string/venueDetails_tuesdayHours"
+                        android:text="@string/activity_venueDetails_tuesdayHoursTextView"
                         android:layout_marginRight="5dp"
                         android:layout_marginEnd="5dp" />
 
@@ -232,7 +232,7 @@
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
                         android:textSize="15sp"
-                        android:text="@string/venueDetails_wednesdayHours"
+                        android:text="@string/activity_venueDetails_wednesdayHoursTextView"
                         android:layout_marginRight="5dp"
                         android:layout_marginEnd="5dp" />
 
@@ -257,7 +257,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:text="@string/venueDetails_thursdayHours"
+                        android:text="@string/activity_venueDetails_thursdayHoursTextView"
                         android:layout_marginRight="5dp"
                         android:layout_marginEnd="5dp" />
 
@@ -292,7 +292,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:text="@string/venueDetails_fridayHours"
+                        android:text="@string/activity_venueDetails_fridayHoursTextView"
                         android:layout_marginRight="5dp"
                         android:layout_marginEnd="5dp" />
 
@@ -317,7 +317,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:text="@string/venueDetails_saturdayHours"
+                        android:text="@string/activity_venueDetails_saturdayHoursTextView"
                         android:layout_marginRight="5dp"
                         android:layout_marginEnd="5dp" />
 
@@ -342,7 +342,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:text="@string/venueDetails_sundayHours"
+                        android:text="@string/activity_venueDetails_sundayHoursTextView"
                         android:layout_marginRight="5dp"
                         android:layout_marginEnd="5dp" />
 

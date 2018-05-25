@@ -2,6 +2,9 @@ package com.mosy.kalin.mosy.DAL.Http;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mosy.kalin.mosy.DAL.Http.Deserializers.JsonDateDeserializer;
+import com.mosy.kalin.mosy.DAL.Http.Deserializers.JsonTimeDeserializer;
+import com.mosy.kalin.mosy.DAL.Http.Deserializers.TimeOnlyDateDeserializer;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 
 import java.sql.Time;
@@ -25,7 +28,7 @@ public class RetrofitAPIClient {
 
             GsonBuilder builder  = new GsonBuilder();
             builder.registerTypeAdapter(Date.class, new JsonDateDeserializer());
-            builder.registerTypeAdapter(Date.class, new JsonDateDeserializer2());
+            builder.registerTypeAdapter(Date.class, new TimeOnlyDateDeserializer());
             builder.registerTypeAdapter(Time.class, new JsonTimeDeserializer());
             Gson gson = builder.create();
 

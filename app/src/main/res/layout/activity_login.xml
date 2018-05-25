@@ -10,7 +10,7 @@
 
     <TextView
         android:id = "@+id/login_title"
-        android:text = "@string/title_activity_login"
+        android:text = "@string/activity_login_titleTextView"
         android:layout_width="wrap_content"
         android:layout_height = "wrap_content"
         android:textSize = "35sp"
@@ -31,7 +31,7 @@
         android:id = "@+id/login_etEmail"
         android:layout_width = "wrap_content"
         android:layout_height = "wrap_content"
-        android:hint = "@string/email_activity_login"
+        android:hint = "@string/activity_login_emailEditText"
         android:focusable = "true"
         android:textColorHighlight = "#ff7eff15"
         android:textColorHint = "#ffff299f"
@@ -54,13 +54,13 @@
         android:layout_alignRight="@+id/login_etEmail"
         android:layout_alignEnd="@+id/login_etEmail"
         android:textColorHint="#ffff299f"
-        android:hint="@string/password_activity_login" />
+        android:hint="@string/activity_login_passwordEditText" />
 
     <Button
         android:id="@+id/login_btnLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/login_activity_login"
+        android:text="@string/activity_login_loginBtn"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/login_title"
         android:layout_toStartOf="@+id/login_title" />
@@ -69,7 +69,7 @@
         android:id="@+id/login_btnRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/register_activity_login"
+        android:text="@string/activity_login_registerBtn"
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/login_appName"
         android:layout_alignStart="@+id/login_appName" />
@@ -78,7 +78,7 @@
         android:id="@+id/login_btnCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/cancel_activity_login"
+        android:text="@string/activity_login_cancelBtn"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/login_title"
         android:layout_toEndOf="@+id/login_title" />

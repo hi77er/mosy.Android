@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Фуду</string>
+    <string name="test_version_landing">Българска версия</string>
+    <string name="activity_venues_swipeDownToRefreshMessageTextView">ДРЪПНИ НАДОЛУ ЗА ДА ОПРЕСНИШ</string>
 </resources>

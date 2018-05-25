@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,6 +25,7 @@ import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.daasuu.bl.ArrowDirection;
 import com.daasuu.bl.BubbleLayout;
@@ -59,7 +59,7 @@ import java.util.Calendar;
 @EActivity(R.layout.activity_venues)
 @OptionsMenu(R.menu.menu)
 public class VenuesActivity
-        extends AppCompatActivity {
+        extends BaseActivity {
 
     long timeStarted = 0;
     Boolean searchIsPromoted = true; //INFO: Normally search only promoted dishesWall, but when using query then search among all dishesWall
@@ -276,7 +276,7 @@ public class VenuesActivity
                         ArrayList<String> spectrumFilterIds,
                         ArrayList<String> allergensFilterIds){
 
-        if (lastKnownLocation != null){
+        if (lastKnownLocation != null) {
             AsyncTaskListener<ArrayList<MenuListItem>> listener = new AsyncTaskListener<ArrayList<MenuListItem>>() {
                 @Override
                 public void onPreExecute() {
@@ -312,6 +312,10 @@ public class VenuesActivity
                     phaseFilterIds, regionFilterIds, spectrumFilterIds, allergensFilterIds,
                     localDayOfWeek, localTime);
         }
+        else {
+            Toast.makeText(applicationContext, R.string.activity_venues_locationNotResolvedToast, Toast.LENGTH_LONG).show();
+        }
+
     }
 
     @Override
@@ -325,11 +329,11 @@ public class VenuesActivity
         if (!DishesSearchModeActivated) {
             menu.findItem(R.id.action_dishes).setVisible(true);
             menu.findItem(R.id.action_venues).setVisible(false);
-            searchView.setQueryHint(getString(R.string.search_venues_hint));
+            searchView.setQueryHint(getString(R.string.activity_venues_searchVenuesHint));
         } else {
             menu.findItem(R.id.action_venues).setVisible(true);
             menu.findItem(R.id.action_dishes).setVisible(false);
-            searchView.setQueryHint(getString(R.string.search_dishes_hint));
+            searchView.setQueryHint(getString(R.string.activity_venues_searchDishesHint));
         }
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
@@ -468,7 +472,7 @@ public class VenuesActivity
 
                 Paint mPaint = new Paint();
                 mPaint.setTextSize(20);
-                String labelText = getResources().getString(R.string.filters_settings);
+                String labelText = getResources().getString(R.string.activity_venues_filtersSettingsTextView);
                 float width = mPaint.measureText(labelText, 0, labelText.length());
 
                 int filtersButtonStartingY = location[1];
