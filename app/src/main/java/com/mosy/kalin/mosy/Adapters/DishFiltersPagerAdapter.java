@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mosy.kalin.mosy.DTOs.DishFilter;
 import com.mosy.kalin.mosy.Fragments.FiltersPage_;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.R;
 
 import java.util.ArrayList;
@@ -53,7 +54,8 @@ public class DishFiltersPagerAdapter
                 break;
             case 3:
                 filters = this.AllergensFilters;
-                fragment.setNote(context.getString(R.string.activity_dishesFilters_allergensFiltersNote));
+                String note = StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_allergensFiltersNote);
+                fragment.setNote(note);
                 break;
         }
 
@@ -70,13 +72,13 @@ public class DishFiltersPagerAdapter
     @Override
     public CharSequence getPageTitle(int position) {
         if (position == 0)
-            return context.getString(R.string.activity_dishesFilters_typeFiltersTitle);;
+            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_typeFiltersTitle);
         if (position == 1)
-            return context.getString(R.string.activity_dishesFilters_regionFiltersTitle);
+            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_regionFiltersTitle);
         if (position == 2)
-            return context.getString(R.string.activity_dishesFilters_ingredientsFiltersTitle);
+            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_ingredientsFiltersTitle);
         if (position == 3)
-            return context.getString(R.string.activity_dishesFilters_allergensFiltersTitle);
+            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_allergensFiltersTitle);
         return null;
     }
 
