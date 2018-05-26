@@ -42,7 +42,6 @@ public class FilterListAdapter
             filterItemView = FilterItemView_.build(context);
         else
             filterItemView = (FilterItemView) view;
-
         DishFilter filter = this.Filters.get(position);
         filterItemView.bind(filter);
 

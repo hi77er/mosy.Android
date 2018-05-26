@@ -5,7 +5,7 @@
     <string name="activity_landing_languageBgSpinner">Búlgaro</string>
     <string name="activity_landing_languageEnUSSpinner">Inglés</string>
     <string name="activity_landing_languageRuSpinner">Ruso</string>
-    <string name="activity_landing_languageEsSpinner">Española</string>
+    <string name="activity_landing_languageEsSpinner">Español</string>
     <string name="activity_landing_languageElSpinner">Griega</string>
     <string name="activity_landing_languageDeSpinner">Aleman</string>
 </resources>

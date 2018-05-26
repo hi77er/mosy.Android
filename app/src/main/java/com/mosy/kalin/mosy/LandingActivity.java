@@ -24,7 +24,6 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_landing)
@@ -78,11 +77,14 @@ public class LandingActivity
         spinnerLocaleList.add(new SpinnerLocale("es", constructLanguageSpinnerText(R.string.activity_landing_languageEsSpinner)));
 
         //fill data in spinner
-        ArrayAdapter<SpinnerLocale> adapter = new ArrayAdapter<>(this.applicationContext, android.R.layout.simple_spinner_dropdown_item, spinnerLocaleList);
+        ArrayAdapter<SpinnerLocale> adapter = new ArrayAdapter<>(this.applicationContext, R.layout.languages_spinner_activity_landing, spinnerLocaleList);
+        adapter.setDropDownViewResource(R.layout.languages_spinner_activity_landing);
         this.languagesSpinner.setAdapter(adapter);
 
         String currentDefaultSpinnerLocale = LocaleHelper.getLanguage(applicationContext);
+
         //TODO: Linq-like syntax needed!
+        //Stream.of(cuisineRegionFilters).filter(filter -> filter.Id.equals(filterId)).single();
         for(SpinnerLocale sLocale : spinnerLocaleList){
             if (sLocale.getId().equals(currentDefaultSpinnerLocale)){
                 this.languagesSpinner.setSelection(adapter.getPosition(sLocale));
@@ -104,9 +106,10 @@ public class LandingActivity
     }
 
     private String constructLanguageSpinnerText(int resourceId) {
-        String applicationDefaultLocaleTranslation = StringHelper.getResourcesDeviceDefaultLocale(this, resourceId);
-        String deviceDefaultLocaleTranslation = StringHelper.getStringForLocale(this, resourceId, App.sDefSystemLocale);
-        return applicationDefaultLocaleTranslation + " (" + deviceDefaultLocaleTranslation + ")";
+        String applicationDefaultLocaleTranslation = StringHelper.getStringAppDefaultLocale(this, resourceId);
+        String deviceDefaultLocaleTranslation = StringHelper.getStringDeviceDefaultLocale(this, resourceId);
+        String label = applicationDefaultLocaleTranslation + " (" + deviceDefaultLocaleTranslation + ")";
+        return label;
     }
 
     private void startActivityLoading() {

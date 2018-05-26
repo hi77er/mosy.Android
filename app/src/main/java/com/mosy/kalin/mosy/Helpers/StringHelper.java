@@ -83,13 +83,23 @@ public class StringHelper {
     }
 
     @NonNull
-    public static String getStringForLanguage(Activity context, int resId, String desiredLanguage) {
+    public static String getStringAppDefaultLocale(Context context, int resId) {
+        return getStringForLocale(context, resId, Locale.getDefault());
+    }
+
+    @NonNull
+    public static String getStringDeviceDefaultLocale(Context context, int resId) {
+        return getStringForLocale(context, resId, App.sDefSystemLocale);
+    }
+
+    @NonNull
+    public static String getStringForLanguage(Context context, int resId, String desiredLanguage) {
         Locale desiredLocale = new Locale(desiredLanguage);
         return getStringForLocale(context, resId, desiredLocale);
     }
 
     @NonNull
-    public static String getStringForLocale(Activity context, int resourceId, Locale locale) {
+    public static String getStringForLocale(Context context, int resourceId, Locale locale) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
             return getStringByLocalPlus17(context, resourceId, locale);
         else
@@ -98,7 +108,7 @@ public class StringHelper {
 
     @NonNull
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private static String getStringByLocalPlus17(Activity context, int resourceId, Locale locale) {
+    private static String getStringByLocalPlus17(Context context, int resourceId, Locale locale) {
         Configuration configuration = new Configuration(context.getResources().getConfiguration());
         configuration.setLocale(locale);
         return context.createConfigurationContext(configuration).getResources().getString(resourceId);
@@ -120,11 +130,6 @@ public class StringHelper {
         // Restore device-specific locale
         new Resources(assets, metrics, currentResources.getConfiguration());
         return string;
-    }
-
-    @NonNull
-    public static String getResourcesDeviceDefaultLocale(Activity context, int resId) {
-        return getStringForLocale(context, resId, Locale.getDefault());
     }
 
 }
