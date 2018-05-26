@@ -2,15 +2,16 @@ package com.mosy.kalin.mosy.Views;
 
 import android.content.Context;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.mosy.kalin.mosy.BuildConfig;
 import com.mosy.kalin.mosy.DTOs.DishFilter;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.R;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
+
 
 @EViewGroup(R.layout.activity_item_filter)
 public class FilterItemView
@@ -34,8 +35,22 @@ public class FilterItemView
             selected = isChecked;
             filter.IsChecked = isChecked;
         });
+
         this.checkBox.setChecked(filter.IsChecked);
-        this.checkBox.setText(filter.Name);
+
+        String name = StringHelper.empty();
+        int identifier = getResources().getIdentifier(filter.I18nResourceName, "string", BuildConfig.APPLICATION_ID);
+
+        try {
+            name = StringHelper.getStringAppDefaultLocale(getContext(), identifier);
+        }
+        catch (Exception ex) {
+            name = filter.Name;
+
+            ex.printStackTrace();
+        }
+
+        this.checkBox.setText(name);
     }
 
 
