@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Фуду</string>
     <string name="activity_venues_swipeDownToRefreshMessageTextView">ДРЪПНИ НАДОЛУ ЗА ДА ОПРЕСНИШ</string>
-    <string name="activity_landing_venuesBtn"><![CDATA[ЗАВЕДЕНИЯ & МЕНЮТА]]></string>
+    <string name="activity_landing_venuesBtn"><![CDATA[РАЗГЛЕДАЙ ЗАВЕДЕНИЯ & МЕНЮТА]]></string>
     <string name="activity_landing_dishesBtn"><![CDATA[ПОТЪРСИ ЯСТИЯ & НАПИТКИ]]></string>
     <string name="activity_login_titleTextView">Вход</string>
     <string name="activity_login_emailEditText">Въведи електронна поща</string>
@@ -69,4 +69,10 @@
     <string name="activity_dishesFilters_CuisineSpectrumKosher">Кашерна храна</string>
     <string name="activity_dishesFilters_CuisineSpectrumHalal">Халал храна</string>
     <string name="activity_dishesFilters_goBtn">Давай</string>
+    <string name="activity_landing_languageBgSpinner">Български</string>
+    <string name="activity_landing_languageEnUSSpinner">Английски</string>
+    <string name="activity_landing_languageDeSpinner">Немски</string>
+    <string name="activity_landing_languageElSpinner">Гръцки</string>
+    <string name="activity_landing_languageRuSpinner">Руски</string>
+    <string name="activity_landing_languageEsSpinner">Испански</string>
 </resources>

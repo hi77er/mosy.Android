@@ -2,4 +2,10 @@
 <resources>
     <string name="app_name">Foodoo</string>
     <string name="activity_venues_swipeDownToRefreshMessageTextView">AKTUALISIEREN SIE DEN INHALT</string>
+    <string name="activity_landing_languageBgSpinner">Bulgarisch</string>
+    <string name="activity_landing_languageEnUSSpinner">Englisch</string>
+    <string name="activity_landing_languageRuSpinner">Russisch</string>
+    <string name="activity_landing_languageElSpinner">Griechisch</string>
+    <string name="activity_landing_languageDeSpinner">Deutsch</string>
+    <string name="activity_landing_languageEsSpinner">Spanisch</string>
 </resources>

@@ -72,8 +72,11 @@
 
     <Spinner
         android:id="@+id/landing_spLanguage"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryVeryLight"
+        android:textColor="@color/colorPrimary"
+        android:gravity="center_horizontal"/>
 
 </LinearLayout>
 
