@@ -3,10 +3,16 @@ package com.mosy.kalin.mosy;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Build;
 
 import com.mosy.kalin.mosy.Helpers.LocaleHelper;
 
+import java.util.Locale;
+
 public class App extends Application {
+
+    public static Locale sDefSystemLocale;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -18,6 +24,13 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        //Getting Device Default Locale
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            sDefSystemLocale = Resources.getSystem().getConfiguration().getLocales().get(0);
+        else
+            sDefSystemLocale = Resources.getSystem().getConfiguration().locale;
+
         // Required initialization logic here!
     }
 
@@ -26,6 +39,14 @@ public class App extends Application {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+
+        //Getting Device Default Locale
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            sDefSystemLocale = Resources.getSystem().getConfiguration().getLocales().get(0);
+        else
+            sDefSystemLocale = Resources.getSystem().getConfiguration().locale;
+
+
         LocaleHelper.onAttach(this);
     }
 

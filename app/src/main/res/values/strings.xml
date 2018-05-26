@@ -20,6 +20,12 @@
     <!-- Activity Landing -->
     <string name="activity_landing_venuesBtn"><![CDATA[VENUES & MENUS]]></string>
     <string name="activity_landing_dishesBtn"><![CDATA[FIND DISHES & DRINKS]]></string>
+    <string name="activity_landing_languageBgSpinner">Bulgarian</string>
+    <string name="activity_landing_languageEnUSSpinner">English</string>
+    <string name="activity_landing_languageDeSpinner">German</string>
+    <string name="activity_landing_languageElSpinner">Greek</string>
+    <string name="activity_landing_languageRuSpinner">Russian</string>
+    <string name="activity_landing_languageEsSpinner">Spanish</string>
 
     <!-- Activity Login -->
     <string name="activity_login_titleTextView">"Login to"</string>
