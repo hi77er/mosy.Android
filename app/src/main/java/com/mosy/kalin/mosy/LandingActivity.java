@@ -3,8 +3,6 @@ package com.mosy.kalin.mosy;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Models.Views.SpinnerLocale;
 import com.mosy.kalin.mosy.Helpers.LocaleHelper;
 import com.mosy.kalin.mosy.Services.AccountService;
@@ -25,8 +24,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-
-import static android.content.pm.PackageManager.GET_META_DATA;
+import java.util.Locale;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_landing)
@@ -72,12 +70,12 @@ public class LandingActivity
     private void setupLanguagesSpinner() {
         ArrayList<SpinnerLocale> spinnerLocaleList = new ArrayList<>();
 
-        spinnerLocaleList.add(new SpinnerLocale("bg", "Bulgarian"));
-        spinnerLocaleList.add(new SpinnerLocale("en", "English"));
-        spinnerLocaleList.add(new SpinnerLocale("de", "German"));
-        spinnerLocaleList.add(new SpinnerLocale("el", "Greek"));
-        spinnerLocaleList.add(new SpinnerLocale("ru", "Russian"));
-        spinnerLocaleList.add(new SpinnerLocale("es", "Spanish"));
+        spinnerLocaleList.add(new SpinnerLocale("bg", constructLanguageSpinnerText(R.string.activity_landing_languageBgSpinner)));
+        spinnerLocaleList.add(new SpinnerLocale("en", constructLanguageSpinnerText(R.string.activity_landing_languageEnUSSpinner)));
+        spinnerLocaleList.add(new SpinnerLocale("de", constructLanguageSpinnerText(R.string.activity_landing_languageDeSpinner)));
+        spinnerLocaleList.add(new SpinnerLocale("el", constructLanguageSpinnerText(R.string.activity_landing_languageElSpinner)));
+        spinnerLocaleList.add(new SpinnerLocale("ru", constructLanguageSpinnerText(R.string.activity_landing_languageRuSpinner)));
+        spinnerLocaleList.add(new SpinnerLocale("es", constructLanguageSpinnerText(R.string.activity_landing_languageEsSpinner)));
 
         //fill data in spinner
         ArrayAdapter<SpinnerLocale> adapter = new ArrayAdapter<>(this.applicationContext, android.R.layout.simple_spinner_dropdown_item, spinnerLocaleList);
@@ -103,6 +101,12 @@ public class LandingActivity
             @Override public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+    }
+
+    private String constructLanguageSpinnerText(int resourceId) {
+        String applicationDefaultLocaleTranslation = StringHelper.getResourcesDeviceDefaultLocale(this, resourceId);
+        String deviceDefaultLocaleTranslation = StringHelper.getStringForLocale(this, resourceId, App.sDefSystemLocale);
+        return applicationDefaultLocaleTranslation + " (" + deviceDefaultLocaleTranslation + ")";
     }
 
     private void startActivityLoading() {
