@@ -8,4 +8,11 @@
     <string name="activity_landing_languageEsSpinner">Español</string>
     <string name="activity_landing_languageElSpinner">Griega</string>
     <string name="activity_landing_languageDeSpinner">Aleman</string>
+    <string name="activity_venueDetails_mondayHoursTextView">Lun</string>
+    <string name="activity_venueDetails_tuesdayHoursTextView">Mar</string>
+    <string name="activity_venueDetails_wednesdayHoursTextView">Mie</string>
+    <string name="activity_venueDetails_thursdayHoursTextView">Jue</string>
+    <string name="activity_venueDetails_fridayHoursTextView">Vie</string>
+    <string name="activity_venueDetails_saturdayHoursTextView">Sab</string>
+    <string name="activity_venueDetails_sundayHoursTextView">Dom</string>
 </resources>

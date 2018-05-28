@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Foodoo</string>
-    <string name="activity_venues_swipeDownToRefreshMessageTextView">ПРОКРУТИТЕ ВНИЗ, ЧТОБЫ ОБНОВИТЬ СТРАНИЦУ</string>
+    <string name="activity_venues_swipeDownToRefreshMessageTextView">ПОТЯНИТЕ ВНИЗ, ЧТОБЫ ОБНОВИТЬ СТРАНИЦУ</string>
     <string name="activity_landing_languageBgSpinner">Болгарский</string>
     <string name="activity_landing_languageEnUSSpinner">Английский</string>
     <string name="activity_landing_languageRuSpinner">Русский</string>
     <string name="activity_landing_languageEsSpinner">Испанский</string>
     <string name="activity_landing_languageElSpinner">Греческий</string>
     <string name="activity_landing_languageDeSpinner">Немецкий</string>
+    <string name="activity_landing_venuesBtn"><![CDATA[ЗАВЕДЕНИЯ & МЕНЮ]]></string>
+    <string name="activity_landing_dishesBtn"><![CDATA[ЕДА & НАПИТКИ]]></string>
+    <string name="activity_venuesFilters_showClosedTextView">Только открытые заведения</string>
+    <string name="item_dish_venueNameTextView">Имя Заведения</string>
+    <string name="activity_dishesFilters_showClosedTextView">Только открытые заведения</string>
+    <string name="activity_venuesFilters_goBtn">Покажи</string>
+    <string name="activity_dishesFilters_goBtn">Покажи</string>
 </resources>

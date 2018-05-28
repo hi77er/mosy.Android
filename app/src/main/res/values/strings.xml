@@ -66,7 +66,7 @@
     <string name="activity_venueDetails_quietPlaceTooltip">"Working friendly atmosphere. Quiet place. Electricity hubs available."</string>
     <string name="activity_venueDetails_bikeFriendlyTooltip">"Reachable by bike. Secure bicycle parking in short distance."</string>
     <string name="activity_venueDetails_childrenFriendlyTooltip">"Kid's corner available. Baby highchairs available."</string>
-    <string name="activity_venueDetails_funPlaceTooltip"><![CDATA[Disco & music. Gaming club. Fun place.]]></string>
+    <string name="activity_venueDetails_funPlaceTooltip"><![CDATA[Club music. Gaming club. Fun place.]]></string>
     <string name="activity_venueDetails_parkingSignTooltip">"Parking available."</string>
     <string name="activity_venueDetails_petFriendlyTooltip">"Pet friendly place."</string>
     <string name="activity_venueDetails_romanticPlaceTooltip">"Romantic place. Romantic view. Romantic music."</string>
@@ -90,7 +90,7 @@
     <string name="activity_dishesFilters_title"><![CDATA[Filter dishes & drinks]]></string>
     <string name="activity_dishesFilters_showClosedTextView">"Show only open venues"</string>
     <string name="CuisinePhaseSalads">"Salads"</string>
-    <string name="CuisinePhaseAppetizersAndSnacks">Appetizers &amp; Snacks</string>
+    <string name="CuisinePhaseAppetizersAndSnacks"><![CDATA[Appetizers & Snacks]]></string>
     <string name="CuisinePhaseDrinks">"Drinks"</string>
     <string name="CuisinePhaseBreakfast">"Breakfast"</string>
     <string name="CuisinePhaseMains">"Mains"</string>
@@ -100,7 +100,7 @@
     <string name="CuisineRegionEuropean">"Europe"</string>
     <string name="CuisineRegionAfrican">"Africa"</string>
     <string name="CuisineRegionAmerican">"Americas"</string>
-    <string name="CuisineSpectrumFishAndSeafood">"Fish &amp; sea"</string>
+    <string name="CuisineSpectrumFishAndSeafood"><![CDATA[Fish & sea food]]></string>
     <string name="CuisineSpectrumWhiteMeat">"White meat"</string>
     <string name="CuisineSpectrumVegan">"Vegan"</string>
     <string name="CuisineSpectrumGlutenFree">"Gluten free"</string>
