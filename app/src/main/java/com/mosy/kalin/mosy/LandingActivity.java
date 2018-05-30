@@ -40,7 +40,9 @@ public class LandingActivity
     @ViewById(resName = "landing_btnVenues")
     Button buttonVenues;
     @ViewById(resName = "landing_llInitialLoadingProgress")
-    LinearLayout centralProgress;
+    LinearLayout centralProgressLayout;
+    @ViewById(resName = "landing_lButtons")
+    LinearLayout buttonsLayout;
     @ViewById(resName = "landing_spLanguage")
     Spinner languagesSpinner;
 
@@ -113,16 +115,17 @@ public class LandingActivity
     }
 
     private void startActivityLoading() {
+        this.buttonsLayout.setVisibility(View.GONE);
         this.buttonDishes.setEnabled(false);
         this.buttonVenues.setEnabled(false);
-        this.centralProgress.setVisibility(View.VISIBLE);
+        this.centralProgressLayout.setVisibility(View.VISIBLE);
     }
 
     private void endActivityLoading() {
-
+        this.buttonsLayout.setVisibility(View.VISIBLE);
         this.buttonDishes.setEnabled(true);
         this.buttonVenues.setEnabled(true);
-        this.centralProgress.setVisibility(View.INVISIBLE);
+        this.centralProgressLayout.setVisibility(View.INVISIBLE);
     }
 
     @Click(resName = "landing_btnVenues")
