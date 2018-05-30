@@ -27,7 +27,7 @@ public class LoadVenueIndoorImageMetadataAsyncTask
 
         try {
             GetVenueIndoorImageMetaBindingModel model = models[0];
-            results = new VenuesRepository().getImageMetaIndoor(model);
+//            results = new VenuesRepository().getImageMetaIndoor(model);
         } catch (Exception e) {
             e.printStackTrace();
         }

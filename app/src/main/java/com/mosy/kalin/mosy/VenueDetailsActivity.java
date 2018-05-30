@@ -232,7 +232,7 @@ public class VenueDetailsActivity
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getEndorsements(applicationContext, listener, this.Venue.Id);
+        this.venueService.getBadgeEndorsements(applicationContext, listener, this.Venue.Id);
     }
 
     @Override
