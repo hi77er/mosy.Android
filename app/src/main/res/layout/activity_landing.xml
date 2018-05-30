@@ -25,7 +25,8 @@
         android:layout_below="@+id/landing_ivLogo"
         android:orientation="horizontal"
         android:background="@color/colorWhite"
-        android:layout_marginBottom="50dp">
+        android:layout_marginBottom="50dp"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/landing_btnDishes"
