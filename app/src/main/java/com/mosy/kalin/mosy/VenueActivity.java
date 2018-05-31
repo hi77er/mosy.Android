@@ -46,8 +46,6 @@ public class VenueActivity
 
     private static final String storageContainer = "userimages\\fboalbums\\200x200";
 
-    private Context applicationContext;
-
     @Bean
     VenuesService venueService;
 

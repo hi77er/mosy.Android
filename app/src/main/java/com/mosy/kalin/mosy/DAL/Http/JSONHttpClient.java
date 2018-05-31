@@ -19,6 +19,7 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -166,12 +167,17 @@ public class JSONHttpClient {
                 accessToken.Status = TokenResultStatus.Success;
             }
             else if(resultString.contains("Invalid Hostname")){
-                accessToken.Status = TokenResultStatus.InvalidHosName;
+                accessToken.Status = TokenResultStatus.InvalidHostName;
             }
             else {
                 accessToken.Status = TokenResultStatus.Fail;
             }
-        } catch (Exception e) {
+        }
+        catch (UnknownHostException e){
+            //e.g. no internet
+            accessToken.Status = TokenResultStatus.InvalidHostName;
+        }
+        catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         return accessToken;

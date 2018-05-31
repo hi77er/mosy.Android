@@ -28,14 +28,14 @@ public class AccountService {
     }
 
     public boolean refreshApiAuthenticationTokenExists(Runnable preExecute, Context applicationContext){
-        return refreshApiAuthenticationTokenExists(applicationContext, null, preExecute);
+        return refreshApiAuthenticationTokenExists(applicationContext, null, null, preExecute);
     }
 
-    public boolean refreshApiAuthenticationTokenExists(Context applicationContext, Runnable postExecute){
-        return refreshApiAuthenticationTokenExists(applicationContext, postExecute, null);
+    public boolean refreshApiAuthenticationTokenExists(Context applicationContext, Runnable postExecute, Runnable invalidHostExecute){
+        return refreshApiAuthenticationTokenExists(applicationContext, postExecute, invalidHostExecute, null);
     }
 
-    public boolean refreshApiAuthenticationTokenExists(Context applicationContext, Runnable postExecute, Runnable preExecute) {
+    public boolean refreshApiAuthenticationTokenExists(Context applicationContext, Runnable successExecute, Runnable invalidHostExecute, Runnable preExecute) {
         SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_webApi), Context.MODE_PRIVATE);
         LoginBindingModel model = new LoginBindingModel("webapiadmin@mosy.com", "!23Qwe");
         boolean tokenExistsAndIsValid = this.checkTokenValid(applicationContext);
@@ -50,11 +50,18 @@ public class AccountService {
                 }
                 @Override
                 public void onPostExecute(final TokenResult result) {
-                    refreshWebApiAuthTokenSettings(applicationContext, result.AccessToken ,result.TokenType, result.IssuedAt, result.ExpiresIn);
+                    if (result == null) throw new NullPointerException("Must have result");
 
-                    if (postExecute != null)
-                        postExecute.run();
+                    if (result.Status == TokenResultStatus.InvalidHostName){
+                        if (invalidHostExecute != null)
+                            invalidHostExecute.run();
+                    }
+                    else {
+                        refreshWebApiAuthTokenSettings(applicationContext, result.AccessToken, result.TokenType, result.IssuedAt, result.ExpiresIn);
 
+                        if (successExecute != null)
+                            successExecute.run();
+                    }
                 }
             };
             new AccountTokenLoginAsyncTask(listener).execute(model);

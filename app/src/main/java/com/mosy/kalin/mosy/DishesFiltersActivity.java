@@ -38,8 +38,6 @@ public class DishesFiltersActivity
     private DishFiltersPagerAdapter DFAdapter;
     private boolean SelectedApplyWorkingStatusFilter;
 
-    private Context applicationContext;
-
     @Bean
     DishesService dishesService;
 

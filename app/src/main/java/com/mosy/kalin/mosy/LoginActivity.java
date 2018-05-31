@@ -3,14 +3,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mosy.kalin.mosy.DTOs.Enums.AuthenticationResultStatus;
 import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
 import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
@@ -117,7 +115,7 @@ public class LoginActivity
     private void populateAuthenticationResult(TokenResult result) {
         if (result.Status == TokenResultStatus.Fail ||
                 result.Status  == TokenResultStatus.Unknown ||
-                result.Status  == TokenResultStatus.InvalidHosName)
+                result.Status  == TokenResultStatus.InvalidHostName)
             Toast.makeText(this, "Please try later. We are currently experiencing some troubles to connect you.", Toast.LENGTH_SHORT).show();
         else if (result.Status  == TokenResultStatus.Unauthorized)
             Toast.makeText(this, "Wrong username or password.", Toast.LENGTH_SHORT).show();

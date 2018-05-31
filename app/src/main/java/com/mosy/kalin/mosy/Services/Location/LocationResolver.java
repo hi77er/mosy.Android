@@ -29,6 +29,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
+import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -77,7 +78,7 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
         } else if (!isLocationEnabled(mActivity)) {
             showLocationSettingsDialog();
             return false;
-        } else if (!isConnected()) {
+        } else if (!ConnectivityHelper.isConnected(mActivity)) {
             showWifiSettingsDialog(mActivity);
             return false;
         }
@@ -180,17 +181,6 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
         } else {
             locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
             return !TextUtils.isEmpty(locationProviders);
-        }
-    }
-
-    /* checks whether the device connected or not*/
-    public boolean isConnected() {
-        try {
-            ConnectivityManager cm = (ConnectivityManager) mActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo netInfo = cm.getActiveNetworkInfo();
-            return netInfo != null && netInfo.isConnected();
-        } catch (Exception e) {
-            return false;
         }
     }
 
@@ -365,7 +355,7 @@ public class LocationResolver implements GoogleApiClient.ConnectionCallbacks,
     }
 
 
-    private void showWifiSettingsDialog(final Context context) {
+    public void showWifiSettingsDialog(final Context context) {
         if (alertDialog != null) alertDialog.cancel();
 
         alertDialog = new AlertDialog.Builder(mActivity)
