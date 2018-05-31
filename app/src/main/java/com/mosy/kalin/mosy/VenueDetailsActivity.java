@@ -66,7 +66,6 @@ public class VenueDetailsActivity
     private static final String x200BlobStorageContainerPath = "userimages\\fboalbums\\200x200";
     private static final String originalBlobStorageContainerPath = "userimages\\fboalbums\\original";
 
-    private Context applicationContext;
     boolean IsUsingDefaultIndoorImageThumbnail;
     public String PhoneNumber;
 

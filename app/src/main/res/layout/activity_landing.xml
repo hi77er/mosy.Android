@@ -75,6 +75,23 @@
         </ProgressBar>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/landing_llInvalidHost"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/landing_lButtons"
+        android:gravity="center"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/landing_tvInvalidHost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/activity_landing_noInternetMessageTextView">
+        </TextView>
+    </LinearLayout>
+
     <Spinner
         android:id="@+id/landing_spLanguage"
         android:layout_width="match_parent"

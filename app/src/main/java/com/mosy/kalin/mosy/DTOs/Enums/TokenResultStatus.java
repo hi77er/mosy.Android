@@ -9,6 +9,6 @@ public enum TokenResultStatus {
     Fail,
     Success,
     Unauthorized,
-    InvalidHosName
+    InvalidHostName
 
 }

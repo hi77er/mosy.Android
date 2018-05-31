@@ -67,7 +67,6 @@ public class VenuesActivity
     int itemsInitialLoadCount = 8;
     int itemsOnScrollLoadCount = 5;
 
-    private Context applicationContext;
     private LocationResolver mLocationResolver;
     private Location lastKnownLocation;
 
