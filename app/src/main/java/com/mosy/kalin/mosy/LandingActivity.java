@@ -63,15 +63,19 @@ public class LandingActivity
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        activityStopped = false;
+    }
+
+    @Override
     protected void onNetworkAvailable() {
-        super.onNetworkAvailable();
         if (afterViewsFinished)
             runOnUiThread(this::ensureHasAuthenticationToken);
     }
 
     @Override
     protected void onNetworkLost() {
-        super.onNetworkLost();
         if (afterViewsFinished)
             runOnUiThread(this::endActivityLoadingInvalidHost);
     }
@@ -154,7 +158,8 @@ public class LandingActivity
         this.buttonsLayout.setVisibility(View.GONE);
         this.invalidHostLayout.setVisibility(View.VISIBLE);
         this.centralProgressLayout.setVisibility(View.GONE);
-        new LocationResolver(this).showWifiSettingsDialog(applicationContext);
+        if (!activityStopped)
+            new LocationResolver(this).showWifiSettingsDialog(applicationContext);
         //TODO: Delete before deploying to production!
         Toast.makeText(applicationContext, "No internet!", Toast.LENGTH_LONG).show();
     }
@@ -173,4 +178,14 @@ public class LandingActivity
         startActivity(intent);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        activityStopped = true;
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+    }
 }

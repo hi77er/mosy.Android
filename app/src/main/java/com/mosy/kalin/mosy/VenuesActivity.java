@@ -68,6 +68,7 @@ public class VenuesActivity
     int itemsInitialLoadCount = 8;
     int itemsOnScrollLoadCount = 5;
     boolean afterViewsFinished = false;
+    boolean networkLost = false;
 
     private LocationResolver mLocationResolver;
     private Location lastKnownLocation;
@@ -124,17 +125,20 @@ public class VenuesActivity
 
         incrementActivityUsagesCount();
         timeStarted = System.currentTimeMillis();
-        this.applicationContext = getApplicationContext();
     }
 
     @AfterViews
     void afterViews() {
         configureActionBar();
 
-        if (ConnectivityHelper.isConnected(applicationContext))
+        if (ConnectivityHelper.isConnected(applicationContext)) {
+            networkLost = false;
             loadData();
-        else
+        }
+        else {
+            networkLost = true;
             showInvalidHostLayout(); // For any case.. But should never happen because landing activity doesn't show links to this activity if no internet.
+        }
 
         afterViewsFinished = true;
     }
@@ -167,17 +171,17 @@ public class VenuesActivity
 
     @Override
     protected void onNetworkAvailable() {
-        super.onNetworkAvailable();
-
-        if (afterViewsFinished)
+        if (afterViewsFinished && networkLost) {
             runOnUiThread(this::loadData);
+            networkLost = false;
+        }
     }
-
     @Override
     protected void onNetworkLost() {
-        super.onNetworkLost();
-        if (afterViewsFinished)
+        if (afterViewsFinished) {
             runOnUiThread(this::showInvalidHostLayout);
+        }
+        networkLost = true;
     }
 
     private void showInvalidHostLayout() {
@@ -409,6 +413,8 @@ public class VenuesActivity
     @Override
     protected void onStop() {
         super.onStop();
+        this.connectionStateMonitor.onAvailable = null;
+        this.connectionStateMonitor.onLost = null;
         mLocationResolver.onStop();
     }
 
