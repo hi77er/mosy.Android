@@ -138,6 +138,7 @@
     <string name="activity_dishesFilters_allergensFiltersTitle">Allergens</string>
     <string name="activity_dishesFilters_allergensFiltersNote">* Selected Allergens will reduce the appearance priority of dishes associated to them.</string>
     <string name="activity_landing_noInternetMessageTextView">No internet! Please check your network settings or try again later.</string>
+    <string name="activity_venues_noInternetTextView">No internet!</string>
 
 
 </resources>

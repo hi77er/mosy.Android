@@ -96,6 +96,27 @@
             </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <LinearLayout
+        android:id="@+id/venues_llInvalidHost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="55dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:background="@color/colorRed">
+
+        <TextView
+            android:id="@+id/venues_tvInvalidHost"
+            android:text="@string/activity_venues_noInternetTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/colorWhite">
+        </TextView>
+    </LinearLayout>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/venues_ibFilters"
         android:layout_width="65dp"

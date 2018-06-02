@@ -147,11 +147,19 @@ public class JSONHttpClient {
             // Set the Content-Type header.
             con.setRequestProperty( "Content-Type" , "application/x-www-form-urlencoded" );
             con.setRequestProperty( "Charset" , "UTF-8" );
+
+            long execStart = 0;
+            long elapsed = 0;
+
+            if (BuildConfig.DEBUG) execStart = System.currentTimeMillis();
             // Send the encoded parameters on the connection.
             OutputStream os = con.getOutputStream();
             os.write(encoded.getBytes( "UTF-8" ));
             os.flush();
             con.connect();
+            if (BuildConfig.DEBUG) elapsed = System.currentTimeMillis() - execStart;
+            if (BuildConfig.DEBUG) System.out.println("MOSYLOGS : REST CALL - " + url + " with params: username=" + username + "password" + password + " TOOK: " + elapsed + "ms;");
+
 
             // Convert the response into a String object.
             String resultString = convertStreamToString(con.getInputStream());
@@ -172,6 +180,7 @@ public class JSONHttpClient {
             else {
                 accessToken.Status = TokenResultStatus.Fail;
             }
+
         }
         catch (UnknownHostException e){
             //e.g. no internet

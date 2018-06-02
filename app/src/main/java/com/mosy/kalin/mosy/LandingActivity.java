@@ -33,6 +33,8 @@ public class LandingActivity
         extends BaseActivity
 
 {
+    boolean afterViewsFinished = false;
+
     @Bean
     AccountService accountService;
 
@@ -40,36 +42,38 @@ public class LandingActivity
     Button buttonDishes;
     @ViewById(resName = "landing_btnVenues")
     Button buttonVenues;
+    @ViewById(resName = "landing_lButtons")
+    LinearLayout buttonsLayout;
     @ViewById(resName = "landing_llInitialLoadingProgress")
     LinearLayout centralProgressLayout;
     @ViewById(resName = "landing_llInvalidHost")
     LinearLayout invalidHostLayout;
-    @ViewById(resName = "landing_lButtons")
-    LinearLayout buttonsLayout;
     @ViewById(resName = "landing_spLanguage")
     Spinner languagesSpinner;
 
     @AfterViews
     public void afterViews(){
-        ConnectionStateMonitor monitor = new ConnectionStateMonitor();
-        monitor.onAvailable = this::onNetworkAvailable;
-        monitor.onLost = this::onNetworkLost;
-        monitor.enable(applicationContext);
-
         if (ConnectivityHelper.isConnected(applicationContext))
             ensureHasAuthenticationToken();
         else
             endActivityLoadingInvalidHost();
 
         setupLanguagesSpinner();
+        afterViewsFinished = true;
     }
 
-    private void onNetworkAvailable() {
-        runOnUiThread(this::ensureHasAuthenticationToken);
+    @Override
+    protected void onNetworkAvailable() {
+        super.onNetworkAvailable();
+        if (afterViewsFinished)
+            runOnUiThread(this::ensureHasAuthenticationToken);
     }
 
-    private void onNetworkLost() {
-        runOnUiThread(this::endActivityLoadingInvalidHost);
+    @Override
+    protected void onNetworkLost() {
+        super.onNetworkLost();
+        if (afterViewsFinished)
+            runOnUiThread(this::endActivityLoadingInvalidHost);
     }
 
     private void ensureHasAuthenticationToken() {

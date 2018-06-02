@@ -90,7 +90,7 @@ public class DishesAdapter
 
     @Override
     public MenuListItem getItem(int position) {
-        if (this.menuListItems != null)
+        if (this.menuListItems != null && this.menuListItems.size() > 0)
             return menuListItems.get(position);
         else return null;
     }

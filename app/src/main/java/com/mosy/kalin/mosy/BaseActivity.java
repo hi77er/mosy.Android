@@ -22,6 +22,19 @@ public abstract class BaseActivity
         super.onCreate(savedInstanceState);
 
         this.applicationContext = getApplicationContext();
+
+        ConnectionStateMonitor monitor = new ConnectionStateMonitor();
+        monitor.onAvailable = this::onNetworkAvailable;
+        monitor.onLost = this::onNetworkLost;
+        monitor.enable(applicationContext);
+    }
+
+    protected void onNetworkLost() {
+
+    }
+
+    protected void onNetworkAvailable() {
+
     }
 
     @Override
