@@ -29,7 +29,7 @@ public class LoadMenuListItemsAsyncTask
 
         try {
             SearchMenuListItemsBindingModel model = models[0];
-            results = new DishesRepository().loadDishes(model);
+//            results = new DishesRepository().loadDishes(model);
         } catch (Exception e) {
             e.printStackTrace();
         }
