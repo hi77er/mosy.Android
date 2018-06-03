@@ -18,20 +18,6 @@ public class DishesRepository {
     private static final String getMenuListItemFiltersEndpointEnding = "dishes/filters/all";
 
 
-    public ArrayList<MenuListItem> loadDishes(SearchMenuListItemsBindingModel model){
-        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(searchMenuListItemsEndpointEnding);
-        ArrayList<MenuListItem> menuItemsResult = new ArrayList<>();
-        try {
-            JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            Type returnType = new TypeToken<ArrayList<MenuListItem>>(){}.getType();
-            menuItemsResult = jsonHttpClient.PostObject(endpoint, model, returnType, "yyyy-MM-dd'T'HH:mm:ss.", model.AuthTokenHeader);
-            return menuItemsResult;
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        return menuItemsResult;
-    }
-
     public RequestableFiltersResult getFilters(GetRequestableFiltersBindingModel model){
         String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getMenuListItemFiltersEndpointEnding);
         RequestableFiltersResult response;
@@ -48,4 +34,18 @@ public class DishesRepository {
         }
         return response;
     }
+//    public ArrayList<MenuListItem> loadDishes(SearchMenuListItemsBindingModel model){
+//        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(searchMenuListItemsEndpointEnding);
+//        ArrayList<MenuListItem> menuItemsResult = new ArrayList<>();
+//        try {
+//            JSONHttpClient jsonHttpClient = new JSONHttpClient();
+//            Type returnType = new TypeToken<ArrayList<MenuListItem>>(){}.getType();
+//            menuItemsResult = jsonHttpClient.PostObject(endpoint, model, returnType, "yyyy-MM-dd'T'HH:mm:ss.", model.AuthTokenHeader);
+//            return menuItemsResult;
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//        }
+//        return menuItemsResult;
+//    }
+
 }
