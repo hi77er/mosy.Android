@@ -304,7 +304,7 @@ public class VenuesActivity
                 localDayOfWeek = localCalendar.get(Calendar.DAY_OF_WEEK);
             }
 
-            this.dishesService.getDishes(
+            this.dishesService.loadDishes(
                     applicationContext, listener,
                     maxResultsCount, totalItemsOffset,
                     lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
