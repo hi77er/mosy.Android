@@ -58,6 +58,7 @@ public class DishesService {
 
         try {
             Call<ArrayList<MenuListItem>> callResult =  repository.getDishes(authTokenHeader, model);
+            listener.onPreExecute();
             callResult.enqueue(new Callback<ArrayList<MenuListItem>>() {
                 @Override
                 public void onResponse(Call<ArrayList<MenuListItem>> call, Response<ArrayList<MenuListItem>> response) {
