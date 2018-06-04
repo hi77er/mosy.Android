@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
@@ -70,6 +72,7 @@ public class VenuesActivity
     boolean afterViewsFinished = false;
     boolean networkLost = false;
 
+
     private LocationResolver mLocationResolver;
     private Location lastKnownLocation;
 
@@ -114,6 +117,11 @@ public class VenuesActivity
     @ViewById(resName = "venues_lvDishes")
     ListView dishesWall;
 
+    @ViewById(resName = "venues_lVenuesSwipeContainer")
+    SwipeRefreshLayout venuesSwipeContainer;
+    @ViewById(resName = "venues_lDishesSwipeContainer")
+    SwipeRefreshLayout dishesSwipeContainer;
+
     @ViewById(resName = "venues_ibFilters")
     FloatingActionButton filtersButton;
 
@@ -143,6 +151,35 @@ public class VenuesActivity
         afterViewsFinished = true;
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onNetworkAvailable() {
+        if (afterViewsFinished && networkLost) {
+            runOnUiThread(this::loadData);
+            networkLost = false;
+        }
+    }
+
+    @Override
+    protected void onNetworkLost() {
+        if (afterViewsFinished) {
+            runOnUiThread(this::showInvalidHostLayout);
+        }
+        networkLost = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!ConnectivityHelper.isConnected(applicationContext)) {
+            showInvalidHostLayout();
+        }
+    }
+
     private void loadData() {
         this.invalidHostLayout.setVisibility(View.GONE);
 
@@ -167,21 +204,6 @@ public class VenuesActivity
         int activityUsagesCount = getActivityUsagesCount();
         if (activityUsagesCount <= 15)
             showFiltersPopupLabel();
-    }
-
-    @Override
-    protected void onNetworkAvailable() {
-        if (afterViewsFinished && networkLost) {
-            runOnUiThread(this::loadData);
-            networkLost = false;
-        }
-    }
-    @Override
-    protected void onNetworkLost() {
-        if (afterViewsFinished) {
-            runOnUiThread(this::showInvalidHostLayout);
-        }
-        networkLost = true;
     }
 
     private void showInvalidHostLayout() {
@@ -373,11 +395,6 @@ public class VenuesActivity
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         if (!DishesSearchModeActivated) {
@@ -415,13 +432,15 @@ public class VenuesActivity
         super.onStop();
         this.connectionStateMonitor.onAvailable = null;
         this.connectionStateMonitor.onLost = null;
-        mLocationResolver.onStop();
+        if (mLocationResolver != null)
+            mLocationResolver.onStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mLocationResolver.onDestroy();
+        if (mLocationResolver != null)
+            mLocationResolver.onDestroy();
     }
 
     @Override

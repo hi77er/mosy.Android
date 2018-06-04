@@ -71,8 +71,6 @@ public class DishesFiltersActivity
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        this.applicationContext = getApplicationContext();
-
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         getWindow().setLayout((int)(dm.widthPixels*.9), (int)(dm.heightPixels*.7));
