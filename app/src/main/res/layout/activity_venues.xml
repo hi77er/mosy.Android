@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorWhite">
 
     <include layout="@layout/action_bar_toolbar" />
@@ -51,10 +52,11 @@
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/venues_lVenuesSwipeContainer"
-        android:layout_marginTop="55dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
             <ListView
                 android:id="@+id/venues_lvVenues"
@@ -75,10 +77,11 @@
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/venues_lDishesSwipeContainer"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="?android:attr/actionBarSize"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="55dp"
-        android:visibility="gone">
+        android:layout_height="match_parent">
 
             <ListView
                 android:id="@+id/venues_lvDishes"
@@ -95,6 +98,30 @@
                 android:drawSelectorOnTop="false">
             </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <!--It is positioned below the content containers in order to have higher z-index-->
+    <LinearLayout
+        android:id="@+id/venues_llInvalidHost"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:gravity="center"
+        android:background="@color/colorRed">
+
+        <TextView
+            android:id="@+id/venues_tvInvalidHost"
+            android:text="@string/activity_venues_noInternetTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/colorWhite">
+        </TextView>
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/venues_ibFilters"

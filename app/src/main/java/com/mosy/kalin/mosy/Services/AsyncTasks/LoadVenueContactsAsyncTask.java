@@ -27,7 +27,7 @@ public class LoadVenueContactsAsyncTask
 
         try {
             GetVenueContactsBindingModel model = models[0];
-            results = new VenuesRepository().getContacts(model);
+//            results = new VenuesRepository().getContacts(model);
         } catch (Exception e) {
             e.printStackTrace();
         }

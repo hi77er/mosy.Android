@@ -18,6 +18,7 @@
     <color name="colorSecondaryVeryLight">#F1F0CC</color>
     <color name="colorSecondaryLight">#D5BF86</color>
     <color name="colorSecondary">#8D775F</color>
+    <color name="colorRed">#f00</color>
 
     <color name="colorTertiaryLight">#6B9080</color>
     <color name="colorTertiary">#00900F</color>

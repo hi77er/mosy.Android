@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="Show only open venues"
+                android:text="@string/activity_venuesFilters_showClosedTextView"
                 android:textColor="@color/colorPrimaryVeryLight" />
 
             <Switch
@@ -59,7 +59,7 @@
         android:background="@color/colorPrimaryDark">
 
         <Button
-            android:id="@+id/filterDishes_GoButton"
+            android:id="@+id/filterVenues_GoButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/activity_venuesFilters_goBtn"

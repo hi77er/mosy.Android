@@ -29,7 +29,7 @@ public class LoadVenueMenuAsyncTask
 
         try {
             GetVenueMenuBindingModel model = models[0];
-            results = new VenuesRepository().getMenu(model);
+//            results = new VenuesRepository().getMenu(model);
         } catch (Exception e) {
             e.printStackTrace();
         }

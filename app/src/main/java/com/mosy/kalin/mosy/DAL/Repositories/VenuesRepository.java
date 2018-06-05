@@ -41,102 +41,13 @@ public class VenuesRepository {
     private static final String getVenueMenuEndpointEnding = "fbo/publicmenu";
 
 
-    public VenueContacts getContacts(GetVenueContactsBindingModel model){
-        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getVenueContactsEndpointEnding);
-        VenueContacts result = null;
 
-        try {
-            HttpParams params = new HttpParams();
-            params.put("fboId", model.VenueId);
+//
 
-            JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            result = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueContacts>(){}.getType(), "HH:mm:ss", model.AuthTokenHeader);
-        } catch(Exception e) {
-            e.printStackTrace();
-            VenueContacts venueContacts = new VenueContacts();
-            venueContacts.ErrorMessage = e.getMessage();
-            return venueContacts;
-        }
-        return result;
-    }
 
-    public ArrayList<VenueBadgeEndorsement> getBadgeEndorsements(GetVenueBadgeEndorsementsBindingModel model){
-        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getVenueBadgeEndorsementsEndpointEnding);
-        ArrayList<VenueBadgeEndorsement> badgeEndorsements = new ArrayList<VenueBadgeEndorsement>();
 
-        try {HttpParams params = new HttpParams();
-            params.put("fboId", model.VenueId);
 
-            JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            badgeEndorsements = jsonHttpClient.Get(endpoint, params, new TypeToken<ArrayList<VenueBadgeEndorsement>>(){}.getType(), StringHelper.empty(), model.AuthTokenHeader);
-        } catch(Exception e) {
-            e.printStackTrace();
-            VenueBadgeEndorsement errResult = new VenueBadgeEndorsement();
-            errResult.ErrorMessage = e.getMessage();
-            badgeEndorsements.add(errResult);
-            return badgeEndorsements;
-        }
-        return badgeEndorsements;
-    }
 
-    public VenueLocation getLocation(GetVenueLocationBindingModel model){
-        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getVenueLocationEndpointEnding);
-        VenueLocation location;
-
-        try {
-            HttpParams params = new HttpParams();
-            params.put("fboId", model.VenueId);
-
-            JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            location = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueLocation>(){}.getType(), StringHelper.empty(), model.AuthTokenHeader);
-        } catch(Exception e) {
-            e.printStackTrace();
-            VenueLocation errResult = new VenueLocation();
-            errResult.ErrorMessage = e.getMessage();
-            return errResult;
-        }
-        return location;
-    }
-
-    public VenueImage getImageMetaIndoor(GetVenueIndoorImageMetaBindingModel model){
-        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getVenueIndoorImageMetaEndpointEnding);
-        VenueImage imageResult;
-
-        try {
-            HttpParams params = new HttpParams();
-            params.put("fboId", model.VenueId);
-
-            JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            imageResult = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueImage>(){}.getType(), StringHelper.empty(), model.AuthTokenHeader);
-        } catch(Exception e) {
-            e.printStackTrace();
-            VenueImage errResult = new VenueImage();
-            errResult.ErrorMessage = e.getMessage();
-            return errResult;
-        }
-        return imageResult;
-    }
-
-    public ArrayList<MenuList> getMenu(GetVenueMenuBindingModel model){
-        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getVenueMenuEndpointEnding);
-        ArrayList<MenuList> brochuresResult = new ArrayList<>();
-
-        try {
-            HttpParams params = new HttpParams();
-            params.put("fboId", model.VenueId);
-
-            JSONHttpClient jsonHttpClient = new JSONHttpClient();
-            brochuresResult = jsonHttpClient.Get(endpoint, params, new TypeToken<ArrayList<MenuList>>(){}.getType(), StringHelper.empty(), model.AuthTokenHeader);
-        } catch(Exception e) {
-            e.printStackTrace();
-            MenuList errResult = new MenuList();
-            errResult.ErrorMessage = e.getMessage();
-            brochuresResult.add(errResult);
-            errResult.ErrorMessage = e.getMessage();
-            return brochuresResult;
-        }
-        return brochuresResult;
-    }
 
 
 //    public ArrayList<Venue> loadVenues(SearchVenuesBindingModel model){
@@ -196,6 +107,104 @@ public class VenuesRepository {
 //            return errResult;
 //        }
 //        return businessHours;
+//    }
+
+
+//    public VenueContacts getContacts(GetVenueContactsBindingModel model){
+//        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getVenueContactsEndpointEnding);
+//        VenueContacts result = null;
+//
+//        try {
+//            HttpParams params = new HttpParams();
+//            params.put("fboId", model.VenueId);
+//
+//            JSONHttpClient jsonHttpClient = new JSONHttpClient();
+//            result = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueContacts>(){}.getType(), "HH:mm:ss", model.AuthTokenHeader);
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//            VenueContacts venueContacts = new VenueContacts();
+//            venueContacts.ErrorMessage = e.getMessage();
+//            return venueContacts;
+//        }
+//        return result;
+//    }
+//public ArrayList<VenueBadgeEndorsement> getBadgeEndorsements(GetVenueBadgeEndorsementsBindingModel model){
+//        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getVenueBadgeEndorsementsEndpointEnding);
+//        ArrayList<VenueBadgeEndorsement> badgeEndorsements = new ArrayList<VenueBadgeEndorsement>();
+//
+//        try {HttpParams params = new HttpParams();
+//            params.put("fboId", model.VenueId);
+//
+//            JSONHttpClient jsonHttpClient = new JSONHttpClient();
+//            badgeEndorsements = jsonHttpClient.Get(endpoint, params, new TypeToken<ArrayList<VenueBadgeEndorsement>>(){}.getType(), StringHelper.empty(), model.AuthTokenHeader);
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//            VenueBadgeEndorsement errResult = new VenueBadgeEndorsement();
+//            errResult.ErrorMessage = e.getMessage();
+//            badgeEndorsements.add(errResult);
+//            return badgeEndorsements;
+//        }
+//        return badgeEndorsements;
+//    }
+
+
+//    public VenueLocation getLocation(GetVenueLocationBindingModel model){
+//        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getVenueLocationEndpointEnding);
+//        VenueLocation location;
+//
+//        try {
+//            HttpParams params = new HttpParams();
+//            params.put("fboId", model.VenueId);
+//
+//            JSONHttpClient jsonHttpClient = new JSONHttpClient();
+//            location = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueLocation>(){}.getType(), StringHelper.empty(), model.AuthTokenHeader);
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//            VenueLocation errResult = new VenueLocation();
+//            errResult.ErrorMessage = e.getMessage();
+//            return errResult;
+//        }
+//        return location;
+//    }
+
+//    public VenueImage getImageMetaIndoor(GetVenueIndoorImageMetaBindingModel model){
+//        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getVenueIndoorImageMetaEndpointEnding);
+//        VenueImage imageResult;
+//
+//        try {
+//            HttpParams params = new HttpParams();
+//            params.put("fboId", model.VenueId);
+//
+//            JSONHttpClient jsonHttpClient = new JSONHttpClient();
+//            imageResult = jsonHttpClient.Get(endpoint, params, new TypeToken<VenueImage>(){}.getType(), StringHelper.empty(), model.AuthTokenHeader);
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//            VenueImage errResult = new VenueImage();
+//            errResult.ErrorMessage = e.getMessage();
+//            return errResult;
+//        }
+//        return imageResult;
+//    }
+
+    //    public ArrayList<MenuList> getMenu(GetVenueMenuBindingModel model){
+//        String endpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(getVenueMenuEndpointEnding);
+//        ArrayList<MenuList> brochuresResult = new ArrayList<>();
+//
+//        try {
+//            HttpParams params = new HttpParams();
+//            params.put("fboId", model.VenueId);
+//
+//            JSONHttpClient jsonHttpClient = new JSONHttpClient();
+//            brochuresResult = jsonHttpClient.Get(endpoint, params, new TypeToken<ArrayList<MenuList>>(){}.getType(), StringHelper.empty(), model.AuthTokenHeader);
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//            MenuList errResult = new MenuList();
+//            errResult.ErrorMessage = e.getMessage();
+//            brochuresResult.add(errResult);
+//            errResult.ErrorMessage = e.getMessage();
+//            return brochuresResult;
+//        }
+//        return brochuresResult;
 //    }
 
 }

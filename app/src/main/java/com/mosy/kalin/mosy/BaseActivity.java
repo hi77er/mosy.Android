@@ -4,19 +4,46 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.mosy.kalin.mosy.Helpers.LocaleHelper;
+import com.mosy.kalin.mosy.Services.Connectivity.ConnectionStateMonitor;
 
 import static android.content.pm.PackageManager.GET_META_DATA;
 
 public abstract class BaseActivity
-        extends AppCompatActivity{
+        extends AppCompatActivity {
+
+    protected boolean activityStopped = false;
+
+    protected Context applicationContext;
+    protected Context baseContext;
+
+    protected ConnectionStateMonitor connectionStateMonitor;
 
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(LocaleHelper.onAttach(base));
         resetTitle();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        this.applicationContext = getApplicationContext();
+        this.baseContext = getBaseContext();
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+        connectionStateMonitor = new ConnectionStateMonitor();
+        connectionStateMonitor.onAvailable = this::onNetworkAvailable;
+        connectionStateMonitor.onLost = this::onNetworkLost;
+        connectionStateMonitor.enable(baseContext);
     }
 
     private void resetTitle() {
@@ -36,4 +63,19 @@ public abstract class BaseActivity
         }
     }
 
+    protected void onNetworkLost() {
+    }
+
+    protected void onNetworkAvailable() {
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+    }
 }

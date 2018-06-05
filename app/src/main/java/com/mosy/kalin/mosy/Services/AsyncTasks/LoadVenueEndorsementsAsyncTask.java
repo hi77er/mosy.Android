@@ -29,7 +29,7 @@ public class LoadVenueEndorsementsAsyncTask
 
         try {
             GetVenueBadgeEndorsementsBindingModel model = models[0];
-            results = new VenuesRepository().getBadgeEndorsements(model);
+//            results = new VenuesRepository().getBadgeEndorsements(model);
         } catch (Exception e) {
             e.printStackTrace();
         }

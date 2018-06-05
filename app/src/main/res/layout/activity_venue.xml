@@ -80,7 +80,7 @@
         android:layout_gravity="end"
         android:background="@color/colorWhite">
 
-        <android.support.v4.view.PagerTitleStrip
+        <com.mosy.kalin.mosy.CustomControls.PagerClickTitleStrip
             android:id="@+id/pager_title_strip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

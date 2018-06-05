@@ -1,7 +1,6 @@
 package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,10 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Models.Views.SpinnerLocale;
 import com.mosy.kalin.mosy.Helpers.LocaleHelper;
 import com.mosy.kalin.mosy.Services.AccountService;
+import com.mosy.kalin.mosy.Services.Connectivity.ConnectionStateMonitor;
+import com.mosy.kalin.mosy.Services.Location.LocationResolver;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -24,14 +26,14 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_landing)
 public class LandingActivity
         extends BaseActivity
+
 {
-    private Context applicationContext;
+    boolean afterViewsFinished = false;
 
     @Bean
     AccountService accountService;
@@ -40,31 +42,52 @@ public class LandingActivity
     Button buttonDishes;
     @ViewById(resName = "landing_btnVenues")
     Button buttonVenues;
+    @ViewById(resName = "landing_lButtons")
+    LinearLayout buttonsLayout;
     @ViewById(resName = "landing_llInitialLoadingProgress")
-    LinearLayout centralProgress;
+    LinearLayout centralProgressLayout;
+    @ViewById(resName = "landing_llInvalidHost")
+    LinearLayout invalidHostLayout;
     @ViewById(resName = "landing_spLanguage")
     Spinner languagesSpinner;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        this.applicationContext = getApplicationContext();
-    }
-
     @AfterViews
     public void afterViews(){
-        startActivityLoading();
-
-        boolean authTokenExistsAndIsValid = this.accountService.refreshApiAuthenticationTokenExists(applicationContext, () -> {
-            //TODO: Delete before deploying to production!
-            endActivityLoading();
-            Toast.makeText(applicationContext, "WebApi authToken refreshed!", Toast.LENGTH_LONG).show();
-        });
-        if (authTokenExistsAndIsValid)
-            endActivityLoading();
+        if (ConnectivityHelper.isConnected(applicationContext))
+            ensureHasAuthenticationToken();
+        else
+            endActivityLoadingInvalidHost();
 
         setupLanguagesSpinner();
+        afterViewsFinished = true;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        activityStopped = false;
+    }
+
+    @Override
+    protected void onNetworkAvailable() {
+        if (afterViewsFinished)
+            runOnUiThread(this::ensureHasAuthenticationToken);
+    }
+
+    @Override
+    protected void onNetworkLost() {
+        if (afterViewsFinished)
+            runOnUiThread(this::endActivityLoadingInvalidHost);
+    }
+
+    private void ensureHasAuthenticationToken() {
+        startActivityLoading();
+        boolean authTokenExistsAndIsValid = this.accountService.refreshApiAuthenticationTokenExists(applicationContext,
+                this::endActivityLoadingSuccess,
+                this::endActivityLoadingInvalidHost);
+
+        if (authTokenExistsAndIsValid)
+            endActivityLoadingSuccess();
     }
 
     private void setupLanguagesSpinner() {
@@ -78,11 +101,14 @@ public class LandingActivity
         spinnerLocaleList.add(new SpinnerLocale("es", constructLanguageSpinnerText(R.string.activity_landing_languageEsSpinner)));
 
         //fill data in spinner
-        ArrayAdapter<SpinnerLocale> adapter = new ArrayAdapter<>(this.applicationContext, android.R.layout.simple_spinner_dropdown_item, spinnerLocaleList);
+        ArrayAdapter<SpinnerLocale> adapter = new ArrayAdapter<>(this.applicationContext, R.layout.languages_spinner_activity_landing, spinnerLocaleList);
+        adapter.setDropDownViewResource(R.layout.languages_spinner_activity_landing);
         this.languagesSpinner.setAdapter(adapter);
 
         String currentDefaultSpinnerLocale = LocaleHelper.getLanguage(applicationContext);
+
         //TODO: Linq-like syntax needed!
+        //Stream.of(cuisineRegionFilters).filter(filter -> filter.Id.equals(filterId)).single();
         for(SpinnerLocale sLocale : spinnerLocaleList){
             if (sLocale.getId().equals(currentDefaultSpinnerLocale)){
                 this.languagesSpinner.setSelection(adapter.getPosition(sLocale));
@@ -104,22 +130,38 @@ public class LandingActivity
     }
 
     private String constructLanguageSpinnerText(int resourceId) {
-        String applicationDefaultLocaleTranslation = StringHelper.getResourcesDeviceDefaultLocale(this, resourceId);
-        String deviceDefaultLocaleTranslation = StringHelper.getStringForLocale(this, resourceId, App.sDefSystemLocale);
-        return applicationDefaultLocaleTranslation + " (" + deviceDefaultLocaleTranslation + ")";
+        String applicationDefaultLocaleTranslation = StringHelper.getStringAppDefaultLocale(this, resourceId);
+        String deviceDefaultLocaleTranslation = StringHelper.getStringDeviceDefaultLocale(this, resourceId);
+        String label = applicationDefaultLocaleTranslation + " (" + deviceDefaultLocaleTranslation + ")";
+        return label;
     }
 
     private void startActivityLoading() {
+        this.buttonsLayout.setVisibility(View.GONE);
+        this.invalidHostLayout.setVisibility(View.GONE);
         this.buttonDishes.setEnabled(false);
         this.buttonVenues.setEnabled(false);
-        this.centralProgress.setVisibility(View.VISIBLE);
+        this.centralProgressLayout.setVisibility(View.VISIBLE);
     }
 
-    private void endActivityLoading() {
-
+    private void endActivityLoadingSuccess() {
+        this.buttonsLayout.setVisibility(View.VISIBLE);
+        this.invalidHostLayout.setVisibility(View.GONE);
         this.buttonDishes.setEnabled(true);
         this.buttonVenues.setEnabled(true);
-        this.centralProgress.setVisibility(View.INVISIBLE);
+        this.centralProgressLayout.setVisibility(View.GONE);
+        //TODO: Delete before deploying to production!
+        Toast.makeText(applicationContext, "WebApi authToken refreshed!", Toast.LENGTH_LONG).show();
+    }
+
+    private void endActivityLoadingInvalidHost() {
+        this.buttonsLayout.setVisibility(View.GONE);
+        this.invalidHostLayout.setVisibility(View.VISIBLE);
+        this.centralProgressLayout.setVisibility(View.GONE);
+        if (!activityStopped)
+            new LocationResolver(this).showWifiSettingsDialog(applicationContext);
+        //TODO: Delete before deploying to production!
+        Toast.makeText(applicationContext, "No internet!", Toast.LENGTH_LONG).show();
     }
 
     @Click(resName = "landing_btnVenues")
@@ -134,5 +176,16 @@ public class LandingActivity
         Intent intent = new Intent(LandingActivity.this, VenuesActivity_.class);
         intent.putExtra("DishesSearchModeActivated", true); //else find dishesWall
         startActivity(intent);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        activityStopped = true;
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
     }
 }

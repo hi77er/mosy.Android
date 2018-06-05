@@ -2,27 +2,20 @@ package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.Window;
-import android.widget.SeekBar;
+import android.widget.Button;
 import android.widget.Switch;
-import android.widget.TextView;
 
-import com.mosy.kalin.mosy.Helpers.ListHelper;
-import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 
-import org.androidannotations.annotations.AfterExtras;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
-import java.util.ArrayList;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_filters_venues)
@@ -30,13 +23,18 @@ public class VenuesFiltersActivity
         extends BaseActivity {
 
 
-    private boolean SelectedApplyWorkingStatusFilter;
+    private boolean afterViewsFinished = false;
+    private boolean networkLost = false;
+    private boolean selectedApplyWorkingStatusFilter;
 
     @Extra
     static boolean PreselectedApplyWorkingStatusFilter;
 
     @ViewById(resName = "filters_venues_sbWorkingTimeFilter")
     public Switch workingStatusFilter;
+    @ViewById(resName = "filterVenues_GoButton")
+    public Button goButton;
+
 
 //    @ViewById(resName = "filters_venues_tvRatingLabel")
 //    public TextView ratingLabel;
@@ -58,8 +56,19 @@ public class VenuesFiltersActivity
     public void afterViews(){
         this.workingStatusFilter.setChecked(PreselectedApplyWorkingStatusFilter);
         this.workingStatusFilter.setOnCheckedChangeListener(
-            (compoundButton, b) -> SelectedApplyWorkingStatusFilter = compoundButton.isChecked()
+            (compoundButton, b) -> selectedApplyWorkingStatusFilter = compoundButton.isChecked()
         );
+
+        if (ConnectivityHelper.isConnected(applicationContext)) {
+            networkLost = false;
+            showLoaded();
+        }
+        else {
+            networkLost = true;
+            showLoading();
+        }
+
+        afterViewsFinished = true;
 
 //        this.ratingFilter.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
 //        this.ratingFilter.getThumb().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
@@ -86,26 +95,55 @@ public class VenuesFiltersActivity
     }
 
     @Override
+    protected void onNetworkAvailable() {
+        if (afterViewsFinished && networkLost) {
+            runOnUiThread(this::showLoaded);
+            networkLost = false;
+        }
+    }
+
+    @Override
+    protected void onNetworkLost() {
+        if (afterViewsFinished) {
+            runOnUiThread(this::showLoading);
+        }
+        networkLost = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        this.connectionStateMonitor.onAvailable = null;
+        this.connectionStateMonitor.onLost = null;
+    }
+
+    @Override
     protected void onDestroy(){
         super.onDestroy();
         Intent intent = new Intent(VenuesFiltersActivity.this, VenuesActivity_.class);
 
-        SelectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
-
-        if (checkFiltersStateChanged(SelectedApplyWorkingStatusFilter)) {
-            intent.putExtra("ApplyWorkingStatusFilterToVenues", SelectedApplyWorkingStatusFilter);
-            startActivity(intent);
+        selectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
+        if (ConnectivityHelper.isConnected(applicationContext)) {
+            if (checkFiltersStateChanged(selectedApplyWorkingStatusFilter)) {
+                intent.putExtra("ApplyWorkingStatusFilterToVenues", selectedApplyWorkingStatusFilter);
+                startActivity(intent);
+            }
+            else{
+                // Do nothing. Simply close this activity.
+            }
         }
-        else{
+        else {
             // Do nothing. Simply close this activity.
         }
     }
 
-    @Click(R.id.filterDishes_GoButton)
-    public void GoButton_Clicked(){
-        VenuesFiltersActivity.this.finish();
+    private void showLoading() {
+        goButton.setVisibility(View.GONE);
     }
 
+    private void showLoaded() {
+        goButton.setVisibility(View.VISIBLE);
+    }
 
     private boolean checkFiltersStateChanged(boolean selectedApplyWorkingStatusFilter) {
         boolean applyWorkingStatusChanged = selectedApplyWorkingStatusFilter != PreselectedApplyWorkingStatusFilter;
@@ -113,6 +151,10 @@ public class VenuesFiltersActivity
         return applyWorkingStatusChanged;
     }
 
+    @Click(R.id.filterVenues_GoButton)
+    public void GoButton_Clicked(){
+        VenuesFiltersActivity.this.finish();
+    }
 
 
 //    @Override

@@ -39,9 +39,7 @@ import com.mosy.kalin.mosy.Helpers.DimensionsHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueBusinessHoursBindingModel;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueBusinessHoursAsyncTask;
 import com.mosy.kalin.mosy.Services.VenuesService;
 
 import org.androidannotations.annotations.AfterViews;
@@ -66,7 +64,6 @@ public class VenueDetailsActivity
     private static final String x200BlobStorageContainerPath = "userimages\\fboalbums\\200x200";
     private static final String originalBlobStorageContainerPath = "userimages\\fboalbums\\original";
 
-    private Context applicationContext;
     boolean IsUsingDefaultIndoorImageThumbnail;
     public String PhoneNumber;
 
@@ -201,7 +198,7 @@ public class VenueDetailsActivity
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getBusinessHoursRetrofit(applicationContext, listener, this.Venue.Id);
+        this.venueService.getBusinessHours(applicationContext, listener, this.Venue.Id);
     }
 
     private void loadLocation() {
@@ -234,7 +231,7 @@ public class VenueDetailsActivity
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getEndorsements(applicationContext, listener, this.Venue.Id);
+        this.venueService.getBadgeEndorsements(applicationContext, listener, this.Venue.Id);
     }
 
     @Override

@@ -90,7 +90,7 @@ public class VenuesAdapter
 
     @Override
     public Venue getItem(int position) {
-        if (this.venues != null)
+        if (this.venues != null && this.venues.size() > 0)
             return venues.get(position);
         else return null;
     }

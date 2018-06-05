@@ -1,5 +1,6 @@
 package com.mosy.kalin.mosy.Adapters;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,6 +8,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mosy.kalin.mosy.DTOs.DishFilter;
 import com.mosy.kalin.mosy.Fragments.FiltersPage_;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.R;
 
 import java.util.ArrayList;
 
@@ -17,17 +20,20 @@ public class DishFiltersPagerAdapter
     public ArrayList<DishFilter> RegionsFilters;
     public ArrayList<DishFilter> SpectrumFilters;
     public ArrayList<DishFilter> AllergensFilters;
+    private Context context;
 
     public DishFiltersPagerAdapter(FragmentManager manager,
                                    ArrayList<DishFilter> phases,
                                    ArrayList<DishFilter> regions,
                                    ArrayList<DishFilter> spectrums,
-                                   ArrayList<DishFilter> allergens) {
+                                   ArrayList<DishFilter> allergens,
+                                   Context context) {
         super(manager);
         PhasesFilters = phases;
         RegionsFilters = regions;
         SpectrumFilters = spectrums;
         AllergensFilters = allergens;
+        this.context = context;
     }
 
     @Override
@@ -48,7 +54,8 @@ public class DishFiltersPagerAdapter
                 break;
             case 3:
                 filters = this.AllergensFilters;
-                fragment.setNote("* Selected Allergens will reduce the appearance priority of dishes associated to them.");
+                String note = StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_allergensFiltersNote);
+                fragment.setNote(note);
                 break;
         }
 
@@ -65,13 +72,13 @@ public class DishFiltersPagerAdapter
     @Override
     public CharSequence getPageTitle(int position) {
         if (position == 0)
-            return "Type";
+            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_typeFiltersTitle);
         if (position == 1)
-            return "Region";
+            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_regionFiltersTitle);
         if (position == 2)
-            return "Ingredients";
+            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_ingredientsFiltersTitle);
         if (position == 3)
-            return "Allergens";
+            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_allergensFiltersTitle);
         return null;
     }
 

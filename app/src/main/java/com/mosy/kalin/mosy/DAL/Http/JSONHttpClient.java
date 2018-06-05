@@ -19,6 +19,7 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -146,11 +147,19 @@ public class JSONHttpClient {
             // Set the Content-Type header.
             con.setRequestProperty( "Content-Type" , "application/x-www-form-urlencoded" );
             con.setRequestProperty( "Charset" , "UTF-8" );
+
+            long execStart = 0;
+            long elapsed = 0;
+
+            if (BuildConfig.DEBUG) execStart = System.currentTimeMillis();
             // Send the encoded parameters on the connection.
             OutputStream os = con.getOutputStream();
             os.write(encoded.getBytes( "UTF-8" ));
             os.flush();
             con.connect();
+            if (BuildConfig.DEBUG) elapsed = System.currentTimeMillis() - execStart;
+            if (BuildConfig.DEBUG) System.out.println("MOSYLOGS : REST CALL - " + url + " with params: username=" + username + "password" + password + " TOOK: " + elapsed + "ms;");
+
 
             // Convert the response into a String object.
             String resultString = convertStreamToString(con.getInputStream());
@@ -166,12 +175,18 @@ public class JSONHttpClient {
                 accessToken.Status = TokenResultStatus.Success;
             }
             else if(resultString.contains("Invalid Hostname")){
-                accessToken.Status = TokenResultStatus.InvalidHosName;
+                accessToken.Status = TokenResultStatus.InvalidHostName;
             }
             else {
                 accessToken.Status = TokenResultStatus.Fail;
             }
-        } catch (Exception e) {
+
+        }
+        catch (UnknownHostException e){
+            //e.g. no internet
+            accessToken.Status = TokenResultStatus.InvalidHostName;
+        }
+        catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         return accessToken;

@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
@@ -34,6 +36,7 @@ import com.mosy.kalin.mosy.Adapters.DishesAdapter;
 import com.mosy.kalin.mosy.Adapters.VenuesAdapter;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Helpers.DimensionsHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Listeners.EndlessScrollListener;
@@ -66,8 +69,10 @@ public class VenuesActivity
     String query = "searchall";
     int itemsInitialLoadCount = 8;
     int itemsOnScrollLoadCount = 5;
+    boolean afterViewsFinished = false;
+    boolean networkLost = false;
 
-    private Context applicationContext;
+
     private LocationResolver mLocationResolver;
     private Location lastKnownLocation;
 
@@ -102,12 +107,20 @@ public class VenuesActivity
 
     @ViewById(resName = "venues_llInitialLoadingProgress")
     LinearLayout centralProgress;
+    @ViewById(resName = "venues_llInvalidHost")
+    LinearLayout invalidHostLayout;
+
     @ViewById(R.id.toolbar)
     Toolbar toolbar;
     @ViewById(resName = "venues_lvVenues")
     ListView venuesWall;
     @ViewById(resName = "venues_lvDishes")
     ListView dishesWall;
+
+    @ViewById(resName = "venues_lVenuesSwipeContainer")
+    SwipeRefreshLayout venuesSwipeContainer;
+    @ViewById(resName = "venues_lDishesSwipeContainer")
+    SwipeRefreshLayout dishesSwipeContainer;
 
     @ViewById(resName = "venues_ibFilters")
     FloatingActionButton filtersButton;
@@ -120,12 +133,55 @@ public class VenuesActivity
 
         incrementActivityUsagesCount();
         timeStarted = System.currentTimeMillis();
-        this.applicationContext = getApplicationContext();
     }
 
     @AfterViews
     void afterViews() {
         configureActionBar();
+
+        if (ConnectivityHelper.isConnected(applicationContext)) {
+            networkLost = false;
+            loadData();
+        }
+        else {
+            networkLost = true;
+            showInvalidHostLayout(); // For any case.. But should never happen because landing activity doesn't show links to this activity if no internet.
+        }
+
+        afterViewsFinished = true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onNetworkAvailable() {
+        if (afterViewsFinished && networkLost) {
+            runOnUiThread(this::loadData);
+            networkLost = false;
+        }
+    }
+
+    @Override
+    protected void onNetworkLost() {
+        if (afterViewsFinished) {
+            runOnUiThread(this::showInvalidHostLayout);
+        }
+        networkLost = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!ConnectivityHelper.isConnected(applicationContext)) {
+            showInvalidHostLayout();
+        }
+    }
+
+    private void loadData() {
+        this.invalidHostLayout.setVisibility(View.GONE);
 
         dishesWall.setEmptyView(findViewById(R.id.venues_llSwipeToRefresh));
         venuesWall.setEmptyView(findViewById(R.id.venues_llSwipeToRefresh));
@@ -150,92 +206,111 @@ public class VenuesActivity
             showFiltersPopupLabel();
     }
 
+    private void showInvalidHostLayout() {
+        this.invalidHostLayout.setVisibility(View.VISIBLE);
+    }
+
     //INFO: Called in "afterViews"
     private void adaptVenueItems() {
-        EndlessScrollListener endlessScrollListener = new EndlessScrollListener() {
-            @Override
-            public boolean onLoadMore(int page, int totalItemsCount) {
-                if (!venuesAdapter.LoadingStillInAction && venuesAdapter.APICallStillReturnsElements)
-                {
-                    venuesAdapter.LoadingStillInAction = true;
+        if (ConnectivityHelper.isConnected(applicationContext)) {
+            EndlessScrollListener endlessScrollListener = new EndlessScrollListener() {
+                @Override
+                public boolean onLoadMore(int page, int totalItemsCount) {
+                    if (ConnectivityHelper.isConnected(applicationContext) &&
+                            !venuesAdapter.LoadingStillInAction &&
+                            venuesAdapter.APICallStillReturnsElements) {
+                        venuesAdapter.LoadingStillInAction = true;
 
-                    //INFO: WHILE SCROLLING LOAD
-                    loadMoreVenues(itemsOnScrollLoadCount, totalItemsCount, query);
+                        //INFO: WHILE SCROLLING LOAD
+                        loadMoreVenues(itemsOnScrollLoadCount, totalItemsCount, query);
+                        return true;
+                    }
+                    return false;
                 }
-                return true;
-            }
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == 0) filtersButton.show();// scrolling stopped
-                else filtersButton.hide();
-            }
-        };
 
-        final SwipeRefreshLayout venuesSwipeContainer = findViewById(R.id.venues_lVenuesSwipeContainer);
-        venuesAdapter.setSwipeRefreshLayout(venuesSwipeContainer);
-        venuesAdapter.swipeContainer.setOnRefreshListener(() -> {
-            refreshLastKnownLocation();
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    if (scrollState == 0) filtersButton.show();// scrolling stopped
+                    else filtersButton.hide();
+                }
+            };
+
+            final SwipeRefreshLayout venuesSwipeContainer = findViewById(R.id.venues_lVenuesSwipeContainer);
+            venuesAdapter.setSwipeRefreshLayout(venuesSwipeContainer);
+            venuesAdapter.swipeContainer.setOnRefreshListener(() -> {
+                if (ConnectivityHelper.isConnected(applicationContext)) {
+                    refreshLastKnownLocation();
+                    venuesAdapter.clearVenues();
+
+                    //INFO: REFRESH INITIAL LOAD
+                    loadMoreVenues(itemsInitialLoadCount, 0, "searchall");
+                }
+                endlessScrollListener.resetState();
+                venuesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
+            });
+
+            //INFO: INITIAL LOAD
             venuesAdapter.clearVenues();
+            loadMoreVenues(itemsInitialLoadCount, 0, query);
 
-            //INFO: REFRESH INITIAL LOAD
-            loadMoreVenues(itemsInitialLoadCount, 0, "searchall");
-
-            endlessScrollListener.resetState();
-            venuesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
-        });
-
-        //INFO: INITIAL LOAD
-        loadMoreVenues(itemsInitialLoadCount, 0, query);
-
-        venuesWall.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
-        venuesWall.setAdapter(venuesAdapter);
-        venuesWall.setOnScrollListener(endlessScrollListener);
+            venuesWall.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
+            venuesWall.setAdapter(venuesAdapter);
+            venuesWall.setOnScrollListener(endlessScrollListener);
+        }
     }
 
     //INFO: Called in "afterViews"
     private void adaptDishItems() {
-        EndlessScrollListener endlessScrollListener = new EndlessScrollListener() {
-            @Override
-            public boolean onLoadMore(int page, int totalItemsCount) {
-                if (!dishesAdapter.loadingStillInAction && dishesAdapter.APICallStillReturnsElements) {
-                    dishesAdapter.loadingStillInAction = true;
+        if (ConnectivityHelper.isConnected(applicationContext)) {
+            EndlessScrollListener endlessScrollListener = new EndlessScrollListener() {
+                @Override
+                public boolean onLoadMore(int page, int totalItemsCount) {
+                    if (ConnectivityHelper.isConnected(applicationContext) &&
+                        !dishesAdapter.loadingStillInAction && dishesAdapter.APICallStillReturnsElements) {
+                        dishesAdapter.loadingStillInAction = true;
 
-                    //INFO: WHILE SCROLLING LOAD
-                    loadMoreDishes(itemsOnScrollLoadCount, totalItemsCount, searchIsPromoted, query,
+                        //INFO: WHILE SCROLLING LOAD
+                        loadMoreDishes(itemsOnScrollLoadCount, totalItemsCount, searchIsPromoted, query,
+                                SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds, SelectedAllergensFilterIds);
+                        return true;
+                    }
+                    return false;
+                }
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    if (scrollState == 0) filtersButton.show();// scrolling stopped
+                    else filtersButton.hide();
+                }
+            };
+
+            final SwipeRefreshLayout dishesSwipeContainer = findViewById(R.id.venues_lDishesSwipeContainer);
+            dishesAdapter.setSwipeRefreshLayout(dishesSwipeContainer);
+            dishesAdapter.swipeContainer.setOnRefreshListener(() -> {
+                if (ConnectivityHelper.isConnected(applicationContext)) {
+                    refreshLastKnownLocation();
+                    dishesAdapter.clearDishes();
+
+                    //INFO: REFRESH INITIAL LOAD
+                    loadMoreDishes(itemsInitialLoadCount, 0, searchIsPromoted, query,
                             SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds, SelectedAllergensFilterIds);
                 }
-                return true;
-            }
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == 0) filtersButton.show();// scrolling stopped
-                else filtersButton.hide();
-            }
-        };
 
-        final SwipeRefreshLayout dishesSwipeContainer = findViewById(R.id.venues_lDishesSwipeContainer);
-        dishesAdapter.setSwipeRefreshLayout(dishesSwipeContainer);
-        dishesAdapter.swipeContainer.setOnRefreshListener(() -> {
-            refreshLastKnownLocation();
+                endlessScrollListener.resetState();
+                dishesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
+            });
+
+            //INFO: INITIAL LOAD
             dishesAdapter.clearDishes();
-
-            //INFO: REFRESH INITIAL LOAD
             loadMoreDishes(itemsInitialLoadCount, 0, searchIsPromoted, query,
                     SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds, SelectedAllergensFilterIds);
 
-            endlessScrollListener.resetState();
-            dishesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
-        });
-
-        //INFO: INITIAL LOAD
-        loadMoreDishes(itemsInitialLoadCount, 0, searchIsPromoted, query,
-                SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds, SelectedAllergensFilterIds);
-
-        dishesWall.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
-        dishesWall.setAdapter(dishesAdapter);
-        dishesWall.setOnScrollListener(endlessScrollListener);
+            dishesWall.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
+            dishesWall.setAdapter(dishesAdapter);
+            dishesWall.setOnScrollListener(endlessScrollListener);
+        }
     }
 
     void loadMoreVenues(int maxResultsCount, int totalItemsOffset, String query){
-        if (lastKnownLocation != null) {
+        if (ConnectivityHelper.isConnected(applicationContext) &&
+                lastKnownLocation != null) {
             AsyncTaskListener<ArrayList<Venue>> listener = new AsyncTaskListener<ArrayList<Venue>>() {
                 @Override public void onPreExecute() {
                     centralProgress.setVisibility(View.VISIBLE);
@@ -276,7 +351,8 @@ public class VenuesActivity
                         ArrayList<String> spectrumFilterIds,
                         ArrayList<String> allergensFilterIds){
 
-        if (lastKnownLocation != null) {
+        if (ConnectivityHelper.isConnected(applicationContext) &&
+                lastKnownLocation != null) {
             AsyncTaskListener<ArrayList<MenuListItem>> listener = new AsyncTaskListener<ArrayList<MenuListItem>>() {
                 @Override
                 public void onPreExecute() {
@@ -304,7 +380,7 @@ public class VenuesActivity
                 localDayOfWeek = localCalendar.get(Calendar.DAY_OF_WEEK);
             }
 
-            this.dishesService.getDishes(
+            this.dishesService.loadDishes(
                     applicationContext, listener,
                     maxResultsCount, totalItemsOffset,
                     lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
@@ -316,11 +392,6 @@ public class VenuesActivity
             Toast.makeText(applicationContext, R.string.activity_venues_locationNotResolvedToast, Toast.LENGTH_LONG).show();
         }
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     @Override
@@ -359,13 +430,17 @@ public class VenuesActivity
     @Override
     protected void onStop() {
         super.onStop();
-        mLocationResolver.onStop();
+        this.connectionStateMonitor.onAvailable = null;
+        this.connectionStateMonitor.onLost = null;
+        if (mLocationResolver != null)
+            mLocationResolver.onStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mLocationResolver.onDestroy();
+        if (mLocationResolver != null)
+            mLocationResolver.onDestroy();
     }
 
     @Override
