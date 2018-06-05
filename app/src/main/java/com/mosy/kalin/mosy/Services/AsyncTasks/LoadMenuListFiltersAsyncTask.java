@@ -27,7 +27,7 @@ public class LoadMenuListFiltersAsyncTask
 
         try {
             GetRequestableFiltersBindingModel model = models[0];
-            results = new DishesRepository().getFilters(model);
+//            results = new DishesRepository().getFilters(model);
         } catch (Exception e) {
             e.printStackTrace();
         }
