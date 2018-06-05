@@ -23,44 +23,34 @@ import java.util.Locale;
 @EBean
 public class AccountService {
 
-    public boolean refreshApiAuthenticationTokenExists(Context applicationContext){
-        return refreshApiAuthenticationTokenExists(applicationContext, null, null);
+    public void executeAssuredTokenValidOrRefreshed(Context applicationContext, Runnable onSuccess, Runnable onInvalidHost){
+        executeAssuredTokenValidOrRefreshed(applicationContext, null, onSuccess, onInvalidHost);
     }
 
-    public boolean refreshApiAuthenticationTokenExists(Runnable preExecute, Context applicationContext){
-        return refreshApiAuthenticationTokenExists(applicationContext, null, null, preExecute);
-    }
-
-    public boolean refreshApiAuthenticationTokenExists(Context applicationContext, Runnable postExecute, Runnable invalidHostExecute){
-        return refreshApiAuthenticationTokenExists(applicationContext, postExecute, invalidHostExecute, null);
-    }
-
-    public boolean refreshApiAuthenticationTokenExists(Context applicationContext, Runnable successExecute, Runnable invalidHostExecute, Runnable preExecute) {
+    public void executeAssuredTokenValidOrRefreshed(Context applicationContext, Runnable preExecute, Runnable onSuccess, Runnable onInvalidHost) {
         SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_webApi), Context.MODE_PRIVATE);
         LoginBindingModel model = new LoginBindingModel("webapiadmin@mosy.com", "!23Qwe");
         boolean tokenExistsAndIsValid = this.checkTokenValid(applicationContext);
 
         if (!tokenExistsAndIsValid) {
             AsyncTaskListener<TokenResult> listener = new AsyncTaskListener<TokenResult>() {
-                @Override
-                public void onPreExecute() {
+                @Override public void onPreExecute() {
                     //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
                     if (preExecute != null)
                         preExecute.run();
                 }
-                @Override
-                public void onPostExecute(final TokenResult result) {
-                    if (result == null) throw new NullPointerException("Must have result");
+                @Override public void onPostExecute(final TokenResult result) {
+                    if (result == null) throw new NullPointerException("Must have Authentication Token response");
 
                     if (result.Status == TokenResultStatus.InvalidHostName){
-                        if (invalidHostExecute != null)
-                            invalidHostExecute.run();
+                        if (onInvalidHost != null)
+                            onInvalidHost.run();
                     }
-                    else {
+                    else if (result.Status == TokenResultStatus.Success) {
                         refreshWebApiAuthTokenSettings(applicationContext, result.AccessToken, result.TokenType, result.IssuedAt, result.ExpiresIn);
 
-                        if (successExecute != null)
-                            successExecute.run();
+                        if (onSuccess != null)
+                            onSuccess.run();
                     }
                 }
             };
@@ -69,8 +59,9 @@ public class AccountService {
             SharedPreferences.Editor editor = mPreferences.edit();
             editor.apply();
         }
-
-        return tokenExistsAndIsValid;
+        else if (onSuccess != null) {
+            onSuccess.run();
+        }
     }
 
     private boolean checkTokenValid(Context applicationContext) {

@@ -1,6 +1,7 @@
 package com.mosy.kalin.mosy.Services;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IDishesRepository;
@@ -20,8 +21,10 @@ import retrofit2.Response;
 @EBean
 public class DishesService {
 
+    private AccountService accountService = new AccountService();
+
     public void loadDishes(Context applicationContext,
-                           AsyncTaskListener<ArrayList<MenuListItem>> listener,
+                           AsyncTaskListener<ArrayList<MenuListItem>> dishesResultsListener,
                            int maxResultsCount,
                            int totalItemsOffset,
                            double latitude,
@@ -35,70 +38,60 @@ public class DishesService {
                            Integer localDayOfWeek,
                            String localTime)
     {
-        String authTokenHeader = new AccountService().getAuthTokenHeader(applicationContext);
+        this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
+                dishesResultsListener::onPreExecute,
+                () -> {
+                    String authTokenHeader = this.accountService.getAuthTokenHeader(applicationContext);
+                    SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(authTokenHeader,
+                            maxResultsCount, totalItemsOffset, latitude, longitude, isPromoted, query, phaseFilterIds,
+                            regionFilterIds, spectrumFilterIds, allergensFilterIds, localDayOfWeek, localTime);
 
-        SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(
-                authTokenHeader,
-                maxResultsCount,
-                totalItemsOffset,
-                latitude,
-                longitude,
-                isPromoted,
-                query,
-                phaseFilterIds,
-                regionFilterIds,
-                spectrumFilterIds,
-                allergensFilterIds,
-                localDayOfWeek,
-                localTime);
+                    IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
 
-        IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
-
-        try {
-            Call<ArrayList<MenuListItem>> callResult =  repository.loadDishes(authTokenHeader, model);
-            listener.onPreExecute();
-            callResult.enqueue(new Callback<ArrayList<MenuListItem>>() {
-                @Override
-                public void onResponse(Call<ArrayList<MenuListItem>> call, Response<ArrayList<MenuListItem>> response) {
-                    ArrayList<MenuListItem> dishes = response.body();
-                    listener.onPostExecute(dishes);
-                }
-                @Override
-                public void onFailure(Call<ArrayList<MenuListItem>> call, Throwable t) {
-                    call.cancel();
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                    try {
+                        Call<ArrayList<MenuListItem>> callResult =  repository.loadDishes(authTokenHeader, model);
+                        dishesResultsListener.onPreExecute();
+                        callResult.enqueue(new Callback<ArrayList<MenuListItem>>() {
+                            @Override public void onResponse(@NonNull Call<ArrayList<MenuListItem>> call, @NonNull Response<ArrayList<MenuListItem>> response) {
+                                ArrayList<MenuListItem> dishes = response.body();
+                                dishesResultsListener.onPostExecute(dishes);
+                            }
+                            @Override public void onFailure(@NonNull Call<ArrayList<MenuListItem>> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                },
+                null);
     }
 
-    public void getFilters (Context applicationContext,
-                            AsyncTaskListener<RequestableFiltersResult> listener)
+    public void getFilters(Context applicationContext,
+                            AsyncTaskListener<RequestableFiltersResult> filtersResultListener)
     {
-        String authTokenHeader = new AccountService().getAuthTokenHeader(applicationContext);
-        IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
-
-        try {
-            Call<RequestableFiltersResult> callFilters = repository.getFilters(authTokenHeader);
-            callFilters.enqueue(new Callback<RequestableFiltersResult>() {
-                @Override
-                public void onResponse(Call<RequestableFiltersResult> call, Response<RequestableFiltersResult> response) {
-                    RequestableFiltersResult result = response.body();
-                    listener.onPostExecute(result);
-                }
-
-                @Override
-                public void onFailure(Call<RequestableFiltersResult> call, Throwable t) {
-                    call.cancel();
-                }
-            });
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
+        this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
+                filtersResultListener::onPreExecute,
+                () -> {
+                    String authTokenHeader = this.accountService.getAuthTokenHeader(applicationContext);
+                    IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
+                    try {
+                        Call<RequestableFiltersResult> callFilters = repository.getFilters(authTokenHeader);
+                        callFilters.enqueue(new Callback<RequestableFiltersResult>() {
+                            @Override public void onResponse(@NonNull Call<RequestableFiltersResult> call, @NonNull Response<RequestableFiltersResult> response) {
+                                RequestableFiltersResult result = response.body();
+                                filtersResultListener.onPostExecute(result);
+                            }
+                            @Override public void onFailure(@NonNull Call<RequestableFiltersResult> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                },
+                null);
     }
-
 
 }
