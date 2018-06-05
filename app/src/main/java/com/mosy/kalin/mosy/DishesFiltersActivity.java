@@ -251,8 +251,8 @@ public class DishesFiltersActivity
                 showLoaded();
             }
         };
-        this.dishesService.getFilters(this.applicationContext, listener);
 
+        this.dishesService.getFilters(this.applicationContext, listener);
     }
 
     private void showLoading() {

@@ -12,7 +12,6 @@ public class AccountRepository {
 
     private static final String registerEndpointEnding = "account/register";
 
-
     public TokenResult tokenLogin(LoginBindingModel model) {
         String tokenEndpoint = ServiceEndpointFactory.apiTokenEndpoint;
         TokenResult tokenResult = null;

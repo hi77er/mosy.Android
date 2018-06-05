@@ -2,7 +2,6 @@ package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,7 +15,6 @@ import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Models.Views.SpinnerLocale;
 import com.mosy.kalin.mosy.Helpers.LocaleHelper;
 import com.mosy.kalin.mosy.Services.AccountService;
-import com.mosy.kalin.mosy.Services.Connectivity.ConnectionStateMonitor;
 import com.mosy.kalin.mosy.Services.Location.LocationResolver;
 
 import org.androidannotations.annotations.AfterViews;
@@ -34,6 +32,7 @@ public class LandingActivity
 
 {
     boolean afterViewsFinished = false;
+    boolean networkLost = false;
 
     @Bean
     AccountService accountService;
@@ -53,10 +52,14 @@ public class LandingActivity
 
     @AfterViews
     public void afterViews(){
-        if (ConnectivityHelper.isConnected(applicationContext))
+        if (ConnectivityHelper.isConnected(applicationContext)) {
             ensureHasAuthenticationToken();
-        else
+            networkLost = false;
+        }
+        else {
             endActivityLoadingInvalidHost();
+            networkLost = true;
+        }
 
         setupLanguagesSpinner();
         afterViewsFinished = true;
@@ -65,29 +68,36 @@ public class LandingActivity
     @Override
     public void onStart() {
         super.onStart();
-        activityStopped = false;
+        this.activityStopped = false;
     }
 
     @Override
     protected void onNetworkAvailable() {
-        if (afterViewsFinished)
+        if (afterViewsFinished && networkLost){
             runOnUiThread(this::ensureHasAuthenticationToken);
+            networkLost = false;
+        }
     }
 
     @Override
     protected void onNetworkLost() {
-        if (afterViewsFinished)
+        if (afterViewsFinished) {
             runOnUiThread(this::endActivityLoadingInvalidHost);
+        }
+        networkLost = true;
     }
 
     private void ensureHasAuthenticationToken() {
         startActivityLoading();
-        boolean authTokenExistsAndIsValid = this.accountService.refreshApiAuthenticationTokenExists(applicationContext,
-                this::endActivityLoadingSuccess,
-                this::endActivityLoadingInvalidHost);
 
-        if (authTokenExistsAndIsValid)
-            endActivityLoadingSuccess();
+//        boolean authTokenExistsAndIsValid =
+
+        this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
+            this::endActivityLoadingSuccess,
+            this::endActivityLoadingInvalidHost);
+
+//        if (authTokenExistsAndIsValid) // this is for the case when
+//            endActivityLoadingSuccess();
     }
 
     private void setupLanguagesSpinner() {
@@ -158,7 +168,7 @@ public class LandingActivity
         this.buttonsLayout.setVisibility(View.GONE);
         this.invalidHostLayout.setVisibility(View.VISIBLE);
         this.centralProgressLayout.setVisibility(View.GONE);
-        if (!activityStopped)
+        if (!this.activityStopped)
             new LocationResolver(this).showWifiSettingsDialog(applicationContext);
         //TODO: Delete before deploying to production!
         Toast.makeText(applicationContext, "No internet!", Toast.LENGTH_LONG).show();
@@ -181,7 +191,9 @@ public class LandingActivity
     @Override
     public void onStop() {
         super.onStop();
-        activityStopped = true;
+        this.connectionStateMonitor.onAvailable = null;
+        this.connectionStateMonitor.onLost = null;
+        this.activityStopped = true;
     }
 
     @Override
