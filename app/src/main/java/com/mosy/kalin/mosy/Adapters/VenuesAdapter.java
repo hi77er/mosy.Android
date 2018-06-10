@@ -1,16 +1,15 @@
 package com.mosy.kalin.mosy.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.LruCache;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
+import com.mosy.kalin.mosy.Adapters.Base.RecyclerViewAdapterBase;
+import com.mosy.kalin.mosy.Adapters.Base.ViewWrapper;
 import com.mosy.kalin.mosy.DTOs.Venue;
-import com.mosy.kalin.mosy.R;
 import com.mosy.kalin.mosy.Views.VenueItemView;
 import com.mosy.kalin.mosy.Views.VenueItemView_;
 
@@ -22,18 +21,20 @@ import java.util.ArrayList;
 
 @EBean
 public class VenuesAdapter
-        extends BaseAdapter {
+        extends RecyclerViewAdapterBase<Venue, VenueItemView> {
+
+    private boolean IsUsingDefaultThumbnail = true;
 
     public boolean LoadingStillInAction; // used to prevent searching while another async search hasn't been finished
     public boolean APICallStillReturnsElements = true;
-
-    private ArrayList<Venue> venues;
-    private LruCache<String, Bitmap> mMemoryCache;
 
     public SwipeRefreshLayout swipeContainer;
 
     @RootContext
     Context context;
+
+    @RootContext
+    Activity activity;
 
     public void setSwipeRefreshLayout(SwipeRefreshLayout layout) {
         if (layout != null) {
@@ -49,78 +50,44 @@ public class VenuesAdapter
     }
 
     @AfterInject
-    void initAdapter() {
-        if (this.venues == null) this.venues = new ArrayList<>();
+    void afterInject() {
+        if (this.items == null) this.items = new ArrayList<>();
         // final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         // final int cacheSize = maxMemory / 8; // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = 10 * 1024 * 1024; // 10 MBs
 
-        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than
-                // number of items.
-                return bitmap.getByteCount() / 1024;
-            }
-        };
-        addBitmapToMemoryCache("default", BitmapFactory.decodeResource(context.getResources(), R.drawable.venue_default_thumbnail));
-    }
-
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        VenueItemView venueItemView = null;
-        if (convertView == null) {
-            venueItemView = VenueItemView_.build(context);
-        } else
-            venueItemView = (VenueItemView) convertView;
-
-        Venue venue = getItem(position);
-        venueItemView.bind(venue, mMemoryCache);
-
-        return venueItemView;
     }
 
     @Override
-    public int getCount() {
-        if (this.venues != null)
-            return venues.size();
-        else return 0;
+    protected VenueItemView onCreateItemView(ViewGroup parent, int viewType) {
+        return VenueItemView_.build(context);
     }
 
     @Override
-    public Venue getItem(int position) {
-        if (this.venues != null && this.venues.size() > 0)
-            return venues.get(position);
-        else return null;
-    }
+    public void onBindViewHolder(@NonNull ViewWrapper<VenueItemView> viewHolder, int position) {
+        VenueItemView view = viewHolder.getView();
+        Venue venue = items.get(position);
 
-    @Override
-    public long getItemId(int position) {
-        return position;
+        view.bind(venue, position);
     }
-
 
     public void addItems(ArrayList<Venue> items){
-        if (this.venues != null) {
-            int lastItemPosition = this.venues.size();
-            this.venues.addAll(lastItemPosition, items);
-            this.notifyDataSetChanged();
+        if (this.items != null) {
+            int lastItemPosition = this.items.size();
+            this.items.addAll(lastItemPosition, items);
+            activity.runOnUiThread(this::notifyDataSetChanged);
         }
     }
 
-    public void clearVenues(){
-        this.venues = new ArrayList<>();
-    }
-
-
-    private void addBitmapToMemoryCache(String key, Bitmap bitmap) {
-        if (getBitmapFromMemCache(key) == null) {
-            mMemoryCache.put(key, bitmap);
+    private int getItemPosition(Venue venue){
+        for (Venue item : this.items) {
+            if (item.Id.equals(venue.Id))
+                return this.items.indexOf(item);
         }
+        return -1; // doesn't exist
     }
 
-    private Bitmap getBitmapFromMemCache(String key) {
-        return mMemoryCache.get(key);
+    public void onItemChanged(Venue venue) {
+        int position = this.getItemPosition(venue);
+        activity.runOnUiThread(() -> this.notifyItemChanged(position));
     }
 }

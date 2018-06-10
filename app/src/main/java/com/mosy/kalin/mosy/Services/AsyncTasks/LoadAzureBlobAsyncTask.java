@@ -1,5 +1,6 @@
 package com.mosy.kalin.mosy.Services.AsyncTasks;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 
 import com.mosy.kalin.mosy.DAL.Repositories.AzureBlobRepository;
@@ -13,7 +14,7 @@ public class LoadAzureBlobAsyncTask
     private final AsyncTaskListener<byte[]> asyncTaskListener;
 
     public LoadAzureBlobAsyncTask(AsyncTaskListener<byte[]> listener) {
-        asyncTaskListener = listener;
+        this.asyncTaskListener = listener;
     }
 
     @Override

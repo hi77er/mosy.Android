@@ -5,27 +5,29 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.AbsListView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
@@ -33,14 +35,17 @@ import com.daasuu.bl.ArrowDirection;
 import com.daasuu.bl.BubbleLayout;
 import com.daasuu.bl.BubblePopupHelper;
 import com.mosy.kalin.mosy.Adapters.DishesAdapter;
+import com.mosy.kalin.mosy.CustomControls.Support.RecyclerViewItemsClickSupport;
 import com.mosy.kalin.mosy.Adapters.VenuesAdapter;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Helpers.DimensionsHelper;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Listeners.EndlessScrollListener;
 import com.mosy.kalin.mosy.Services.AccountService;
+import com.mosy.kalin.mosy.Services.AzureBlobService;
 import com.mosy.kalin.mosy.Services.DishesService;
 import com.mosy.kalin.mosy.Services.Location.LocationResolver;
 import com.mosy.kalin.mosy.Services.VenuesService;
@@ -49,7 +54,6 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
@@ -57,22 +61,23 @@ import org.androidannotations.annotations.ViewById;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
 
 @SuppressLint("Registered")
-@EActivity(R.layout.activity_venues)
+@EActivity(R.layout.activity_wall)
 @OptionsMenu(R.menu.menu)
-public class VenuesActivity
+public class WallActivity
         extends BaseActivity {
 
-    long timeStarted = 0;
-    Boolean searchIsPromoted = true; //INFO: Normally search only promoted dishesWall, but when using query then search among all dishesWall
-    String query = "searchall";
-    int itemsInitialLoadCount = 8;
-    int itemsOnScrollLoadCount = 5;
-    boolean afterViewsFinished = false;
-    boolean networkLost = false;
+    private long timeStarted = 0;
+    private Boolean searchIsPromoted = true; //INFO: Normally search only promoted dishesWall, but when using query then search among all dishesWall
+    private String query = "searchall";
+    private int itemsInitialLoadCount = 8;
+    private int itemsToLoadCountWhenScrolled = 5;
+    private boolean afterViewsFinished = false;
+    private boolean networkLost = false;
 
-
+    private LruCache<String, Bitmap> mMemoryCache;
     private LocationResolver mLocationResolver;
     private Location lastKnownLocation;
 
@@ -85,6 +90,7 @@ public class VenuesActivity
     VenuesService venuesService;
     @Bean
     DishesService dishesService;
+
     @Bean
     VenuesAdapter venuesAdapter;
     @Bean
@@ -112,10 +118,11 @@ public class VenuesActivity
 
     @ViewById(R.id.toolbar)
     Toolbar toolbar;
+
     @ViewById(resName = "venues_lvVenues")
-    ListView venuesWall;
+    RecyclerView venuesWall;
     @ViewById(resName = "venues_lvDishes")
-    ListView dishesWall;
+    RecyclerView dishesWall;
 
     @ViewById(resName = "venues_lVenuesSwipeContainer")
     SwipeRefreshLayout venuesSwipeContainer;
@@ -138,6 +145,15 @@ public class VenuesActivity
     @AfterViews
     void afterViews() {
         configureActionBar();
+        final int cacheSize = 10 * 1024 * 1024; // 10 MBs
+        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // The cache size will be measured in kilobytes rather than
+                // number of items.
+                return bitmap.getByteCount() / 1024;
+            }
+        };
 
         if (ConnectivityHelper.isConnected(applicationContext)) {
             networkLost = false;
@@ -183,11 +199,8 @@ public class VenuesActivity
     private void loadData() {
         this.invalidHostLayout.setVisibility(View.GONE);
 
-        dishesWall.setEmptyView(findViewById(R.id.venues_llSwipeToRefresh));
-        venuesWall.setEmptyView(findViewById(R.id.venues_llSwipeToRefresh));
-
-        mLocationResolver = new LocationResolver(this);
-        mLocationResolver.onStart();
+        this.mLocationResolver = new LocationResolver(this);
+        this.mLocationResolver.onStart();
         refreshLastKnownLocation();
 
         Intent intent = getIntent();
@@ -213,105 +226,62 @@ public class VenuesActivity
     //INFO: Called in "afterViews"
     private void adaptVenueItems() {
         if (ConnectivityHelper.isConnected(applicationContext)) {
-            EndlessScrollListener endlessScrollListener = new EndlessScrollListener() {
-                @Override
-                public boolean onLoadMore(int page, int totalItemsCount) {
+            RecyclerView.OnScrollListener venuesScrollListener = new RecyclerView.OnScrollListener() {
+                @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     if (ConnectivityHelper.isConnected(applicationContext) &&
                             !venuesAdapter.LoadingStillInAction &&
                             venuesAdapter.APICallStillReturnsElements) {
                         venuesAdapter.LoadingStillInAction = true;
 
                         //INFO: WHILE SCROLLING LOAD
-                        loadMoreVenues(itemsOnScrollLoadCount, totalItemsCount, query);
-                        return true;
+                        int totalItemsCount = recyclerView.getAdapter().getItemCount();
+                        loadMoreVenues(itemsToLoadCountWhenScrolled, totalItemsCount, query);
                     }
-                    return false;
                 }
-
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    if (scrollState == 0) filtersButton.show();// scrolling stopped
-                    else filtersButton.hide();
+                @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING)
+                        filtersButton.hide();
+                    else
+                        filtersButton.show();
                 }
             };
 
             final SwipeRefreshLayout venuesSwipeContainer = findViewById(R.id.venues_lVenuesSwipeContainer);
-            venuesAdapter.setSwipeRefreshLayout(venuesSwipeContainer);
-            venuesAdapter.swipeContainer.setOnRefreshListener(() -> {
+
+            this.venuesWall.setAdapter(venuesAdapter);
+            this.venuesWall.setLayoutManager(new GridLayoutManager(this.baseContext, 1));
+
+            DividerItemDecoration itemDecorator = new DividerItemDecoration(this.applicationContext, DividerItemDecoration.VERTICAL);
+            itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(this.applicationContext, R.drawable.wall_divider)));
+            this.venuesWall.addItemDecoration(itemDecorator);
+
+
+            this.venuesAdapter.setSwipeRefreshLayout(venuesSwipeContainer);
+            this.venuesAdapter.swipeContainer.setOnRefreshListener(() -> {
                 if (ConnectivityHelper.isConnected(applicationContext)) {
                     refreshLastKnownLocation();
-                    venuesAdapter.clearVenues();
+                    venuesAdapter.clearItems();
 
                     //INFO: REFRESH INITIAL LOAD
                     loadMoreVenues(itemsInitialLoadCount, 0, "searchall");
                 }
-                endlessScrollListener.resetState();
                 venuesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
             });
 
             //INFO: INITIAL LOAD
-            venuesAdapter.clearVenues();
-            loadMoreVenues(itemsInitialLoadCount, 0, query);
+            this.venuesAdapter.clearItems();
 
-            venuesWall.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
-            venuesWall.setAdapter(venuesAdapter);
-            venuesWall.setOnScrollListener(endlessScrollListener);
-        }
-    }
+            this.loadMoreVenues(itemsInitialLoadCount, 0, query);
 
-    //INFO: Called in "afterViews"
-    private void adaptDishItems() {
-        if (ConnectivityHelper.isConnected(applicationContext)) {
-            EndlessScrollListener endlessScrollListener = new EndlessScrollListener() {
-                @Override
-                public boolean onLoadMore(int page, int totalItemsCount) {
-                    if (ConnectivityHelper.isConnected(applicationContext) &&
-                        !dishesAdapter.loadingStillInAction && dishesAdapter.APICallStillReturnsElements) {
-                        dishesAdapter.loadingStillInAction = true;
-
-                        //INFO: WHILE SCROLLING LOAD
-                        loadMoreDishes(itemsOnScrollLoadCount, totalItemsCount, searchIsPromoted, query,
-                                SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds, SelectedAllergensFilterIds);
-                        return true;
-                    }
-                    return false;
-                }
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    if (scrollState == 0) filtersButton.show();// scrolling stopped
-                    else filtersButton.hide();
-                }
-            };
-
-            final SwipeRefreshLayout dishesSwipeContainer = findViewById(R.id.venues_lDishesSwipeContainer);
-            dishesAdapter.setSwipeRefreshLayout(dishesSwipeContainer);
-            dishesAdapter.swipeContainer.setOnRefreshListener(() -> {
-                if (ConnectivityHelper.isConnected(applicationContext)) {
-                    refreshLastKnownLocation();
-                    dishesAdapter.clearDishes();
-
-                    //INFO: REFRESH INITIAL LOAD
-                    loadMoreDishes(itemsInitialLoadCount, 0, searchIsPromoted, query,
-                            SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds, SelectedAllergensFilterIds);
-                }
-
-                endlessScrollListener.resetState();
-                dishesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
-            });
-
-            //INFO: INITIAL LOAD
-            dishesAdapter.clearDishes();
-            loadMoreDishes(itemsInitialLoadCount, 0, searchIsPromoted, query,
-                    SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds, SelectedAllergensFilterIds);
-
-            dishesWall.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
-            dishesWall.setAdapter(dishesAdapter);
-            dishesWall.setOnScrollListener(endlessScrollListener);
+//            this.venuesWall.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
+            this.venuesWall.addOnScrollListener(venuesScrollListener);
         }
     }
 
     void loadMoreVenues(int maxResultsCount, int totalItemsOffset, String query){
         if (ConnectivityHelper.isConnected(applicationContext) &&
-                lastKnownLocation != null) {
-            AsyncTaskListener<ArrayList<Venue>> listener = new AsyncTaskListener<ArrayList<Venue>>() {
+                this.lastKnownLocation != null) {
+            AsyncTaskListener<ArrayList<Venue>> apiCallResultListener = new AsyncTaskListener<ArrayList<Venue>>() {
                 @Override public void onPreExecute() {
                     centralProgress.setVisibility(View.VISIBLE);
                 }
@@ -321,7 +291,11 @@ public class VenuesActivity
 
                     if (result != null) {
                         venuesAdapter.addItems(result);
-                        venuesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;
+
+                        for (Venue venue : result)
+                            loadVenueItemOutdoorImage(venue);
+
+                        venuesAdapter.APICallStillReturnsElements = result.size() >= itemsToLoadCountWhenScrolled;
                         venuesAdapter.LoadingStillInAction = false;
                     }
                 }
@@ -336,9 +310,112 @@ public class VenuesActivity
             }
 
             this.venuesService.getVenues(
-                    applicationContext, listener, maxResultsCount, totalItemsOffset,
+                    applicationContext, apiCallResultListener, this::showInvalidHostLayout, maxResultsCount, totalItemsOffset,
                     lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
                     query, localDayOfWeek, localTime);
+        }
+    }
+
+    private void loadVenueItemOutdoorImage(Venue venue) {
+        AsyncTaskListener<byte[]> outdoorImageResultListener = new AsyncTaskListener<byte[]>() {
+            @Override public void onPreExecute() {
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+            }
+            @Override public void onPostExecute(byte[] bytes) {
+                if (ArrayHelper.hasValidBitmapContent(bytes)) {
+                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, 200, 200, false);
+                    venue.OutdoorImage.Bitmap = scaledBmp;
+                    addBitmapToMemoryCache(venue.OutdoorImage.Id, scaledBmp);
+
+                    venuesAdapter.onItemChanged(venue);
+                }
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+            }
+        };
+
+        if (venue != null && venue.OutdoorImage != null) {
+            if (StringHelper.isNotNullOrEmpty(venue.OutdoorImage.Id)) {
+                venue.OutdoorImage.Bitmap = getBitmapFromMemCache(venue.OutdoorImage.Id);
+                if (venue.OutdoorImage.Bitmap == null)
+                    new AzureBlobService().downloadVenue100x100Thumbnail(venue.OutdoorImage.Id, outdoorImageResultListener);
+            }
+        } //IN ALL 3 'ELSE'S DO NOTHING. The Item has already been set the default image
+    }
+
+    //INFO: Called in "afterViews"
+    private void adaptDishItems() {
+        if (ConnectivityHelper.isConnected(applicationContext)) {
+            RecyclerView.OnScrollListener dishesScrollListener = new RecyclerView.OnScrollListener() {
+                @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    if (ConnectivityHelper.isConnected(applicationContext) &&
+                        !dishesAdapter.loadingStillInAction && dishesAdapter.APICallStillReturnsElements) {
+                        dishesAdapter.loadingStillInAction = true;
+
+                        //INFO: WHILE SCROLLING LOAD
+                        int totalItemsCount = recyclerView.getAdapter().getItemCount();
+                        loadMoreDishes(itemsToLoadCountWhenScrolled, totalItemsCount, searchIsPromoted, query,
+                            SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds, SelectedAllergensFilterIds);
+                    }
+                }
+                @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING)
+                        filtersButton.hide();
+                    else
+                        filtersButton.show();
+                }
+            };
+
+            final SwipeRefreshLayout dishesSwipeContainer = findViewById(R.id.venues_lDishesSwipeContainer);
+
+            this.dishesWall.setAdapter(dishesAdapter);
+            this.dishesWall.setLayoutManager(new GridLayoutManager(this.baseContext, 1));
+            DividerItemDecoration itemDecorator = new DividerItemDecoration(this.applicationContext, DividerItemDecoration.VERTICAL);
+            itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(this.applicationContext, R.drawable.wall_divider)));
+            this.dishesWall.addItemDecoration(itemDecorator);
+            this.dishesWall.addOnScrollListener(dishesScrollListener);
+//            this.dishesWall.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll for ListView
+
+            RecyclerViewItemsClickSupport.addTo(this.dishesWall).setOnItemClickListener((recyclerView, position, v) -> {
+                Intent intent = new Intent(WallActivity.this, VenueMenuActivity_.class);
+                MenuListItem itemClicked = dishesAdapter.getItemAt(position);
+
+                AsyncTaskListener<Venue> apiCallResultListener = new AsyncTaskListener<Venue>() {
+                    @Override public void onPreExecute() {
+                        centralProgress.setVisibility(View.VISIBLE);
+                    }
+                    @Override public void onPostExecute(Venue venue) {
+                        venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+                        venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+                        venue.Location = null;
+                        venue.VenueBusinessHours = null;
+                        venue.VenueContacts = null;
+                        intent.putExtra("Venue", venue);
+                        intent.putExtra("SelectedMenuListId", itemClicked.BrochureId);
+                        startActivity(intent);
+                    }
+                };
+
+                this.venuesService.getById(applicationContext, apiCallResultListener, this::showInvalidHostLayout, itemClicked.VenueId);
+            });
+
+            this.dishesAdapter.setSwipeRefreshLayout(dishesSwipeContainer);
+            this.dishesAdapter.swipeContainer.setOnRefreshListener(() -> {
+                if (ConnectivityHelper.isConnected(applicationContext)) {
+                    refreshLastKnownLocation();
+                    dishesAdapter.clearItems();
+
+                    //INFO: REFRESH INITIAL LOAD
+                    loadMoreDishes(itemsInitialLoadCount, 0, searchIsPromoted, query,
+                            SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds, SelectedAllergensFilterIds);
+                }
+                dishesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
+            });
+
+            //INFO: INITIAL LOAD
+            this.dishesAdapter.clearItems();
+            this.loadMoreDishes(itemsInitialLoadCount, 0, searchIsPromoted, query,
+                    SelectedPhaseFilterIds, SelectedRegionFilterIds, SelectedSpectrumFilterIds, SelectedAllergensFilterIds);
         }
     }
 
@@ -353,7 +430,7 @@ public class VenuesActivity
 
         if (ConnectivityHelper.isConnected(applicationContext) &&
                 lastKnownLocation != null) {
-            AsyncTaskListener<ArrayList<MenuListItem>> listener = new AsyncTaskListener<ArrayList<MenuListItem>>() {
+            AsyncTaskListener<ArrayList<MenuListItem>> apiCallResultListener = new AsyncTaskListener<ArrayList<MenuListItem>>() {
                 @Override
                 public void onPreExecute() {
                     centralProgress.setVisibility(View.VISIBLE);
@@ -365,7 +442,11 @@ public class VenuesActivity
 
                     if (result != null) {
                         dishesAdapter.addItems(result);
-                        dishesAdapter.APICallStillReturnsElements = result.size() >= itemsOnScrollLoadCount;
+
+                        for (MenuListItem menuListItem : result)
+                            loadMenuListItemImageThumbnail(menuListItem);
+
+                        dishesAdapter.APICallStillReturnsElements = result.size() >= itemsToLoadCountWhenScrolled;
                         dishesAdapter.loadingStillInAction = false;
                     }
                 }
@@ -381,7 +462,7 @@ public class VenuesActivity
             }
 
             this.dishesService.loadDishes(
-                    applicationContext, listener,
+                    applicationContext, apiCallResultListener,
                     maxResultsCount, totalItemsOffset,
                     lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
                     isPromoted, query,
@@ -392,6 +473,32 @@ public class VenuesActivity
             Toast.makeText(applicationContext, R.string.activity_venues_locationNotResolvedToast, Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    private void loadMenuListItemImageThumbnail(MenuListItem menuListItem) {
+        AsyncTaskListener<byte[]> mliImageResultListener = new AsyncTaskListener<byte[]>() {
+            @Override public void onPreExecute() {
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+            }
+            @Override public void onPostExecute(byte[] bytes) {
+                if (ArrayHelper.hasValidBitmapContent(bytes)){
+                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, 200, 200, false);
+                    menuListItem.ImageThumbnail.Bitmap = scaledBmp;
+                    addBitmapToMemoryCache(menuListItem.ImageThumbnail.Id, scaledBmp);
+                }
+                dishesAdapter.onItemChanged(menuListItem);
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+            }
+        };
+
+        if (menuListItem != null && menuListItem.ImageThumbnail != null) {
+            if (StringHelper.isNotNullOrEmpty(menuListItem.ImageThumbnail.Id)) {
+                menuListItem.ImageThumbnail.Bitmap = getBitmapFromMemCache(menuListItem.ImageThumbnail.Id);
+                if (menuListItem.ImageThumbnail.Bitmap == null)
+                    new AzureBlobService().downloadMenuListItem100x100Thumbnail(menuListItem.ImageThumbnail.Id, mliImageResultListener);
+            }
+        } //IN ALL 3 'ELSE'S DO NOTHING. The Item has already been set the default image
     }
 
     @Override
@@ -417,10 +524,10 @@ public class VenuesActivity
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_venues:
-                this.NavigateVenuesSearch();
+                this.navigateVenuesSearch();
                 return true;
             case R.id.action_dishes:
-                this.NavigateDishesSearch();
+                this.navigateDishesSearch();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -449,34 +556,34 @@ public class VenuesActivity
         mLocationResolver.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    @ItemClick(resName = "venues_lvDishes")
-    void dishClicked(MenuListItem listItem) {
-        Intent intent = new Intent(VenuesActivity.this, VenueActivity_.class);
-
-        AsyncTaskListener<Venue> listener = new AsyncTaskListener<Venue>() {
-            @Override public void onPreExecute() {
-                centralProgress.setVisibility(View.VISIBLE);
-            }
-            @Override public void onPostExecute(Venue result) {
-                Venue venue = result;
-                venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-                venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-                venue.Location = null;
-                venue.VenueBusinessHours = null;
-                venue.VenueContacts = null;
-                intent.putExtra("Venue", venue);
-                intent.putExtra("SelectedMenuListId", listItem.BrochureId);
-
-                startActivity(intent);
-            }
-        };
-
-        this.venuesService.getById(applicationContext, listener, listItem.VenueId);
-    }
+//    @ItemClick(resName = "venues_lvDishes")
+//    void dishClicked(MenuListItem listItem) {
+//        Intent intent = new Intent(WallActivity.this, VenueMenuActivity_.class);
+//
+//        AsyncTaskListener<Venue> apiCallResultListener = new AsyncTaskListener<Venue>() {
+//            @Override public void onPreExecute() {
+//                centralProgress.setVisibility(View.VISIBLE);
+//            }
+//            @Override public void onPostExecute(Venue result) {
+//                Venue venue = result;
+//                venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+//                venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+//                venue.Location = null;
+//                venue.VenueBusinessHours = null;
+//                venue.VenueContacts = null;
+//                intent.putExtra("Venue", venue);
+//                intent.putExtra("SelectedMenuListId", listItem.BrochureId);
+//
+//                startActivity(intent);
+//            }
+//        };
+//
+//        this.venuesService.getById(applicationContext, apiCallResultListener, this::showInvalidHostLayout, listItem.VenueId);
+//    }
 
     void openFilters() {
         if (DishesSearchModeActivated) {
-            Intent intent = new Intent(VenuesActivity.this, DishesFiltersActivity_.class);
+            Intent intent = new Intent(WallActivity.this, DishesFiltersActivity_.class);
             intent.putExtra("PreselectedPhaseFilterIds", SelectedPhaseFilterIds);
             intent.putExtra("PreselectedRegionFilterIds", SelectedRegionFilterIds);
             intent.putExtra("PreselectedSpectrumFilterIds", SelectedSpectrumFilterIds);
@@ -484,20 +591,20 @@ public class VenuesActivity
             intent.putExtra("PreselectedApplyWorkingStatusFilter", ApplyWorkingStatusFilterToDishes);
             startActivity(intent);
         } else {
-            Intent intent = new Intent(VenuesActivity.this, VenuesFiltersActivity_.class);
+            Intent intent = new Intent(WallActivity.this, VenuesFiltersActivity_.class);
             intent.putExtra("PreselectedApplyWorkingStatusFilter", ApplyWorkingStatusFilterToVenues);
             startActivity(intent);
         }
     }
 
-    public void NavigateVenuesSearch() {
-        Intent intent = new Intent(VenuesActivity.this, VenuesActivity_.class);
+    public void navigateVenuesSearch() {
+        Intent intent = new Intent(WallActivity.this, WallActivity_.class);
         intent.putExtra("DishesSearchModeActivated", false);
         startActivity(intent);
     }
 
-    public void NavigateDishesSearch() {
-        Intent intent = new Intent(VenuesActivity.this, VenuesActivity_.class);
+    public void navigateDishesSearch() {
+        Intent intent = new Intent(WallActivity.this, WallActivity_.class);
         intent.putExtra("DishesSearchModeActivated", true);
 
         startActivity(intent);
@@ -536,8 +643,8 @@ public class VenuesActivity
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                BubbleLayout bubbleLayout = (BubbleLayout) LayoutInflater.from(VenuesActivity.this).inflate(R.layout.popup_bubble, null);
-                PopupWindow popupWindow = BubblePopupHelper.create(VenuesActivity.this, bubbleLayout);
+                BubbleLayout bubbleLayout = (BubbleLayout) LayoutInflater.from(WallActivity.this).inflate(R.layout.popup_bubble, null);
+                PopupWindow popupWindow = BubblePopupHelper.create(WallActivity.this, bubbleLayout);
                 bubbleLayout.setArrowDirection(ArrowDirection.RIGHT);
 
                 filtersButton.getViewTreeObserver().removeGlobalOnLayoutListener(this);
@@ -551,16 +658,16 @@ public class VenuesActivity
                 float width = mPaint.measureText(labelText, 0, labelText.length());
 
                 int filtersButtonStartingY = location[1];
-                int popupMarginTop = DimensionsHelper.dpToPx(3, VenuesActivity.this);
+                int popupMarginTop = DimensionsHelper.dpToPx(3, WallActivity.this);
 
                 int filtersButtonStartingX = location[0];
                 int textWidth = (int)width;
-                int textViewMarginEnd = DimensionsHelper.dpToPx(4, VenuesActivity.this);;
+                int textViewMarginEnd = DimensionsHelper.dpToPx(4, WallActivity.this);;
                 int filtersButtonWidth = filtersButton.getWidth();
-                int filtersButtonMarginEnd = DimensionsHelper.dpToPx(25, VenuesActivity.this);
-                int popupSidePadding = DimensionsHelper.dpToPx(24, VenuesActivity.this);
-                int popupMarginRight = DimensionsHelper.dpToPx(20, VenuesActivity.this);
-                int arrowWidth = DimensionsHelper.dpToPx(8, VenuesActivity.this);
+                int filtersButtonMarginEnd = DimensionsHelper.dpToPx(25, WallActivity.this);
+                int popupSidePadding = DimensionsHelper.dpToPx(24, WallActivity.this);
+                int popupMarginRight = DimensionsHelper.dpToPx(20, WallActivity.this);
+                int arrowWidth = DimensionsHelper.dpToPx(8, WallActivity.this);
 
                 int popupX = filtersButtonStartingX -
                         filtersButtonWidth -
@@ -579,5 +686,13 @@ public class VenuesActivity
         });
     }
 
+    private void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) == null)
+            mMemoryCache.put(key, bitmap);
+    }
+
+    private Bitmap getBitmapFromMemCache(String key) {
+        return mMemoryCache.get(key);
+    }
 
 }

@@ -8,11 +8,12 @@ import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
 import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class MenuListItem
         extends ResultBase
-        implements Parcelable {
+        implements Parcelable, Serializable {
 
     @SerializedName("Id")
     public String Id;

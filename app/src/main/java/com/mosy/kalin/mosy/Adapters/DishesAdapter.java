@@ -1,16 +1,16 @@
 package com.mosy.kalin.mosy.Adapters;
 
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.LruCache;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
+import com.mosy.kalin.mosy.Adapters.Base.RecyclerViewAdapterBase;
+import com.mosy.kalin.mosy.Adapters.Base.ViewWrapper;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
-import com.mosy.kalin.mosy.R;
 import com.mosy.kalin.mosy.Views.DishItemView;
 import com.mosy.kalin.mosy.Views.DishItemView_;
 
@@ -22,17 +22,16 @@ import java.util.ArrayList;
 
 @EBean
 public class DishesAdapter
-        extends BaseAdapter {
+        extends RecyclerViewAdapterBase<MenuListItem, DishItemView> {
 
     public boolean loadingStillInAction; // used to prevent searching while another async search hasn't been finished
     public boolean APICallStillReturnsElements = true;
 
-    private ArrayList<MenuListItem> menuListItems;
+    private boolean IsUsingDefaultThumbnail = true;
     private LruCache<String, Bitmap> mMemoryCache;
 
     @RootContext
-    Context context;
-
+    Activity activity;
 
     public SwipeRefreshLayout swipeContainer;
     public void setSwipeRefreshLayout(SwipeRefreshLayout layout) {
@@ -50,76 +49,48 @@ public class DishesAdapter
 
     @AfterInject
     void initAdapter() {
-        if (this.menuListItems == null) this.menuListItems = new ArrayList<>();
+        if (this.items == null) this.items = new ArrayList<>();
 
         // final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         // final int cacheSize = maxMemory / 8; // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = 10 * 1024 * 1024; // 10 MBs
-
-        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than
-                // number of items.
-                return bitmap.getByteCount() / 1024;
-            }
-        };
-        addBitmapToMemoryCache("default", BitmapFactory.decodeResource(context.getResources(), R.drawable.eat_paprika_100x100));
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        DishItemView view = null;
-        if (convertView == null)
-            view = DishItemView_.build(context);
-        else
-            view = (DishItemView) convertView;
-
-        MenuListItem menuListItem = getItem(position);
-        view.bind(menuListItem, mMemoryCache);
-
-        return view;
+    protected DishItemView onCreateItemView(ViewGroup parent, int viewType) {
+        return DishItemView_.build(activity);
     }
 
     @Override
-    public int getCount() {
-        if (this.menuListItems != null)
-            return menuListItems.size();
-        else return 0;
-    }
+    public void onBindViewHolder(@NonNull ViewWrapper<DishItemView> viewHolder, int position) {
+        DishItemView view = viewHolder.getView();
+        MenuListItem menuListItem = this.items.get(position);
 
-    @Override
-    public MenuListItem getItem(int position) {
-        if (this.menuListItems != null && this.menuListItems.size() > 0)
-            return menuListItems.get(position);
-        else return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+        view.bind(menuListItem, position, this.IsUsingDefaultThumbnail);
     }
 
     public void addItems(ArrayList<MenuListItem> items){
-        if (this.menuListItems != null){
-            int lastItemPosition = this.menuListItems.size();
-            this.menuListItems.addAll(lastItemPosition, items);
+        if (this.items != null){
+            int lastItemPosition = this.items.size();
+            this.items.addAll(lastItemPosition, items);
             this.notifyDataSetChanged();
         }
     }
 
-    public void clearDishes(){
-        this.menuListItems = new ArrayList<>();
+    public MenuListItem getItemAt(int position){
+        return this.items.get(position);
     }
 
-    private void addBitmapToMemoryCache(String key, Bitmap bitmap) {
-        if (getBitmapFromMemCache(key) == null) {
-            mMemoryCache.put(key, bitmap);
+    private int getItemPosition(MenuListItem item){
+        for (MenuListItem menuListItem : this.items) {
+            if (item.Id.equals(menuListItem.Id))
+                return this.items.indexOf(item);
         }
+        return -1; // doesn't exist
     }
 
-    private Bitmap getBitmapFromMemCache(String key) {
-        return mMemoryCache.get(key);
+    public void onItemChanged(MenuListItem item) {
+        int position = this.getItemPosition(item);
+        activity.runOnUiThread(() -> this.notifyItemChanged(position));
     }
 
 }

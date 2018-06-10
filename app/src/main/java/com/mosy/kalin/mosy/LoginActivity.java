@@ -89,7 +89,7 @@ public class LoginActivity
                     LoginBindingModel model = new LoginBindingModel(email, password);
                     new AccountTokenLoginAsyncTask(listener).execute(model);
 
-                    Intent intent = new Intent(LoginActivity.this, VenuesActivity_.class);
+                    Intent intent = new Intent(LoginActivity.this, WallActivity_.class);
                     startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();

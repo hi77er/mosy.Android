@@ -25,10 +25,12 @@ public class MenuListItemView
     }
 
     public void bind(MenuListItem menuListItem) {
-        this.Name.setText(menuListItem.Name);
-        this.Price.setText(menuListItem.PriceDisplayText);
-
-        // if (isSelected)
-        // this.setBackgroundColor(Color.WHITE);
+        if (menuListItem != null)
+        {
+            this.Name.setText(menuListItem.Name);
+            this.Price.setText(menuListItem.PriceDisplayText);
+            // if (isSelected)
+            // this.setBackgroundColor(Color.WHITE);
+        }
     }
 }

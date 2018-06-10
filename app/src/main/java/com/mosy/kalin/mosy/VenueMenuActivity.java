@@ -1,18 +1,15 @@
 package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mosy.kalin.mosy.Adapters.MenuListsPagerAdapter;
 import com.mosy.kalin.mosy.DTOs.MenuList;
@@ -22,12 +19,7 @@ import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueIndoorImageMetaBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.GetVenueMenuBindingModel;
-import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueIndoorImageMetadataAsyncTask;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadVenueMenuAsyncTask;
 import com.mosy.kalin.mosy.Services.VenuesService;
 
 import org.androidannotations.annotations.AfterViews;
@@ -40,8 +32,8 @@ import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 
 @SuppressLint("Registered")
-@EActivity(R.layout.activity_venue)
-public class VenueActivity
+@EActivity(R.layout.activity_venue_menu)
+public class VenueMenuActivity
         extends BaseActivity {
 
     private static final String storageContainer = "userimages\\fboalbums\\200x200";
@@ -85,7 +77,7 @@ public class VenueActivity
     }
 
     private void loadIndoorImageMeta() {
-        AsyncTaskListener<VenueImage> listener = new AsyncTaskListener<VenueImage>() {
+        AsyncTaskListener<VenueImage> apiCallResultListener = new AsyncTaskListener<VenueImage>() {
             @Override public void onPreExecute() {
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
             }
@@ -95,11 +87,11 @@ public class VenueActivity
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getImageMetaIndoor(this.applicationContext, listener, this.Venue.Id);
+        this.venueService.getImageMetaIndoor(this.applicationContext, apiCallResultListener, null, this.Venue.Id);
     }
 
     private void loadMenu(){
-        AsyncTaskListener<ArrayList<MenuList>> listener = new AsyncTaskListener<ArrayList<MenuList>>() {
+        AsyncTaskListener<ArrayList<MenuList>> apiCallResultListener = new AsyncTaskListener<ArrayList<MenuList>>() {
             @Override public void onPreExecute() {
                 centralProgress.setVisibility(View.VISIBLE);
             }
@@ -120,13 +112,13 @@ public class VenueActivity
                 centralProgress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getMenu(this.applicationContext, listener, this.Venue.Id);
+        this.venueService.getMenu(this.applicationContext, apiCallResultListener, null, this.Venue.Id);
     }
 
     private void populateIndoorImageThumbnail() {
         if (this.Venue.IndoorImage != null && this.Venue.IndoorImage.Id != null && this.Venue.IndoorImage.Id.length() > 0) {
             //INFO: TryGet Venue Image
-            AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
+            AsyncTaskListener<byte[]> apiCallResultListener = new AsyncTaskListener<byte[]>() {
                 @Override public void onPreExecute() {
                     //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
                 }
@@ -141,13 +133,13 @@ public class VenueActivity
             };
 
             DownloadBlobModel model = new DownloadBlobModel(this.Venue.IndoorImage.Id, storageContainer);
-            new LoadAzureBlobAsyncTask(listener).execute(model);
+            new LoadAzureBlobAsyncTask(apiCallResultListener).execute(model);
         }
     }
 
     @Click(R.id.venue_lVenueTitle)
     void venueTitle_Click() {
-        Intent intent = new Intent(VenueActivity.this, VenueDetailsActivity_.class);
+        Intent intent = new Intent(VenueMenuActivity.this, VenueDetailsActivity_.class);
         this.Venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
         this.Venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
         this.Venue.Location = null;
