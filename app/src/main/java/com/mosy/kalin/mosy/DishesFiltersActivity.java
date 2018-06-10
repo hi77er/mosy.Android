@@ -1,7 +1,6 @@
 package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -99,7 +98,7 @@ public class DishesFiltersActivity
         }
         else {
             networkLost = true;
-            showLoading();
+            showFiltersLoadingLayout();
         }
 
         afterViewsFinished = true;
@@ -144,7 +143,7 @@ public class DishesFiltersActivity
     @Override
     protected void onNetworkLost() {
         if (afterViewsFinished) {
-            runOnUiThread(this::showLoading);
+            runOnUiThread(this::showFiltersLoadingLayout);
         }
         networkLost = true;
     }
@@ -161,7 +160,7 @@ public class DishesFiltersActivity
         super.onDestroy();
 
         if (ConnectivityHelper.isConnected(applicationContext)) {
-            Intent intent = new Intent(DishesFiltersActivity.this, VenuesActivity_.class);
+            Intent intent = new Intent(DishesFiltersActivity.this, WallActivity_.class);
             ArrayList<String> selectedPhasesFilterIds = new ArrayList<>();
             ArrayList<String> selectedRegionsFilterIds = new ArrayList<>();
             ArrayList<String> selectedSpectrumFilterIds = new ArrayList<>();
@@ -226,7 +225,7 @@ public class DishesFiltersActivity
 
         AsyncTaskListener<RequestableFiltersResult> listener = new AsyncTaskListener<RequestableFiltersResult>() {
             @Override public void onPreExecute() {
-                showLoading();
+                showFiltersLoadingLayout();
             }
 
             @Override public void onPostExecute(RequestableFiltersResult result) {
@@ -248,20 +247,20 @@ public class DishesFiltersActivity
                     dishesFiltersPager.setAdapter(DFAdapter);
                     dishesFiltersTabs.setupWithViewPager(dishesFiltersPager);
                 }
-                showLoaded();
+                onFiltersLoaded();
             }
         };
 
         this.dishesService.getFilters(this.applicationContext, listener);
     }
 
-    private void showLoading() {
+    private void showFiltersLoadingLayout() {
         dishesFiltersPager.setVisibility(View.GONE);
         goButton.setVisibility(View.GONE);
         centralProgress.setVisibility(View.VISIBLE);
     }
 
-    private void showLoaded() {
+    private void onFiltersLoaded() {
         centralProgress.setVisibility(View.GONE);
         dishesFiltersPager.setVisibility(View.VISIBLE);
         goButton.setVisibility(View.VISIBLE);

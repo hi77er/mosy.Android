@@ -2,14 +2,12 @@ package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.MotionEvent;
@@ -77,36 +75,50 @@ public class VenueDetailsActivity
     SupportMapFragment VenueLocationMap;
 
     @ViewById(resName = "venueDetails_lBadges")
-    LinearLayout LayoutBadges;
+    LinearLayout badgesLayout;
     @ViewById(resName = "venueDetails_lContacts")
-    LinearLayout LayoutContacts;
+    LinearLayout contactsLayout;
     @ViewById(resName = "venueDetails_lBusinessHours")
-    LinearLayout LayoutBusinessHours;
+    LinearLayout businessHoursLayout;
+
+    @ViewById(resName = "venueDetails_lBadgesContainer")
+    LinearLayout badgesContainerLayout;
+    @ViewById(resName = "venueDetails_lContactsContainer")
+    LinearLayout contactsContainerLayout;
+    @ViewById(resName = "venueDetails_lBusinessHoursContainer")
+    LinearLayout getBusinessHoursContainerLayout;
+
+    @ViewById(resName = "venueDetails_lBadgesProgress")
+    LinearLayout badgesProgressLayout;
+    @ViewById(resName = "venueDetails_lContactsProgress")
+    LinearLayout contactsProgressLayout;
+    @ViewById(resName = "venueDetails_lBusinessHoursProgress")
+    LinearLayout getBusinessHoursProgressLayout;
 
     @ViewById(resName = "venueDetails_svMain")
-    ScrollView ScrollViewMain;
+    ScrollView mainScrollView;
     @ViewById(resName = "venueDetails_tvName")
-    TextView Name;
+    TextView nameTextView;
     @ViewById(resName = "venueDetails_tvClass")
-    TextView Class;
+    TextView classTextView;
     @ViewById(resName = "venueDetails_btnPhone")
-    Button PhoneButton;
+    Button phoneButton;
     @ViewById(resName = "venueDetails_ivIndoorThumbnail")
-    ImageView IndoorImageThumbnail;
+    ImageView indoorImageThumbnailView;
     @ViewById(resName = "venueDetails_tvBHMondayTime")
-    TextView Monday;
+    TextView mondayTextView;
     @ViewById(resName = "venueDetails_tvBHTuesdayTime")
-    TextView Tuesday;
+    TextView tuesdayTextView;
     @ViewById(resName = "venueDetails_tvBHWednesdayTime")
-    TextView Wednesday;
+    TextView wednesdayTextView;
     @ViewById(resName = "venueDetails_tvBHThursdayTime")
-    TextView Thursday;
+    TextView thursdayTextView;
     @ViewById(resName = "venueDetails_tvBHFridayTime")
-    TextView Friday;
+    TextView fridayTextView;
     @ViewById(resName = "venueDetails_tvBHSaturdayTime")
-    TextView Saturday;
+    TextView saturdayTextView;
     @ViewById(resName = "venueDetails_tvBHSundayTime")
-    TextView Sunday;
+    TextView sundayTextView;
 
     @ViewById(resName = "venueDetails_ivMapTransparent")
     ImageView TransparentImage;
@@ -141,21 +153,21 @@ public class VenueDetailsActivity
     @AfterViews
     void afterViews() {
         try {
-            Name.setText(this.Venue.Name);
-            Class.setText(this.Venue.Class);
+            nameTextView.setText(this.Venue.Name);
+            classTextView.setText(this.Venue.Class);
 
             loadIndoorImage();
+            loadBadgeEndorsements();
             loadContacts();
             loadBusinessHours();
             loadLocation();
-            loadEndorsements();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void loadIndoorImage() {
-        AsyncTaskListener<VenueImage> listener = new AsyncTaskListener<VenueImage>() {
+        AsyncTaskListener<VenueImage> apiCallResultListener = new AsyncTaskListener<VenueImage>() {
             @Override
             public void onPreExecute() {
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
@@ -168,28 +180,41 @@ public class VenueDetailsActivity
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getImageMetaIndoor(this.applicationContext, listener, this.Venue.Id);
+        this.venueService.getImageMetaIndoor(this.applicationContext, apiCallResultListener, null, this.Venue.Id);
+    }
+
+    private void loadBadgeEndorsements() {
+        AsyncTaskListener<ArrayList<VenueBadgeEndorsement>> apiCallResultListener = new AsyncTaskListener<ArrayList<VenueBadgeEndorsement>>() {
+            @Override public void onPreExecute() {
+                showBadgesLoading();
+            }
+            @Override public void onPostExecute(ArrayList<VenueBadgeEndorsement> result) {
+                Venue.Endorsements = result;
+                populateBadges();
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+            }
+        };
+        this.venueService.getBadgeEndorsements(applicationContext, apiCallResultListener, null, this.Venue.Id);
     }
 
     private void loadContacts() {
         AsyncTaskListener<VenueContacts> listener = new AsyncTaskListener<VenueContacts>() {
             @Override public void onPreExecute() {
-                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+                showContactsLoading();
             }
-
             @Override public void onPostExecute(VenueContacts result) {
                 Venue.VenueContacts = result;
                 populateContacts();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getContacts(this.applicationContext, listener, this.Venue.Id);
+        this.venueService.getContacts(this.applicationContext, listener, null, this.Venue.Id);
     }
 
     private void loadBusinessHours() {
-        AsyncTaskListener<VenueBusinessHours> listener = new AsyncTaskListener<VenueBusinessHours>() {
+        AsyncTaskListener<VenueBusinessHours> apiCallResultListener = new AsyncTaskListener<VenueBusinessHours>() {
             @Override public void onPreExecute() {
-                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+                showBusinessHoursLoading();
             }
 
             @Override public void onPostExecute(VenueBusinessHours result) {
@@ -198,7 +223,7 @@ public class VenueDetailsActivity
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getBusinessHours(applicationContext, listener, this.Venue.Id);
+        this.venueService.getBusinessHours(applicationContext, apiCallResultListener, null, this.Venue.Id);
     }
 
     private void loadLocation() {
@@ -213,62 +238,26 @@ public class VenueDetailsActivity
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getLocation(applicationContext, listener, this.Venue.Id);
+        this.venueService.getLocation(applicationContext, listener, null, this.Venue.Id);
 
         // TODO: Decide weather this should be called here on onPostExecute of the upper task
         populateGoogleMap();
     }
 
-    private void loadEndorsements() {
-        AsyncTaskListener<ArrayList<VenueBadgeEndorsement>> listener = new AsyncTaskListener<ArrayList<VenueBadgeEndorsement>>() {
-            @Override public void onPreExecute() {
-                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
-            }
-
-            @Override public void onPostExecute(ArrayList<VenueBadgeEndorsement> result) {
-                Venue.Endorsements = result;
-                populateBadges();
-                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
-            }
-        };
-        this.venueService.getBadgeEndorsements(applicationContext, listener, this.Venue.Id);
+    private void showBadgesLoading() {
+        this.badgesLayout.setVisibility(View.GONE);
+        this.badgesProgressLayout.setVisibility(View.VISIBLE);
+        this.badgesContainerLayout.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        if (this.Venue != null && this.Venue.Location != null) {
-            LatLng venueLocation = new LatLng(this.Venue.Location.Latitude, this.Venue.Location.Longitude);
-            googleMap.getUiSettings().setZoomControlsEnabled(true);
-            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-            googleMap.getUiSettings().setMapToolbarEnabled(true);
-            googleMap.addMarker(
-                    new MarkerOptions()
-                            .position(venueLocation)
-                            .title(this.Venue.Name)
-            );
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(venueLocation, 16.0f));
-        }
+    private void showContactsLoading() {
+        this.contactsLayout.setVisibility(View.GONE);
+        this.contactsProgressLayout.setVisibility(View.VISIBLE);
     }
 
-    @Touch(R.id.venueDetails_ivMapTransparent)
-    boolean transparentImage_Touch(View v, MotionEvent event) {
-        int action = event.getAction();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                // Disallow ScrollView to intercept touch events.
-                this.ScrollViewMain.requestDisallowInterceptTouchEvent(true);
-                // Disable touch on transparent view
-                return false;
-            case MotionEvent.ACTION_UP:
-                // Allow ScrollView to intercept touch events.
-                this.ScrollViewMain.requestDisallowInterceptTouchEvent(false);
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                this.ScrollViewMain.requestDisallowInterceptTouchEvent(true);
-                return false;
-            default:
-                return true;
-        }
+    private void showBusinessHoursLoading() {
+        this.businessHoursLayout.setVisibility(View.GONE);
+        this.getBusinessHoursProgressLayout.setVisibility(View.VISIBLE);
     }
 
     private void populateIndoorImageThumbnail() {
@@ -281,7 +270,7 @@ public class VenueDetailsActivity
                 @Override public void onPostExecute(byte[] bytes) {
                     if (ArrayHelper.hasValidBitmapContent(bytes)) {
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        IndoorImageThumbnail.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
+                        indoorImageThumbnailView.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
                         IsUsingDefaultIndoorImageThumbnail = false;
                     } else
                         IsUsingDefaultIndoorImageThumbnail = true;
@@ -297,31 +286,45 @@ public class VenueDetailsActivity
     private void populateContacts() {
         VenueContacts venueContacts = this.Venue.VenueContacts;
         if (venueContacts != null) {
+            boolean any = false;
             if (StringHelper.isNotNullOrEmpty(venueContacts.Phone)) {
                 this.PhoneNumber = venueContacts.Phone;
-                this.PhoneButton.setText(venueContacts.Phone);
-                this.PhoneButton.setVisibility(View.VISIBLE);
+                this.phoneButton.setText(venueContacts.Phone);
+                this.phoneButton.setVisibility(View.VISIBLE);
+                any = true;
             }
             if (StringHelper.isNotNullOrEmpty(venueContacts.Address)) {
                 addContact(venueContacts.Address, R.drawable.contact_address_paprica, false);
+                any = true;
             }
             if (StringHelper.isNotNullOrEmpty(venueContacts.WebPage)) {
                 addContact(venueContacts.WebPage, R.drawable.contact_webpage_paprica, true);
+                any = true;
             }
             if (StringHelper.isNotNullOrEmpty(venueContacts.FacebookUrl)) {
                 addContact(venueContacts.FacebookUrl, R.drawable.contact_facebook_paprica, true);
+                any = true;
             }
             if (StringHelper.isNotNullOrEmpty(venueContacts.Foursquare)) {
                 addContact(venueContacts.Foursquare, R.drawable.contact_foursquare_paprica, true);
+                any = true;
             }
             if (StringHelper.isNotNullOrEmpty(venueContacts.Instagram)) {
                 addContact(venueContacts.Instagram, R.drawable.contact_instagram_paprica, true);
+                any = true;
             }
             if (StringHelper.isNotNullOrEmpty(venueContacts.Email)) {
                 addContact(venueContacts.Email, R.drawable.contact_email_paprica, true);
+                any = true;
             }
+            if (any) {
+                showContactsContainer();
+            } else {
+                hideContactsContainer();
+            }
+
         } else {
-            this.LayoutContacts.setVisibility(View.GONE);
+            hideContactsContainer();
         }
     }
 
@@ -352,58 +355,19 @@ public class VenueDetailsActivity
 
         contactLayout.addView(iv);
         contactLayout.addView(tv);
-        this.LayoutContacts.addView(contactLayout);
-        if (this.LayoutContacts.getVisibility() != View.VISIBLE)
-                this.LayoutContacts.setVisibility(View.VISIBLE);
+        this.contactsLayout.addView(contactLayout);
     }
 
-    private void populateBusinessHours() {
-        VenueBusinessHours businessHours = this.Venue.VenueBusinessHours;
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
-        if (businessHours != null // and a single day has business hours set ->
-                && (businessHours.IsMondayDayOff || businessHours.IsTuesdayDayOff || businessHours.IsWednesdayDayOff ||
-                businessHours.IsThursdayDayOff || businessHours.IsFridayDayOff || businessHours.IsSaturdayDayOff ||
-                businessHours.IsSundayDayOff || businessHours.MondayFrom != null || businessHours.MondayTo != null
-                || businessHours.TuesdayFrom != null || businessHours.TuesdayTo != null || businessHours.WednesdayFrom != null
-                || businessHours.WednesdayTo != null || businessHours.ThursdayFrom != null || businessHours.ThursdayTo != null
-                || businessHours.FridayFrom != null || businessHours.FridayTo != null || businessHours.SaturdayFrom != null
-                || businessHours.SaturdayTo != null || businessHours.SundayFrom != null || businessHours.SundayTo != null)) {
-
-            String d1 = businessHours.IsMondayDayOff ? "Day Off" :
-                    ((businessHours.MondayFrom != null ? DateHelper.ToString(businessHours.MondayFrom, formatter) : StringHelper.empty()) + " - " +
-                            (businessHours.MondayTo != null ? DateHelper.ToString(businessHours.MondayTo, formatter) : StringHelper.empty()));
-            String d2 = businessHours.IsTuesdayDayOff ? "Day Off" :
-                    ((businessHours.TuesdayFrom != null ? DateHelper.ToString(businessHours.TuesdayFrom, formatter) : StringHelper.empty()) + " - " +
-                            (businessHours.TuesdayTo != null ? DateHelper.ToString(businessHours.TuesdayTo, formatter) : StringHelper.empty()));
-            String d3 = businessHours.IsWednesdayDayOff ? "Day Off" :
-                    ((businessHours.WednesdayFrom != null ? DateHelper.ToString(businessHours.WednesdayFrom, formatter) : StringHelper.empty()) + " - " +
-                            (businessHours.WednesdayTo != null ? DateHelper.ToString(businessHours.WednesdayTo, formatter) : StringHelper.empty()));
-            String d4 = businessHours.IsThursdayDayOff ? "Day Off" :
-                    ((businessHours.ThursdayFrom != null ? DateHelper.ToString(businessHours.ThursdayFrom, formatter) : StringHelper.empty()) + " - " +
-                            (businessHours.ThursdayTo != null ? DateHelper.ToString(businessHours.ThursdayTo, formatter) : StringHelper.empty()));
-            String d5 = businessHours.IsFridayDayOff ? "Day Off" :
-                    ((businessHours.FridayFrom != null ? DateHelper.ToString(businessHours.FridayFrom, formatter) : StringHelper.empty()) + " - " +
-                            (businessHours.FridayTo != null ? DateHelper.ToString(businessHours.FridayTo, formatter) : StringHelper.empty()));
-            String d6 = businessHours.IsSaturdayDayOff ? "Day Off" :
-                    ((businessHours.SaturdayFrom != null ? DateHelper.ToString(businessHours.SaturdayFrom, formatter) : StringHelper.empty()) + " - " +
-                            (businessHours.SaturdayTo != null ? DateHelper.ToString(businessHours.SaturdayTo, formatter) : StringHelper.empty()));
-            String d7 = businessHours.IsSundayDayOff ? "Day Off" :
-                    ((businessHours.SundayFrom != null ? DateHelper.ToString(businessHours.SundayFrom, formatter) : StringHelper.empty()) + " - " +
-                            (businessHours.SundayTo != null ? DateHelper.ToString(businessHours.SundayTo, formatter) : StringHelper.empty()));
-
-            this.Monday.setText(d1);
-            this.Tuesday.setText(d2);
-            this.Wednesday.setText(d3);
-            this.Thursday.setText(d4);
-            this.Friday.setText(d5);
-            this.Saturday.setText(d6);
-            this.Sunday.setText(d7);
-            this.LayoutBusinessHours.setVisibility(View.VISIBLE);
-        }
+    private void showContactsContainer() {
+        this.contactsProgressLayout.setVisibility(View.GONE);
+        this.contactsLayout.setVisibility(View.VISIBLE);
+        this.contactsContainerLayout.setVisibility(View.VISIBLE);
     }
 
-    private void populateGoogleMap() {
-        this.VenueLocationMap.getMapAsync(this);
+    private void hideContactsContainer() {
+        this.contactsProgressLayout.setVisibility(View.GONE);
+        this.contactsLayout.setVisibility(View.GONE);
+        this.contactsContainerLayout.setVisibility(View.GONE);
     }
 
     private void populateBadges() {
@@ -454,14 +418,137 @@ public class VenueDetailsActivity
                     any = true;
                 }
             }
-            if (any) this.LayoutBadges.setVisibility(View.VISIBLE);
+            if (any) {
+                showBadgesContainer();
+            }
+            else {
+                hideBadgesContainer();
+            }
         }
+        else
+        {
+            hideBadgesContainer();
+        }
+    }
+
+    private void showBadgesContainer() {
+        this.contactsProgressLayout.setVisibility(View.GONE);
+        this.badgesLayout.setVisibility(View.VISIBLE);
+        this.badgesContainerLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void hideBadgesContainer() {
+        this.contactsProgressLayout.setVisibility(View.GONE);
+        this.badgesLayout.setVisibility(View.GONE);
+        this.badgesContainerLayout.setVisibility(View.GONE);
+    }
+
+    private void populateBusinessHours() {
+        VenueBusinessHours businessHours = this.Venue.VenueBusinessHours;
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        if (businessHours != null // and a single day has business hours set ->
+                && (businessHours.IsMondayDayOff || businessHours.IsTuesdayDayOff || businessHours.IsWednesdayDayOff ||
+                businessHours.IsThursdayDayOff || businessHours.IsFridayDayOff || businessHours.IsSaturdayDayOff ||
+                businessHours.IsSundayDayOff || businessHours.MondayFrom != null || businessHours.MondayTo != null
+                || businessHours.TuesdayFrom != null || businessHours.TuesdayTo != null || businessHours.WednesdayFrom != null
+                || businessHours.WednesdayTo != null || businessHours.ThursdayFrom != null || businessHours.ThursdayTo != null
+                || businessHours.FridayFrom != null || businessHours.FridayTo != null || businessHours.SaturdayFrom != null
+                || businessHours.SaturdayTo != null || businessHours.SundayFrom != null || businessHours.SundayTo != null)) {
+
+            String d1 = businessHours.IsMondayDayOff ? "Day Off" :
+                    ((businessHours.MondayFrom != null ? DateHelper.ToString(businessHours.MondayFrom, formatter) : StringHelper.empty()) + " - " +
+                            (businessHours.MondayTo != null ? DateHelper.ToString(businessHours.MondayTo, formatter) : StringHelper.empty()));
+            String d2 = businessHours.IsTuesdayDayOff ? "Day Off" :
+                    ((businessHours.TuesdayFrom != null ? DateHelper.ToString(businessHours.TuesdayFrom, formatter) : StringHelper.empty()) + " - " +
+                            (businessHours.TuesdayTo != null ? DateHelper.ToString(businessHours.TuesdayTo, formatter) : StringHelper.empty()));
+            String d3 = businessHours.IsWednesdayDayOff ? "Day Off" :
+                    ((businessHours.WednesdayFrom != null ? DateHelper.ToString(businessHours.WednesdayFrom, formatter) : StringHelper.empty()) + " - " +
+                            (businessHours.WednesdayTo != null ? DateHelper.ToString(businessHours.WednesdayTo, formatter) : StringHelper.empty()));
+            String d4 = businessHours.IsThursdayDayOff ? "Day Off" :
+                    ((businessHours.ThursdayFrom != null ? DateHelper.ToString(businessHours.ThursdayFrom, formatter) : StringHelper.empty()) + " - " +
+                            (businessHours.ThursdayTo != null ? DateHelper.ToString(businessHours.ThursdayTo, formatter) : StringHelper.empty()));
+            String d5 = businessHours.IsFridayDayOff ? "Day Off" :
+                    ((businessHours.FridayFrom != null ? DateHelper.ToString(businessHours.FridayFrom, formatter) : StringHelper.empty()) + " - " +
+                            (businessHours.FridayTo != null ? DateHelper.ToString(businessHours.FridayTo, formatter) : StringHelper.empty()));
+            String d6 = businessHours.IsSaturdayDayOff ? "Day Off" :
+                    ((businessHours.SaturdayFrom != null ? DateHelper.ToString(businessHours.SaturdayFrom, formatter) : StringHelper.empty()) + " - " +
+                            (businessHours.SaturdayTo != null ? DateHelper.ToString(businessHours.SaturdayTo, formatter) : StringHelper.empty()));
+            String d7 = businessHours.IsSundayDayOff ? "Day Off" :
+                    ((businessHours.SundayFrom != null ? DateHelper.ToString(businessHours.SundayFrom, formatter) : StringHelper.empty()) + " - " +
+                            (businessHours.SundayTo != null ? DateHelper.ToString(businessHours.SundayTo, formatter) : StringHelper.empty()));
+
+            this.mondayTextView.setText(d1);
+            this.tuesdayTextView.setText(d2);
+            this.wednesdayTextView.setText(d3);
+            this.thursdayTextView.setText(d4);
+            this.fridayTextView.setText(d5);
+            this.saturdayTextView.setText(d6);
+            this.sundayTextView.setText(d7);
+
+            showBHContainer();
+        }
+        else {
+            hideBHContainer();
+        }
+    }
+
+    private void showBHContainer() {
+        this.getBusinessHoursProgressLayout.setVisibility(View.GONE);
+        this.businessHoursLayout.setVisibility(View.VISIBLE);
+        this.getBusinessHoursContainerLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void hideBHContainer() {
+        this.getBusinessHoursProgressLayout.setVisibility(View.GONE);
+        this.businessHoursLayout.setVisibility(View.GONE);
+        this.getBusinessHoursContainerLayout.setVisibility(View.GONE);
+    }
+
+    private void populateGoogleMap() {
+        this.VenueLocationMap.getMapAsync(this);
     }
 
     private boolean hasValidIndoorImageMetadata() {
         return this.Venue.IndoorImage != null
                 && this.Venue.IndoorImage.Id != null
                 && this.Venue.IndoorImage.Id.length() > 0;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        if (this.Venue != null && this.Venue.Location != null) {
+            LatLng venueLocation = new LatLng(this.Venue.Location.Latitude, this.Venue.Location.Longitude);
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+            googleMap.getUiSettings().setMapToolbarEnabled(true);
+            googleMap.addMarker(
+                    new MarkerOptions()
+                            .position(venueLocation)
+                            .title(this.Venue.Name)
+            );
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(venueLocation, 16.0f));
+        }
+    }
+
+    @Touch(R.id.venueDetails_ivMapTransparent)
+    boolean transparentImage_Touch(View v, MotionEvent event) {
+        int action = event.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                // Disallow ScrollView to intercept touch events.
+                this.mainScrollView.requestDisallowInterceptTouchEvent(true);
+                // Disable touch on transparent view
+                return false;
+            case MotionEvent.ACTION_UP:
+                // Allow ScrollView to intercept touch events.
+                this.mainScrollView.requestDisallowInterceptTouchEvent(false);
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                this.mainScrollView.requestDisallowInterceptTouchEvent(true);
+                return false;
+            default:
+                return true;
+        }
     }
 
     @Click(resName = "venueDetails_ivIndoorThumbnail")

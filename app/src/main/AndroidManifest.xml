@@ -45,7 +45,7 @@
             android:label="Register"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".VenuesActivity_"
+            android:name=".WallActivity_"
             android:label="@string/manifest_venuesActivityTitle"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -60,7 +60,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".VenueActivity_"
+            android:name=".VenueMenuActivity_"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <data

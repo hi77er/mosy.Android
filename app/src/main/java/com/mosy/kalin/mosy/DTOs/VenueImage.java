@@ -1,5 +1,7 @@
 package com.mosy.kalin.mosy.DTOs;
 
+import android.graphics.Bitmap;
+
 import com.google.gson.annotations.SerializedName;
 import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
 
@@ -27,5 +29,7 @@ public class VenueImage
 
     @SerializedName("Bytes")
     public byte[] Bytes;
+
+    public Bitmap Bitmap;
 
 }

@@ -57,7 +57,7 @@ public class LandingActivity
             networkLost = false;
         }
         else {
-            endActivityLoadingInvalidHost();
+            showInvalidHostLayout();
             networkLost = true;
         }
 
@@ -82,22 +82,30 @@ public class LandingActivity
     @Override
     protected void onNetworkLost() {
         if (afterViewsFinished) {
-            runOnUiThread(this::endActivityLoadingInvalidHost);
+            runOnUiThread(this::showInvalidHostLayout);
         }
         networkLost = true;
     }
 
-    private void ensureHasAuthenticationToken() {
-        startActivityLoading();
+    @Override
+    public void onStop() {
+        super.onStop();
+        this.connectionStateMonitor.onAvailable = null;
+        this.connectionStateMonitor.onLost = null;
+        this.activityStopped = true;
+    }
 
-//        boolean authTokenExistsAndIsValid =
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+    }
+    private void ensureHasAuthenticationToken() {
 
         this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
-            this::endActivityLoadingSuccess,
-            this::endActivityLoadingInvalidHost);
+            this::showLoading,
+            this::showButtonsLayout,
+            this::showInvalidHostLayout);
 
-//        if (authTokenExistsAndIsValid) // this is for the case when
-//            endActivityLoadingSuccess();
     }
 
     private void setupLanguagesSpinner() {
@@ -146,7 +154,7 @@ public class LandingActivity
         return label;
     }
 
-    private void startActivityLoading() {
+    private void showLoading() {
         this.buttonsLayout.setVisibility(View.GONE);
         this.invalidHostLayout.setVisibility(View.GONE);
         this.buttonDishes.setEnabled(false);
@@ -154,7 +162,7 @@ public class LandingActivity
         this.centralProgressLayout.setVisibility(View.VISIBLE);
     }
 
-    private void endActivityLoadingSuccess() {
+    private void showButtonsLayout() {
         this.buttonsLayout.setVisibility(View.VISIBLE);
         this.invalidHostLayout.setVisibility(View.GONE);
         this.buttonDishes.setEnabled(true);
@@ -164,7 +172,7 @@ public class LandingActivity
         Toast.makeText(applicationContext, "WebApi authToken refreshed!", Toast.LENGTH_LONG).show();
     }
 
-    private void endActivityLoadingInvalidHost() {
+    private void showInvalidHostLayout() {
         this.buttonsLayout.setVisibility(View.GONE);
         this.invalidHostLayout.setVisibility(View.VISIBLE);
         this.centralProgressLayout.setVisibility(View.GONE);
@@ -175,29 +183,17 @@ public class LandingActivity
     }
 
     @Click(resName = "landing_btnVenues")
-    public void NavigateVenuesSearch(){
-        Intent intent = new Intent(LandingActivity.this, VenuesActivity_.class);
+    public void navigateVenuesSearch(){
+        Intent intent = new Intent(LandingActivity.this, WallActivity_.class);
         intent.putExtra("DishesSearchModeActivated", false); //else find dishesWall
         startActivity(intent);
     }
 
     @Click(resName = "landing_btnDishes")
-    public void NavigateDishesSearch(){
-        Intent intent = new Intent(LandingActivity.this, VenuesActivity_.class);
+    public void navigateDishesSearch(){
+        Intent intent = new Intent(LandingActivity.this, WallActivity_.class);
         intent.putExtra("DishesSearchModeActivated", true); //else find dishesWall
         startActivity(intent);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        this.connectionStateMonitor.onAvailable = null;
-        this.connectionStateMonitor.onLost = null;
-        this.activityStopped = true;
-    }
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-    }
 }

@@ -27,11 +27,11 @@
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/venues_llSwipeToRefresh"
+        android:visibility="gone"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:gravity="center_horizontal">
 
         <ImageView
             android:id="@+id/ivSwipeToRefresh"
@@ -54,24 +54,20 @@
         android:id="@+id/venues_lVenuesSwipeContainer"
         android:visibility="gone"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="?android:attr/actionBarSize"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?android:attr/actionBarSize">
 
-            <ListView
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/venues_lvVenues"
                 android:layout_width="match_parent"
                 android:layout_height="0dip"
                 android:layout_weight="2"
                 android:focusableInTouchMode="false"
                 android:listSelector="@android:color/transparent"
-                android:headerDividersEnabled="false"
-                android:footerDividersEnabled="false"
-                android:dividerHeight="5dp"
-                android:divider="#770000"
                 android:cacheColorHint="#000000"
                 android:drawSelectorOnTop="false">
-            </ListView>
+            </android.support.v7.widget.RecyclerView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -79,24 +75,20 @@
         android:id="@+id/venues_lDishesSwipeContainer"
         android:visibility="gone"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="?android:attr/actionBarSize"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="?android:attr/actionBarSize">
 
-            <ListView
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/venues_lvDishes"
                 android:layout_width="match_parent"
                 android:layout_height="0dip"
                 android:layout_weight="2"
                 android:focusableInTouchMode="false"
                 android:listSelector="@android:color/transparent"
-                android:headerDividersEnabled="false"
-                android:footerDividersEnabled="false"
-                android:dividerHeight="5dp"
-                android:divider="#770000"
                 android:cacheColorHint="#000000"
                 android:drawSelectorOnTop="false">
-            </ListView>
+            </android.support.v7.widget.RecyclerView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <!--It is positioned below the content containers in order to have higher z-index-->

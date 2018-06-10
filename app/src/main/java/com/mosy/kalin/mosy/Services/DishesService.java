@@ -24,7 +24,7 @@ public class DishesService {
     private AccountService accountService = new AccountService();
 
     public void loadDishes(Context applicationContext,
-                           AsyncTaskListener<ArrayList<MenuListItem>> dishesResultsListener,
+                           AsyncTaskListener<ArrayList<MenuListItem>> apiCallResultListener,
                            int maxResultsCount,
                            int totalItemsOffset,
                            double latitude,
@@ -39,7 +39,7 @@ public class DishesService {
                            String localTime)
     {
         this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
-                dishesResultsListener::onPreExecute,
+                apiCallResultListener::onPreExecute,
                 () -> {
                     String authTokenHeader = this.accountService.getAuthTokenHeader(applicationContext);
                     SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(authTokenHeader,
@@ -50,11 +50,11 @@ public class DishesService {
 
                     try {
                         Call<ArrayList<MenuListItem>> callResult =  repository.loadDishes(authTokenHeader, model);
-                        dishesResultsListener.onPreExecute();
+                        apiCallResultListener.onPreExecute();
                         callResult.enqueue(new Callback<ArrayList<MenuListItem>>() {
                             @Override public void onResponse(@NonNull Call<ArrayList<MenuListItem>> call, @NonNull Response<ArrayList<MenuListItem>> response) {
                                 ArrayList<MenuListItem> dishes = response.body();
-                                dishesResultsListener.onPostExecute(dishes);
+                                apiCallResultListener.onPostExecute(dishes);
                             }
                             @Override public void onFailure(@NonNull Call<ArrayList<MenuListItem>> call, @NonNull Throwable t) {
                                 call.cancel();
@@ -68,19 +68,20 @@ public class DishesService {
     }
 
     public void getFilters(Context applicationContext,
-                            AsyncTaskListener<RequestableFiltersResult> filtersResultListener)
+                            AsyncTaskListener<RequestableFiltersResult> apiCallResultListener)
     {
         this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
-                filtersResultListener::onPreExecute,
-                () -> {
+                apiCallResultListener::onPreExecute,
+                        () -> {
                     String authTokenHeader = this.accountService.getAuthTokenHeader(applicationContext);
                     IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
                     try {
                         Call<RequestableFiltersResult> callFilters = repository.getFilters(authTokenHeader);
+                        apiCallResultListener.onPreExecute();
                         callFilters.enqueue(new Callback<RequestableFiltersResult>() {
                             @Override public void onResponse(@NonNull Call<RequestableFiltersResult> call, @NonNull Response<RequestableFiltersResult> response) {
                                 RequestableFiltersResult result = response.body();
-                                filtersResultListener.onPostExecute(result);
+                                apiCallResultListener.onPostExecute(result);
                             }
                             @Override public void onFailure(@NonNull Call<RequestableFiltersResult> call, @NonNull Throwable t) {
                                 call.cancel();

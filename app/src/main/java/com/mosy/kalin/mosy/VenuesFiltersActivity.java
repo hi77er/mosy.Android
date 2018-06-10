@@ -120,7 +120,7 @@ public class VenuesFiltersActivity
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        Intent intent = new Intent(VenuesFiltersActivity.this, VenuesActivity_.class);
+        Intent intent = new Intent(VenuesFiltersActivity.this, WallActivity_.class);
 
         selectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
         if (ConnectivityHelper.isConnected(applicationContext)) {
