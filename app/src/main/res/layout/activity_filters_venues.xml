@@ -8,7 +8,7 @@
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8">
+        android:layout_weight="6">
 
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,20 +18,20 @@
             android:padding="15dp">
 
             <!--<TextView-->
-                <!--android:id="@+id/filters_venues_tvRatingLabel"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="5dp"-->
-                <!--android:text="@string/filters_venues_title_venues_sbRating"-->
-                <!--android:textColor="@color/colorPrimaryVeryLight" />-->
+            <!--android:id="@+id/filters_venues_tvRatingLabel"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="5dp"-->
+            <!--android:text="@string/filters_venues_title_venues_sbRating"-->
+            <!--android:textColor="@color/colorPrimaryVeryLight" />-->
 
             <!--<android.support.v7.widget.AppCompatSeekBar-->
-                <!--android:id="@+id/filters_venues_sbRatingFilter"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="10dp"-->
-                <!--android:min="1"-->
-                <!--android:max="10"/>-->
+            <!--android:id="@+id/filters_venues_sbRatingFilter"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="10dp"-->
+            <!--android:min="1"-->
+            <!--android:max="10"/>-->
 
             <TextView
                 android:layout_width="match_parent"

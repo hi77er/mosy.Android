@@ -12,7 +12,7 @@
         android:id="@+id/menuListItem_ivThumbnail"
         android:layout_width="130dp"
         android:layout_height="130dp"
-        android:layout_marginEnd="5dp"
+        android:layout_margin="7dp"
         android:src="@drawable/eat_paprika_100x100" />
 
     <LinearLayout
@@ -104,9 +104,8 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="47dp"
                 android:paddingStart="3dp"
-                android:paddingBottom="3dp"
                 android:background="@color/colorPrimaryVeryLight">
 
                 <TextView
