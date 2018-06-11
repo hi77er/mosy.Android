@@ -10,6 +10,7 @@ public class SearchVenuesBindingModel {
     public int TotalItemsOffset;
     public Integer LocalDayOfWeek;
     public String LocalTime;
+    public int SearchedDistanceMeters;
 
 //    public boolean ApplyWorkingStatusFilter;
 
@@ -23,7 +24,8 @@ public class SearchVenuesBindingModel {
             double longitude,
             String query,
             Integer localDayOfWeek,
-            String localTime) {
+            String localTime,
+            int searchedDistanceMeters) {
 
         this.AuthTokenHeader = authTokenHeader;
         this.Latitude = latitude;
@@ -33,6 +35,7 @@ public class SearchVenuesBindingModel {
         this.TotalItemsOffset = totalItemsOffset;
         this.LocalDayOfWeek = localDayOfWeek;
         this.LocalTime = localTime;
+        this.SearchedDistanceMeters = searchedDistanceMeters;
 
 //        this.ApplyWorkingStatusFilter = applyWorkingStatusFilter;
     }
