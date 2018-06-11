@@ -2,12 +2,17 @@ package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 
@@ -22,13 +27,18 @@ import org.androidannotations.annotations.ViewById;
 public class VenuesFiltersActivity
         extends BaseActivity {
 
-
     private boolean afterViewsFinished = false;
     private boolean networkLost = false;
+    private int distanceFilterStep = 100;
+    private int distanceFilterMinValue = 100;
+    private int distanceFilterMaxValue = 10000;
     private boolean selectedApplyWorkingStatusFilter;
+    private int distanceFilterValue;
 
     @Extra
     static boolean PreselectedApplyWorkingStatusFilter;
+    @Extra
+    static int PreselectedDistanceFilterValue;
 
     @ViewById(resName = "filters_venues_sbWorkingTimeFilter")
     public Switch workingStatusFilter;
@@ -36,10 +46,10 @@ public class VenuesFiltersActivity
     public Button goButton;
 
 
-//    @ViewById(resName = "filters_venues_tvRatingLabel")
-//    public TextView ratingLabel;
-//    @ViewById(resName = "filters_venues_sbRatingFilter")
-//    public SeekBar ratingFilter;
+    @ViewById(resName = "filters_venues_tvDistanceLabel")
+    public TextView distanceLabel;
+    @ViewById(resName = "filters_venues_sbDistanceFilter")
+    public SeekBar distanceSeekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -52,6 +62,7 @@ public class VenuesFiltersActivity
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
     }
 
+    @SuppressLint("SetTextI18n")
     @AfterViews
     public void afterViews(){
         this.workingStatusFilter.setChecked(PreselectedApplyWorkingStatusFilter);
@@ -68,24 +79,33 @@ public class VenuesFiltersActivity
             showLoading();
         }
 
-        afterViewsFinished = true;
+        this.distanceLabel.setText(this.getDistanceFilterLabelText(PreselectedDistanceFilterValue));
+        this.distanceSeekBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
+        this.distanceSeekBar.getThumb().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            this.distanceSeekBar.setMin(distanceFilterMinValue);
+        }
+        this.distanceSeekBar.setMax(distanceFilterMaxValue);
+        this.distanceSeekBar.incrementProgressBy(distanceFilterStep);
+        this.distanceSeekBar.setProgress(PreselectedDistanceFilterValue);
+        this.distanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progress = formatProgressDivideBy100(progress);
+                if (progress > distanceFilterMaxValue) progress = distanceFilterMaxValue;
+                if (progress < distanceFilterMinValue) progress = distanceFilterMinValue;
+                distanceLabel.setText(getDistanceFilterLabelText(progress));
+            }
 
-//        this.ratingFilter.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
-//        this.ratingFilter.getThumb().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
-//        this.ratingFilter.setProgress(5);
-//        this.ratingFilter.setMax(10);
-//        this.ratingFilter.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                ratingLabel.setText("Rating: higher than " + String.valueOf(progress));
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) { }
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) { }
-//        });
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+
+        afterViewsFinished = true;
     }
+
 
     @Override
     protected void onStart(){
@@ -123,18 +143,15 @@ public class VenuesFiltersActivity
         Intent intent = new Intent(VenuesFiltersActivity.this, WallActivity_.class);
 
         selectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
+        distanceFilterValue = formatProgressDivideBy100(this.distanceSeekBar.getProgress());
+
         if (ConnectivityHelper.isConnected(applicationContext)) {
-            if (checkFiltersStateChanged(selectedApplyWorkingStatusFilter)) {
+            if (checkFiltersStateChanged(selectedApplyWorkingStatusFilter, distanceFilterValue)) {
                 intent.putExtra("ApplyWorkingStatusFilterToVenues", selectedApplyWorkingStatusFilter);
+                intent.putExtra("ApplyDistanceFilterToVenues", distanceFilterValue);
                 startActivity(intent);
             }
-            else{
-                // Do nothing. Simply close this activity.
-            }
-        }
-        else {
-            // Do nothing. Simply close this activity.
-        }
+        } // In both "else"s do nothing. Simply close this activity without passing any values or initiating a "start" of the Wall activity.
     }
 
     private void showLoading() {
@@ -145,8 +162,9 @@ public class VenuesFiltersActivity
         goButton.setVisibility(View.VISIBLE);
     }
 
-    private boolean checkFiltersStateChanged(boolean selectedApplyWorkingStatusFilter) {
-        boolean applyWorkingStatusChanged = selectedApplyWorkingStatusFilter != PreselectedApplyWorkingStatusFilter;
+    private boolean checkFiltersStateChanged(boolean selectedApplyWorkingStatusFilter, int distanceFilterValue) {
+        boolean applyWorkingStatusChanged = selectedApplyWorkingStatusFilter != PreselectedApplyWorkingStatusFilter
+                || distanceFilterValue != PreselectedDistanceFilterValue;
 
         return applyWorkingStatusChanged;
     }
@@ -156,6 +174,18 @@ public class VenuesFiltersActivity
         VenuesFiltersActivity.this.finish();
     }
 
+    @NonNull
+    private String getDistanceFilterLabelText(int distanceFilterProgress) {
+        return getResources().getString(R.string.activity_venuesFilters_distanceFilterTextView)
+                + " " + String.valueOf(distanceFilterProgress)
+                + " " + getString(R.string.activity_venuesFilters_distanceMeasureTypeTextView);
+    }
+
+    private int formatProgressDivideBy100(int progress) {
+        progress = progress / distanceFilterStep;
+        progress = progress * distanceFilterStep;
+        return  progress;
+    }
 
 //    @Override
 //    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

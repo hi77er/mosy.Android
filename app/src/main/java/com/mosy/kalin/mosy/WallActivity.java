@@ -101,6 +101,9 @@ public class WallActivity
     @Extra
     static boolean ApplyWorkingStatusFilterToVenues = true;
     @Extra
+    static int ApplyDistanceFilterToVenues = 1000;
+
+    @Extra
     static boolean ApplyWorkingStatusFilterToDishes = true;
     @Extra
     static ArrayList<String> SelectedPhaseFilterIds;
@@ -312,7 +315,7 @@ public class WallActivity
             this.venuesService.getVenues(
                     applicationContext, apiCallResultListener, this::showInvalidHostLayout, maxResultsCount, totalItemsOffset,
                     lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
-                    query, localDayOfWeek, localTime);
+                    query, localDayOfWeek, localTime, ApplyDistanceFilterToVenues);
         }
     }
 
@@ -593,6 +596,7 @@ public class WallActivity
         } else {
             Intent intent = new Intent(WallActivity.this, VenuesFiltersActivity_.class);
             intent.putExtra("PreselectedApplyWorkingStatusFilter", ApplyWorkingStatusFilterToVenues);
+            intent.putExtra("PreselectedDistanceFilterValue", ApplyDistanceFilterToVenues);
             startActivity(intent);
         }
     }
