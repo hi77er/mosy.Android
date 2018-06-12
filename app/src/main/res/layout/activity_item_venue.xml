@@ -81,7 +81,7 @@
                 android:paddingEnd="5dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                android:background="@color/colorPrimarySalmonLight"
+                android:background="@color/colorPrimaryVeryLight"
                 android:textColor="@color/colorPrimary"
                 android:drawableStart="@drawable/distance_paprika"
                 android:textStyle="bold"
