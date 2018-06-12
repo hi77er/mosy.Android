@@ -7,9 +7,11 @@
     <color name="colorPrimarySalmon">#EF6461</color>
     <color name="colorPrimaryApricot">#EB9373</color>
     <color name="colorPrimaryAmber">#FFC300</color>
-    <color name="colorPrimaryLight">#CF9893</color>
+    <color name="colorPrimaryDusty">#CF9893</color>
     <color name="colorPrimarySalmonLight">#FEC3BF</color>
+    <color name="colorPrimaryLight">#FFE4E4</color>
     <color name="colorPrimaryVeryLight">#FFEEEE</color>
+    <color name="colorPrimarySalmonLightTransparent">#66FEC3BF</color>
 
     <color name="colorAccent">#fc7878</color>
 
@@ -20,6 +22,7 @@
     <color name="colorSecondaryLight">#D5BF86</color>
     <color name="colorSecondary">#8D775F</color>
     <color name="colorRed">#f00</color>
+    <color name="colorWhiteTransparent">#33FFFFFF</color>
 
     <color name="colorTertiaryLight">#6B9080</color>
     <color name="colorTertiary">#00900F</color>

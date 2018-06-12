@@ -58,16 +58,15 @@ public class DishItemView
     TextView walkingTimeTextView;
     @ViewById(resName = "menuListItem_tvPriceTag")
     TextView priceTagTextVIew;
-    @ViewById(resName = "menuListItem_tvRatingTag")
-    TextView ratingTagTextView;
+//    @ViewById(resName = "menuListItem_tvRatingTag")
+//    TextView ratingTagTextView;
 
     public DishItemView(Context context) {
         super(context);
         this.baseContext = context;
     }
 
-    public void bind(MenuListItem menuListItem, int position, boolean isUsingDefaultThumbnail) {
-        this.IsUsingDefaultThumbnail = isUsingDefaultThumbnail;
+    public void bind(MenuListItem menuListItem, int position) {
         this.imageThumbnail.setImageDrawable(null);
 
         if (menuListItem != null) {

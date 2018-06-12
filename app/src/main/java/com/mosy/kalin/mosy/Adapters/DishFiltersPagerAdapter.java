@@ -22,12 +22,12 @@ public class DishFiltersPagerAdapter
     public ArrayList<DishFilter> AllergensFilters;
     private Context context;
 
-    public DishFiltersPagerAdapter(FragmentManager manager,
+    public DishFiltersPagerAdapter(Context context,
+                                   FragmentManager manager,
                                    ArrayList<DishFilter> phases,
                                    ArrayList<DishFilter> regions,
                                    ArrayList<DishFilter> spectrums,
-                                   ArrayList<DishFilter> allergens,
-                                   Context context) {
+                                   ArrayList<DishFilter> allergens) {
         super(manager);
         PhasesFilters = phases;
         RegionsFilters = regions;

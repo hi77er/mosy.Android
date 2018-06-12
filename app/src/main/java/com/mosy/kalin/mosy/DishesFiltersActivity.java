@@ -2,7 +2,10 @@ package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
@@ -10,7 +13,9 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.annimon.stream.Stream;
 import com.mosy.kalin.mosy.Adapters.DishFiltersPagerAdapter;
@@ -38,12 +43,19 @@ public class DishesFiltersActivity
 
     private boolean afterViewsFinished = false;
     private boolean networkLost = false;
+    private int distanceFilterStep = 100;
+    private int distanceFilterMinValue = 100;
+    private int distanceFilterMaxValue = 10000;
+    private int distanceFilterFormattedValue;
     private boolean selectedApplyWorkingStatusFilter;
+
     private DishFiltersPagerAdapter DFAdapter;
 
     @Bean
     DishesService dishesService;
 
+    @Extra
+    static int PreselectedDistanceFilterValue;
     @Extra
     static boolean PreselectedApplyWorkingStatusFilter;
     @Extra
@@ -67,10 +79,10 @@ public class DishesFiltersActivity
     @ViewById(resName = "filterDishes_GoButton")
     Button goButton;
 
-    //    @ViewById(resName = "filters_dishes_tvRatingLabel")
-//    public TextView ratingLabel;
-//    @ViewById(resName = "filters_dishes_sbRatingFilter")
-//    public SeekBar ratingFilter;
+    @ViewById(resName = "filters_dishes_tvDistanceLabel")
+    public TextView distanceLabel;
+    @ViewById(resName = "filters_dishes_sbDistanceFilter")
+    public SeekBar distanceSeekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -103,21 +115,28 @@ public class DishesFiltersActivity
 
         afterViewsFinished = true;
 
-//        this.ratingFilter.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
-//        this.ratingFilter.getThumb().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
-//        this.ratingFilter.setProgress(5);
-//        this.ratingFilter.setMax(10);
-//        this.ratingFilter.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                ratingLabel.setText("Rating: higher than " + String.valueOf(progress));
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) { }
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) { }
-//        });
+
+        this.distanceFilterFormattedValue = PreselectedDistanceFilterValue;
+        this.distanceLabel.setText(this.getDistanceFilterLabelText(PreselectedDistanceFilterValue));
+        this.distanceSeekBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
+        this.distanceSeekBar.getThumb().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            this.distanceSeekBar.setMin(distanceFilterMinValue);
+        }
+        this.distanceSeekBar.setMax(distanceFilterMaxValue);
+        this.distanceSeekBar.incrementProgressBy(distanceFilterStep);
+        this.distanceSeekBar.setProgress(PreselectedDistanceFilterValue);
+        this.distanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progress = formatProgressDivideBy100(progress);
+                if (progress > distanceFilterMaxValue) progress = distanceFilterMaxValue;
+                if (progress < distanceFilterMinValue) progress = distanceFilterMinValue;
+                distanceFilterFormattedValue = progress;
+                distanceLabel.setText(getDistanceFilterLabelText(progress));
+            }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
     }
 
     @Override
@@ -129,7 +148,6 @@ public class DishesFiltersActivity
         if (PreselectedRegionFilterIds == null) PreselectedRegionFilterIds = new ArrayList<>();
         if (PreselectedSpectrumFilterIds == null) PreselectedSpectrumFilterIds = new ArrayList<>();
         if (PreselectedAllergensFilterIds == null) PreselectedAllergensFilterIds = new ArrayList<>();
-
     }
 
     @Override
@@ -166,6 +184,7 @@ public class DishesFiltersActivity
             ArrayList<String> selectedSpectrumFilterIds = new ArrayList<>();
             ArrayList<String> selectedAllergensFilterIds = new ArrayList<>();
 
+//            distanceFilterFormattedValue = formatProgressDivideBy100(this.distanceSeekBar.getProgress());
             selectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
 
             if (DFAdapter != null && DFAdapter.PhasesFilters != null) {
@@ -197,14 +216,15 @@ public class DishesFiltersActivity
                         .toList());
             }
 
-            boolean filtersStateChanged = checkFiltersStateChanged(
-                    selectedApplyWorkingStatusFilter,
-                    selectedPhasesFilterIds,
-                    selectedRegionsFilterIds,
-                    selectedSpectrumFilterIds,
-                    selectedAllergensFilterIds);
+            boolean filtersStateChanged = checkFiltersStateChanged(distanceFilterFormattedValue,
+                                                                   selectedApplyWorkingStatusFilter,
+                                                                   selectedPhasesFilterIds,
+                                                                   selectedRegionsFilterIds,
+                                                                   selectedSpectrumFilterIds,
+                                                                   selectedAllergensFilterIds);
 
             if (filtersStateChanged) {
+                intent.putExtra("ApplyDistanceFilterToDishes", distanceFilterFormattedValue);
                 intent.putExtra("ApplyWorkingStatusFilterToDishes", selectedApplyWorkingStatusFilter);
                 intent.putExtra("SelectedPhaseFilterIds", selectedPhasesFilterIds);
                 intent.putExtra("SelectedRegionFilterIds", selectedRegionsFilterIds);
@@ -236,13 +256,12 @@ public class DishesFiltersActivity
                             result.CuisineSpectrumFilters,
                             result.CuisineAllergensFilters);
 
-                    DFAdapter = new DishFiltersPagerAdapter(
-                            getSupportFragmentManager(),
-                            result.CuisinePhaseFilters,
-                            result.CuisineRegionFilters,
-                            result.CuisineSpectrumFilters,
-                            result.CuisineAllergensFilters,
-                            applicationContext);
+                    DFAdapter = new DishFiltersPagerAdapter(applicationContext,
+                                                            getSupportFragmentManager(),
+                                                            result.CuisinePhaseFilters,
+                                                            result.CuisineRegionFilters,
+                                                            result.CuisineSpectrumFilters,
+                                                            result.CuisineAllergensFilters);
 
                     dishesFiltersPager.setAdapter(DFAdapter);
                     dishesFiltersTabs.setupWithViewPager(dishesFiltersPager);
@@ -293,20 +312,40 @@ public class DishesFiltersActivity
         });
     }
 
-    private boolean checkFiltersStateChanged(
-            boolean selectedApplyWorkingStatusFilter,
-            ArrayList<String> selectedPhasesFilterIds,
-            ArrayList<String> selectedRegionsFilterIds,
-            ArrayList<String> selectedSpectrumFilterIds,
-            ArrayList<String> selectedAllergensFilterIds) {
+    private boolean checkFiltersStateChanged(int distanceFilterValue,
+                                             boolean selectedApplyWorkingStatusFilter,
+                                             ArrayList<String> selectedPhasesFilterIds,
+                                             ArrayList<String> selectedRegionsFilterIds,
+                                             ArrayList<String> selectedSpectrumFilterIds,
+                                             ArrayList<String> selectedAllergensFilterIds) {
 
+        boolean searchedDistanceChanged = distanceFilterValue != PreselectedDistanceFilterValue;
         boolean applyWorkingStatusChanged = selectedApplyWorkingStatusFilter != PreselectedApplyWorkingStatusFilter;
         boolean phasesChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedPhaseFilterIds, selectedPhasesFilterIds);
         boolean regionsChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedRegionFilterIds, selectedRegionsFilterIds);
         boolean spectrumChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedSpectrumFilterIds, selectedSpectrumFilterIds);
         boolean allergensChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedAllergensFilterIds, selectedAllergensFilterIds);
 
-        return applyWorkingStatusChanged || phasesChanged || regionsChanged || spectrumChanged || allergensChanged;
+        return searchedDistanceChanged || applyWorkingStatusChanged || phasesChanged || regionsChanged || spectrumChanged || allergensChanged;
+    }
+
+    @NonNull
+    private String getDistanceFilterLabelText(int distanceFilterProgressMeters) {
+        double distanceText = distanceFilterProgressMeters;
+        String measurementTypeText = getString(R.string.activity_dishesFilters_distanceMeasureTypeMeters);
+        if (distanceText >= 1000) {
+            distanceText = distanceText / 1000;
+            measurementTypeText = getString(R.string.activity_dishesFilters_distanceMeasureTypeKillometers);
+        }
+        return getResources().getString(R.string.activity_dishesFilters_distanceFilterTextView)
+                + " " + String.valueOf(distanceText)
+                + " " + measurementTypeText;
+    }
+
+    private int formatProgressDivideBy100(int progress) {
+        progress = progress / distanceFilterStep;
+        progress = progress * distanceFilterStep;
+        return  progress;
     }
 
     @Click(R.id.filterDishes_GoButton)
