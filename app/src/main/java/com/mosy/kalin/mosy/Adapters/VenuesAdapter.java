@@ -23,11 +23,7 @@ import java.util.ArrayList;
 public class VenuesAdapter
         extends RecyclerViewAdapterBase<Venue, VenueItemView> {
 
-    private boolean IsUsingDefaultThumbnail = true;
-
-    public boolean LoadingStillInAction; // used to prevent searching while another async search hasn't been finished
     public boolean APICallStillReturnsElements = true;
-
     public SwipeRefreshLayout swipeContainer;
 
     @RootContext

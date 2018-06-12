@@ -24,11 +24,7 @@ import java.util.ArrayList;
 public class DishesAdapter
         extends RecyclerViewAdapterBase<MenuListItem, DishItemView> {
 
-    public boolean loadingStillInAction; // used to prevent searching while another async search hasn't been finished
     public boolean APICallStillReturnsElements = true;
-
-    private boolean IsUsingDefaultThumbnail = true;
-    private LruCache<String, Bitmap> mMemoryCache;
 
     @RootContext
     Activity activity;
@@ -65,7 +61,7 @@ public class DishesAdapter
         DishItemView view = viewHolder.getView();
         MenuListItem menuListItem = this.items.get(position);
 
-        view.bind(menuListItem, position, this.IsUsingDefaultThumbnail);
+        view.bind(menuListItem, position);
     }
 
     public void addItems(ArrayList<MenuListItem> items){

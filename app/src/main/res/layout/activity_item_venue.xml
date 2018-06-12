@@ -67,45 +67,49 @@
             android:layout_marginEnd="5dp"
             android:src="@drawable/venue_default_thumbnail" />
 
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/venueItem_tvDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingEnd="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="@color/colorPrimarySalmonLight"
+                android:textColor="@color/colorPrimary"
+                android:drawableStart="@drawable/distance_paprika"
+                android:textStyle="bold"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/venueItem_tvWalkingMinutes"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/colorPrimary"
+                android:drawableStart="@drawable/walkingtime_paprika"
+                android:textStyle="bold"
+                android:textSize="20sp"  />
+        </LinearLayout>
+
         <ImageView
             android:id="@+id/venueItem_ivMenu"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/menu_main_100x100" />
+            android:background="@drawable/button_venue_item_menu" />
 
         <ImageView
             android:id="@+id/venueItem_ivInfo"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/venue_info_100x100" />
-
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:orientation="vertical"
-            android:layout_width="100dp"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/venueItem_tvDistance"
-                android:layout_gravity="start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/distance_paprika"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:textColor="@color/colorPrimary" />
-
-            <TextView
-                android:id="@+id/venueItem_tvWalkingMinutes"
-                android:layout_gravity="start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/walkingtime_paprika"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:textColor="@color/colorPrimary"
-                android:visibility="gone" />
-        </LinearLayout>
+            android:background="@drawable/button_venue_item_info" />
 
     </LinearLayout>
 

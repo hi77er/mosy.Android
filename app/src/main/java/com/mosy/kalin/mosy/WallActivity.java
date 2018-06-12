@@ -37,6 +37,7 @@ import com.daasuu.bl.BubblePopupHelper;
 import com.mosy.kalin.mosy.Adapters.DishesAdapter;
 import com.mosy.kalin.mosy.CustomControls.Support.RecyclerViewItemsClickSupport;
 import com.mosy.kalin.mosy.Adapters.VenuesAdapter;
+import com.mosy.kalin.mosy.DTOs.Enums.ImageResolution;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
@@ -76,6 +77,8 @@ public class WallActivity
     private int itemsToLoadCountWhenScrolled = 5;
     private boolean afterViewsFinished = false;
     private boolean networkLost = false;
+    private boolean venuesLoadingStillInAction; // used to prevent searching while another async search hasn't been finished
+    private boolean dishesLoadingStillInAction; // used to prevent searching while another async search hasn't been finished
 
     private LruCache<String, Bitmap> mMemoryCache;
     private LocationResolver mLocationResolver;
@@ -233,10 +236,8 @@ public class WallActivity
         if (ConnectivityHelper.isConnected(applicationContext)) {
             RecyclerView.OnScrollListener venuesScrollListener = new RecyclerView.OnScrollListener() {
                 @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    if (ConnectivityHelper.isConnected(applicationContext) &&
-                            !venuesAdapter.LoadingStillInAction &&
-                            venuesAdapter.APICallStillReturnsElements) {
-                        venuesAdapter.LoadingStillInAction = true;
+                    if (!venuesLoadingStillInAction && ConnectivityHelper.isConnected(applicationContext) && venuesAdapter.APICallStillReturnsElements) {
+                        venuesLoadingStillInAction = true;
 
                         //INFO: WHILE SCROLLING LOAD
                         int totalItemsCount = recyclerView.getAdapter().getItemCount();
@@ -244,7 +245,8 @@ public class WallActivity
                     }
                 }
                 @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING)
+                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING ||
+                        newState == RecyclerView.SCROLL_STATE_SETTLING)
                         filtersButton.hide();
                     else
                         filtersButton.show();
@@ -263,7 +265,9 @@ public class WallActivity
 
             this.venuesAdapter.setSwipeRefreshLayout(venuesSwipeContainer);
             this.venuesAdapter.swipeContainer.setOnRefreshListener(() -> {
-                if (ConnectivityHelper.isConnected(applicationContext)) {
+                if (!venuesLoadingStillInAction && ConnectivityHelper.isConnected(applicationContext)) {
+                    venuesLoadingStillInAction = true;
+
                     refreshLastKnownLocation();
                     venuesAdapter.clearItems();
 
@@ -301,7 +305,7 @@ public class WallActivity
                             loadVenueItemOutdoorImage(venue);
 
                         venuesAdapter.APICallStillReturnsElements = result.size() >= itemsToLoadCountWhenScrolled;
-                        venuesAdapter.LoadingStillInAction = false;
+                        venuesLoadingStillInAction = false;
                     }
                 }
             };
@@ -343,7 +347,7 @@ public class WallActivity
             if (StringHelper.isNotNullOrEmpty(venue.OutdoorImage.Id)) {
                 venue.OutdoorImage.Bitmap = getBitmapFromMemCache(venue.OutdoorImage.Id);
                 if (venue.OutdoorImage.Bitmap == null)
-                    new AzureBlobService().downloadVenue100x100Thumbnail(venue.OutdoorImage.Id, outdoorImageResultListener);
+                    new AzureBlobService().downloadVenueThumbnail(venue.OutdoorImage.Id, ImageResolution.Format100x100, outdoorImageResultListener);
             }
         } //IN ALL 3 'ELSE'S DO NOTHING. The Item has already been set the default image
     }
@@ -353,9 +357,8 @@ public class WallActivity
         if (ConnectivityHelper.isConnected(applicationContext)) {
             RecyclerView.OnScrollListener dishesScrollListener = new RecyclerView.OnScrollListener() {
                 @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    if (ConnectivityHelper.isConnected(applicationContext) &&
-                        !dishesAdapter.loadingStillInAction && dishesAdapter.APICallStillReturnsElements) {
-                        dishesAdapter.loadingStillInAction = true;
+                    if (!dishesLoadingStillInAction && ConnectivityHelper.isConnected(applicationContext) && dishesAdapter.APICallStillReturnsElements) {
+                        dishesLoadingStillInAction = true;
 
                         //INFO: WHILE SCROLLING LOAD
                         int totalItemsCount = recyclerView.getAdapter().getItemCount();
@@ -364,7 +367,8 @@ public class WallActivity
                     }
                 }
                 @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING)
+                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING ||
+                        newState == RecyclerView.SCROLL_STATE_SETTLING)
                         filtersButton.hide();
                     else
                         filtersButton.show();
@@ -406,7 +410,7 @@ public class WallActivity
 
             this.dishesAdapter.setSwipeRefreshLayout(dishesSwipeContainer);
             this.dishesAdapter.swipeContainer.setOnRefreshListener(() -> {
-                if (ConnectivityHelper.isConnected(applicationContext)) {
+                if (!dishesLoadingStillInAction && ConnectivityHelper.isConnected(applicationContext)) {
                     refreshLastKnownLocation();
                     dishesAdapter.clearItems();
 
@@ -452,7 +456,7 @@ public class WallActivity
                             loadMenuListItemImageThumbnail(menuListItem);
 
                         dishesAdapter.APICallStillReturnsElements = result.size() >= itemsToLoadCountWhenScrolled;
-                        dishesAdapter.loadingStillInAction = false;
+                        dishesLoadingStillInAction = false;
                     }
                 }
             };
@@ -501,7 +505,7 @@ public class WallActivity
             if (StringHelper.isNotNullOrEmpty(menuListItem.ImageThumbnail.Id)) {
                 menuListItem.ImageThumbnail.Bitmap = getBitmapFromMemCache(menuListItem.ImageThumbnail.Id);
                 if (menuListItem.ImageThumbnail.Bitmap == null)
-                    new AzureBlobService().downloadMenuListItem100x100Thumbnail(menuListItem.ImageThumbnail.Id, mliImageResultListener);
+                    new AzureBlobService().downloadMenuListItemThumbnail(menuListItem.ImageThumbnail.Id, ImageResolution.Format200x200, mliImageResultListener);
             }
         } //IN ALL 3 'ELSE'S DO NOTHING. The Item has already been set the default image
     }

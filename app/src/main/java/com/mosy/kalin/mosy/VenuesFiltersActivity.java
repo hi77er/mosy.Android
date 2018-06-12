@@ -32,7 +32,7 @@ public class VenuesFiltersActivity
     private int distanceFilterStep = 100;
     private int distanceFilterMinValue = 100;
     private int distanceFilterMaxValue = 10000;
-    private int distanceFilterValue;
+    private int distanceFilterFormattedValue;
     private boolean selectedApplyWorkingStatusFilter;
 
     @Extra
@@ -78,6 +78,7 @@ public class VenuesFiltersActivity
             showLoading();
         }
 
+        this.distanceFilterFormattedValue = PreselectedDistanceFilterValue;
         this.distanceLabel.setText(this.getDistanceFilterLabelText(PreselectedDistanceFilterValue));
         this.distanceSeekBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
         this.distanceSeekBar.getThumb().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
@@ -92,6 +93,7 @@ public class VenuesFiltersActivity
                 progress = formatProgressDivideBy100(progress);
                 if (progress > distanceFilterMaxValue) progress = distanceFilterMaxValue;
                 if (progress < distanceFilterMinValue) progress = distanceFilterMinValue;
+                distanceFilterFormattedValue = progress;
                 distanceLabel.setText(getDistanceFilterLabelText(progress));
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) { }
@@ -137,12 +139,12 @@ public class VenuesFiltersActivity
         super.onDestroy();
         Intent intent = new Intent(VenuesFiltersActivity.this, WallActivity_.class);
 
-        distanceFilterValue = formatProgressDivideBy100(this.distanceSeekBar.getProgress());
+//        distanceFilterFormattedValue = formatProgressDivideBy100(this.distanceSeekBar.getProgress());
         selectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
 
         if (ConnectivityHelper.isConnected(applicationContext)) {
-            if (checkFiltersStateChanged(distanceFilterValue, selectedApplyWorkingStatusFilter)) {
-                intent.putExtra("ApplyDistanceFilterToVenues", distanceFilterValue);
+            if (checkFiltersStateChanged(distanceFilterFormattedValue, selectedApplyWorkingStatusFilter)) {
+                intent.putExtra("ApplyDistanceFilterToVenues", distanceFilterFormattedValue);
                 intent.putExtra("ApplyWorkingStatusFilterToVenues", selectedApplyWorkingStatusFilter);
                 startActivity(intent);
             }
@@ -170,10 +172,16 @@ public class VenuesFiltersActivity
     }
 
     @NonNull
-    private String getDistanceFilterLabelText(int distanceFilterProgress) {
+    private String getDistanceFilterLabelText(int distanceFilterProgressMeters) {
+        double distanceText = distanceFilterProgressMeters;
+        String measurementTypeText = getString(R.string.activity_venuesFilters_distanceMeasureTypeMeters);
+        if (distanceText >= 1000) {
+            distanceText = distanceText / 1000;
+            measurementTypeText = getString(R.string.activity_venuesFilters_distanceMeasureTypeKillometers);
+        }
         return getResources().getString(R.string.activity_venuesFilters_distanceFilterTextView)
-                + " " + String.valueOf(distanceFilterProgress)
-                + " " + getString(R.string.activity_venuesFilters_distanceMeasureTypeTextView);
+                + " " + String.valueOf(distanceText)
+                + " " + measurementTypeText;
     }
 
     private int formatProgressDivideBy100(int progress) {

@@ -46,7 +46,7 @@ public class DishesFiltersActivity
     private int distanceFilterStep = 100;
     private int distanceFilterMinValue = 100;
     private int distanceFilterMaxValue = 10000;
-    private int distanceFilterValue;
+    private int distanceFilterFormattedValue;
     private boolean selectedApplyWorkingStatusFilter;
 
     private DishFiltersPagerAdapter DFAdapter;
@@ -116,6 +116,7 @@ public class DishesFiltersActivity
         afterViewsFinished = true;
 
 
+        this.distanceFilterFormattedValue = PreselectedDistanceFilterValue;
         this.distanceLabel.setText(this.getDistanceFilterLabelText(PreselectedDistanceFilterValue));
         this.distanceSeekBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
         this.distanceSeekBar.getThumb().setColorFilter(getResources().getColor(R.color.colorPrimarySalmon), PorterDuff.Mode.SRC_IN);
@@ -130,6 +131,7 @@ public class DishesFiltersActivity
                 progress = formatProgressDivideBy100(progress);
                 if (progress > distanceFilterMaxValue) progress = distanceFilterMaxValue;
                 if (progress < distanceFilterMinValue) progress = distanceFilterMinValue;
+                distanceFilterFormattedValue = progress;
                 distanceLabel.setText(getDistanceFilterLabelText(progress));
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) { }
@@ -182,7 +184,7 @@ public class DishesFiltersActivity
             ArrayList<String> selectedSpectrumFilterIds = new ArrayList<>();
             ArrayList<String> selectedAllergensFilterIds = new ArrayList<>();
 
-            distanceFilterValue = formatProgressDivideBy100(this.distanceSeekBar.getProgress());
+//            distanceFilterFormattedValue = formatProgressDivideBy100(this.distanceSeekBar.getProgress());
             selectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
 
             if (DFAdapter != null && DFAdapter.PhasesFilters != null) {
@@ -214,7 +216,7 @@ public class DishesFiltersActivity
                         .toList());
             }
 
-            boolean filtersStateChanged = checkFiltersStateChanged(distanceFilterValue,
+            boolean filtersStateChanged = checkFiltersStateChanged(distanceFilterFormattedValue,
                                                                    selectedApplyWorkingStatusFilter,
                                                                    selectedPhasesFilterIds,
                                                                    selectedRegionsFilterIds,
@@ -222,7 +224,7 @@ public class DishesFiltersActivity
                                                                    selectedAllergensFilterIds);
 
             if (filtersStateChanged) {
-                intent.putExtra("ApplyDistanceFilterToDishes", distanceFilterValue);
+                intent.putExtra("ApplyDistanceFilterToDishes", distanceFilterFormattedValue);
                 intent.putExtra("ApplyWorkingStatusFilterToDishes", selectedApplyWorkingStatusFilter);
                 intent.putExtra("SelectedPhaseFilterIds", selectedPhasesFilterIds);
                 intent.putExtra("SelectedRegionFilterIds", selectedRegionsFilterIds);
@@ -328,10 +330,16 @@ public class DishesFiltersActivity
     }
 
     @NonNull
-    private String getDistanceFilterLabelText(int distanceFilterProgress) {
+    private String getDistanceFilterLabelText(int distanceFilterProgressMeters) {
+        double distanceText = distanceFilterProgressMeters;
+        String measurementTypeText = getString(R.string.activity_dishesFilters_distanceMeasureTypeMeters);
+        if (distanceText >= 1000) {
+            distanceText = distanceText / 1000;
+            measurementTypeText = getString(R.string.activity_dishesFilters_distanceMeasureTypeKillometers);
+        }
         return getResources().getString(R.string.activity_dishesFilters_distanceFilterTextView)
-                + " " + String.valueOf(distanceFilterProgress)
-                + " " + getString(R.string.activity_dishesFilters_distanceMeasureTypeTextView);
+                + " " + String.valueOf(distanceText)
+                + " " + measurementTypeText;
     }
 
     private int formatProgressDivideBy100(int progress) {

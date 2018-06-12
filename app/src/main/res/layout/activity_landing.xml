@@ -39,7 +39,7 @@
             android:drawableTop="@drawable/eat_paprika_100x100"
             android:text="@string/activity_landing_dishesBtn"
             android:textSize="20sp"
-            android:background="@color/colorPrimaryVeryLight"
+            android:background="@drawable/button_landing_dishes"
             android:textColor="@color/colorPrimary"
             android:stateListAnimator="@null" />
 
@@ -54,7 +54,7 @@
             android:drawableTop="@drawable/venue_default_thumbnail_100x100"
             android:text="@string/activity_landing_venuesBtn"
             android:textSize="20sp"
-            android:background="@color/colorPrimaryVeryLight"
+            android:background="@drawable/button_landing_dishes"
             android:textColor="@color/colorPrimary"
             android:stateListAnimator="@null" />
     </LinearLayout>
@@ -96,7 +96,7 @@
         android:id="@+id/landing_spLanguage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryVeryLight"
+        android:background="@drawable/button_landing_dishes"
         android:layout_alignParentBottom="true" />
     
 </RelativeLayout>

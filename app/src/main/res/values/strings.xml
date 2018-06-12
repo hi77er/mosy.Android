@@ -140,9 +140,11 @@
     <string name="activity_landing_noInternetMessageTextView">No internet! Please check your network settings or try again later.</string>
     <string name="activity_venues_noInternetTextView">No internet!</string>
     <string name="activity_venuesFilters_distanceFilterTextView">Search distance:</string>
-    <string name="activity_venuesFilters_distanceMeasureTypeTextView">m</string>
+    <string name="activity_venuesFilters_distanceMeasureTypeMeters">m</string>
     <string name="activity_dishesFilters_distanceFilterTextView">Search distance:</string>
-    <string name="activity_dishesFilters_distanceMeasureTypeTextView">m</string>
+    <string name="activity_dishesFilters_distanceMeasureTypeMeters">m</string>
+    <string name="activity_venuesFilters_distanceMeasureTypeKillometers">km</string>
+    <string name="activity_dishesFilters_distanceMeasureTypeKillometers">km</string>
 
 
 </resources>
