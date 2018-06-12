@@ -139,8 +139,10 @@
     <string name="activity_dishesFilters_allergensFiltersNote">* Selected Allergens will reduce the appearance priority of dishes associated to them.</string>
     <string name="activity_landing_noInternetMessageTextView">No internet! Please check your network settings or try again later.</string>
     <string name="activity_venues_noInternetTextView">No internet!</string>
-    <string name="activity_venuesFilters_distanceFilterTextView">Search distance (meters):</string>
-    <string name="activity_venuesFilters_distanceMeasureTypeTextView">meters</string>
+    <string name="activity_venuesFilters_distanceFilterTextView">Search distance:</string>
+    <string name="activity_venuesFilters_distanceMeasureTypeTextView">m</string>
+    <string name="activity_dishesFilters_distanceFilterTextView">Search distance:</string>
+    <string name="activity_dishesFilters_distanceMeasureTypeTextView">m</string>
 
 
 </resources>

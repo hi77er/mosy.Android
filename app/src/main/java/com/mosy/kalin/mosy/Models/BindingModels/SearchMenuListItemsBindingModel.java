@@ -18,6 +18,7 @@ public class SearchMenuListItemsBindingModel {
     public List<String> CuisineAllergensIds;
     public Integer LocalDayOfWeek;
     public String LocalTime;
+    public int SearchedDistanceMeters;
 
     public SearchMenuListItemsBindingModel() { }
     public SearchMenuListItemsBindingModel(
@@ -33,7 +34,8 @@ public class SearchMenuListItemsBindingModel {
             ArrayList<String> spectrumFilterIds,
             ArrayList<String> allergensFilterIds,
             Integer localDayOfWeek,
-            String localTime)
+            String localTime,
+            int searchedDistanceMeters)
     {
         this.AuthTokenHeader = authTokenHeader;
         this.MaxResultsCount = maxResultsCount;
@@ -48,6 +50,7 @@ public class SearchMenuListItemsBindingModel {
         this.CuisineAllergensIds = allergensFilterIds;
         this.LocalDayOfWeek = localDayOfWeek;
         this.LocalTime= localTime;
+        this.SearchedDistanceMeters = searchedDistanceMeters;
     }
 
 }

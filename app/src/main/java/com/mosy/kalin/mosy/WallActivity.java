@@ -102,6 +102,8 @@ public class WallActivity
     static boolean ApplyWorkingStatusFilterToVenues = true;
     @Extra
     static int ApplyDistanceFilterToVenues = 1000;
+    @Extra
+    static int ApplyDistanceFilterToDishes = 1000;
 
     @Extra
     static boolean ApplyWorkingStatusFilterToDishes = true;
@@ -470,7 +472,7 @@ public class WallActivity
                     lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
                     isPromoted, query,
                     phaseFilterIds, regionFilterIds, spectrumFilterIds, allergensFilterIds,
-                    localDayOfWeek, localTime);
+                    localDayOfWeek, localTime, ApplyDistanceFilterToDishes);
         }
         else {
             Toast.makeText(applicationContext, R.string.activity_venues_locationNotResolvedToast, Toast.LENGTH_LONG).show();
@@ -587,6 +589,7 @@ public class WallActivity
     void openFilters() {
         if (DishesSearchModeActivated) {
             Intent intent = new Intent(WallActivity.this, DishesFiltersActivity_.class);
+            intent.putExtra("PreselectedDistanceFilterValue", ApplyDistanceFilterToDishes);
             intent.putExtra("PreselectedPhaseFilterIds", SelectedPhaseFilterIds);
             intent.putExtra("PreselectedRegionFilterIds", SelectedRegionFilterIds);
             intent.putExtra("PreselectedSpectrumFilterIds", SelectedSpectrumFilterIds);
@@ -595,8 +598,8 @@ public class WallActivity
             startActivity(intent);
         } else {
             Intent intent = new Intent(WallActivity.this, VenuesFiltersActivity_.class);
-            intent.putExtra("PreselectedApplyWorkingStatusFilter", ApplyWorkingStatusFilterToVenues);
             intent.putExtra("PreselectedDistanceFilterValue", ApplyDistanceFilterToVenues);
+            intent.putExtra("PreselectedApplyWorkingStatusFilter", ApplyWorkingStatusFilterToVenues);
             startActivity(intent);
         }
     }

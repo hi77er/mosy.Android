@@ -32,8 +32,8 @@ public class VenuesFiltersActivity
     private int distanceFilterStep = 100;
     private int distanceFilterMinValue = 100;
     private int distanceFilterMaxValue = 10000;
-    private boolean selectedApplyWorkingStatusFilter;
     private int distanceFilterValue;
+    private boolean selectedApplyWorkingStatusFilter;
 
     @Extra
     static boolean PreselectedApplyWorkingStatusFilter;
@@ -44,7 +44,6 @@ public class VenuesFiltersActivity
     public Switch workingStatusFilter;
     @ViewById(resName = "filterVenues_GoButton")
     public Button goButton;
-
 
     @ViewById(resName = "filters_venues_tvDistanceLabel")
     public TextView distanceLabel;
@@ -89,18 +88,14 @@ public class VenuesFiltersActivity
         this.distanceSeekBar.incrementProgressBy(distanceFilterStep);
         this.distanceSeekBar.setProgress(PreselectedDistanceFilterValue);
         this.distanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 progress = formatProgressDivideBy100(progress);
                 if (progress > distanceFilterMaxValue) progress = distanceFilterMaxValue;
                 if (progress < distanceFilterMinValue) progress = distanceFilterMinValue;
                 distanceLabel.setText(getDistanceFilterLabelText(progress));
             }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) { }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override public void onStopTrackingTouch(SeekBar seekBar) { }
         });
 
         afterViewsFinished = true;
@@ -142,13 +137,13 @@ public class VenuesFiltersActivity
         super.onDestroy();
         Intent intent = new Intent(VenuesFiltersActivity.this, WallActivity_.class);
 
-        selectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
         distanceFilterValue = formatProgressDivideBy100(this.distanceSeekBar.getProgress());
+        selectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
 
         if (ConnectivityHelper.isConnected(applicationContext)) {
-            if (checkFiltersStateChanged(selectedApplyWorkingStatusFilter, distanceFilterValue)) {
-                intent.putExtra("ApplyWorkingStatusFilterToVenues", selectedApplyWorkingStatusFilter);
+            if (checkFiltersStateChanged(distanceFilterValue, selectedApplyWorkingStatusFilter)) {
                 intent.putExtra("ApplyDistanceFilterToVenues", distanceFilterValue);
+                intent.putExtra("ApplyWorkingStatusFilterToVenues", selectedApplyWorkingStatusFilter);
                 startActivity(intent);
             }
         } // In both "else"s do nothing. Simply close this activity without passing any values or initiating a "start" of the Wall activity.
@@ -162,7 +157,7 @@ public class VenuesFiltersActivity
         goButton.setVisibility(View.VISIBLE);
     }
 
-    private boolean checkFiltersStateChanged(boolean selectedApplyWorkingStatusFilter, int distanceFilterValue) {
+    private boolean checkFiltersStateChanged(int distanceFilterValue, boolean selectedApplyWorkingStatusFilter) {
         boolean applyWorkingStatusChanged = selectedApplyWorkingStatusFilter != PreselectedApplyWorkingStatusFilter
                 || distanceFilterValue != PreselectedDistanceFilterValue;
 
