@@ -63,7 +63,7 @@
     <string name="activity_venueDetails_saturdayHoursTextView">"Sat"</string>
     <string name="activity_venueDetails_sundayHoursTextView">"Sun"</string>
     <string name="activity_venueDetails_freeWiFiTooltip">"Free WiFi available"</string>
-    <string name="activity_venueDetails_quietPlaceTooltip">"Working friendly atmosphere. Quiet place. Electricity hubs available."</string>
+    <string name="activity_venueDetails_quietPlaceTooltip">Friendly working atmosphere. Quiet place. Electricity hubs available.</string>
     <string name="activity_venueDetails_bikeFriendlyTooltip">"Reachable by bike. Secure bicycle parking in short distance."</string>
     <string name="activity_venueDetails_childrenFriendlyTooltip">"Kid's corner available. Baby highchairs available."</string>
     <string name="activity_venueDetails_funPlaceTooltip"><![CDATA[Club music. Gaming club. Fun place.]]></string>

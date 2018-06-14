@@ -61,6 +61,12 @@ public class MenuListItem
     @SerializedName("CusineAllergens")
     public ArrayList<DishFilter> CuisineAllergens;
 
+    @SerializedName("MatchingFiltersIds")
+    public ArrayList<String> MatchingFiltersIds;
+
+    @SerializedName("MismatchingFiltersIds")
+    public ArrayList<String> MismatchingFiltersIds;
+
 @SuppressWarnings("unchecked")
     protected MenuListItem(Parcel in) {
         String[] data = new String[8];

@@ -102,4 +102,12 @@
     <string name="activity_dishesFilters_ingredientsFiltersTitle">Основен продукт</string>
     <string name="activity_dishesFilters_allergensFiltersTitle">Алергени</string>
     <string name="activity_dishesFilters_allergensFiltersNote">* Избраните Алергени ще направят асоциираните с тях ястия по-малко приоритетни за показване</string>
+    <string name="activity_landing_noInternetMessageTextView">Няма интернет! Моля проверете Вашите настройки или опитайте по-късно.</string>
+    <string name="activity_venues_noInternetTextView">Няма интернет!</string>
+    <string name="activity_venuesFilters_distanceFilterTextView">Дистанция на търсенето:</string>
+    <string name="activity_venuesFilters_distanceMeasureTypeMeters">м</string>
+    <string name="activity_dishesFilters_distanceFilterTextView">Дистанция на търсенето:</string>
+    <string name="activity_dishesFilters_distanceMeasureTypeMeters">м</string>
+    <string name="activity_venuesFilters_distanceMeasureTypeKillometers">км</string>
+    <string name="activity_dishesFilters_distanceMeasureTypeKillometers">км</string>
 </resources>

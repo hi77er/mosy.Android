@@ -39,7 +39,7 @@
     <string name="activity_venueDetails_fridayHoursTextView">Пт</string>
     <string name="activity_venueDetails_saturdayHoursTextView">Суб</string>
     <string name="activity_venueDetails_sundayHoursTextView">Вос</string>
-    <string name="activity_venues_locationNotResolvedToast">Местонахождение не было получено …</string>
+    <string name="activity_venues_locationNotResolvedToast">Местонахождение не было найдено …</string>
     <string name="activity_venueDetails_freeWiFiTooltip">Бесплатный WiFi</string>
     <string name="activity_venueDetails_quietPlaceTooltip">Дружеская рабочая атмосфера. Тихое место. Доступные разетки.</string>
     <string name="activity_venueDetails_bikeFriendlyTooltip">Благоустроено для велосипедистов. Надежные стоянки для велосипедов по близости.</string>
@@ -68,8 +68,8 @@
     <string name="CuisineSpectrumFishAndSeafood"><![CDATA[Рыба & морепродукты]]></string>
     <string name="CuisineRegionAmerican">Американская кухня</string>
     <string name="CuisineSpectrumWhiteMeat">Белое мясо</string>
-    <string name="CuisineSpectrumVegan">Веганский</string>
-    <string name="CuisineSpectrumGlutenFree">Без глютен</string>
+    <string name="CuisineSpectrumVegan">Веган</string>
+    <string name="CuisineSpectrumGlutenFree">Без глютенa</string>
     <string name="CuisineSpectrumRedMeat">Красное мясо</string>
     <string name="CuisineSpectrumRawVegan">Сыроедение</string>
     <string name="CuisineSpectrumVegetarian">Вегетарианский</string>
@@ -101,5 +101,13 @@
     <string name="activity_dishesFilters_regionFiltersTitle">Регион</string>
     <string name="activity_dishesFilters_ingredientsFiltersTitle">Ингредиенты</string>
     <string name="activity_dishesFilters_allergensFiltersTitle">Аллергены</string>
-    <string name="activity_dishesFilters_allergensFiltersNote">*Выбранные аллергены сделают блюда, связанные с ними менее приоритетными для отображения.</string>
+    <string name="activity_dishesFilters_allergensFiltersNote">*Выбранные аллергены сделают блюда, содержащие их, менее приоритетными для отображения.</string>
+    <string name="activity_landing_noInternetMessageTextView">Нет интернета! Проверьте настройки сети или повторите попытку позже.</string>
+    <string name="activity_venues_noInternetTextView">Нет интернета!</string>
+    <string name="activity_venuesFilters_distanceFilterTextView">Расстояние поиска:</string>
+    <string name="activity_venuesFilters_distanceMeasureTypeMeters">м</string>
+    <string name="activity_dishesFilters_distanceMeasureTypeMeters">м</string>
+    <string name="activity_venuesFilters_distanceMeasureTypeKillometers">км</string>
+    <string name="activity_dishesFilters_distanceMeasureTypeKillometers">км</string>
+    <string name="activity_dishesFilters_distanceFilterTextView">Расстояние поиска:</string>
 </resources>
