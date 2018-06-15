@@ -3,6 +3,8 @@ package com.mosy.kalin.mosy.Services;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
+import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IAccountRepository;
 import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
 import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
@@ -19,6 +21,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 @EBean
 public class AccountService {
@@ -33,28 +39,33 @@ public class AccountService {
         boolean tokenExistsAndIsValid = this.checkTokenValid(applicationContext);
 
         if (!tokenExistsAndIsValid) {
-            AsyncTaskListener<TokenResult> listener = new AsyncTaskListener<TokenResult>() {
-                @Override public void onPreExecute() {
-                    //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
-                    if (preExecute != null)
-                        preExecute.run();
-                }
-                @Override public void onPostExecute(final TokenResult result) {
-                    if (result == null) throw new NullPointerException("Must have Authentication Token response");
+            IAccountRepository accountRepo = RetrofitAPIClientFactory.getClient().create(IAccountRepository.class);
+            Call<TokenResult> call = accountRepo.tokenLogin(model.Email, model.Password, "password");
 
-                    if (result.Status == TokenResultStatus.InvalidHostName){
+            if (preExecute != null) preExecute.run();
+
+            call.enqueue(new Callback<TokenResult>() {
+                @Override public void onResponse(Call<TokenResult> call, Response<TokenResult> response) {
+                    if (response.code() == 400){
                         if (onInvalidHost != null)
                             onInvalidHost.run();
                     }
-                    else if (result.Status == TokenResultStatus.Success) {
-                        refreshWebApiAuthTokenSettings(applicationContext, result.AccessToken, result.TokenType, result.IssuedAt, result.ExpiresIn);
+                    else {
+                        TokenResult result = response.body();
+                        if (result == null) throw new NullPointerException("Must have Authentication Token response");
 
-                        if (onSuccess != null)
-                            onSuccess.run();
+                        if (!StringHelper.isNullOrEmpty(result.AccessToken) && !StringHelper.isNullOrEmpty(result.AccessToken)){
+                            refreshWebApiAuthTokenSettings(applicationContext, result.AccessToken, result.TokenType, result.IssuedAt, result.ExpiresIn);
+
+                            if (onSuccess != null)
+                                onSuccess.run();
+                        }
                     }
                 }
-            };
-            new AccountTokenLoginAsyncTask(listener).execute(model);
+                @Override public void onFailure(Call<TokenResult> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
 
             SharedPreferences.Editor editor = mPreferences.edit();
             editor.apply();

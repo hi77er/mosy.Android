@@ -99,6 +99,7 @@ public class LandingActivity
     public void onDestroy(){
         super.onDestroy();
     }
+
     private void ensureHasAuthenticationToken() {
 
         this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
