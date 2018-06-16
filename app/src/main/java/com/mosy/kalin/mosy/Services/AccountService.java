@@ -6,10 +6,12 @@ import android.content.SharedPreferences;
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IAccountRepository;
 import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
+import com.mosy.kalin.mosy.DTOs.Results.RegisterResult;
 import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
+import com.mosy.kalin.mosy.Models.BindingModels.RegisterBindingModel;
 import com.mosy.kalin.mosy.R;
 import com.mosy.kalin.mosy.Services.AsyncTasks.AccountTokenLoginAsyncTask;
 
@@ -120,4 +122,35 @@ public class AccountService {
         String type = mPreferences.getString(applicationContext.getString(R.string.pref_authTokenType_webApi), StringHelper.empty());
         return type + " " + token;
     }
+
+    public void register(Context applicationContext,
+                                   String Email,
+                                   String Password,
+                                   String ConfirmPassword,
+                                   AsyncTaskListener<RegisterResult> apiCallResultListener,
+                                   Runnable onInvalidHost)
+    {
+        RegisterBindingModel model = new RegisterBindingModel(Email, Password, ConfirmPassword);
+        IAccountRepository repository = RetrofitAPIClientFactory.getClient().create(IAccountRepository.class);
+        Call<RegisterResult> callRegResult = repository.register(model);
+
+        callRegResult.enqueue(new Callback<RegisterResult>() {
+            @Override
+            public void onResponse(Call<RegisterResult> call, Response<RegisterResult> response) {
+                if(response.code() == 400)
+                    if(onInvalidHost != null)
+                        onInvalidHost.run();
+                RegisterResult result = response.body();
+                if(result != null && result.isSuccessful() && apiCallResultListener != null)
+                    apiCallResultListener.onPostExecute(result);
+            }
+
+            @Override
+            public void onFailure(Call<RegisterResult> call, Throwable t) {
+                call.cancel();
+            }
+        });
+
+    }
+
 }

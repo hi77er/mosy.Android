@@ -3,6 +3,7 @@ package com.mosy.kalin.mosy.DAL.Repositories.Interfaces;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Results.RegisterResult;
 import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
+import com.mosy.kalin.mosy.Models.BindingModels.RegisterBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
 import com.mosy.kalin.mosy.Models.Responses.RequestableFiltersResult;
 
@@ -17,9 +18,9 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 public interface IAccountRepository {
-//
-//    @POST("account/register")
-//    Call<RegisterResult> register(@Header("Authorization") String authorization, @Body SearchMenuListItemsBindingModel model);
+//    @Header("Authorization") String authorization,
+    @POST("account/register")
+    Call<RegisterResult> register(@Body RegisterBindingModel model);
 
     @FormUrlEncoded
     @POST("http://mosyws.azurewebsites.net/token")
