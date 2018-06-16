@@ -10,7 +10,6 @@ import com.mosy.kalin.mosy.Models.BindingModels.RegisterBindingModel;
 
 public class AccountRepository {
 
-    private static final String registerEndpointEnding = "account/register";
 
     public TokenResult tokenLogin(LoginBindingModel model) {
         String tokenEndpoint = ServiceEndpointFactory.apiTokenEndpoint;
@@ -24,18 +23,4 @@ public class AccountRepository {
         return tokenResult;
     }
 
-    public RegisterResult register(RegisterBindingModel model) {
-        String registerEndpoint = new ServiceEndpointFactory().constructMosyWebAPIDevEndpoint(registerEndpointEnding);
-        JSONHttpClient jsonHttpClient = new JSONHttpClient();
-
-        try {
-            String result = jsonHttpClient.PostObject(registerEndpoint, model, String.class, StringHelper.empty(), StringHelper.empty());
-            return new RegisterResult(true, result);
-        }
-        catch(Exception e)
-        {
-            return new RegisterResult(false, e.getMessage());
-        }
     }
-
-}
