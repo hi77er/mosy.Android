@@ -9,12 +9,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
-import com.mosy.kalin.mosy.DAL.Http.Results.TokenResult;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
-import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
-import com.mosy.kalin.mosy.Services.AsyncTasks.AccountTokenLoginAsyncTask;
+import com.mosy.kalin.mosy.Services.AccountService;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -72,28 +69,12 @@ public class LoginActivity
 
         if (!StringHelper.isNullOrWhitespace(email) && !StringHelper.isNullOrWhitespace(password)) {
             if (StringHelper.isEmailAddress(email)) {
-                try {
-                    AsyncTaskListener<TokenResult> listener = new AsyncTaskListener<TokenResult>() {
-                        @Override
-                        public void onPreExecute() {
-                            //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
-                        }
 
-                        @Override
-                        public void onPostExecute(final TokenResult result) {
-                            //TODO: Handle the case when no Internet connection
-                            //TODO: Handle the case when Server does not respond
-                            populateAuthenticationResult(result);
-                        }
-                    };
-                    LoginBindingModel model = new LoginBindingModel(email, password);
-                    new AccountTokenLoginAsyncTask(listener).execute(model);
-
-                    Intent intent = new Intent(LoginActivity.this, WallActivity_.class);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                LoginBindingModel model = new LoginBindingModel(email, password);
+                new AccountService().executeAssuredUserTokenValidOrRefreshed(
+                        this.applicationContext, model, null,
+                        this::userAuthenticationSucceeded,
+                        this::showInvalidHostMessage);
             } else
                 Toast.makeText(applicationContext,
                         "Invalid Email address.",
@@ -111,15 +92,18 @@ public class LoginActivity
         startActivity(intent);
     }
 
+    private void userAuthenticationSucceeded() {
+        Toast.makeText(this, "Login successful.", Toast.LENGTH_SHORT).show();
 
-    private void populateAuthenticationResult(TokenResult result) {
-        if (result.Status == TokenResultStatus.Fail ||
-                result.Status  == TokenResultStatus.Unknown ||
-                result.Status  == TokenResultStatus.InvalidHostName)
-            Toast.makeText(this, "Please try later. We are currently experiencing some troubles to connect you.", Toast.LENGTH_SHORT).show();
-        else if (result.Status  == TokenResultStatus.Unauthorized)
-            Toast.makeText(this, "Wrong username or password.", Toast.LENGTH_SHORT).show();
-        else if (result.Status  == TokenResultStatus.Success)
-            Toast.makeText(this, "Login successful.", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(LoginActivity.this, WallActivity_.class);
+        startActivity(intent);
+    }
+
+    private void userAuthenticationFailed() {
+        Toast.makeText(this, "Wrong username or password.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void showInvalidHostMessage() {
+        Toast.makeText(this, "Wrong username or password.", Toast.LENGTH_SHORT).show();
     }
 }

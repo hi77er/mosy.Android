@@ -101,8 +101,7 @@ public class LandingActivity
     }
 
     private void ensureHasAuthenticationToken() {
-
-        this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
             this::showLoading,
             this::showButtonsLayout,
             this::showInvalidHostLayout);

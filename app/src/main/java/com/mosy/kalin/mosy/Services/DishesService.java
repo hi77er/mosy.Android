@@ -39,10 +39,10 @@ public class DishesService {
                            String localTime,
                            int searchedDistanceMeters)
     {
-        this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
                 () -> {
-                    String authTokenHeader = this.accountService.getAuthTokenHeader(applicationContext);
+                    String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(authTokenHeader,
                             maxResultsCount, totalItemsOffset, latitude, longitude, isPromoted, query, phaseFilterIds,
                             regionFilterIds, spectrumFilterIds, allergensFilterIds, localDayOfWeek, localTime, searchedDistanceMeters);
@@ -71,10 +71,10 @@ public class DishesService {
     public void getFilters(Context applicationContext,
                             AsyncTaskListener<RequestableFiltersResult> apiCallResultListener)
     {
-        this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
                         () -> {
-                    String authTokenHeader = this.accountService.getAuthTokenHeader(applicationContext);
+                    String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
                     try {
                         Call<RequestableFiltersResult> callFilters = repository.getFilters(authTokenHeader);
