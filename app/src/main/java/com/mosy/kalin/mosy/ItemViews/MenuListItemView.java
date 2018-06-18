@@ -1,7 +1,6 @@
-package com.mosy.kalin.mosy.Views;
+package com.mosy.kalin.mosy.ItemViews;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 

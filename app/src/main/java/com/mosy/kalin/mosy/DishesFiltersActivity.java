@@ -335,7 +335,7 @@ public class DishesFiltersActivity
         String measurementTypeText = getString(R.string.activity_dishesFilters_distanceMeasureTypeMeters);
         if (distanceText >= 1000) {
             distanceText = distanceText / 1000;
-            measurementTypeText = getString(R.string.activity_dishesFilters_distanceMeasureTypeKillometers);
+            measurementTypeText = getString(R.string.activity_dishesFilters_distanceMeasureTypeKilometers);
         }
         return getResources().getString(R.string.activity_dishesFilters_distanceFilterTextView)
                 + " " + String.valueOf(distanceText)

@@ -1,4 +1,4 @@
-package com.mosy.kalin.mosy.DTOs.Results;
+package com.mosy.kalin.mosy.DAL.Http.Results;
 
 import com.google.gson.annotations.SerializedName;
 import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;

@@ -1,16 +1,14 @@
-package com.mosy.kalin.mosy.Views;
+package com.mosy.kalin.mosy.ItemViews;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mosy.kalin.mosy.DTOs.Venue;
@@ -30,7 +28,7 @@ import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
 @EViewGroup(R.layout.activity_item_venue)
-public class VenueItemView
+public class VenueWallItemView
         extends LinearLayout {
 
     private static final String originalBlobStorageContainerPath = "userimages\\fboalbums\\original";
@@ -53,7 +51,7 @@ public class VenueItemView
     @ViewById(resName = "venueItem_ivOutdoorThumbnail")
     ImageView OutdoorImageThumbnail;
 
-    public VenueItemView(Context context) {
+    public VenueWallItemView(Context context) {
         super(context);
         this.baseContext = context;
     }

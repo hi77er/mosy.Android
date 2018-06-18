@@ -1,4 +1,4 @@
-package com.mosy.kalin.mosy.DTOs.Results;
+package com.mosy.kalin.mosy.DAL.Http.Results;
 
 import android.os.Parcel;
 

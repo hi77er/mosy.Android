@@ -26,6 +26,7 @@
     <string name="activity_landing_languageElSpinner">Greek</string>
     <string name="activity_landing_languageRuSpinner">Russian</string>
     <string name="activity_landing_languageEsSpinner">Spanish</string>
+    <string name="activity_landing_noInternetMessageTextView">No internet! Please check your network settings or try again later.</string>
 
     <!-- Activity Login -->
     <string name="activity_login_titleTextView">"Login to"</string>
@@ -48,11 +49,13 @@
     <string name="menu_btnNavigateToDishesText">"Dishes"</string>
 
     <!-- Activity Venues -->
-    <string name="activity_venues_searchVenuesHint">"Search venues …"</string>
-    <string name="activity_venues_searchDishesHint">"Search dishes …"</string>
-    <string name="activity_venues_filtersSettingsTextView">"Filters Settings"</string>
-    <string name="activity_venues_swipeDownToRefreshMessageTextView">SWIPE DOWN TO REFRESH</string>
-    <string name="activity_venues_locationNotResolvedToast">Location was not resolved …</string>
+    <string name="activity_wall_searchVenuesHint">"Search venues …"</string>
+    <string name="activity_wall_searchDishesHint">"Search dishes …"</string>
+    <string name="activity_wall_filtersSettingsTextView">"Filters Settings"</string>
+    <string name="activity_wall_swipeDownToRefreshMessageTextView">SWIPE DOWN TO REFRESH</string>
+    <string name="activity_wall_locationNotResolvedToast">Location was not resolved …</string>
+    <string name="activity_wall_missingFiltersInfoLabel">missing:</string>
+    <string name="activity_wall_noInternetTextView">No internet!</string>
 
     <!-- Activity Venue Details -->
     <string name="activity_venueDetails_mondayHoursTextView">"Mon"</string>
@@ -85,10 +88,22 @@
     <string name="activity_venuesFilters_title">"Filter venues"</string>
     <string name="activity_venuesFilters_goBtn">"Go"</string>
     <string name="activity_venuesFilters_showClosedTextView">Show only open venues</string>
+    <string name="activity_venuesFilters_distanceMeasureTypeKilometers">km</string>
+    <string name="activity_venuesFilters_distanceFilterTextView">Search distance:</string>
+    <string name="activity_venuesFilters_distanceMeasureTypeMeters">m</string>
 
     <!-- Activity Dishes Filters -->
     <string name="activity_dishesFilters_title"><![CDATA[Filter dishes & drinks]]></string>
     <string name="activity_dishesFilters_showClosedTextView">"Show only open venues"</string>
+    <string name="activity_dishesFilters_goBtn">"Go"</string>
+    <string name="activity_dishesFilters_typeFiltersTitle">Type</string>
+    <string name="activity_dishesFilters_regionFiltersTitle">Region</string>
+    <string name="activity_dishesFilters_ingredientsFiltersTitle">Ingredients</string>
+    <string name="activity_dishesFilters_allergensFiltersTitle">Allergens</string>
+    <string name="activity_dishesFilters_allergensFiltersNote">* Selected Allergens will reduce the appearance priority of dishes associated to them.</string>
+    <string name="activity_dishesFilters_distanceFilterTextView">Search distance:</string>
+    <string name="activity_dishesFilters_distanceMeasureTypeMeters">m</string>
+    <string name="activity_dishesFilters_distanceMeasureTypeKilometers">km</string>
     <string name="CuisinePhaseSalads">"Salads"</string>
     <string name="CuisinePhaseAppetizersAndSnacks"><![CDATA[Appetizers & Snacks]]></string>
     <string name="CuisinePhaseDrinks">"Drinks"</string>
@@ -131,20 +146,6 @@
     <string name="CuisineAllergenHotPeppers">"Hot Peppers"</string>
     <string name="CuisineAllergenTreeNuts">"Tree Nuts"</string>
     <string name="CuisineAllergenMustard">"Mustard"</string>
-    <string name="activity_dishesFilters_goBtn">"Go"</string>
-    <string name="activity_dishesFilters_typeFiltersTitle">Type</string>
-    <string name="activity_dishesFilters_regionFiltersTitle">Region</string>
-    <string name="activity_dishesFilters_ingredientsFiltersTitle">Ingredients</string>
-    <string name="activity_dishesFilters_allergensFiltersTitle">Allergens</string>
-    <string name="activity_dishesFilters_allergensFiltersNote">* Selected Allergens will reduce the appearance priority of dishes associated to them.</string>
-    <string name="activity_landing_noInternetMessageTextView">No internet! Please check your network settings or try again later.</string>
-    <string name="activity_venues_noInternetTextView">No internet!</string>
-    <string name="activity_venuesFilters_distanceFilterTextView">Search distance:</string>
-    <string name="activity_venuesFilters_distanceMeasureTypeMeters">m</string>
-    <string name="activity_dishesFilters_distanceFilterTextView">Search distance:</string>
-    <string name="activity_dishesFilters_distanceMeasureTypeMeters">m</string>
-    <string name="activity_venuesFilters_distanceMeasureTypeKillometers">km</string>
-    <string name="activity_dishesFilters_distanceMeasureTypeKillometers">km</string>
 
 
 </resources>

@@ -4,9 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
-import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
-import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.DAL.Http.Results.ResultBase;
 
 import java.io.Serializable;
 import java.util.ArrayList;

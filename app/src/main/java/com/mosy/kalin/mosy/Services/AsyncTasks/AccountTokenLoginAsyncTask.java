@@ -3,8 +3,7 @@ package com.mosy.kalin.mosy.Services.AsyncTasks;
 import android.os.AsyncTask;
 
 import com.mosy.kalin.mosy.DAL.Repositories.AccountRepository;
-import com.mosy.kalin.mosy.DTOs.Enums.AuthenticationResultStatus;
-import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
+import com.mosy.kalin.mosy.DAL.Http.Results.TokenResult;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
 

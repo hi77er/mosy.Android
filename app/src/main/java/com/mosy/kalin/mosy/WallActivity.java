@@ -37,6 +37,8 @@ import com.daasuu.bl.BubblePopupHelper;
 import com.mosy.kalin.mosy.Adapters.DishesAdapter;
 import com.mosy.kalin.mosy.CustomControls.Support.RecyclerViewItemsClickSupport;
 import com.mosy.kalin.mosy.Adapters.VenuesAdapter;
+import com.mosy.kalin.mosy.DTOs.Base.WallItemBase;
+import com.mosy.kalin.mosy.DTOs.DishFilter;
 import com.mosy.kalin.mosy.DTOs.Enums.ImageResolution;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
@@ -45,11 +47,13 @@ import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Helpers.DimensionsHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
+import com.mosy.kalin.mosy.Models.Responses.RequestableFiltersResult;
 import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Services.AzureBlobService;
 import com.mosy.kalin.mosy.Services.DishesService;
 import com.mosy.kalin.mosy.Services.Location.LocationResolver;
 import com.mosy.kalin.mosy.Services.VenuesService;
+import com.mosy.kalin.mosy.Models.Views.ItemModels.DishWallItem;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -83,6 +87,7 @@ public class WallActivity
     private LruCache<String, Bitmap> mMemoryCache;
     private LocationResolver mLocationResolver;
     private Location lastKnownLocation;
+    private RequestableFiltersResult filters;
 
     @SystemService
     SearchManager searchManager;
@@ -172,6 +177,7 @@ public class WallActivity
             showInvalidHostLayout(); // For any case.. But should never happen because landing activity doesn't show links to this activity if no internet.
         }
 
+
         afterViewsFinished = true;
     }
 
@@ -217,8 +223,7 @@ public class WallActivity
             searchIsPromoted = null; //INFO: Normally get only promoted dishesWall, but when searched - search among all dishesWall
         }
 
-        if (!DishesSearchModeActivated) adaptVenueItems();
-        else adaptDishItems();
+        this.loadDishFilters();
 
         this.filtersButton.setOnClickListener(v -> openFilters());
 
@@ -227,8 +232,23 @@ public class WallActivity
             showFiltersPopupLabel();
     }
 
-    private void showInvalidHostLayout() {
-        this.invalidHostLayout.setVisibility(View.VISIBLE);
+    private void loadDishFilters(){
+        AsyncTaskListener<RequestableFiltersResult> listener = new AsyncTaskListener<RequestableFiltersResult>() {
+            @Override public void onPreExecute() {
+                centralProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override public void onPostExecute(RequestableFiltersResult filtersResult) {
+                if (filtersResult != null) {
+                    filters = filtersResult;
+                }
+
+                if (!DishesSearchModeActivated) adaptVenueItems();
+                else adaptDishItems();
+            }
+        };
+
+        this.dishesService.getFilters(this.applicationContext, listener);
     }
 
     //INFO: Called in "afterViews"
@@ -386,26 +406,34 @@ public class WallActivity
 //            this.dishesWall.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll for ListView
 
             RecyclerViewItemsClickSupport.addTo(this.dishesWall).setOnItemClickListener((recyclerView, position, v) -> {
-                Intent intent = new Intent(WallActivity.this, VenueMenuActivity_.class);
-                MenuListItem itemClicked = dishesAdapter.getItemAt(position);
+                WallItemBase itemClicked = dishesAdapter.getItemAt(position);
 
-                AsyncTaskListener<Venue> apiCallResultListener = new AsyncTaskListener<Venue>() {
-                    @Override public void onPreExecute() {
-                        centralProgress.setVisibility(View.VISIBLE);
-                    }
-                    @Override public void onPostExecute(Venue venue) {
-                        venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-                        venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-                        venue.Location = null;
-                        venue.VenueBusinessHours = null;
-                        venue.VenueContacts = null;
-                        intent.putExtra("Venue", venue);
-                        intent.putExtra("SelectedMenuListId", itemClicked.BrochureId);
-                        startActivity(intent);
-                    }
-                };
+                if (itemClicked.getType() == WallItemBase.ITEM_TYPE_DISH_TILE){
+                    MenuListItem castedItemClicked = ((DishWallItem)itemClicked).MenuListItem;
 
-                this.venuesService.getById(applicationContext, apiCallResultListener, this::showInvalidHostLayout, itemClicked.VenueId);
+                    Intent intent = new Intent(WallActivity.this, VenueMenuActivity_.class);
+
+                    AsyncTaskListener<Venue> apiCallResultListener = new AsyncTaskListener<Venue>() {
+                        @Override public void onPreExecute() {
+                            centralProgress.setVisibility(View.VISIBLE);
+                        }
+                        @Override public void onPostExecute(Venue venue) {
+                            venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+                            venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+                            venue.Location = null;
+                            venue.VenueBusinessHours = null;
+                            venue.VenueContacts = null;
+                            intent.putExtra("Venue", venue);
+                            intent.putExtra("SelectedMenuListId", castedItemClicked.BrochureId);
+                            startActivity(intent);
+                        }
+                    };
+
+                    this.venuesService.getById(applicationContext, apiCallResultListener, this::showInvalidHostLayout, castedItemClicked.VenueId);
+                }
+                else {
+                    // Do nothing for now
+                }
             });
 
             this.dishesAdapter.setSwipeRefreshLayout(dishesSwipeContainer);
@@ -445,17 +473,30 @@ public class WallActivity
                     centralProgress.setVisibility(View.VISIBLE);
                 }
                 @Override
-                public void onPostExecute(ArrayList<MenuListItem> result) {
+                public void onPostExecute(ArrayList<MenuListItem> results) {
                     centralProgress.setVisibility(View.GONE);
                     dishesWall.setVisibility(View.VISIBLE);
 
-                    if (result != null) {
-                        dishesAdapter.addItems(result);
+                    if (results != null && results.size() > 0) {
+                        for (MenuListItem item : results) {
+                            String matchingFiltersInfo = constructMatchingFiltersInfo(item.MatchingFiltersIds);
+                            String mismatchingFiltersInfo = constructMismatchingFiltersInfo(item.MismatchingFiltersIds);
 
-                        for (MenuListItem menuListItem : result)
-                            loadMenuListItemImageThumbnail(menuListItem);
+                            if (StringHelper.isNotNullOrEmpty(matchingFiltersInfo) || StringHelper.isNotNullOrEmpty(mismatchingFiltersInfo)) {
 
-                        dishesAdapter.APICallStillReturnsElements = result.size() >= itemsToLoadCountWhenScrolled;
+                                boolean prevItemHasSameFiltersInfo = dishesAdapter.previousItemHasSameFiltersInfo(item.MatchingFiltersIds, item.MismatchingFiltersIds);
+                                if (!prevItemHasSameFiltersInfo)
+                                    dishesAdapter.addFiltersInfoHeader(matchingFiltersInfo, mismatchingFiltersInfo);
+                            }
+                            dishesAdapter.addDishWallItem(item);
+                        }
+
+                        for (MenuListItem menuListItem : results) {
+                            DishWallItem wallItem = dishesAdapter.getItemByMenuListItemId(menuListItem.Id);
+                            loadMenuListItemImageThumbnail(wallItem);
+                        }
+
+                        dishesAdapter.APICallStillReturnsElements = results.size() >= itemsToLoadCountWhenScrolled;
                         dishesLoadingStillInAction = false;
                     }
                 }
@@ -479,12 +520,12 @@ public class WallActivity
                     localDayOfWeek, localTime, ApplyDistanceFilterToDishes);
         }
         else {
-            Toast.makeText(applicationContext, R.string.activity_venues_locationNotResolvedToast, Toast.LENGTH_LONG).show();
+            Toast.makeText(applicationContext, R.string.activity_wall_locationNotResolvedToast, Toast.LENGTH_LONG).show();
         }
 
     }
 
-    private void loadMenuListItemImageThumbnail(MenuListItem menuListItem) {
+    private void loadMenuListItemImageThumbnail(DishWallItem dishWallItem) {
         AsyncTaskListener<byte[]> mliImageResultListener = new AsyncTaskListener<byte[]>() {
             @Override public void onPreExecute() {
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
@@ -493,21 +534,25 @@ public class WallActivity
                 if (ArrayHelper.hasValidBitmapContent(bytes)){
                     Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                     Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, 200, 200, false);
-                    menuListItem.ImageThumbnail.Bitmap = scaledBmp;
-                    addBitmapToMemoryCache(menuListItem.ImageThumbnail.Id, scaledBmp);
+                    dishWallItem.MenuListItem.ImageThumbnail.Bitmap = scaledBmp;
+                    addBitmapToMemoryCache(dishWallItem.MenuListItem.ImageThumbnail.Id, scaledBmp);
                 }
-                dishesAdapter.onItemChanged(menuListItem);
+                dishesAdapter.onItemChanged(dishWallItem);
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
 
-        if (menuListItem != null && menuListItem.ImageThumbnail != null) {
-            if (StringHelper.isNotNullOrEmpty(menuListItem.ImageThumbnail.Id)) {
-                menuListItem.ImageThumbnail.Bitmap = getBitmapFromMemCache(menuListItem.ImageThumbnail.Id);
-                if (menuListItem.ImageThumbnail.Bitmap == null)
-                    new AzureBlobService().downloadMenuListItemThumbnail(menuListItem.ImageThumbnail.Id, ImageResolution.Format200x200, mliImageResultListener);
+        if (dishWallItem != null && dishWallItem.MenuListItem != null && dishWallItem.MenuListItem.ImageThumbnail != null) {
+            if (StringHelper.isNotNullOrEmpty(dishWallItem.MenuListItem.ImageThumbnail.Id)) {
+                dishWallItem.MenuListItem.ImageThumbnail.Bitmap = getBitmapFromMemCache(dishWallItem.MenuListItem.ImageThumbnail.Id);
+                if (dishWallItem.MenuListItem.ImageThumbnail.Bitmap == null)
+                    new AzureBlobService().downloadMenuListItemThumbnail(dishWallItem.MenuListItem.ImageThumbnail.Id, ImageResolution.Format200x200, mliImageResultListener);
             }
         } //IN ALL 3 'ELSE'S DO NOTHING. The Item has already been set the default image
+    }
+
+    private void showInvalidHostLayout() {
+        this.invalidHostLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -516,11 +561,11 @@ public class WallActivity
         if (!DishesSearchModeActivated) {
             menu.findItem(R.id.action_dishes).setVisible(true);
             menu.findItem(R.id.action_venues).setVisible(false);
-            searchView.setQueryHint(getString(R.string.activity_venues_searchVenuesHint));
+            searchView.setQueryHint(getString(R.string.activity_wall_searchVenuesHint));
         } else {
             menu.findItem(R.id.action_venues).setVisible(true);
             menu.findItem(R.id.action_dishes).setVisible(false);
-            searchView.setQueryHint(getString(R.string.activity_venues_searchDishesHint));
+            searchView.setQueryHint(getString(R.string.activity_wall_searchDishesHint));
         }
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
@@ -565,32 +610,7 @@ public class WallActivity
         mLocationResolver.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-//    @ItemClick(resName = "venues_lvDishes")
-//    void dishClicked(MenuListItem listItem) {
-//        Intent intent = new Intent(WallActivity.this, VenueMenuActivity_.class);
-//
-//        AsyncTaskListener<Venue> apiCallResultListener = new AsyncTaskListener<Venue>() {
-//            @Override public void onPreExecute() {
-//                centralProgress.setVisibility(View.VISIBLE);
-//            }
-//            @Override public void onPostExecute(Venue result) {
-//                Venue venue = result;
-//                venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-//                venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-//                venue.Location = null;
-//                venue.VenueBusinessHours = null;
-//                venue.VenueContacts = null;
-//                intent.putExtra("Venue", venue);
-//                intent.putExtra("SelectedMenuListId", listItem.BrochureId);
-//
-//                startActivity(intent);
-//            }
-//        };
-//
-//        this.venuesService.getById(applicationContext, apiCallResultListener, this::showInvalidHostLayout, listItem.VenueId);
-//    }
-
-    void openFilters() {
+    private void openFilters() {
         if (DishesSearchModeActivated) {
             Intent intent = new Intent(WallActivity.this, DishesFiltersActivity_.class);
             intent.putExtra("PreselectedDistanceFilterValue", ApplyDistanceFilterToDishes);
@@ -665,7 +685,7 @@ public class WallActivity
 
                 Paint mPaint = new Paint();
                 mPaint.setTextSize(20);
-                String labelText = getResources().getString(R.string.activity_venues_filtersSettingsTextView);
+                String labelText = getResources().getString(R.string.activity_wall_filtersSettingsTextView);
                 float width = mPaint.measureText(labelText, 0, labelText.length());
 
                 int filtersButtonStartingY = location[1];
@@ -695,6 +715,49 @@ public class WallActivity
                 );
             }
         });
+    }
+
+    private String constructMatchingFiltersInfo(ArrayList<String> matchingFiltersIds) {
+        return this.getLocalizedNamesByFiltersIds(matchingFiltersIds);
+    }
+
+    private String constructMismatchingFiltersInfo(ArrayList<String> mismatchingFiltersIds) {
+        return this.getLocalizedNamesByFiltersIds(mismatchingFiltersIds);
+    }
+
+    private String getLocalizedNamesByFiltersIds(ArrayList<String> filtersIds) {
+        ArrayList<String> localizedFiltersNames = new ArrayList<>();
+
+        if (this.filters != null){
+            for (String filterId : filtersIds) {
+                for (DishFilter filter : this.filters.CuisinePhaseFilters) {
+                    if (filterId.equals(filter.Id)){
+                        String localizedFilterName = StringHelper.getStringAppDefaultLocale(getApplicationContext(), getResources(), filter.I18nResourceName, filter.Name);
+                        localizedFiltersNames.add(localizedFilterName);
+                    }
+                }
+                for (DishFilter filter : this.filters.CuisineRegionFilters) {
+                    if (filterId.equals(filter.Id)){
+                        String localizedFilterName = StringHelper.getStringAppDefaultLocale(getApplicationContext(), getResources(), filter.I18nResourceName, filter.Name);
+                        localizedFiltersNames.add(localizedFilterName);
+                    }
+                }
+                for (DishFilter filter : this.filters.CuisineSpectrumFilters) {
+                    if (filterId.equals(filter.Id)){
+                        String localizedFilterName = StringHelper.getStringAppDefaultLocale(getApplicationContext(), getResources(), filter.I18nResourceName, filter.Name);
+                        localizedFiltersNames.add(localizedFilterName);
+                    }
+                }
+                for (DishFilter filter : this.filters.CuisineAllergensFilters) {
+                    if (filterId.equals(filter.Id)){
+                        String localizedFilterName = StringHelper.getStringAppDefaultLocale(getApplicationContext(), getResources(), filter.I18nResourceName, filter.Name);
+                        localizedFiltersNames.add(localizedFilterName);
+                    }
+                }
+            }
+            return StringHelper.join(", ", localizedFiltersNames);
+        }
+        return  StringHelper.empty();
     }
 
     private void addBitmapToMemoryCache(String key, Bitmap bitmap) {

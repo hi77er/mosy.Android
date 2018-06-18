@@ -5,13 +5,10 @@ import android.content.SharedPreferences;
 
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IAccountRepository;
-import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
-import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
+import com.mosy.kalin.mosy.DAL.Http.Results.TokenResult;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
-import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
 import com.mosy.kalin.mosy.R;
-import com.mosy.kalin.mosy.Services.AsyncTasks.AccountTokenLoginAsyncTask;
 
 import org.androidannotations.annotations.EBean;
 

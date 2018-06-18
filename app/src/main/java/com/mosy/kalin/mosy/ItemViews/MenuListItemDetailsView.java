@@ -1,4 +1,4 @@
-package com.mosy.kalin.mosy.Views;
+package com.mosy.kalin.mosy.ItemViews;
 
 import android.app.Dialog;
 import android.content.Context;

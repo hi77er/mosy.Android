@@ -1,7 +1,7 @@
 package com.mosy.kalin.mosy.DAL.Repositories;
 
-import com.mosy.kalin.mosy.DTOs.Results.RegisterResult;
-import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
+import com.mosy.kalin.mosy.DAL.Http.Results.RegisterResult;
+import com.mosy.kalin.mosy.DAL.Http.Results.TokenResult;
 import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.DAL.Http.JSONHttpClient;

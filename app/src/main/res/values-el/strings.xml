@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Foodoo</string>
-    <string name="activity_venues_swipeDownToRefreshMessageTextView">ΑΝΑΓΝΩΡΙΖΕΤΕ ΤΟ ΠΕΡΙΕΧΟΜΕΝΟ</string>
+    <string name="activity_wall_swipeDownToRefreshMessageTextView">ΑΝΑΓΝΩΡΙΖΕΤΕ ΤΟ ΠΕΡΙΕΧΟΜΕΝΟ</string>
     <string name="activity_landing_languageBgSpinner">Βουλγαρική</string>
     <string name="activity_landing_languageEnUSSpinner">Αγγλική</string>
     <string name="activity_landing_languageRuSpinner">Ρωσική</string>
@@ -24,10 +24,10 @@
     <string name="menu_searchTitle">Αναζήτηση</string>
     <string name="menu_btnNavigateToVenuesText">Εστιατόρια</string>
     <string name="menu_btnNavigateToDishesText">Πιάτα</string>
-    <string name="activity_venues_searchVenuesHint">Αναζήτηση: Εστιατόρια</string>
-    <string name="activity_venues_searchDishesHint">Αναζήτηση: Πιάτα</string>
-    <string name="activity_venues_filtersSettingsTextView">Ρυθμίσεις φίλτρων</string>
-    <string name="activity_venues_locationNotResolvedToast">Η τοποθεσία δεν βρέθηκε</string>
+    <string name="activity_wall_searchVenuesHint">Αναζήτηση: Εστιατόρια</string>
+    <string name="activity_wall_searchDishesHint">Αναζήτηση: Πιάτα</string>
+    <string name="activity_wall_filtersSettingsTextView">Ρυθμίσεις φίλτρων</string>
+    <string name="activity_wall_locationNotResolvedToast">Η τοποθεσία δεν βρέθηκε</string>
     <string name="activity_venueDetails_mondayHoursTextView">Δευ</string>
     <string name="activity_venueDetails_tuesdayHoursTextView">Τρί</string>
     <string name="activity_venueDetails_wednesdayHoursTextView">Τετ</string>
