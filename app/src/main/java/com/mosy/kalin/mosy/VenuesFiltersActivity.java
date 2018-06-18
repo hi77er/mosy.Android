@@ -177,7 +177,7 @@ public class VenuesFiltersActivity
         String measurementTypeText = getString(R.string.activity_venuesFilters_distanceMeasureTypeMeters);
         if (distanceText >= 1000) {
             distanceText = distanceText / 1000;
-            measurementTypeText = getString(R.string.activity_venuesFilters_distanceMeasureTypeKillometers);
+            measurementTypeText = getString(R.string.activity_venuesFilters_distanceMeasureTypeKilometers);
         }
         return getResources().getString(R.string.activity_venuesFilters_distanceFilterTextView)
                 + " " + String.valueOf(distanceText)

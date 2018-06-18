@@ -1,14 +1,14 @@
 package com.mosy.kalin.mosy.DTOs;
 
 import com.google.gson.annotations.SerializedName;
-import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
+import com.mosy.kalin.mosy.DAL.Http.Results.ResultBase;
+import com.mosy.kalin.mosy.DTOs.Base.WallItemBase;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 // Implements Serializable in order to be passed between activities.
 public class Venue
-        extends ResultBase
         implements Serializable {
 
     @SerializedName("Id")

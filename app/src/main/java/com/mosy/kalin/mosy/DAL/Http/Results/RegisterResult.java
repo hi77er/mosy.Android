@@ -1,4 +1,4 @@
-package com.mosy.kalin.mosy.DTOs.Results;
+package com.mosy.kalin.mosy.DAL.Http.Results;
 
 /**
  * Created by kkras on 7/29/2017.

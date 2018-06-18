@@ -2,7 +2,7 @@ package com.mosy.kalin.mosy.Models.Responses;
 
 import com.google.gson.annotations.SerializedName;
 import com.mosy.kalin.mosy.DTOs.DishFilter;
-import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
+import com.mosy.kalin.mosy.DAL.Http.Results.ResultBase;
 
 import java.io.Serializable;
 import java.util.ArrayList;

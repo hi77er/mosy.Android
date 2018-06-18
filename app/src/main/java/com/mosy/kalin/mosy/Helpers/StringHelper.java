@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 
 import com.mosy.kalin.mosy.App;
+import com.mosy.kalin.mosy.BuildConfig;
 
 import java.util.List;
 import java.util.Locale;
@@ -80,6 +81,23 @@ public class StringHelper {
 
     public static String empty() {
         return "";
+    }
+
+    public static String interval() {
+        return " ";
+    }
+
+    @NonNull
+    public static String getStringAppDefaultLocale(Context context, Resources resources, String i18nResourceName, String defaultName) {
+        int identifier = resources.getIdentifier(i18nResourceName, "string", BuildConfig.APPLICATION_ID);
+
+        try {
+            return StringHelper.getStringAppDefaultLocale(context, identifier);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            return defaultName;
+        }
     }
 
     @NonNull

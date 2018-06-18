@@ -2,11 +2,10 @@ package com.mosy.kalin.mosy;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.mosy.kalin.mosy.DTOs.Results.RegisterResult;
+import com.mosy.kalin.mosy.DAL.Http.Results.RegisterResult;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Helpers.StringHelper;

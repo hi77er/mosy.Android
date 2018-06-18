@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Foodoo</string>
-    <string name="activity_venues_swipeDownToRefreshMessageTextView">ПОТЯНИТЕ ВНИЗ, ЧТОБЫ ОБНОВИТЬ СТРАНИЦУ</string>
+    <string name="activity_wall_swipeDownToRefreshMessageTextView">ПОТЯНИТЕ ВНИЗ, ЧТОБЫ ОБНОВИТЬ СТРАНИЦУ</string>
     <string name="activity_landing_languageBgSpinner">Болгарский</string>
     <string name="activity_landing_languageEnUSSpinner">Английский</string>
     <string name="activity_landing_languageRuSpinner">Русский</string>
@@ -29,9 +29,9 @@
     <string name="menu_searchTitle">Найти</string>
     <string name="menu_btnNavigateToVenuesText">Заведения</string>
     <string name="menu_btnNavigateToDishesText">Еда</string>
-    <string name="activity_venues_searchVenuesHint">Найти заведения …</string>
-    <string name="activity_venues_searchDishesHint">Найти еду …</string>
-    <string name="activity_venues_filtersSettingsTextView">Настройка Фильтров</string>
+    <string name="activity_wall_searchVenuesHint">Найти заведения …</string>
+    <string name="activity_wall_searchDishesHint">Найти еду …</string>
+    <string name="activity_wall_filtersSettingsTextView">Настройка Фильтров</string>
     <string name="activity_venueDetails_mondayHoursTextView">Пон</string>
     <string name="activity_venueDetails_tuesdayHoursTextView">Вт</string>
     <string name="activity_venueDetails_wednesdayHoursTextView">Ср</string>
@@ -39,7 +39,7 @@
     <string name="activity_venueDetails_fridayHoursTextView">Пт</string>
     <string name="activity_venueDetails_saturdayHoursTextView">Суб</string>
     <string name="activity_venueDetails_sundayHoursTextView">Вос</string>
-    <string name="activity_venues_locationNotResolvedToast">Местонахождение не было найдено …</string>
+    <string name="activity_wall_locationNotResolvedToast">Местонахождение не было найдено …</string>
     <string name="activity_venueDetails_freeWiFiTooltip">Бесплатный WiFi</string>
     <string name="activity_venueDetails_quietPlaceTooltip">Дружеская рабочая атмосфера. Тихое место. Доступные разетки.</string>
     <string name="activity_venueDetails_bikeFriendlyTooltip">Благоустроено для велосипедистов. Надежные стоянки для велосипедов по близости.</string>
@@ -103,11 +103,12 @@
     <string name="activity_dishesFilters_allergensFiltersTitle">Аллергены</string>
     <string name="activity_dishesFilters_allergensFiltersNote">*Выбранные аллергены сделают блюда, содержащие их, менее приоритетными для отображения.</string>
     <string name="activity_landing_noInternetMessageTextView">Нет интернета! Проверьте настройки сети или повторите попытку позже.</string>
-    <string name="activity_venues_noInternetTextView">Нет интернета!</string>
+    <string name="activity_wall_noInternetTextView">Нет интернета!</string>
     <string name="activity_venuesFilters_distanceFilterTextView">Расстояние поиска:</string>
     <string name="activity_venuesFilters_distanceMeasureTypeMeters">м</string>
     <string name="activity_dishesFilters_distanceMeasureTypeMeters">м</string>
-    <string name="activity_venuesFilters_distanceMeasureTypeKillometers">км</string>
-    <string name="activity_dishesFilters_distanceMeasureTypeKillometers">км</string>
+    <string name="activity_venuesFilters_distanceMeasureTypeKilometers">км</string>
+    <string name="activity_dishesFilters_distanceMeasureTypeKilometers">км</string>
     <string name="activity_dishesFilters_distanceFilterTextView">Расстояние поиска:</string>
+    <string name="activity_wall_missingFiltersInfoLabel">отсутствуют:</string>
 </resources>

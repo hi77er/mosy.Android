@@ -1,10 +1,9 @@
-package com.mosy.kalin.mosy.Views;
+package com.mosy.kalin.mosy.ItemViews;
 
 import android.content.Context;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
-import com.mosy.kalin.mosy.BuildConfig;
 import com.mosy.kalin.mosy.DTOs.DishFilter;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.R;
@@ -38,17 +37,7 @@ public class FilterItemView
 
         this.checkBox.setChecked(filter.IsChecked);
 
-        String name = StringHelper.empty();
-        int identifier = getResources().getIdentifier(filter.I18nResourceName, "string", BuildConfig.APPLICATION_ID);
-
-        try {
-            name = StringHelper.getStringAppDefaultLocale(getContext(), identifier);
-        }
-        catch (Exception ex) {
-            name = filter.Name;
-
-            ex.printStackTrace();
-        }
+        String name = StringHelper.getStringAppDefaultLocale(getContext(), getResources(), filter.I18nResourceName, filter.Name);
 
         this.checkBox.setText(name);
     }

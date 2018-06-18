@@ -1,8 +1,7 @@
 package com.mosy.kalin.mosy.DTOs;
 
 import com.google.gson.annotations.SerializedName;
-import com.mosy.kalin.mosy.DTOs.Enums.ContactType;
-import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
+import com.mosy.kalin.mosy.DAL.Http.Results.ResultBase;
 
 public class VenueContacts extends ResultBase {
 

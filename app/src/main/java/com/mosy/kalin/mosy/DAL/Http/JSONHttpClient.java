@@ -6,7 +6,7 @@ import com.mosy.kalin.mosy.DAL.Http.Deserializers.JsonDateDeserializer;
 import com.mosy.kalin.mosy.DAL.Http.Deserializers.JsonTimeDeserializer;
 import com.mosy.kalin.mosy.DAL.Http.Deserializers.TimeOnlyDateDeserializer;
 import com.mosy.kalin.mosy.DTOs.Enums.TokenResultStatus;
-import com.mosy.kalin.mosy.DTOs.Results.TokenResult;
+import com.mosy.kalin.mosy.DAL.Http.Results.TokenResult;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 
 import java.io.BufferedReader;

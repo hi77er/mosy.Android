@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import com.mosy.kalin.mosy.Adapters.Base.RecyclerViewAdapterBase;
 import com.mosy.kalin.mosy.Adapters.Base.ViewWrapper;
 import com.mosy.kalin.mosy.DTOs.Venue;
-import com.mosy.kalin.mosy.Views.VenueItemView;
-import com.mosy.kalin.mosy.Views.VenueItemView_;
+import com.mosy.kalin.mosy.ItemViews.VenueWallItemView;
+import com.mosy.kalin.mosy.ItemViews.VenueWallItemView_;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 @EBean
 public class VenuesAdapter
-        extends RecyclerViewAdapterBase<Venue, VenueItemView> {
+        extends RecyclerViewAdapterBase<Venue, VenueWallItemView> {
 
     public boolean APICallStillReturnsElements = true;
     public SwipeRefreshLayout swipeContainer;
@@ -54,13 +54,13 @@ public class VenuesAdapter
     }
 
     @Override
-    protected VenueItemView onCreateItemView(ViewGroup parent, int viewType) {
-        return VenueItemView_.build(context);
+    protected VenueWallItemView onCreateItemView(ViewGroup parent, int viewType) {
+        return VenueWallItemView_.build(context);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewWrapper<VenueItemView> viewHolder, int position) {
-        VenueItemView view = viewHolder.getView();
+    public void onBindViewHolder(@NonNull ViewWrapper<VenueWallItemView> viewHolder, int position) {
+        VenueWallItemView view = viewHolder.getView();
         Venue venue = items.get(position);
 
         view.bind(venue, position);
