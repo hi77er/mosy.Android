@@ -7,7 +7,7 @@
     android:layout_height="fill_parent">
 
     <LinearLayout
-        android:id="@+id/venues_llInitialLoadingProgress"
+        android:id="@+id/llInitialLoadingProgress"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

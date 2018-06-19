@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.mosy.kalin.mosy.DTOs.DishFilter;
+import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.ItemViews.FilterItemView;
 import com.mosy.kalin.mosy.ItemViews.FilterItemView_;
 
@@ -20,8 +20,8 @@ import java.util.List;
 public class FilterListAdapter
         extends BaseAdapter {
 
-    private List<DishFilter> Filters;
-    public void setFilters(ArrayList<DishFilter> filters){
+    private List<Filter> Filters;
+    public void setFilters(ArrayList<Filter> filters){
         this.Filters = filters;
     }
 
@@ -40,7 +40,7 @@ public class FilterListAdapter
             filterItemView = FilterItemView_.build(context);
         else
             filterItemView = (FilterItemView) view;
-        DishFilter filter = this.Filters.get(position);
+        Filter filter = this.Filters.get(position);
         filterItemView.bind(filter);
 
         return filterItemView;
@@ -51,7 +51,7 @@ public class FilterListAdapter
         return this.Filters.size();
     }
     @Override
-    public DishFilter getItem(int position) {
+    public Filter getItem(int position) {
         return this.Filters.get(position);
     }
     @Override

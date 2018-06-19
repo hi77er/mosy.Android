@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.mosy.kalin.mosy.DTOs.DishFilter;
+import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.Fragments.FiltersPage_;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.R;
@@ -16,24 +16,24 @@ import java.util.ArrayList;
 public class DishFiltersPagerAdapter
         extends FragmentStatePagerAdapter {
 
-    public ArrayList<DishFilter> PhasesFilters;
-    public ArrayList<DishFilter> RegionsFilters;
-    public ArrayList<DishFilter> SpectrumFilters;
-    public ArrayList<DishFilter> AllergensFilters;
+    public ArrayList<Filter> DishTypeFilters;
+    public ArrayList<Filter> DishRegionFilters;
+    public ArrayList<Filter> DishMainIngredientFilters;
+    public ArrayList<Filter> DishAllergenFilters;
     private Context context;
 
     public DishFiltersPagerAdapter(Context context,
                                    FragmentManager manager,
-                                   ArrayList<DishFilter> phases,
-                                   ArrayList<DishFilter> regions,
-                                   ArrayList<DishFilter> spectrums,
-                                   ArrayList<DishFilter> allergens) {
+                                   ArrayList<Filter> dishTypeFilters,
+                                   ArrayList<Filter> dishRegionFilters,
+                                   ArrayList<Filter> dishMainIngredientFilters,
+                                   ArrayList<Filter> allergensdishAllergenFilters) {
         super(manager);
-        PhasesFilters = phases;
-        RegionsFilters = regions;
-        SpectrumFilters = spectrums;
-        AllergensFilters = allergens;
         this.context = context;
+        this.DishTypeFilters = dishTypeFilters;
+        this.DishRegionFilters = dishRegionFilters;
+        this.DishMainIngredientFilters = dishMainIngredientFilters;
+        this.DishAllergenFilters = allergensdishAllergenFilters;
     }
 
     @Override
@@ -41,19 +41,19 @@ public class DishFiltersPagerAdapter
         FiltersPage_ fragment = new FiltersPage_();
 
         Bundle bundle = new Bundle();
-        ArrayList<DishFilter> filters = new ArrayList<>();
+        ArrayList<Filter> filters = new ArrayList<>();
         switch (position){
             case 0:
-                filters = this.PhasesFilters;
+                filters = this.DishTypeFilters;
                 break;
             case 1:
-                filters = this.RegionsFilters;
+                filters = this.DishRegionFilters;
                 break;
             case 2:
-                filters = this.SpectrumFilters;
+                filters = this.DishMainIngredientFilters;
                 break;
             case 3:
-                filters = this.AllergensFilters;
+                filters = this.DishAllergenFilters;
                 String note = StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_allergensFiltersNote);
                 fragment.setNote(note);
                 break;

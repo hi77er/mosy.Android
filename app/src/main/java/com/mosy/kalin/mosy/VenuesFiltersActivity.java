@@ -6,21 +6,34 @@ import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.annimon.stream.Stream;
+import com.mosy.kalin.mosy.Adapters.VenueFiltersPagerAdapter;
+import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
+import com.mosy.kalin.mosy.Helpers.ListHelper;
+import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
+import com.mosy.kalin.mosy.Models.Responses.VenueFiltersResult;
+import com.mosy.kalin.mosy.Services.VenuesService;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
+import java.util.ArrayList;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_filters_venues)
@@ -35,20 +48,38 @@ public class VenuesFiltersActivity
     private int distanceFilterFormattedValue;
     private boolean selectedApplyWorkingStatusFilter;
 
+    private VenueFiltersPagerAdapter venueFiltersAdapter;
+
+    @Bean
+    VenuesService venuesService;
+
     @Extra
     static boolean PreselectedApplyWorkingStatusFilter;
     @Extra
     static int PreselectedDistanceFilterValue;
+    @Extra
+    static ArrayList<String> PreselectedVenueBadgeFilterIds;
+    @Extra
+    static ArrayList<String> PreselectedVenueCultureFilterIds;
+
+    @ViewById(resName = "filtersVenues_llInitialLoadingProgress")
+    LinearLayout centralProgress;
+
+    @ViewById(resName = "tl_filters_venues")
+    TabLayout venuesFiltersTabs;
+    @ViewById(resName = "vp_filters_venues")
+    ViewPager venuesFiltersPager;
 
     @ViewById(resName = "filters_venues_sbWorkingTimeFilter")
     public Switch workingStatusFilter;
-    @ViewById(resName = "filterVenues_GoButton")
-    public Button goButton;
-
     @ViewById(resName = "filters_venues_tvDistanceLabel")
     public TextView distanceLabel;
     @ViewById(resName = "filters_venues_sbDistanceFilter")
     public SeekBar distanceSeekBar;
+
+    @ViewById(resName = "filterVenues_GoButton")
+    public Button goButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -61,7 +92,7 @@ public class VenuesFiltersActivity
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
     }
 
-    @SuppressLint("SetTextI18n")
+
     @AfterViews
     public void afterViews(){
         this.workingStatusFilter.setChecked(PreselectedApplyWorkingStatusFilter);
@@ -71,11 +102,11 @@ public class VenuesFiltersActivity
 
         if (ConnectivityHelper.isConnected(applicationContext)) {
             networkLost = false;
-            showLoaded();
+            loadVenueFilters();
         }
         else {
             networkLost = true;
-            showLoading();
+            showFiltersLoadingLayout();
         }
 
         this.distanceFilterFormattedValue = PreselectedDistanceFilterValue;
@@ -103,18 +134,19 @@ public class VenuesFiltersActivity
         afterViewsFinished = true;
     }
 
-
     @Override
     protected void onStart(){
         super.onStart();
-
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_activity_filters_venues);
+
+        if (PreselectedVenueBadgeFilterIds == null) PreselectedVenueBadgeFilterIds = new ArrayList<>();
+        if (PreselectedVenueCultureFilterIds == null) PreselectedVenueCultureFilterIds = new ArrayList<>();
     }
 
     @Override
     protected void onNetworkAvailable() {
         if (afterViewsFinished && networkLost) {
-            runOnUiThread(this::showLoaded);
+            runOnUiThread(this::loadVenueFilters);
             networkLost = false;
         }
     }
@@ -122,7 +154,7 @@ public class VenuesFiltersActivity
     @Override
     protected void onNetworkLost() {
         if (afterViewsFinished) {
-            runOnUiThread(this::showLoading);
+            runOnUiThread(this::showFiltersLoadingLayout);
         }
         networkLost = true;
     }
@@ -137,38 +169,110 @@ public class VenuesFiltersActivity
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        Intent intent = new Intent(VenuesFiltersActivity.this, WallActivity_.class);
-
-//        distanceFilterFormattedValue = formatProgressDivideBy100(this.distanceSeekBar.getProgress());
-        selectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
 
         if (ConnectivityHelper.isConnected(applicationContext)) {
-            if (checkFiltersStateChanged(distanceFilterFormattedValue, selectedApplyWorkingStatusFilter)) {
+            Intent intent = new Intent(VenuesFiltersActivity.this, WallActivity_.class);
+            ArrayList<String> selectedVenueBadgeFilterIds = new ArrayList<>();
+            ArrayList<String> selectedVenueCultureFilterIds = new ArrayList<>();
+
+            selectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
+
+            if (this.venueFiltersAdapter != null && this.venueFiltersAdapter.VenueBadgeFilters != null) {
+                selectedVenueBadgeFilterIds = new ArrayList<>(Stream
+                        .of(venueFiltersAdapter.VenueBadgeFilters)
+                        .filter(x -> x.IsChecked)
+                        .map(x -> x.Id)
+                        .toList());
+            }
+            if (this.venueFiltersAdapter != null && this.venueFiltersAdapter.VenueCultureFilters != null) {
+                selectedVenueCultureFilterIds = new ArrayList<>(Stream
+                        .of(venueFiltersAdapter.VenueCultureFilters)
+                        .filter(x -> x.IsChecked)
+                        .map(x -> x.Id)
+                        .toList());
+            }
+
+            boolean filtersStateChanged = checkFiltersStateChanged(distanceFilterFormattedValue,
+                                                                   selectedApplyWorkingStatusFilter,
+                                                                   selectedVenueBadgeFilterIds,
+                                                                   selectedVenueCultureFilterIds);
+
+            if (filtersStateChanged) {
                 intent.putExtra("ApplyDistanceFilterToVenues", distanceFilterFormattedValue);
                 intent.putExtra("ApplyWorkingStatusFilterToVenues", selectedApplyWorkingStatusFilter);
+                intent.putExtra("SelectedVenuesBadgeFilterIds", selectedVenueBadgeFilterIds);
+                intent.putExtra("SelectedVenuesCultureFilterIds", selectedVenueCultureFilterIds);
                 startActivity(intent);
             }
         } // In both "else"s do nothing. Simply close this activity without passing any values or initiating a "start" of the Wall activity.
     }
 
-    private void showLoading() {
-        goButton.setVisibility(View.GONE);
+    private void loadVenueFilters() {
+
+        AsyncTaskListener<VenueFiltersResult> listener = new AsyncTaskListener<VenueFiltersResult>() {
+            @Override public void onPreExecute() {
+                showFiltersLoadingLayout();
+            }
+
+            @Override public void onPostExecute(VenueFiltersResult result) {
+                if (result != null) {
+                    populateAlreadySelectedFilters(
+                            result.VenueBadgeFilters,
+                            result.VenueCultureFilters);
+
+                    venueFiltersAdapter = new VenueFiltersPagerAdapter(applicationContext,
+                            getSupportFragmentManager(),
+                            result.VenueBadgeFilters,
+                            result.VenueCultureFilters);
+
+                    venuesFiltersPager.setAdapter(venueFiltersAdapter);
+                    venuesFiltersTabs.setupWithViewPager(venuesFiltersPager);
+                }
+                onFiltersLoaded();
+            }
+        };
+
+        this.venuesService.getFilters(this.applicationContext, listener);
     }
 
-    private void showLoaded() {
+    private void showFiltersLoadingLayout() {
+        venuesFiltersPager.setVisibility(View.GONE);
+        goButton.setVisibility(View.GONE);
+        centralProgress.setVisibility(View.VISIBLE);
+    }
+
+    private void onFiltersLoaded() {
+        centralProgress.setVisibility(View.GONE);
+        venuesFiltersPager.setVisibility(View.VISIBLE);
         goButton.setVisibility(View.VISIBLE);
     }
 
-    private boolean checkFiltersStateChanged(int distanceFilterValue, boolean selectedApplyWorkingStatusFilter) {
-        boolean applyWorkingStatusChanged = selectedApplyWorkingStatusFilter != PreselectedApplyWorkingStatusFilter
-                || distanceFilterValue != PreselectedDistanceFilterValue;
+    private void populateAlreadySelectedFilters(
+            ArrayList<Filter> venueBadgeFilters,
+            ArrayList<Filter> venueCultureFilters) {
 
-        return applyWorkingStatusChanged;
+        Stream.of(PreselectedVenueBadgeFilterIds).forEach(filterId -> {
+            Filter matchingFilter = Stream.of(venueBadgeFilters).filter(filter -> filter.Id.equals(filterId)).single();
+            matchingFilter.IsChecked = true;
+        });
+
+        Stream.of(PreselectedVenueCultureFilterIds).forEach(filterId -> {
+            Filter matchingFilter = Stream.of(venueCultureFilters).filter(filter -> filter.Id.equals(filterId)).single();
+            matchingFilter.IsChecked = true;
+        });
+
     }
 
-    @Click(R.id.filterVenues_GoButton)
-    public void GoButton_Clicked(){
-        VenuesFiltersActivity.this.finish();
+    private boolean checkFiltersStateChanged(int distanceFilterValue,
+                                             boolean selectedApplyWorkingStatusFilter,
+                                             ArrayList<String> selectedVenueBadgeFilterIds,
+                                             ArrayList<String> selectedVenueCultureFilterIds) {
+        boolean applyWorkingStatusChanged = selectedApplyWorkingStatusFilter != PreselectedApplyWorkingStatusFilter;
+        boolean searchedDistanceChanged = distanceFilterValue != PreselectedDistanceFilterValue;
+        boolean dishMainIngredientFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedVenueBadgeFilterIds, selectedVenueBadgeFilterIds);
+        boolean dishAllergenFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedVenueCultureFilterIds, selectedVenueCultureFilterIds);
+
+        return applyWorkingStatusChanged || searchedDistanceChanged || dishMainIngredientFiltersChanged || dishAllergenFiltersChanged;
     }
 
     @NonNull
@@ -190,14 +294,9 @@ public class VenuesFiltersActivity
         return  progress;
     }
 
-//    @Override
-//    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//
-////        mDistance.setText("" + AppConstants.getDistance() + " miles");
-//        //Get the thumb bound and get its left value
-//        int x = seekBar.getThumb().getBounds().left;
-//        //set the left value to textview x value
-////        mDistance.setX(x);
-//    }
+    @Click(R.id.filterVenues_GoButton)
+    public void GoButton_Clicked(){
+        VenuesFiltersActivity.this.finish();
+    }
 
 }

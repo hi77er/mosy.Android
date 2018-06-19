@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
+import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IDishesRepository;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IVenuesRepository;
 import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;
@@ -14,6 +15,8 @@ import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.VenueLocation;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
+import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
+import com.mosy.kalin.mosy.Models.Responses.VenueFiltersResult;
 
 import org.androidannotations.annotations.EBean;
 
@@ -283,6 +286,34 @@ public class VenuesService {
                     }
                 },
                 onInvalidHost);
+    }
+
+    public void getFilters(Context applicationContext,
+                           AsyncTaskListener<VenueFiltersResult> apiCallResultListener)
+    {
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    try {
+                        Call<VenueFiltersResult> callFilters = repository.getFilters(authTokenHeader);
+                        apiCallResultListener.onPreExecute();
+                        callFilters.enqueue(new Callback<VenueFiltersResult>() {
+                            @Override public void onResponse(@NonNull Call<VenueFiltersResult> call, @NonNull Response<VenueFiltersResult> response) {
+                                VenueFiltersResult result = response.body();
+                                apiCallResultListener.onPostExecute(result);
+                            }
+                            @Override public void onFailure(@NonNull Call<VenueFiltersResult> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                },
+                null);
     }
 
 }

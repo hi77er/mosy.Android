@@ -46,7 +46,7 @@ public class VenueMenuActivity
     @Extra
     String SelectedMenuListId; //if the page is navigated via Dishes ListView, this should have value
 
-    @ViewById(resName = "venues_llInitialLoadingProgress")
+    @ViewById(resName = "llInitialLoadingProgress")
     LinearLayout centralProgress;
     @ViewById(resName = "venue_tvName")
     TextView Name;

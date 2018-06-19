@@ -5,7 +5,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mosy.kalin.mosy.Adapters.FilterListAdapter;
-import com.mosy.kalin.mosy.DTOs.DishFilter;
+import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.R;
 
@@ -25,7 +25,7 @@ public class FiltersPage
     FilterListAdapter filtersAdapter;
 
     @FragmentArg("Filters")
-    ArrayList<DishFilter> Filters;
+    ArrayList<Filter> Filters;
 
     @ViewById(R.id.lv_Filters)
     ListView FiltersList;

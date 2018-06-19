@@ -57,7 +57,7 @@ public class MenuListItem
     public ArrayList<Ingredient> Ingredients;
 
     @SerializedName("CusineAllergens")
-    public ArrayList<DishFilter> CuisineAllergens;
+    public ArrayList<Filter> CuisineAllergens;
 
     @SerializedName("MatchingFiltersIds")
     public ArrayList<String> MatchingFiltersIds;
