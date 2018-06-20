@@ -59,7 +59,7 @@ public class MenuListItemDetailsView
 
     public void bind(MenuListItem menuListItem, LruCache<String, Bitmap> cache) {
         this.inMemoryCache = cache;
-        this.Allergens = menuListItem.CuisineAllergens;
+        this.Allergens = menuListItem.DishAllergens;
 
         if (menuListItem.ImageThumbnail != null) {
             this.ImageId = menuListItem.ImageThumbnail.Id;

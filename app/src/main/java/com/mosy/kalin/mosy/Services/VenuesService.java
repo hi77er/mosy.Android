@@ -21,6 +21,7 @@ import com.mosy.kalin.mosy.Models.Responses.VenueFiltersResult;
 import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -70,6 +71,8 @@ public class VenuesService {
                           double latitude,
                           double longitude,
                           String query,
+                          List<String> venueBadgeFilterIds,
+                          List<String> venueCultureFilterIds,
                           Integer localDayOfWeek,
                           String localTime,
                           int distanceFilterValue)
@@ -80,7 +83,7 @@ public class VenuesService {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     SearchVenuesBindingModel model = new SearchVenuesBindingModel(
                             authTokenHeader, maxResultsCount, totalItemsOffset,
-                            latitude, longitude, query, localDayOfWeek, localTime, distanceFilterValue);
+                            latitude, longitude, query, venueBadgeFilterIds, venueCultureFilterIds, localDayOfWeek, localTime, distanceFilterValue);
 
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 

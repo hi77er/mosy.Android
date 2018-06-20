@@ -201,7 +201,7 @@ public class VenuesFiltersActivity
                 intent.putExtra("ApplyDistanceFilterToVenues", distanceFilterFormattedValue);
                 intent.putExtra("ApplyWorkingStatusFilterToVenues", selectedApplyWorkingStatusFilter);
                 intent.putExtra("SelectedVenuesBadgeFilterIds", selectedVenueBadgeFilterIds);
-                intent.putExtra("SelectedVenuesCultureFilterIds", selectedVenueCultureFilterIds);
+                intent.putExtra("SelectedVenueCultureFilterIds", selectedVenueCultureFilterIds);
                 startActivity(intent);
             }
         } // In both "else"s do nothing. Simply close this activity without passing any values or initiating a "start" of the Wall activity.

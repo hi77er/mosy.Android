@@ -118,7 +118,7 @@ public class WallActivity
     @Extra
     static ArrayList<String> SelectedVenuesBadgeFilterIds;
     @Extra
-    static ArrayList<String> SelectedVenuesCultureFilterIds;
+    static ArrayList<String> SelectedVenueCultureFilterIds;
     @Extra
     static ArrayList<String> SelectedDishTypeFilterIds;
     @Extra
@@ -265,7 +265,7 @@ public class WallActivity
 
                         //INFO: WHILE SCROLLING LOAD
                         int totalItemsCount = recyclerView.getAdapter().getItemCount();
-                        loadMoreVenues(itemsToLoadCountWhenScrolled, totalItemsCount, query);
+                        loadMoreVenues(itemsToLoadCountWhenScrolled, totalItemsCount, query, SelectedVenuesBadgeFilterIds, SelectedVenueCultureFilterIds);
                     }
                 }
                 @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -296,7 +296,7 @@ public class WallActivity
                     venuesAdapter.clearItems();
 
                     //INFO: REFRESH INITIAL LOAD
-                    loadMoreVenues(itemsInitialLoadCount, 0, "searchall");
+                    loadMoreVenues(itemsInitialLoadCount, 0, "searchall", SelectedVenuesBadgeFilterIds, SelectedVenueCultureFilterIds);
                 }
                 venuesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
             });
@@ -304,14 +304,15 @@ public class WallActivity
             //INFO: INITIAL LOAD
             this.venuesAdapter.clearItems();
 
-            this.loadMoreVenues(itemsInitialLoadCount, 0, query);
+            this.loadMoreVenues(itemsInitialLoadCount, 0, query, SelectedVenuesBadgeFilterIds, SelectedVenueCultureFilterIds);
 
 //            this.venuesWall.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
             this.venuesWall.addOnScrollListener(venuesScrollListener);
         }
     }
 
-    void loadMoreVenues(int maxResultsCount, int totalItemsOffset, String query){
+    void loadMoreVenues(int maxResultsCount, int totalItemsOffset,
+                        String query, ArrayList<String> selectedVenueBadgeFilterIds, ArrayList<String> selectedVenueCultureFilterIds){
         if (ConnectivityHelper.isConnected(applicationContext) &&
                 this.lastKnownLocation != null) {
             AsyncTaskListener<ArrayList<Venue>> apiCallResultListener = new AsyncTaskListener<ArrayList<Venue>>() {
@@ -345,7 +346,8 @@ public class WallActivity
             this.venuesService.getVenues(
                     applicationContext, apiCallResultListener, this::showInvalidHostLayout, maxResultsCount, totalItemsOffset,
                     lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
-                    query, localDayOfWeek, localTime, ApplyDistanceFilterToVenues);
+                    query, selectedVenueBadgeFilterIds, selectedVenueCultureFilterIds,
+                    localDayOfWeek, localTime, ApplyDistanceFilterToVenues);
         }
     }
 
@@ -432,12 +434,9 @@ public class WallActivity
                             startActivity(intent);
                         }
                     };
-
                     this.venuesService.getById(applicationContext, apiCallResultListener, this::showInvalidHostLayout, castedItemClicked.VenueId);
                 }
-                else {
-                    // Do nothing for now
-                }
+                // Else - Do nothing for now
             });
 
             this.dishesAdapter.setSwipeRefreshLayout(dishesSwipeContainer);
@@ -464,10 +463,10 @@ public class WallActivity
                         int totalItemsOffset,
                         Boolean isPromoted,
                         String query,
-                        ArrayList<String> phaseFilterIds,
-                        ArrayList<String> regionFilterIds,
-                        ArrayList<String> spectrumFilterIds,
-                        ArrayList<String> allergensFilterIds){
+                        ArrayList<String> selectedDishTypeFilterIds,
+                        ArrayList<String> selectedDishRegionFilterIds,
+                        ArrayList<String> selectedDishMainIngredientFilterIds,
+                        ArrayList<String> selectedDishAllergenFilterIds){
 
         if (ConnectivityHelper.isConnected(applicationContext) &&
                 lastKnownLocation != null) {
@@ -520,7 +519,7 @@ public class WallActivity
                     maxResultsCount, totalItemsOffset,
                     lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
                     isPromoted, query,
-                    phaseFilterIds, regionFilterIds, spectrumFilterIds, allergensFilterIds,
+                    selectedDishTypeFilterIds, selectedDishRegionFilterIds, selectedDishMainIngredientFilterIds, selectedDishAllergenFilterIds,
                     localDayOfWeek, localTime, ApplyDistanceFilterToDishes);
         }
         else {
@@ -629,7 +628,7 @@ public class WallActivity
             intent.putExtra("PreselectedDistanceFilterValue", ApplyDistanceFilterToVenues);
             intent.putExtra("PreselectedApplyWorkingStatusFilter", ApplyWorkingStatusFilterToVenues);
             intent.putExtra("PreselectedVenueBadgeFilterIds", SelectedVenuesBadgeFilterIds);
-            intent.putExtra("PreselectedVenueCultureFilterIds", SelectedVenuesCultureFilterIds);
+            intent.putExtra("PreselectedVenueCultureFilterIds", SelectedVenueCultureFilterIds);
             startActivity(intent);
         }
     }

@@ -42,8 +42,8 @@ public class Filter
         parcel.writeString(I18nResourceName);
         parcel.writeString(Description);
         parcel.writeString(I18nResourceDescription);
-        parcel.writeString(this.FilteredType.name());
-        parcel.writeString(this.FilterType.name());
+        if (this.FilteredType != null) parcel.writeString(this.FilteredType.name());
+        if (this.FilterType != null) parcel.writeString(this.FilterType.name());
         parcel.writeInt(this.OrderIndex);
         parcel.writeInt(IsChecked ? 1 : 0);
     }
