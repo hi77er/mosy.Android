@@ -11,7 +11,7 @@ import com.mosy.kalin.mosy.Fragments.MenuListPage_;
 
 import java.util.ArrayList;
 
-public class MenuListsPagerAdapter
+public class MenuPagerAdapter
         extends FragmentStatePagerAdapter {
 
     ArrayList<MenuList> menuLists;
@@ -20,7 +20,7 @@ public class MenuListsPagerAdapter
 
     public void setVenueId(String venueId){ this.venueId = venueId; }
 
-    public MenuListsPagerAdapter(FragmentManager fm, ArrayList<MenuList> menuLists, String menuListId) {
+    public MenuPagerAdapter(FragmentManager fm, ArrayList<MenuList> menuLists, String menuListId) {
         super(fm);
         this.menuLists = menuLists;
         this.selectedMenuListId = menuListId;

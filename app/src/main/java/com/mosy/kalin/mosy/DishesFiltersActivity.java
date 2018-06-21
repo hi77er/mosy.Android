@@ -18,12 +18,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.annimon.stream.Stream;
-import com.mosy.kalin.mosy.Adapters.DishFiltersPagerAdapter;
-import com.mosy.kalin.mosy.DTOs.DishFilter;
+import com.mosy.kalin.mosy.Adapters.FilterDishesPagerAdapter;
+import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Helpers.ListHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Models.Responses.RequestableFiltersResult;
+import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
 import com.mosy.kalin.mosy.Services.DishesService;
 
 import org.androidannotations.annotations.AfterViews;
@@ -49,7 +49,7 @@ public class DishesFiltersActivity
     private int distanceFilterFormattedValue;
     private boolean selectedApplyWorkingStatusFilter;
 
-    private DishFiltersPagerAdapter DFAdapter;
+    private FilterDishesPagerAdapter dishFiltersAdapter;
 
     @Bean
     DishesService dishesService;
@@ -59,30 +59,32 @@ public class DishesFiltersActivity
     @Extra
     static boolean PreselectedApplyWorkingStatusFilter;
     @Extra
-    static ArrayList<String> PreselectedPhaseFilterIds;
+    static ArrayList<String> PreselectedDishTypeFilterIds;
     @Extra
-    static ArrayList<String> PreselectedRegionFilterIds;
+    static ArrayList<String> PreselectedDishRegionFilterIds;
     @Extra
-    static ArrayList<String> PreselectedSpectrumFilterIds;
+    static ArrayList<String> PreselectedDishMainIngredientFilterIds;
     @Extra
-    static ArrayList<String> PreselectedAllergensFilterIds;
+    static ArrayList<String> PreselectedDishAllergenFilterIds;
+
+    @ViewById(resName = "filtersDishes_llInitialLoadingProgress")
+    LinearLayout centralProgress;
+
+    @ViewById(resName = "tl_filters_dishes")
+    TabLayout dishesFiltersTabs;
+    @ViewById(resName = "vp_filters_dishes")
+    ViewPager dishesFiltersPager;
 
     @ViewById(resName = "filters_dishes_scWorkingTimeFilter")
     public Switch workingStatusFilter;
-
-    @ViewById(resName = "vp_filters_dishes")
-    ViewPager dishesFiltersPager;
-    @ViewById(resName = "venues_llInitialLoadingProgress")
-    LinearLayout centralProgress;
-    @ViewById(resName = "tl_filters_dishes")
-    TabLayout dishesFiltersTabs;
-    @ViewById(resName = "filterDishes_GoButton")
-    Button goButton;
-
     @ViewById(resName = "filters_dishes_tvDistanceLabel")
     public TextView distanceLabel;
     @ViewById(resName = "filters_dishes_sbDistanceFilter")
     public SeekBar distanceSeekBar;
+
+
+    @ViewById(resName = "filterDishes_GoButton")
+    Button goButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -99,9 +101,7 @@ public class DishesFiltersActivity
     public void afterViews(){
         this.workingStatusFilter.setChecked(PreselectedApplyWorkingStatusFilter);
         this.workingStatusFilter.setOnCheckedChangeListener(
-                (compoundButton, b) -> {
-                    selectedApplyWorkingStatusFilter =  compoundButton.isChecked();
-                }
+            (compoundButton, b) -> selectedApplyWorkingStatusFilter = compoundButton.isChecked()
         );
 
         if (ConnectivityHelper.isConnected(applicationContext)) {
@@ -112,9 +112,6 @@ public class DishesFiltersActivity
             networkLost = true;
             showFiltersLoadingLayout();
         }
-
-        afterViewsFinished = true;
-
 
         this.distanceFilterFormattedValue = PreselectedDistanceFilterValue;
         this.distanceLabel.setText(this.getDistanceFilterLabelText(PreselectedDistanceFilterValue));
@@ -137,6 +134,8 @@ public class DishesFiltersActivity
             @Override public void onStartTrackingTouch(SeekBar seekBar) { }
             @Override public void onStopTrackingTouch(SeekBar seekBar) { }
         });
+
+        afterViewsFinished = true;
     }
 
     @Override
@@ -144,10 +143,10 @@ public class DishesFiltersActivity
         super.onStart();
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_activity_filters_dishes);
 
-        if (PreselectedPhaseFilterIds == null) PreselectedPhaseFilterIds = new ArrayList<>();
-        if (PreselectedRegionFilterIds == null) PreselectedRegionFilterIds = new ArrayList<>();
-        if (PreselectedSpectrumFilterIds == null) PreselectedSpectrumFilterIds = new ArrayList<>();
-        if (PreselectedAllergensFilterIds == null) PreselectedAllergensFilterIds = new ArrayList<>();
+        if (PreselectedDishTypeFilterIds == null) PreselectedDishTypeFilterIds = new ArrayList<>();
+        if (PreselectedDishRegionFilterIds == null) PreselectedDishRegionFilterIds = new ArrayList<>();
+        if (PreselectedDishMainIngredientFilterIds == null) PreselectedDishMainIngredientFilterIds = new ArrayList<>();
+        if (PreselectedDishAllergenFilterIds == null) PreselectedDishAllergenFilterIds = new ArrayList<>();
     }
 
     @Override
@@ -179,38 +178,37 @@ public class DishesFiltersActivity
 
         if (ConnectivityHelper.isConnected(applicationContext)) {
             Intent intent = new Intent(DishesFiltersActivity.this, WallActivity_.class);
-            ArrayList<String> selectedPhasesFilterIds = new ArrayList<>();
-            ArrayList<String> selectedRegionsFilterIds = new ArrayList<>();
-            ArrayList<String> selectedSpectrumFilterIds = new ArrayList<>();
-            ArrayList<String> selectedAllergensFilterIds = new ArrayList<>();
+            ArrayList<String> selectedDishTypeFilterIds = new ArrayList<>();
+            ArrayList<String> selectedDishRegionFilterIds = new ArrayList<>();
+            ArrayList<String> selectedDishMainIngredientFilterIds = new ArrayList<>();
+            ArrayList<String> selectedDishAllergenFilterIds = new ArrayList<>();
 
-//            distanceFilterFormattedValue = formatProgressDivideBy100(this.distanceSeekBar.getProgress());
             selectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
 
-            if (DFAdapter != null && DFAdapter.PhasesFilters != null) {
-                selectedPhasesFilterIds = new ArrayList<>(Stream
-                        .of(DFAdapter.PhasesFilters)
+            if (this.dishFiltersAdapter != null && this.dishFiltersAdapter.DishTypeFilters != null) {
+                selectedDishTypeFilterIds = new ArrayList<>(Stream
+                        .of(dishFiltersAdapter.DishTypeFilters)
                         .filter(x -> x.IsChecked)
                         .map(x -> x.Id)
                         .toList());
             }
-            if (DFAdapter != null && DFAdapter.RegionsFilters != null) {
-                selectedRegionsFilterIds = new ArrayList<>(Stream
-                        .of(DFAdapter.RegionsFilters)
+            if (this.dishFiltersAdapter != null && this.dishFiltersAdapter.DishRegionFilters != null) {
+                selectedDishRegionFilterIds = new ArrayList<>(Stream
+                        .of(dishFiltersAdapter.DishRegionFilters)
                         .filter(x -> x.IsChecked)
                         .map(x -> x.Id)
                         .toList());
             }
-            if (DFAdapter != null && DFAdapter.SpectrumFilters != null) {
-                selectedSpectrumFilterIds = new ArrayList<>(Stream
-                        .of(DFAdapter.SpectrumFilters)
+            if (this.dishFiltersAdapter != null && this.dishFiltersAdapter.DishMainIngredientFilters != null) {
+                selectedDishMainIngredientFilterIds = new ArrayList<>(Stream
+                        .of(dishFiltersAdapter.DishMainIngredientFilters)
                         .filter(x -> x.IsChecked)
                         .map(x -> x.Id)
                         .toList());
             }
-            if (DFAdapter != null && DFAdapter.AllergensFilters != null) {
-                selectedAllergensFilterIds = new ArrayList<>(Stream
-                        .of(DFAdapter.AllergensFilters)
+            if (this.dishFiltersAdapter != null && this.dishFiltersAdapter.DishAllergenFilters != null) {
+                selectedDishAllergenFilterIds = new ArrayList<>(Stream
+                        .of(dishFiltersAdapter.DishAllergenFilters)
                         .filter(x -> x.IsChecked)
                         .map(x -> x.Id)
                         .toList());
@@ -218,52 +216,46 @@ public class DishesFiltersActivity
 
             boolean filtersStateChanged = checkFiltersStateChanged(distanceFilterFormattedValue,
                                                                    selectedApplyWorkingStatusFilter,
-                                                                   selectedPhasesFilterIds,
-                                                                   selectedRegionsFilterIds,
-                                                                   selectedSpectrumFilterIds,
-                                                                   selectedAllergensFilterIds);
+                                                                   selectedDishTypeFilterIds,
+                                                                   selectedDishRegionFilterIds,
+                                                                   selectedDishMainIngredientFilterIds,
+                                                                   selectedDishAllergenFilterIds);
 
             if (filtersStateChanged) {
                 intent.putExtra("ApplyDistanceFilterToDishes", distanceFilterFormattedValue);
                 intent.putExtra("ApplyWorkingStatusFilterToDishes", selectedApplyWorkingStatusFilter);
-                intent.putExtra("SelectedPhaseFilterIds", selectedPhasesFilterIds);
-                intent.putExtra("SelectedRegionFilterIds", selectedRegionsFilterIds);
-                intent.putExtra("SelectedSpectrumFilterIds", selectedSpectrumFilterIds);
-                intent.putExtra("SelectedAllergensFilterIds", selectedAllergensFilterIds);
+                intent.putExtra("SelectedDishTypeFilterIds", selectedDishTypeFilterIds);
+                intent.putExtra("SelectedDishRegionFilterIds", selectedDishRegionFilterIds);
+                intent.putExtra("SelectedDishMainIngredientFilterIds", selectedDishMainIngredientFilterIds);
+                intent.putExtra("SelectedDishAllergenFilterIds", selectedDishAllergenFilterIds);
                 startActivity(intent);
             }
-            else {
-                // Do nothing and.
-            }
-        }
-        else {
-            // Do nothing and.
-        }
+        }// In both "else"s do nothing. Simply close this activity without passing any values or initiating a "start" of the Wall activity.
     }
 
     private void loadMenuListItemFilters() {
 
-        AsyncTaskListener<RequestableFiltersResult> listener = new AsyncTaskListener<RequestableFiltersResult>() {
+        AsyncTaskListener<DishFiltersResult> listener = new AsyncTaskListener<DishFiltersResult>() {
             @Override public void onPreExecute() {
                 showFiltersLoadingLayout();
             }
 
-            @Override public void onPostExecute(RequestableFiltersResult result) {
+            @Override public void onPostExecute(DishFiltersResult result) {
                 if (result != null) {
                     populateAlreadySelectedFilters(
-                            result.CuisinePhaseFilters,
-                            result.CuisineRegionFilters,
-                            result.CuisineSpectrumFilters,
-                            result.CuisineAllergensFilters);
+                            result.DishTypeFilters,
+                            result.DishRegionFilters,
+                            result.DishMainIngredientFilters,
+                            result.DishAllergenFilters);
 
-                    DFAdapter = new DishFiltersPagerAdapter(applicationContext,
+                    dishFiltersAdapter = new FilterDishesPagerAdapter(applicationContext,
                                                             getSupportFragmentManager(),
-                                                            result.CuisinePhaseFilters,
-                                                            result.CuisineRegionFilters,
-                                                            result.CuisineSpectrumFilters,
-                                                            result.CuisineAllergensFilters);
+                                                            result.DishTypeFilters,
+                                                            result.DishRegionFilters,
+                                                            result.DishMainIngredientFilters,
+                                                            result.DishAllergenFilters);
 
-                    dishesFiltersPager.setAdapter(DFAdapter);
+                    dishesFiltersPager.setAdapter(dishFiltersAdapter);
                     dishesFiltersTabs.setupWithViewPager(dishesFiltersPager);
                 }
                 onFiltersLoaded();
@@ -286,47 +278,47 @@ public class DishesFiltersActivity
     }
 
     private void populateAlreadySelectedFilters(
-            ArrayList<DishFilter> cuisinePhaseFilters,
-            ArrayList<DishFilter> cuisineRegionFilters,
-            ArrayList<DishFilter> cuisineSpectrumFilters,
-            ArrayList<DishFilter> cuisineAllergensFilters) {
+            ArrayList<Filter> dishTypeFilters,
+            ArrayList<Filter> dishRegionFilters,
+            ArrayList<Filter> dishMainIngredientFilters,
+            ArrayList<Filter> dishAllergenFilters) {
 
-        Stream.of(PreselectedPhaseFilterIds).forEach(filterId -> {
-            DishFilter matchingFilter = Stream.of(cuisinePhaseFilters).filter(filter -> filter.Id.equals(filterId)).single();
+        Stream.of(PreselectedDishTypeFilterIds).forEach(filterId -> {
+            Filter matchingFilter = Stream.of(dishTypeFilters).filter(filter -> filter.Id.equals(filterId)).single();
             matchingFilter.IsChecked = true;
         });
 
-        Stream.of(PreselectedRegionFilterIds).forEach(filterId -> {
-            DishFilter matchingFilter = Stream.of(cuisineRegionFilters).filter(filter -> filter.Id.equals(filterId)).single();
+        Stream.of(PreselectedDishRegionFilterIds).forEach(filterId -> {
+            Filter matchingFilter = Stream.of(dishRegionFilters).filter(filter -> filter.Id.equals(filterId)).single();
             matchingFilter.IsChecked = true;
         });
 
-        Stream.of(PreselectedSpectrumFilterIds).forEach(filterId -> {
-            DishFilter matchingFilter = Stream.of(cuisineSpectrumFilters).filter(filter -> filter.Id.equals(filterId)).single();
+        Stream.of(PreselectedDishMainIngredientFilterIds).forEach(filterId -> {
+            Filter matchingFilter = Stream.of(dishMainIngredientFilters).filter(filter -> filter.Id.equals(filterId)).single();
             matchingFilter.IsChecked = true;
         });
 
-        Stream.of(PreselectedAllergensFilterIds).forEach(filterId -> {
-            DishFilter matchingFilter = Stream.of(cuisineAllergensFilters).filter(filter -> filter.Id.equals(filterId)).single();
+        Stream.of(PreselectedDishAllergenFilterIds).forEach(filterId -> {
+            Filter matchingFilter = Stream.of(dishAllergenFilters).filter(filter -> filter.Id.equals(filterId)).single();
             matchingFilter.IsChecked = true;
         });
     }
 
     private boolean checkFiltersStateChanged(int distanceFilterValue,
                                              boolean selectedApplyWorkingStatusFilter,
-                                             ArrayList<String> selectedPhasesFilterIds,
-                                             ArrayList<String> selectedRegionsFilterIds,
-                                             ArrayList<String> selectedSpectrumFilterIds,
-                                             ArrayList<String> selectedAllergensFilterIds) {
+                                             ArrayList<String> selectedDishTypeFilterIds,
+                                             ArrayList<String> selectedDishRegionFilterIds,
+                                             ArrayList<String> selectedDishMainIngredientFilterIds,
+                                             ArrayList<String> selectedDishAllergenFilterIds) {
 
         boolean searchedDistanceChanged = distanceFilterValue != PreselectedDistanceFilterValue;
         boolean applyWorkingStatusChanged = selectedApplyWorkingStatusFilter != PreselectedApplyWorkingStatusFilter;
-        boolean phasesChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedPhaseFilterIds, selectedPhasesFilterIds);
-        boolean regionsChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedRegionFilterIds, selectedRegionsFilterIds);
-        boolean spectrumChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedSpectrumFilterIds, selectedSpectrumFilterIds);
-        boolean allergensChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedAllergensFilterIds, selectedAllergensFilterIds);
+        boolean dishTypeFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedDishTypeFilterIds, selectedDishTypeFilterIds);
+        boolean dishRegionFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedDishRegionFilterIds, selectedDishRegionFilterIds);
+        boolean dishMainIngredientFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedDishMainIngredientFilterIds, selectedDishMainIngredientFilterIds);
+        boolean dishAllergenFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedDishAllergenFilterIds, selectedDishAllergenFilterIds);
 
-        return searchedDistanceChanged || applyWorkingStatusChanged || phasesChanged || regionsChanged || spectrumChanged || allergensChanged;
+        return searchedDistanceChanged || applyWorkingStatusChanged || dishTypeFiltersChanged || dishRegionFiltersChanged || dishMainIngredientFiltersChanged || dishAllergenFiltersChanged;
     }
 
     @NonNull

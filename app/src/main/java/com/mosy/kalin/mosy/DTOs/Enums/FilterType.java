@@ -2,41 +2,31 @@ package com.mosy.kalin.mosy.DTOs.Enums;
 
 import com.google.gson.annotations.SerializedName;
 
-public enum ContactType {
-
-    @SerializedName("0")
-    Undefined(0),
-
+public enum FilterType {
     @SerializedName("1")
-    Email(1),
+    VenueBadge(1),
 
     @SerializedName("2")
-    Telephone(2),
+    VenueCulture(2),
 
     @SerializedName("3")
-    Facebook(3),
+    DishType(3),
 
     @SerializedName("4")
-    Skype(4),
+    DishRegion(4),
 
     @SerializedName("5")
-    Twitter(5),
+    DishMainIngredient(5),
 
     @SerializedName("6")
-    Foursquare(6),
-
-    @SerializedName("7")
-    GooglePlus(7),
-
-    @SerializedName("8")
-    Address(8);
+    DishAllergens(6);
 
     private final int value;
     public int getValue() {
         return value;
     }
 
-    private ContactType(int value) {
+    private FilterType(int value) {
         this.value = value;
     }
 }

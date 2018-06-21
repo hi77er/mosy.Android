@@ -12,10 +12,10 @@ public class SearchMenuListItemsBindingModel {
     public double Latitude;
     public double Longitude;
     public Boolean IsPromoted;
-    public List<String> CuisinePhaseIds;
-    public List<String> CuisineRegionIds;
-    public List<String> CuisineSpectrumIds;
-    public List<String> CuisineAllergensIds;
+    public List<String> SelectedDishTypeFilterIds;
+    public List<String> SelectedDishRegionFilterIds;
+    public List<String> SelectedDishMainIngredientFilterIds;
+    public List<String> SelectedDishAllergenFilterIds;
     public Integer LocalDayOfWeek;
     public String LocalTime;
     public int SearchedDistanceMeters;
@@ -29,10 +29,10 @@ public class SearchMenuListItemsBindingModel {
             double longitude,
             Boolean isPromoted,
             String query,
-            ArrayList<String> phaseFilterIds,
-            ArrayList<String> regionFilterIds,
-            ArrayList<String> spectrumFilterIds,
-            ArrayList<String> allergensFilterIds,
+            ArrayList<String> selectedDishTypeFilterIds,
+            ArrayList<String> selectedDishRegionFilterIds,
+            ArrayList<String> selectedDishMainIngredientFilterIds,
+            ArrayList<String> selectedDishAllergenFilterIds,
             Integer localDayOfWeek,
             String localTime,
             int searchedDistanceMeters)
@@ -44,10 +44,10 @@ public class SearchMenuListItemsBindingModel {
         this.Longitude = longitude;
         this.IsPromoted = isPromoted;
         this.Query = query;
-        this.CuisinePhaseIds = phaseFilterIds;
-        this.CuisineRegionIds = regionFilterIds;
-        this.CuisineSpectrumIds = spectrumFilterIds;
-        this.CuisineAllergensIds = allergensFilterIds;
+        this.SelectedDishTypeFilterIds = selectedDishTypeFilterIds;
+        this.SelectedDishRegionFilterIds = selectedDishRegionFilterIds;
+        this.SelectedDishMainIngredientFilterIds = selectedDishMainIngredientFilterIds;
+        this.SelectedDishAllergenFilterIds = selectedDishAllergenFilterIds;
         this.LocalDayOfWeek = localDayOfWeek;
         this.LocalTime= localTime;
         this.SearchedDistanceMeters = searchedDistanceMeters;

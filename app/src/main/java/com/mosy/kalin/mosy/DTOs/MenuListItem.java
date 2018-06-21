@@ -56,8 +56,8 @@ public class MenuListItem
     @SerializedName("Ingredients")
     public ArrayList<Ingredient> Ingredients;
 
-    @SerializedName("CusineAllergens")
-    public ArrayList<DishFilter> CuisineAllergens;
+    @SerializedName("DishAllergens")
+    public ArrayList<Filter> DishAllergens;
 
     @SerializedName("MatchingFiltersIds")
     public ArrayList<String> MatchingFiltersIds;
@@ -65,7 +65,7 @@ public class MenuListItem
     @SerializedName("MismatchingFiltersIds")
     public ArrayList<String> MismatchingFiltersIds;
 
-@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     protected MenuListItem(Parcel in) {
         String[] data = new String[8];
 
@@ -79,7 +79,9 @@ public class MenuListItem
         this.VenueId = data[5];
         this.VenueName = data[6];
         this.Ingredients = in.readArrayList(null);
-        this.CuisineAllergens = in.readArrayList(null);
+        this.DishAllergens = in.readArrayList(null);
+        this.MatchingFiltersIds = in.readArrayList(null);
+        this.MismatchingFiltersIds = in.readArrayList(null);
     }
 
     @Override
@@ -92,7 +94,9 @@ public class MenuListItem
         parcel.writeString(VenueId);
         parcel.writeString(VenueName);
         parcel.writeList(Ingredients);
-        parcel.writeList(CuisineAllergens);
+        parcel.writeList(DishAllergens);
+        parcel.writeList(MatchingFiltersIds);
+        parcel.writeList(MismatchingFiltersIds);
 
     }
 

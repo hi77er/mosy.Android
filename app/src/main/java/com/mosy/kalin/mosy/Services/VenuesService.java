@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
+import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IDishesRepository;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IVenuesRepository;
 import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;
@@ -14,10 +15,13 @@ import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.VenueLocation;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
+import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
+import com.mosy.kalin.mosy.Models.Responses.VenueFiltersResult;
 
 import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,10 +38,10 @@ public class VenuesService {
                         Runnable onInvalidHost,
                         String venueId)
     {
-        this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
                 () -> {
-                    String authTokenHeader = this.accountService.getAuthTokenHeader(applicationContext);
+                    String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
                     try {
@@ -67,17 +71,19 @@ public class VenuesService {
                           double latitude,
                           double longitude,
                           String query,
+                          List<String> venueBadgeFilterIds,
+                          List<String> venueCultureFilterIds,
                           Integer localDayOfWeek,
                           String localTime,
                           int distanceFilterValue)
     {
-        this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                  apiCallResultListener::onPreExecute,
                 () -> {
-                    String authTokenHeader = this.accountService.getAuthTokenHeader(applicationContext);
+                    String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     SearchVenuesBindingModel model = new SearchVenuesBindingModel(
                             authTokenHeader, maxResultsCount, totalItemsOffset,
-                            latitude, longitude, query, localDayOfWeek, localTime, distanceFilterValue);
+                            latitude, longitude, query, venueBadgeFilterIds, venueCultureFilterIds, localDayOfWeek, localTime, distanceFilterValue);
 
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
@@ -105,10 +111,10 @@ public class VenuesService {
                             Runnable onInvalidHost,
                             String venueId)
     {
-        this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
                 () -> {
-                    String authToken = this.accountService.getAuthTokenHeader(applicationContext);
+                    String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
                     try {
@@ -136,10 +142,10 @@ public class VenuesService {
                                  Runnable onInvalidHost,
                                  String venueId)
     {
-        this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
                 () -> {
-                    String authToken = this.accountService.getAuthTokenHeader(applicationContext);
+                    String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
                     try {
@@ -166,11 +172,11 @@ public class VenuesService {
                                      Runnable onInvalidHost,
                                      String venueId)
     {
-        this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
                 () -> {
                     try {
-                        String authToken = this.accountService.getAuthTokenHeader(applicationContext);
+                        String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                         Retrofit retrofitClient = RetrofitAPIClientFactory.getClient();
                         IVenuesRepository repository = retrofitClient.create(IVenuesRepository.class);
 
@@ -199,10 +205,10 @@ public class VenuesService {
                             Runnable onInvalidHost,
                             String venueId)
     {
-        this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
                 () -> {
-                    String authToken = this.accountService.getAuthTokenHeader(applicationContext);
+                    String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
                     try {
@@ -230,10 +236,10 @@ public class VenuesService {
                                    Runnable onInvalidHost,
                                    String venueId)
     {
-        this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
                 () -> {
-                    String authToken = this.accountService.getAuthTokenHeader(applicationContext);
+                    String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
                     try {
                         Call<VenueImage> callImage = repository.getImageMetaIndoor(authToken, venueId);
@@ -260,10 +266,10 @@ public class VenuesService {
                         Runnable onInvalidHost,
                         String venueId)
     {
-        this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
                 () -> {
-                    String authToken = this.accountService.getAuthTokenHeader(applicationContext);
+                    String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
                     try {
                         Call<ArrayList<MenuList>> callMenu = repository.getMenu(authToken, venueId);
@@ -283,6 +289,34 @@ public class VenuesService {
                     }
                 },
                 onInvalidHost);
+    }
+
+    public void getFilters(Context applicationContext,
+                           AsyncTaskListener<VenueFiltersResult> apiCallResultListener)
+    {
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    try {
+                        Call<VenueFiltersResult> callFilters = repository.getFilters(authTokenHeader);
+                        apiCallResultListener.onPreExecute();
+                        callFilters.enqueue(new Callback<VenueFiltersResult>() {
+                            @Override public void onResponse(@NonNull Call<VenueFiltersResult> call, @NonNull Response<VenueFiltersResult> response) {
+                                VenueFiltersResult result = response.body();
+                                apiCallResultListener.onPostExecute(result);
+                            }
+                            @Override public void onFailure(@NonNull Call<VenueFiltersResult> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                },
+                null);
     }
 
 }

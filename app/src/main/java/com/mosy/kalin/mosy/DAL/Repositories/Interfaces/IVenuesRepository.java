@@ -8,6 +8,7 @@ import com.mosy.kalin.mosy.DTOs.VenueContacts;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.VenueLocation;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
+import com.mosy.kalin.mosy.Models.Responses.VenueFiltersResult;
 
 import java.util.ArrayList;
 
@@ -44,5 +45,8 @@ public interface IVenuesRepository {
 
     @GET("fbo/publicmenu")
     Call<ArrayList<MenuList>> getMenu(@Header("Authorization") String authorization, @Query("fboId") String venueId);
+
+    @GET("fbo/filters/all")
+    Call<VenueFiltersResult> getFilters (@Header("Authorization") String authorization);
 
 }

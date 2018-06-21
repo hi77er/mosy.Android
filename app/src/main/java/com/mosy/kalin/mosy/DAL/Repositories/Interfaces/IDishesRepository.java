@@ -1,10 +1,8 @@
 package com.mosy.kalin.mosy.DAL.Repositories.Interfaces;
 
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
-import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
-import com.mosy.kalin.mosy.Models.Responses.RequestableFiltersResult;
+import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
 
 import java.util.ArrayList;
 
@@ -20,6 +18,6 @@ public interface IDishesRepository {
     Call<ArrayList<MenuListItem>> loadDishes(@Header("Authorization") String authorization, @Body SearchMenuListItemsBindingModel model);
 
     @GET("dishes/filters/all")
-    Call<RequestableFiltersResult> getFilters (@Header("Authorization") String authorization);
+    Call<DishFiltersResult> getFilters (@Header("Authorization") String authorization);
 
 }

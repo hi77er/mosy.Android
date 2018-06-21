@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mosy.kalin.mosy.DTOs.DishFilter;
+import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.Ingredient;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
@@ -37,7 +37,7 @@ public class MenuListItemDetailsView
     private LruCache<String, Bitmap> inMemoryCache;
     private boolean IsUsingDefaultImageThumbnail = true;
     private String ImageId;
-    private ArrayList<DishFilter> Allergens;
+    private ArrayList<Filter> Allergens;
 
     public MenuListItemDetailsView(Context context) {
         super(context);
@@ -59,7 +59,7 @@ public class MenuListItemDetailsView
 
     public void bind(MenuListItem menuListItem, LruCache<String, Bitmap> cache) {
         this.inMemoryCache = cache;
-        this.Allergens = menuListItem.CuisineAllergens;
+        this.Allergens = menuListItem.DishAllergens;
 
         if (menuListItem.ImageThumbnail != null) {
             this.ImageId = menuListItem.ImageThumbnail.Id;
@@ -163,7 +163,7 @@ public class MenuListItemDetailsView
         {
             StringBuilder allergensMessage = new StringBuilder(StringHelper.empty());
             String delimiter = StringHelper.empty();
-            for (DishFilter filter : this.Allergens) {
+            for (Filter filter : this.Allergens) {
                 allergensMessage.append(delimiter).append(filter.Name);
                 delimiter = ", ";
             }

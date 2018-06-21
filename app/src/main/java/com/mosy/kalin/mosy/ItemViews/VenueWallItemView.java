@@ -16,6 +16,7 @@ import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.BusinessHoursHelper;
 import com.mosy.kalin.mosy.Helpers.LocationHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.ItemViews.Base.WallItemViewBase;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.R;
@@ -29,14 +30,14 @@ import org.androidannotations.annotations.ViewById;
 
 @EViewGroup(R.layout.activity_item_venue)
 public class VenueWallItemView
-        extends LinearLayout {
+        extends WallItemViewBase {
 
     private static final String originalBlobStorageContainerPath = "userimages\\fboalbums\\original";
-
-    private Venue Venue;
     private boolean IsUsingDefaultThumbnail;
 
     private Context baseContext;
+    private Venue Venue;
+
 
     @ViewById(resName = "venueItem_tvName")
     TextView Name;
@@ -56,7 +57,7 @@ public class VenueWallItemView
         this.baseContext = context;
     }
 
-    public void bind(Venue venue, int position) {
+    public void bind(Venue venue) {
         this.OutdoorImageThumbnail.setImageDrawable(null);
 
         if (venue != null) {

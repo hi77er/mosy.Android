@@ -1,26 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6">
+        android:layout_weight="8">
 
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tl_filters_venues"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabTextColor="#FFF"
+                app:tabSelectedTextColor="@color/colorAccent"
+                android:background="@color/colorPrimaryVeryDark"
+                android:minHeight="?android:attr/actionBarSize"
+                app:tabGravity="center"
+                app:tabMode="scrollable" />
+
+            <LinearLayout
+                android:id="@+id/filtersVenues_llInitialLoadingProgress"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_margin="20dp">
+
+                <ProgressBar
+                    android:id="@+id/pbHeaderProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true" >
+                </ProgressBar>
+            </LinearLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vp_filters_venues"
+                android:layout_width="match_parent"
+                android:layout_height="1000dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark">
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical"
-            android:padding="15dp">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentStart="true">
 
             <TextView
                 android:id="@+id/filters_venues_tvDistanceLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
                 android:text="@string/activity_venuesFilters_distanceFilterTextView"
                 android:textColor="@color/colorPrimaryVeryLight" />
@@ -29,43 +84,53 @@
                 android:id="@+id/filters_venues_sbDistanceFilter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
                 android:min="100"
-                android:max="10000"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/activity_venuesFilters_showClosedTextView"
-                android:textColor="@color/colorPrimaryVeryLight" />
-
-            <Switch
-                android:id="@+id/filters_venues_sbWorkingTimeFilter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:layout_marginBottom="10dp" />
+                android:max="10000" />
 
         </LinearLayout>
-    </ScrollView>
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingTop="10dp"
-        android:background="@color/colorPrimaryDark">
-
-        <Button
-            android:id="@+id/filterVenues_GoButton"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/activity_venuesFilters_goBtn"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="10dp"
-            android:background="@color/transparent"
-            android:textColor="@color/colorAccent" />
-    </RelativeLayout>
+            android:layout_gravity="start">
+
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/filters_venues_tvWorkingTimeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/activity_venuesFilters_showClosedTextView"
+                    android:textColor="@color/colorPrimaryVeryLight" />
+
+                <Switch
+                    android:id="@+id/filters_venues_sbWorkingTimeFilter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/filterVenues_GoButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/activity_dishesFilters_goBtn"
+                android:background="@color/transparent"
+                android:textColor="@color/colorAccent" />
+        </LinearLayout>
+    </LinearLayout>
+
 </LinearLayout>

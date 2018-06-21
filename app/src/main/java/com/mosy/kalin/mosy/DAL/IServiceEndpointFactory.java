@@ -1,4 +1,4 @@
-package com.mosy.kalin.mosy.Models.Interfaces;
+package com.mosy.kalin.mosy.DAL;
 
 public interface IServiceEndpointFactory {
 

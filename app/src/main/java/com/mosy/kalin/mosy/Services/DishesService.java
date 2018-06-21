@@ -8,7 +8,7 @@ import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IDishesRepository;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
-import com.mosy.kalin.mosy.Models.Responses.RequestableFiltersResult;
+import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
 
 import org.androidannotations.annotations.EBean;
 
@@ -39,10 +39,10 @@ public class DishesService {
                            String localTime,
                            int searchedDistanceMeters)
     {
-        this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
                 () -> {
-                    String authTokenHeader = this.accountService.getAuthTokenHeader(applicationContext);
+                    String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(authTokenHeader,
                             maxResultsCount, totalItemsOffset, latitude, longitude, isPromoted, query, phaseFilterIds,
                             regionFilterIds, spectrumFilterIds, allergensFilterIds, localDayOfWeek, localTime, searchedDistanceMeters);
@@ -69,22 +69,22 @@ public class DishesService {
     }
 
     public void getFilters(Context applicationContext,
-                            AsyncTaskListener<RequestableFiltersResult> apiCallResultListener)
+                            AsyncTaskListener<DishFiltersResult> apiCallResultListener)
     {
-        this.accountService.executeAssuredTokenValidOrRefreshed(applicationContext,
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
                         () -> {
-                    String authTokenHeader = this.accountService.getAuthTokenHeader(applicationContext);
+                    String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
                     try {
-                        Call<RequestableFiltersResult> callFilters = repository.getFilters(authTokenHeader);
+                        Call<DishFiltersResult> callFilters = repository.getFilters(authTokenHeader);
                         apiCallResultListener.onPreExecute();
-                        callFilters.enqueue(new Callback<RequestableFiltersResult>() {
-                            @Override public void onResponse(@NonNull Call<RequestableFiltersResult> call, @NonNull Response<RequestableFiltersResult> response) {
-                                RequestableFiltersResult result = response.body();
+                        callFilters.enqueue(new Callback<DishFiltersResult>() {
+                            @Override public void onResponse(@NonNull Call<DishFiltersResult> call, @NonNull Response<DishFiltersResult> response) {
+                                DishFiltersResult result = response.body();
                                 apiCallResultListener.onPostExecute(result);
                             }
-                            @Override public void onFailure(@NonNull Call<RequestableFiltersResult> call, @NonNull Throwable t) {
+                            @Override public void onFailure(@NonNull Call<DishFiltersResult> call, @NonNull Throwable t) {
                                 call.cancel();
                             }
                         });

@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.mosy.kalin.mosy.Adapters.MenuListsPagerAdapter;
+import com.mosy.kalin.mosy.Adapters.MenuPagerAdapter;
 import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
@@ -46,7 +46,7 @@ public class VenueMenuActivity
     @Extra
     String SelectedMenuListId; //if the page is navigated via Dishes ListView, this should have value
 
-    @ViewById(resName = "venues_llInitialLoadingProgress")
+    @ViewById(resName = "llInitialLoadingProgress")
     LinearLayout centralProgress;
     @ViewById(resName = "venue_tvName")
     TextView Name;
@@ -98,7 +98,7 @@ public class VenueMenuActivity
 
             @Override public void onPostExecute(ArrayList<MenuList> result) {
                 ArrayList<MenuList> menuLists = result;
-                MenuListsPagerAdapter adapter = new MenuListsPagerAdapter(getSupportFragmentManager(), menuLists, SelectedMenuListId);
+                MenuPagerAdapter adapter = new MenuPagerAdapter(getSupportFragmentManager(), menuLists, SelectedMenuListId);
                 Menu.setAdapter(adapter);
 
                 if (SelectedMenuListId != null && !SelectedMenuListId.equals(StringHelper.empty())) {

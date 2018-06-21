@@ -1,5 +1,7 @@
 package com.mosy.kalin.mosy.Models.BindingModels;
 
+import java.util.List;
+
 public class SearchVenuesBindingModel {
 
     public String AuthTokenHeader;
@@ -8,6 +10,8 @@ public class SearchVenuesBindingModel {
     public String Query;
     public int MaxResultsCount;
     public int TotalItemsOffset;
+    public List<String> SelectedVenueBadgeFilterIds;
+    public List<String> SelectedVenueCultureFilterIds;
     public Integer LocalDayOfWeek;
     public String LocalTime;
     public int SearchedDistanceMeters;
@@ -23,6 +27,8 @@ public class SearchVenuesBindingModel {
             double latitude,
             double longitude,
             String query,
+            List<String> selectedVenueBadgeFilterIds,
+            List<String> selectedVenueCultureFilterIds,
             Integer localDayOfWeek,
             String localTime,
             int searchedDistanceMeters) {
@@ -33,6 +39,8 @@ public class SearchVenuesBindingModel {
         this.Query = query;
         this.MaxResultsCount = maxResultsCount;
         this.TotalItemsOffset = totalItemsOffset;
+        this.SelectedVenueBadgeFilterIds = selectedVenueBadgeFilterIds;
+        this.SelectedVenueCultureFilterIds = selectedVenueCultureFilterIds;
         this.LocalDayOfWeek = localDayOfWeek;
         this.LocalTime = localTime;
         this.SearchedDistanceMeters = searchedDistanceMeters;
