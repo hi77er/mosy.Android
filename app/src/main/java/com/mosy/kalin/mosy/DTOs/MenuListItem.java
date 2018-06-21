@@ -65,7 +65,7 @@ public class MenuListItem
     @SerializedName("MismatchingFiltersIds")
     public ArrayList<String> MismatchingFiltersIds;
 
-@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     protected MenuListItem(Parcel in) {
         String[] data = new String[8];
 

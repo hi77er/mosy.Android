@@ -31,9 +31,9 @@ public class DishWallItemView
     private static final String originalBlobStorageContainerPath = "userimages\\requestablealbums\\original";
     private boolean IsUsingDefaultThumbnail;
 
+    private Context baseContext;
     private MenuListItem MenuListItem;
 
-    private Context baseContext;
 
     @ViewById(resName = "menuListItem_tvName")
     TextView nameTextView;
@@ -58,7 +58,7 @@ public class DishWallItemView
         this.baseContext = context;
     }
 
-    public void bind(MenuListItem menuListItem, int position) {
+    public void bind(MenuListItem menuListItem) {
         this.imageThumbnail.setImageDrawable(null);
 
         if (menuListItem != null) {

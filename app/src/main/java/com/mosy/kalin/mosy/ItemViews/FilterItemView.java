@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Models.Views.ItemModels.FilterItem;
 import com.mosy.kalin.mosy.R;
 
 import org.androidannotations.annotations.EViewGroup;
@@ -27,7 +28,7 @@ public class FilterItemView
         super(context);
     }
 
-    public void bind(Filter filter) {
+    public void bind(FilterItem filter) {
         //INFO: It's obligatory the listener to be assigned before the setChecked,
         // otherwise another checkbox listener is being hit immediately after setChecked
         this.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {

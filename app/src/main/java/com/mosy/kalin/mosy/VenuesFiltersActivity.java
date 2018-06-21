@@ -18,12 +18,13 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.annimon.stream.Stream;
-import com.mosy.kalin.mosy.Adapters.VenueFiltersPagerAdapter;
+import com.mosy.kalin.mosy.Adapters.FilterVenuesPagerAdapter;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Helpers.ListHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.Responses.VenueFiltersResult;
+import com.mosy.kalin.mosy.Models.Views.ItemModels.FilterItem;
 import com.mosy.kalin.mosy.Services.VenuesService;
 
 import org.androidannotations.annotations.AfterViews;
@@ -48,7 +49,7 @@ public class VenuesFiltersActivity
     private int distanceFilterFormattedValue;
     private boolean selectedApplyWorkingStatusFilter;
 
-    private VenueFiltersPagerAdapter venueFiltersAdapter;
+    private FilterVenuesPagerAdapter venueFiltersAdapter;
 
     @Bean
     VenuesService venuesService;
@@ -177,16 +178,16 @@ public class VenuesFiltersActivity
 
             selectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
 
-            if (this.venueFiltersAdapter != null && this.venueFiltersAdapter.VenueBadgeFilters != null) {
-                selectedVenueBadgeFilterIds = new ArrayList<>(Stream
-                        .of(venueFiltersAdapter.VenueBadgeFilters)
+            if (this.venueFiltersAdapter != null && this.venueFiltersAdapter.VenueBadgeFilterItems != null) {
+                selectedVenueBadgeFilterIds =  new ArrayList<>(Stream
+                        .of(venueFiltersAdapter.VenueBadgeFilterItems)
                         .filter(x -> x.IsChecked)
                         .map(x -> x.Id)
                         .toList());
             }
-            if (this.venueFiltersAdapter != null && this.venueFiltersAdapter.VenueCultureFilters != null) {
+            if (this.venueFiltersAdapter != null && this.venueFiltersAdapter.VenueCultureFilterItems != null) {
                 selectedVenueCultureFilterIds = new ArrayList<>(Stream
-                        .of(venueFiltersAdapter.VenueCultureFilters)
+                        .of(venueFiltersAdapter.VenueCultureFilterItems)
                         .filter(x -> x.IsChecked)
                         .map(x -> x.Id)
                         .toList());
@@ -220,10 +221,11 @@ public class VenuesFiltersActivity
                             result.VenueBadgeFilters,
                             result.VenueCultureFilters);
 
-                    venueFiltersAdapter = new VenueFiltersPagerAdapter(applicationContext,
-                            getSupportFragmentManager(),
-                            result.VenueBadgeFilters,
-                            result.VenueCultureFilters);
+                    ArrayList<FilterItem> badgeFilterItems = toFilterItems(result.VenueBadgeFilters);
+                    ArrayList<FilterItem> cultureFilterItems = toFilterItems(result.VenueCultureFilters);
+
+                    venueFiltersAdapter = new FilterVenuesPagerAdapter(applicationContext, getSupportFragmentManager(),
+                            badgeFilterItems, cultureFilterItems);
 
                     venuesFiltersPager.setAdapter(venueFiltersAdapter);
                     venuesFiltersTabs.setupWithViewPager(venuesFiltersPager);
@@ -233,6 +235,23 @@ public class VenuesFiltersActivity
         };
 
         this.venuesService.getFilters(this.applicationContext, listener);
+    }
+
+    private ArrayList<FilterItem> toFilterItems(ArrayList<Filter> filters) {
+        ArrayList<FilterItem> items = new ArrayList<>();
+        for (Filter filter: filters) {
+            FilterItem item = new FilterItem();
+            item.Id = filter.Id;
+            item.Name = filter.Name;
+            item.Description = filter.Description;
+            item.I18nResourceName = filter.I18nResourceName;
+            item.I18nResourceDescription = filter.I18nResourceDescription;
+            item.FilteredType = filter.FilteredType;
+            item.FilterType = filter.FilterType;
+            item.IsChecked = filter.IsChecked;
+            items.add(item);
+        }
+        return items;
     }
 
     private void showFiltersLoadingLayout() {

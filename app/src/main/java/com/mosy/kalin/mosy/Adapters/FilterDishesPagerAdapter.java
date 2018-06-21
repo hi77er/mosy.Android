@@ -9,11 +9,12 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.Fragments.FiltersPage_;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Models.Views.ItemModels.FilterItem;
 import com.mosy.kalin.mosy.R;
 
 import java.util.ArrayList;
 
-public class DishFiltersPagerAdapter
+public class FilterDishesPagerAdapter
         extends FragmentStatePagerAdapter {
 
     public ArrayList<Filter> DishTypeFilters;
@@ -22,12 +23,12 @@ public class DishFiltersPagerAdapter
     public ArrayList<Filter> DishAllergenFilters;
     private Context context;
 
-    public DishFiltersPagerAdapter(Context context,
-                                   FragmentManager manager,
-                                   ArrayList<Filter> dishTypeFilters,
-                                   ArrayList<Filter> dishRegionFilters,
-                                   ArrayList<Filter> dishMainIngredientFilters,
-                                   ArrayList<Filter> allergensdishAllergenFilters) {
+    public FilterDishesPagerAdapter(Context context,
+                                    FragmentManager manager,
+                                    ArrayList<Filter> dishTypeFilters,
+                                    ArrayList<Filter> dishRegionFilters,
+                                    ArrayList<Filter> dishMainIngredientFilters,
+                                    ArrayList<Filter> allergensdishAllergenFilters) {
         super(manager);
         this.context = context;
         this.DishTypeFilters = dishTypeFilters;
@@ -41,19 +42,19 @@ public class DishFiltersPagerAdapter
         FiltersPage_ fragment = new FiltersPage_();
 
         Bundle bundle = new Bundle();
-        ArrayList<Filter> filters = new ArrayList<>();
+        ArrayList<FilterItem> filters = new ArrayList<>();
         switch (position){
             case 0:
-                filters = this.DishTypeFilters;
+                filters = this.toFilterItems(this.DishTypeFilters);
                 break;
             case 1:
-                filters = this.DishRegionFilters;
+                filters = this.toFilterItems(this.DishRegionFilters);
                 break;
             case 2:
-                filters = this.DishMainIngredientFilters;
+                filters = this.toFilterItems(this.DishMainIngredientFilters);
                 break;
             case 3:
-                filters = this.DishAllergenFilters;
+                filters = this.toFilterItems(this.DishAllergenFilters);
                 String note = StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_allergensFiltersNote);
                 fragment.setNote(note);
                 break;
@@ -62,6 +63,23 @@ public class DishFiltersPagerAdapter
         bundle.putParcelableArrayList("Filters", filters);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    private ArrayList<FilterItem> toFilterItems(ArrayList<Filter> filters) {
+        ArrayList<FilterItem> items = new ArrayList<>();
+        for (Filter filter: filters) {
+            FilterItem item = new FilterItem();
+            item.Id = filter.Id;
+            item.Name = filter.Name;
+            item.Description = filter.Description;
+            item.I18nResourceName = filter.I18nResourceName;
+            item.I18nResourceDescription = filter.I18nResourceDescription;
+            item.FilteredType = filter.FilteredType;
+            item.FilterType = filter.FilterType;
+            item.IsChecked = filter.IsChecked;
+            items.add(item);
+        }
+        return items;
     }
 
     @Override

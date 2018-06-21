@@ -7,7 +7,6 @@ import com.mosy.kalin.mosy.DTOs.Base.WallItemBase;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-// Implements Serializable in order to be passed between activities.
 public class Venue
         implements Serializable {
 
@@ -47,20 +46,14 @@ public class Venue
     @SerializedName("FBOContacts")
     public VenueContacts VenueContacts;
 
-//    public boolean AllowUploadFBOPictures;
-//    public boolean AllowUploadMenuPictures;
-//    public boolean AllowAnonymousUpload;
-//    public boolean AllowReservations;
-//    public FBOStatusMessage LastFBOStatusMessage;
-//
-//    public List<FBOStatusMessage> StatusMessages;
-//    public List<MenuList> Brochures;
-//    public List<FBOTable> Tables;
-//    public UnassignedBrochures As IEnumerable(Of MenuList)
-//    public List<FBOVisit> Visits;
-//    public List<FBORate> Rates;
-//    public List<FBOContact> venueContacts;
-//    public List<FBOImageMeta> Images;
-//    public TablesAndCount List<object>;
+
+    @SerializedName("Filters")
+    public ArrayList<Filter> Filters;
+
+    @SerializedName("MatchingFiltersIds")
+    public ArrayList<String> MatchingFiltersIds;
+
+    @SerializedName("MismatchingFiltersIds")
+    public ArrayList<String> MismatchingFiltersIds;
 
 }

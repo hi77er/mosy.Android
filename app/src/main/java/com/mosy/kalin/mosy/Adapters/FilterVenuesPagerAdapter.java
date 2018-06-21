@@ -6,28 +6,31 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.annimon.stream.Stream;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.Fragments.FiltersPage_;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Models.Views.ItemModels.FilterItem;
 import com.mosy.kalin.mosy.R;
 
+import java.nio.file.DirectoryStream;
 import java.util.ArrayList;
 
-public class VenueFiltersPagerAdapter
+public class FilterVenuesPagerAdapter
         extends FragmentStatePagerAdapter {
 
-    public ArrayList<Filter> VenueBadgeFilters;
-    public ArrayList<Filter> VenueCultureFilters;
+    public ArrayList<FilterItem> VenueBadgeFilterItems;
+    public ArrayList<FilterItem> VenueCultureFilterItems;
     private Context context;
 
-    public VenueFiltersPagerAdapter(Context context,
+    public FilterVenuesPagerAdapter(Context context,
                                     FragmentManager manager,
-                                    ArrayList<Filter> venueBadgeFilters,
-                                    ArrayList<Filter> venueCultureFilters) {
+                                    ArrayList<FilterItem> venueBadgeFilterItems,
+                                    ArrayList<FilterItem> venueCultureFilterItems) {
         super(manager);
         this.context = context;
-        this.VenueBadgeFilters = venueBadgeFilters;
-        this.VenueCultureFilters = venueCultureFilters;
+        this.VenueBadgeFilterItems = venueBadgeFilterItems;
+        this.VenueCultureFilterItems = venueCultureFilterItems;
     }
 
     @Override
@@ -35,13 +38,13 @@ public class VenueFiltersPagerAdapter
         FiltersPage_ fragment = new FiltersPage_();
 
         Bundle bundle = new Bundle();
-        ArrayList<Filter> filters = new ArrayList<>();
+        ArrayList<FilterItem> filters = new ArrayList<>();
         switch (position){
             case 0:
-                filters = this.VenueBadgeFilters;
+                filters = this.VenueBadgeFilterItems;
                 break;
             case 1:
-                filters = this.VenueCultureFilters;
+                filters = this.VenueCultureFilterItems;
                 break;
         }
 

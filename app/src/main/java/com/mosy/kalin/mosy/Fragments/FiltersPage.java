@@ -4,9 +4,9 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.mosy.kalin.mosy.Adapters.FilterListAdapter;
-import com.mosy.kalin.mosy.DTOs.Filter;
+import com.mosy.kalin.mosy.Adapters.FilterItemsListAdapter;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Models.Views.ItemModels.FilterItem;
 import com.mosy.kalin.mosy.R;
 
 import org.androidannotations.annotations.AfterViews;
@@ -22,10 +22,10 @@ public class FiltersPage
         extends BaseFragment {
 
     @Bean
-    FilterListAdapter filtersAdapter;
+    FilterItemsListAdapter filtersAdapter;
 
     @FragmentArg("Filters")
-    ArrayList<Filter> Filters;
+    ArrayList<FilterItem> Filters;
 
     @ViewById(R.id.lv_Filters)
     ListView FiltersList;

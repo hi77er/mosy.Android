@@ -18,7 +18,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.annimon.stream.Stream;
-import com.mosy.kalin.mosy.Adapters.DishFiltersPagerAdapter;
+import com.mosy.kalin.mosy.Adapters.FilterDishesPagerAdapter;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Helpers.ListHelper;
@@ -49,7 +49,7 @@ public class DishesFiltersActivity
     private int distanceFilterFormattedValue;
     private boolean selectedApplyWorkingStatusFilter;
 
-    private DishFiltersPagerAdapter dishFiltersAdapter;
+    private FilterDishesPagerAdapter dishFiltersAdapter;
 
     @Bean
     DishesService dishesService;
@@ -248,7 +248,7 @@ public class DishesFiltersActivity
                             result.DishMainIngredientFilters,
                             result.DishAllergenFilters);
 
-                    dishFiltersAdapter = new DishFiltersPagerAdapter(applicationContext,
+                    dishFiltersAdapter = new FilterDishesPagerAdapter(applicationContext,
                                                             getSupportFragmentManager(),
                                                             result.DishTypeFilters,
                                                             result.DishRegionFilters,
