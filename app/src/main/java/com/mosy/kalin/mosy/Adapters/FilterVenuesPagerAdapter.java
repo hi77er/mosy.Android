@@ -38,17 +38,17 @@ public class FilterVenuesPagerAdapter
         FiltersPage_ fragment = new FiltersPage_();
 
         Bundle bundle = new Bundle();
-        ArrayList<FilterItem> filters = new ArrayList<>();
+        ArrayList<FilterItem> filterItems = new ArrayList<>();
         switch (position){
             case 0:
-                filters = this.VenueBadgeFilterItems;
+                filterItems = this.VenueBadgeFilterItems;
                 break;
             case 1:
-                filters = this.VenueCultureFilterItems;
+                filterItems = this.VenueCultureFilterItems;
                 break;
         }
 
-        bundle.putParcelableArrayList("Filters", filters);
+        bundle.putParcelableArrayList("Filters", filterItems);
         fragment.setArguments(bundle);
         return fragment;
     }

@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mosy.kalin.mosy.DTOs.Enums.FilterType;
+import com.mosy.kalin.mosy.DTOs.Enums.FilteredType;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.Ingredient;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
@@ -27,6 +29,7 @@ import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
 @EViewGroup(R.layout.activity_item_menulistitem_details)
 public class MenuListItemDetailsView
@@ -59,7 +62,10 @@ public class MenuListItemDetailsView
 
     public void bind(MenuListItem menuListItem, LruCache<String, Bitmap> cache) {
         this.inMemoryCache = cache;
-        this.Allergens = menuListItem.DishAllergens;
+        this.Allergens = new ArrayList<>(com.annimon.stream.Stream
+                .of(menuListItem.Filters)
+                .filter(filter -> filter.FilteredType == FilteredType.Dishes && filter.FilterType == FilterType.DishAllergens)
+                .toList());
 
         if (menuListItem.ImageThumbnail != null) {
             this.ImageId = menuListItem.ImageThumbnail.Id;

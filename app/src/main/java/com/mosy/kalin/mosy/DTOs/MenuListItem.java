@@ -56,8 +56,8 @@ public class MenuListItem
     @SerializedName("Ingredients")
     public ArrayList<Ingredient> Ingredients;
 
-    @SerializedName("DishAllergens")
-    public ArrayList<Filter> DishAllergens;
+    @SerializedName("Filters")
+    public ArrayList<Filter> Filters;
 
     @SerializedName("MatchingFiltersIds")
     public ArrayList<String> MatchingFiltersIds;
@@ -79,7 +79,7 @@ public class MenuListItem
         this.VenueId = data[5];
         this.VenueName = data[6];
         this.Ingredients = in.readArrayList(null);
-        this.DishAllergens = in.readArrayList(null);
+        this.Filters = in.readArrayList(null);
         this.MatchingFiltersIds = in.readArrayList(null);
         this.MismatchingFiltersIds = in.readArrayList(null);
     }
@@ -94,7 +94,7 @@ public class MenuListItem
         parcel.writeString(VenueId);
         parcel.writeString(VenueName);
         parcel.writeList(Ingredients);
-        parcel.writeList(DishAllergens);
+        parcel.writeList(Filters);
         parcel.writeList(MatchingFiltersIds);
         parcel.writeList(MismatchingFiltersIds);
 
