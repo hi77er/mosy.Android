@@ -73,6 +73,7 @@ public class AccountService {
                 }
                 @Override public void onFailure(Call<TokenResult> call, Throwable t) {
                     t.printStackTrace();
+                    executeAssuredWebApiTokenValidOrRefreshed(applicationContext, preExecute, onSuccess, onInvalidHost);
                 }
             });
         }

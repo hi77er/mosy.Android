@@ -17,24 +17,24 @@ import java.util.ArrayList;
 public class FilterDishesPagerAdapter
         extends FragmentStatePagerAdapter {
 
-    public ArrayList<Filter> DishTypeFilters;
-    public ArrayList<Filter> DishRegionFilters;
-    public ArrayList<Filter> DishMainIngredientFilters;
-    public ArrayList<Filter> DishAllergenFilters;
+    public ArrayList<FilterItem> DishTypeFilterItems;
+    public ArrayList<FilterItem> DishRegionFilterItems;
+    public ArrayList<FilterItem> DishMainIngredientFilterItems;
+    public ArrayList<FilterItem> DishAllergenFilterItems;
     private Context context;
 
     public FilterDishesPagerAdapter(Context context,
                                     FragmentManager manager,
-                                    ArrayList<Filter> dishTypeFilters,
-                                    ArrayList<Filter> dishRegionFilters,
-                                    ArrayList<Filter> dishMainIngredientFilters,
-                                    ArrayList<Filter> allergensdishAllergenFilters) {
+                                    ArrayList<FilterItem> dishTypeFilterItems,
+                                    ArrayList<FilterItem> dishRegionFilterItems,
+                                    ArrayList<FilterItem> dishMainIngredientFilterItems,
+                                    ArrayList<FilterItem> dishAllergenFilterItems) {
         super(manager);
         this.context = context;
-        this.DishTypeFilters = dishTypeFilters;
-        this.DishRegionFilters = dishRegionFilters;
-        this.DishMainIngredientFilters = dishMainIngredientFilters;
-        this.DishAllergenFilters = allergensdishAllergenFilters;
+        this.DishTypeFilterItems = dishTypeFilterItems;
+        this.DishRegionFilterItems = dishRegionFilterItems;
+        this.DishMainIngredientFilterItems = dishMainIngredientFilterItems;
+        this.DishAllergenFilterItems = dishAllergenFilterItems;
     }
 
     @Override
@@ -42,44 +42,27 @@ public class FilterDishesPagerAdapter
         FiltersPage_ fragment = new FiltersPage_();
 
         Bundle bundle = new Bundle();
-        ArrayList<FilterItem> filters = new ArrayList<>();
+        ArrayList<FilterItem> filterItems = new ArrayList<>();
         switch (position){
             case 0:
-                filters = this.toFilterItems(this.DishTypeFilters);
+                filterItems = this.DishTypeFilterItems;
                 break;
             case 1:
-                filters = this.toFilterItems(this.DishRegionFilters);
+                filterItems = this.DishRegionFilterItems;
                 break;
             case 2:
-                filters = this.toFilterItems(this.DishMainIngredientFilters);
+                filterItems = this.DishMainIngredientFilterItems;
                 break;
             case 3:
-                filters = this.toFilterItems(this.DishAllergenFilters);
+                filterItems = this.DishAllergenFilterItems;
                 String note = StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_allergensFiltersNote);
                 fragment.setNote(note);
                 break;
         }
 
-        bundle.putParcelableArrayList("Filters", filters);
+        bundle.putParcelableArrayList("Filters", filterItems);
         fragment.setArguments(bundle);
         return fragment;
-    }
-
-    private ArrayList<FilterItem> toFilterItems(ArrayList<Filter> filters) {
-        ArrayList<FilterItem> items = new ArrayList<>();
-        for (Filter filter: filters) {
-            FilterItem item = new FilterItem();
-            item.Id = filter.Id;
-            item.Name = filter.Name;
-            item.Description = filter.Description;
-            item.I18nResourceName = filter.I18nResourceName;
-            item.I18nResourceDescription = filter.I18nResourceDescription;
-            item.FilteredType = filter.FilteredType;
-            item.FilterType = filter.FilterType;
-            item.IsChecked = filter.IsChecked;
-            items.add(item);
-        }
-        return items;
     }
 
     @Override

@@ -239,17 +239,19 @@ public class VenuesFiltersActivity
 
     private ArrayList<FilterItem> toFilterItems(ArrayList<Filter> filters) {
         ArrayList<FilterItem> items = new ArrayList<>();
-        for (Filter filter: filters) {
-            FilterItem item = new FilterItem();
-            item.Id = filter.Id;
-            item.Name = filter.Name;
-            item.Description = filter.Description;
-            item.I18nResourceName = filter.I18nResourceName;
-            item.I18nResourceDescription = filter.I18nResourceDescription;
-            item.FilteredType = filter.FilteredType;
-            item.FilterType = filter.FilterType;
-            item.IsChecked = filter.IsChecked;
-            items.add(item);
+        if (filters != null) {
+            for (Filter filter : filters) {
+                FilterItem item = new FilterItem();
+                item.Id = filter.Id;
+                item.Name = filter.Name;
+                item.Description = filter.Description;
+                item.I18nResourceName = filter.I18nResourceName;
+                item.I18nResourceDescription = filter.I18nResourceDescription;
+                item.FilteredType = filter.FilteredType;
+                item.FilterType = filter.FilterType;
+                item.IsChecked = filter.IsChecked;
+                items.add(item);
+            }
         }
         return items;
     }

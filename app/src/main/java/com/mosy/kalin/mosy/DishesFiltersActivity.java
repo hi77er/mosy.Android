@@ -24,6 +24,7 @@ import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Helpers.ListHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
+import com.mosy.kalin.mosy.Models.Views.ItemModels.FilterItem;
 import com.mosy.kalin.mosy.Services.DishesService;
 
 import org.androidannotations.annotations.AfterViews;
@@ -185,30 +186,31 @@ public class DishesFiltersActivity
 
             selectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
 
-            if (this.dishFiltersAdapter != null && this.dishFiltersAdapter.DishTypeFilters != null) {
+            if (this.dishFiltersAdapter != null && this.dishFiltersAdapter.DishTypeFilterItems != null) {
                 selectedDishTypeFilterIds = new ArrayList<>(Stream
-                        .of(dishFiltersAdapter.DishTypeFilters)
+                        .of(dishFiltersAdapter.DishTypeFilterItems)
                         .filter(x -> x.IsChecked)
                         .map(x -> x.Id)
                         .toList());
             }
-            if (this.dishFiltersAdapter != null && this.dishFiltersAdapter.DishRegionFilters != null) {
+            if (this.dishFiltersAdapter != null && this.dishFiltersAdapter.DishRegionFilterItems != null) {
                 selectedDishRegionFilterIds = new ArrayList<>(Stream
-                        .of(dishFiltersAdapter.DishRegionFilters)
+                        .of(dishFiltersAdapter.DishRegionFilterItems)
                         .filter(x -> x.IsChecked)
                         .map(x -> x.Id)
-                        .toList());
+                        .toList()
+                );
             }
-            if (this.dishFiltersAdapter != null && this.dishFiltersAdapter.DishMainIngredientFilters != null) {
+            if (this.dishFiltersAdapter != null && this.dishFiltersAdapter.DishMainIngredientFilterItems != null) {
                 selectedDishMainIngredientFilterIds = new ArrayList<>(Stream
-                        .of(dishFiltersAdapter.DishMainIngredientFilters)
+                        .of(dishFiltersAdapter.DishMainIngredientFilterItems)
                         .filter(x -> x.IsChecked)
                         .map(x -> x.Id)
                         .toList());
             }
-            if (this.dishFiltersAdapter != null && this.dishFiltersAdapter.DishAllergenFilters != null) {
+            if (this.dishFiltersAdapter != null && this.dishFiltersAdapter.DishAllergenFilterItems != null) {
                 selectedDishAllergenFilterIds = new ArrayList<>(Stream
-                        .of(dishFiltersAdapter.DishAllergenFilters)
+                        .of(dishFiltersAdapter.DishAllergenFilterItems)
                         .filter(x -> x.IsChecked)
                         .map(x -> x.Id)
                         .toList());
@@ -248,12 +250,17 @@ public class DishesFiltersActivity
                             result.DishMainIngredientFilters,
                             result.DishAllergenFilters);
 
+                    ArrayList<FilterItem> dishTypeFilters = toFilterItems(result.DishTypeFilters);
+                    ArrayList<FilterItem> dishRegionFilters = toFilterItems(result.DishRegionFilters);
+                    ArrayList<FilterItem> dishMainIngredientFilters = toFilterItems(result.DishMainIngredientFilters);
+                    ArrayList<FilterItem> dishAllergenFilters = toFilterItems(result.DishAllergenFilters);
+
                     dishFiltersAdapter = new FilterDishesPagerAdapter(applicationContext,
-                                                            getSupportFragmentManager(),
-                                                            result.DishTypeFilters,
-                                                            result.DishRegionFilters,
-                                                            result.DishMainIngredientFilters,
-                                                            result.DishAllergenFilters);
+                                                                      getSupportFragmentManager(),
+                                                                      dishTypeFilters,
+                                                                      dishRegionFilters,
+                                                                      dishMainIngredientFilters,
+                                                                      dishAllergenFilters);
 
                     dishesFiltersPager.setAdapter(dishFiltersAdapter);
                     dishesFiltersTabs.setupWithViewPager(dishesFiltersPager);
@@ -263,6 +270,25 @@ public class DishesFiltersActivity
         };
 
         this.dishesService.getFilters(this.applicationContext, listener);
+    }
+
+    private ArrayList<FilterItem> toFilterItems(ArrayList<Filter> filters) {
+        ArrayList<FilterItem> items = new ArrayList<>();
+        if (filters != null) {
+            for (Filter filter : filters) {
+                FilterItem item = new FilterItem();
+                item.Id = filter.Id;
+                item.Name = filter.Name;
+                item.Description = filter.Description;
+                item.I18nResourceName = filter.I18nResourceName;
+                item.I18nResourceDescription = filter.I18nResourceDescription;
+                item.FilteredType = filter.FilteredType;
+                item.FilterType = filter.FilterType;
+                item.IsChecked = filter.IsChecked;
+                items.add(item);
+            }
+        }
+        return items;
     }
 
     private void showFiltersLoadingLayout() {
