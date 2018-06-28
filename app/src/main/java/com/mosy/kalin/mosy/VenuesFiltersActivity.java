@@ -59,7 +59,11 @@ public class VenuesFiltersActivity
     @Extra
     static int PreselectedDistanceFilterValue;
     @Extra
-    static ArrayList<String> PreselectedVenueBadgeFilterIds;
+    static ArrayList<String> PreselectedVenueAccessibilityFilterIds;
+    @Extra
+    static ArrayList<String> PreselectedVenueAvailabilityFilterIds;
+    @Extra
+    static ArrayList<String> PreselectedVenueAtmosphereFilterIds;
     @Extra
     static ArrayList<String> PreselectedVenueCultureFilterIds;
 
@@ -140,7 +144,9 @@ public class VenuesFiltersActivity
         super.onStart();
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_activity_filters_venues);
 
-        if (PreselectedVenueBadgeFilterIds == null) PreselectedVenueBadgeFilterIds = new ArrayList<>();
+        if (PreselectedVenueAccessibilityFilterIds == null) PreselectedVenueAccessibilityFilterIds = new ArrayList<>();
+        if (PreselectedVenueAvailabilityFilterIds == null) PreselectedVenueAvailabilityFilterIds = new ArrayList<>();
+        if (PreselectedVenueAtmosphereFilterIds == null) PreselectedVenueAtmosphereFilterIds = new ArrayList<>();
         if (PreselectedVenueCultureFilterIds == null) PreselectedVenueCultureFilterIds = new ArrayList<>();
     }
 
@@ -173,14 +179,30 @@ public class VenuesFiltersActivity
 
         if (ConnectivityHelper.isConnected(applicationContext)) {
             Intent intent = new Intent(VenuesFiltersActivity.this, WallActivity_.class);
-            ArrayList<String> selectedVenueBadgeFilterIds = new ArrayList<>();
+            ArrayList<String> selectedVenueAccessibilityFilterIds = new ArrayList<>();
+            ArrayList<String> selectedVenueAvailabilityFilterIds = new ArrayList<>();
+            ArrayList<String> selectedVenueAtmosphereFilterIds = new ArrayList<>();
             ArrayList<String> selectedVenueCultureFilterIds = new ArrayList<>();
 
             selectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
 
-            if (this.venueFiltersAdapter != null && this.venueFiltersAdapter.VenueBadgeFilterItems != null) {
-                selectedVenueBadgeFilterIds =  new ArrayList<>(Stream
-                        .of(venueFiltersAdapter.VenueBadgeFilterItems)
+            if (this.venueFiltersAdapter != null && this.venueFiltersAdapter.VenueAccessibilityFilterItems != null) {
+                selectedVenueAccessibilityFilterIds =  new ArrayList<>(Stream
+                        .of(venueFiltersAdapter.VenueAccessibilityFilterItems)
+                        .filter(x -> x.IsChecked)
+                        .map(x -> x.Id)
+                        .toList());
+            }
+            if (this.venueFiltersAdapter != null && this.venueFiltersAdapter.VenueAccessibilityFilterItems != null) {
+                selectedVenueAvailabilityFilterIds =  new ArrayList<>(Stream
+                        .of(venueFiltersAdapter.VenueAvailabilityFilterItems)
+                        .filter(x -> x.IsChecked)
+                        .map(x -> x.Id)
+                        .toList());
+            }
+            if (this.venueFiltersAdapter != null && this.venueFiltersAdapter.VenueAccessibilityFilterItems != null) {
+                selectedVenueAtmosphereFilterIds =  new ArrayList<>(Stream
+                        .of(venueFiltersAdapter.VenueAtmosphereFilterItems)
                         .filter(x -> x.IsChecked)
                         .map(x -> x.Id)
                         .toList());
@@ -195,13 +217,17 @@ public class VenuesFiltersActivity
 
             boolean filtersStateChanged = checkFiltersStateChanged(distanceFilterFormattedValue,
                                                                    selectedApplyWorkingStatusFilter,
-                                                                   selectedVenueBadgeFilterIds,
+                                                                    selectedVenueAccessibilityFilterIds,
+                                                                    selectedVenueAvailabilityFilterIds,
+                                                                   selectedVenueAtmosphereFilterIds,
                                                                    selectedVenueCultureFilterIds);
 
             if (filtersStateChanged) {
                 intent.putExtra("ApplyDistanceFilterToVenues", distanceFilterFormattedValue);
                 intent.putExtra("ApplyWorkingStatusFilterToVenues", selectedApplyWorkingStatusFilter);
-                intent.putExtra("SelectedVenuesBadgeFilterIds", selectedVenueBadgeFilterIds);
+                intent.putExtra("SelectedVenueAccessibilityFilterIds", selectedVenueAccessibilityFilterIds);
+                intent.putExtra("SelectedVenueAvailabilityFilterIds", selectedVenueAvailabilityFilterIds);
+                intent.putExtra("SelectedVenueAtmosphereFilterIds", selectedVenueAtmosphereFilterIds);
                 intent.putExtra("SelectedVenueCultureFilterIds", selectedVenueCultureFilterIds);
                 startActivity(intent);
             }
@@ -218,14 +244,18 @@ public class VenuesFiltersActivity
             @Override public void onPostExecute(VenueFiltersResult result) {
                 if (result != null) {
                     populateAlreadySelectedFilters(
-                            result.VenueBadgeFilters,
+                            result.VenueAccessibilityFilters,
+                            result.VenueAvailabilityFilters,
+                            result.VenueAtmosphereFilters,
                             result.VenueCultureFilters);
 
-                    ArrayList<FilterItem> badgeFilterItems = toFilterItems(result.VenueBadgeFilters);
+                    ArrayList<FilterItem> accessibilityFilterItems = toFilterItems(result.VenueAccessibilityFilters);
+                    ArrayList<FilterItem> availabilityFilterItems = toFilterItems(result.VenueAvailabilityFilters);
+                    ArrayList<FilterItem> atmosphereFilterItems = toFilterItems(result.VenueAtmosphereFilters);
                     ArrayList<FilterItem> cultureFilterItems = toFilterItems(result.VenueCultureFilters);
 
                     venueFiltersAdapter = new FilterVenuesPagerAdapter(applicationContext, getSupportFragmentManager(),
-                            badgeFilterItems, cultureFilterItems);
+                            accessibilityFilterItems, availabilityFilterItems, atmosphereFilterItems, cultureFilterItems);
 
                     venuesFiltersPager.setAdapter(venueFiltersAdapter);
                     venuesFiltersTabs.setupWithViewPager(venuesFiltersPager);
@@ -250,6 +280,7 @@ public class VenuesFiltersActivity
                 item.FilteredType = filter.FilteredType;
                 item.FilterType = filter.FilterType;
                 item.IsChecked = filter.IsChecked;
+                item.Icon = filter.Icon;
                 items.add(item);
             }
         }
@@ -269,11 +300,23 @@ public class VenuesFiltersActivity
     }
 
     private void populateAlreadySelectedFilters(
-            ArrayList<Filter> venueBadgeFilters,
+            ArrayList<Filter> venueAccessibilityFilters,
+            ArrayList<Filter> venueAvailabilityFilters,
+            ArrayList<Filter> venueAtmosphereFilters,
             ArrayList<Filter> venueCultureFilters) {
 
-        Stream.of(PreselectedVenueBadgeFilterIds).forEach(filterId -> {
-            Filter matchingFilter = Stream.of(venueBadgeFilters).filter(filter -> filter.Id.equals(filterId)).single();
+        Stream.of(PreselectedVenueAccessibilityFilterIds).forEach(filterId -> {
+            Filter matchingFilter = Stream.of(venueAccessibilityFilters).filter(filter -> filter.Id.equals(filterId)).single();
+            matchingFilter.IsChecked = true;
+        });
+
+        Stream.of(PreselectedVenueAvailabilityFilterIds).forEach(filterId -> {
+            Filter matchingFilter = Stream.of(venueAvailabilityFilters).filter(filter -> filter.Id.equals(filterId)).single();
+            matchingFilter.IsChecked = true;
+        });
+
+        Stream.of(PreselectedVenueAtmosphereFilterIds).forEach(filterId -> {
+            Filter matchingFilter = Stream.of(venueAtmosphereFilters).filter(filter -> filter.Id.equals(filterId)).single();
             matchingFilter.IsChecked = true;
         });
 
@@ -286,14 +329,23 @@ public class VenuesFiltersActivity
 
     private boolean checkFiltersStateChanged(int distanceFilterValue,
                                              boolean selectedApplyWorkingStatusFilter,
-                                             ArrayList<String> selectedVenueBadgeFilterIds,
+                                             ArrayList<String> selectedVenueAccessibilityFilterIds,
+                                             ArrayList<String> selectedVenueAvailabilityFilterIds,
+                                             ArrayList<String> selectedVenueAtmosphereFilterIds,
                                              ArrayList<String> selectedVenueCultureFilterIds) {
         boolean applyWorkingStatusChanged = selectedApplyWorkingStatusFilter != PreselectedApplyWorkingStatusFilter;
         boolean searchedDistanceChanged = distanceFilterValue != PreselectedDistanceFilterValue;
-        boolean dishMainIngredientFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedVenueBadgeFilterIds, selectedVenueBadgeFilterIds);
-        boolean dishAllergenFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedVenueCultureFilterIds, selectedVenueCultureFilterIds);
+        boolean venueAccessibilityFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedVenueAccessibilityFilterIds, selectedVenueAccessibilityFilterIds);
+        boolean venueAvailabilityFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedVenueAvailabilityFilterIds, selectedVenueAvailabilityFilterIds);
+        boolean venueAtmosphereFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedVenueAtmosphereFilterIds, selectedVenueAtmosphereFilterIds);
+        boolean venueCultureFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedVenueCultureFilterIds, selectedVenueCultureFilterIds);
 
-        return applyWorkingStatusChanged || searchedDistanceChanged || dishMainIngredientFiltersChanged || dishAllergenFiltersChanged;
+        return applyWorkingStatusChanged ||
+                searchedDistanceChanged ||
+                venueAccessibilityFiltersChanged ||
+                venueAvailabilityFiltersChanged ||
+                venueAtmosphereFiltersChanged ||
+                venueCultureFiltersChanged;
     }
 
     @NonNull

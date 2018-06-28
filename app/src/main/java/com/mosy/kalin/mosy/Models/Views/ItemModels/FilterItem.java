@@ -18,12 +18,13 @@ public class FilterItem
     public FilterType FilterType;
     public int OrderIndex;
     public boolean IsChecked;
+    public byte[] Icon;
 
     public FilterItem() {
     }
 
     protected FilterItem(Parcel in) {
-        String[] data = new String[9];
+        String[] data = new String[10];
 
         in.readStringArray(data);
         // the order needs to be the same as in writeToParcel() method

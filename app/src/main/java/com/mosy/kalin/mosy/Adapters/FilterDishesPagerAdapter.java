@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.Fragments.FiltersPage_;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.FilterItem;

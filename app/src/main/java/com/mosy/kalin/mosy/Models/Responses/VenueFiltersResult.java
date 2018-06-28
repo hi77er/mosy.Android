@@ -11,8 +11,14 @@ public class VenueFiltersResult //INFO: Name coming from WebApi specifics
         extends ResultBase
         implements Serializable {
 
-    @SerializedName("VenueBadgeFilters")
-    public ArrayList<Filter> VenueBadgeFilters;
+    @SerializedName("VenueAccessibilityFilters")
+    public ArrayList<Filter> VenueAccessibilityFilters;
+
+    @SerializedName("VenueAvailabilityFilters")
+    public ArrayList<Filter> VenueAvailabilityFilters;
+
+    @SerializedName("VenueAtmosphereFilters")
+    public ArrayList<Filter> VenueAtmosphereFilters;
 
     @SerializedName("VenueCultureFilters")
     public ArrayList<Filter> VenueCultureFilters;

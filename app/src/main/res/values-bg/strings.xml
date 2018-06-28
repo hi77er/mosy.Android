@@ -68,7 +68,7 @@
     <string name="DishesFilterMainIngredientKosherName">Кашерна храна</string>
     <string name="DishesFilterMainIngredientHalalName">Халал храна</string>
     <string name="DishesFilterAllergenSulfurDioxideName">"Въглероден диоксид"</string>
-    <string name="DishesFilterAllergenGrainName">"Зърнести храни"</string>
+    <string name="DishesFilterAllergenGlutenName">"Зърнести храни"</string>
     <string name="DishesFilterAllergenMilkName">"Мляко"</string>
     <string name="DishesFilterAllergenGarlicName">"Чесън"</string>
     <string name="DishesFilterAllergenSoyName">"Соя"</string>

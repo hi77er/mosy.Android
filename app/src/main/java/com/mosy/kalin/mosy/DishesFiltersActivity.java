@@ -285,6 +285,7 @@ public class DishesFiltersActivity
                 item.FilteredType = filter.FilteredType;
                 item.FilterType = filter.FilterType;
                 item.IsChecked = filter.IsChecked;
+                item.Icon = filter.Icon;
                 items.add(item);
             }
         }

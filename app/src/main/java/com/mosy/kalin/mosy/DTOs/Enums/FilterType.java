@@ -3,23 +3,34 @@ package com.mosy.kalin.mosy.DTOs.Enums;
 import com.google.gson.annotations.SerializedName;
 
 public enum FilterType {
-    @SerializedName("1")
-    VenueBadge(1),
 
-    @SerializedName("2")
-    VenueCulture(2),
+    @SerializedName("101")
+    VenueAccessibility(101),
 
-    @SerializedName("3")
-    DishType(3),
+    @SerializedName("102")
+    VenueAvailability(102),
 
-    @SerializedName("4")
-    DishRegion(4),
+    @SerializedName("103")
+    VenueAtmosphere(103),
 
-    @SerializedName("5")
-    DishMainIngredient(5),
+    @SerializedName("104")
+    VenueCulture(104),
 
-    @SerializedName("6")
-    DishAllergens(6);
+
+
+    @SerializedName("201")
+    DishType(201),
+
+    @SerializedName("202")
+    DishRegion(202),
+
+    @SerializedName("203")
+    DishMainIngredient(203),
+
+    @SerializedName("204")
+    DishAllergens(204);
+
+
 
     private final int value;
     public int getValue() {

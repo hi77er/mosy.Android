@@ -7,30 +7,39 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.annimon.stream.Stream;
-import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.Fragments.FiltersPage_;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.FilterItem;
 import com.mosy.kalin.mosy.R;
 
-import java.nio.file.DirectoryStream;
 import java.util.ArrayList;
 
 public class FilterVenuesPagerAdapter
         extends FragmentStatePagerAdapter {
 
-    public ArrayList<FilterItem> VenueBadgeFilterItems;
+    public ArrayList<FilterItem> VenueAccessibilityFilterItems;
+    public ArrayList<FilterItem> VenueAvailabilityFilterItems;
+    public ArrayList<FilterItem> VenueAtmosphereFilterItems;
     public ArrayList<FilterItem> VenueCultureFilterItems;
     private Context context;
 
     public FilterVenuesPagerAdapter(Context context,
                                     FragmentManager manager,
-                                    ArrayList<FilterItem> venueBadgeFilterItems,
+                                    ArrayList<FilterItem> venueAccessibilityFilterItems,
+                                    ArrayList<FilterItem> venueAvailabilityFilterItems,
+                                    ArrayList<FilterItem> venueAtmosphereFilterItems,
                                     ArrayList<FilterItem> venueCultureFilterItems) {
         super(manager);
         this.context = context;
-        this.VenueBadgeFilterItems = venueBadgeFilterItems;
+        this.VenueAccessibilityFilterItems = venueAccessibilityFilterItems;
+        this.VenueAvailabilityFilterItems = venueAvailabilityFilterItems;
+        this.VenueAtmosphereFilterItems = venueAtmosphereFilterItems;
         this.VenueCultureFilterItems = venueCultureFilterItems;
+
+//        this.VenueAccessibilityFilterItems = new ArrayList<>(Stream.of(venueAccessibilityFilterItems).sortBy(x -> x.OrderIndex).toList());
+////        this.VenueAvailabilityFilterItems = new ArrayList<>(Stream.of(venueAvailabilityFilterItems).sortBy(x -> x.OrderIndex).toList());
+////        this.VenueAtmosphereFilterItems = new ArrayList<>(Stream.of(venueAtmosphereFilterItems).sortBy(x -> x.OrderIndex).toList());
+////        this.VenueCultureFilterItems = new ArrayList<>(Stream.of(venueCultureFilterItems).sortBy(x -> x.OrderIndex).toList());
     }
 
     @Override
@@ -41,9 +50,15 @@ public class FilterVenuesPagerAdapter
         ArrayList<FilterItem> filterItems = new ArrayList<>();
         switch (position){
             case 0:
-                filterItems = this.VenueBadgeFilterItems;
+                filterItems = this.VenueAccessibilityFilterItems;
                 break;
             case 1:
+                filterItems = this.VenueAvailabilityFilterItems;
+                break;
+            case 2:
+                filterItems = this.VenueAtmosphereFilterItems;
+                break;
+            case 3:
                 filterItems = this.VenueCultureFilterItems;
                 break;
         }
@@ -55,14 +70,18 @@ public class FilterVenuesPagerAdapter
 
     @Override
     public int getCount() {
-        return 2;
+        return 4;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
         if (position == 0)
-            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_venuesFilters_badgesFiltersTitle);
+            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_venuesFilters_accessibilityFiltersTitle);
         if (position == 1)
+            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_venuesFilters_availabilityFiltersTitle);
+        if (position == 2)
+            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_venuesFilters_atmosphereFiltersTitle);
+        if (position == 3)
             return StringHelper.getStringAppDefaultLocale(context, R.string.activity_venuesFilters_cultureFiltersTitle);
 
         return null;

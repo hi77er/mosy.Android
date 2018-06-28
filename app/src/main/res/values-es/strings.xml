@@ -75,7 +75,7 @@
     <string name="DishesFilterMainIngredientKosherName">Kosher</string>
     <string name="DishesFilterMainIngredientHalalName">Halal</string>
     <string name="DishesFilterAllergenSulfurDioxideName">Dióxido de azufre</string>
-    <string name="DishesFilterAllergenGrainName">Granos</string>
+    <string name="DishesFilterAllergenGlutenName">Granos</string>
     <string name="DishesFilterAllergenMilkName">Leche</string>
     <string name="DishesFilterAllergenGarlicName">Ajo</string>
     <string name="DishesFilterAllergenSoyName">Soja</string>

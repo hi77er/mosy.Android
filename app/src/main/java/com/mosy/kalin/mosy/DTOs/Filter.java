@@ -33,6 +33,9 @@ public class Filter
     @SerializedName("OrderIndex")
     public int OrderIndex;
 
+    @SerializedName("Icon")
+    public byte[] Icon;
+
     public boolean IsChecked;
 
 

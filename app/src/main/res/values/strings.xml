@@ -91,7 +91,9 @@
     <string name="activity_venuesFilters_distanceMeasureTypeKilometers">km</string>
     <string name="activity_venuesFilters_distanceFilterTextView">Search distance:</string>
     <string name="activity_venuesFilters_distanceMeasureTypeMeters">m</string>
-    <string name="activity_venuesFilters_badgesFiltersTitle">Badges</string>
+    <string name="activity_venuesFilters_accessibilityFiltersTitle">Accessibility</string>
+    <string name="activity_venuesFilters_availabilityFiltersTitle">Availability</string>
+    <string name="activity_venuesFilters_atmosphereFiltersTitle">Atmosphere</string>
     <string name="activity_venuesFilters_cultureFiltersTitle">Culture</string>
     <string name="VenuesFilterBadgeBikesParkingAvailableName">"Bikes Parking Available"</string>
     <string name="VenuesFilterBadgeChildrenFriendlyName">"Children Friendly"</string>
@@ -138,7 +140,7 @@
     <string name="DishesFilterRegionEuropeanName">"Europe"</string>
     <string name="DishesFilterRegionAfricanName">"Africa"</string>
     <string name="DishesFilterRegionAmericanName">"Americas"</string>
-    <string name="DishesFilterMainIngredientFishAndSeafoodName"><![CDATA[Fish & sea food]]></string>
+    <string name="DishesFilterMainIngredientFishAndSeafoodName"><![CDATA[Fish & Sea food]]></string>
     <string name="DishesFilterMainIngredientWhiteMeatName">"White meat"</string>
     <string name="DishesFilterMainIngredientVeganName">"Vegan"</string>
     <string name="DishesFilterMainIngredientGlutenFreeName">"Gluten free"</string>
@@ -148,10 +150,10 @@
     <string name="DishesFilterMainIngredientKosherName">"Kosher"</string>
     <string name="DishesFilterMainIngredientHalalName">"Halal"</string>
     <string name="DishesFilterAllergenSulfurDioxideName">"Sulfur Dioxide"</string>
-    <string name="DishesFilterAllergenGrainName">"Grain"</string>
+    <string name="DishesFilterAllergenGlutenName">"Gluten / Wheat"</string>
     <string name="DishesFilterAllergenMilkName">"Milk"</string>
     <string name="DishesFilterAllergenGarlicName">"Garlic"</string>
-    <string name="DishesFilterAllergenSoyName">"Soy"</string>
+    <string name="DishesFilterAllergenSoyName">"Soybeans"</string>
     <string name="DishesFilterAllergenFishName">"Fish"</string>
     <string name="DishesFilterAllergenLegumesName">"Legumes"</string>
     <string name="DishesFilterAllergenLupinName">"Lupin"</string>
@@ -162,7 +164,7 @@
     <string name="DishesFilterAllergenAlcoholName">"Alcohol"</string>
     <string name="DishesFilterAllergenMollusksName">"Mollusks"</string>
     <string name="DishesFilterAllergenCaffeineName">"Caffeine"</string>
-    <string name="DishesFilterAllergenEggName">"Egg"</string>
+    <string name="DishesFilterAllergenEggName">"Eggs"</string>
     <string name="DishesFilterAllergenPeanutsName">"Peanuts"</string>
     <string name="DishesFilterAllergenMushroomsName">"Mushrooms"</string>
     <string name="DishesFilterAllergenCrustaceansName">"Crustaceans"</string>
