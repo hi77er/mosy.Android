@@ -71,7 +71,9 @@ public class VenuesService {
                           double latitude,
                           double longitude,
                           String query,
-                          List<String> venueBadgeFilterIds,
+                          List<String> venueAccessibilityFilterIds,
+                          List<String> venueAvailabilityFilterIds,
+                          List<String> venueAtmosphereFilterIds,
                           List<String> venueCultureFilterIds,
                           Integer localDayOfWeek,
                           String localTime,
@@ -83,7 +85,7 @@ public class VenuesService {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     SearchVenuesBindingModel model = new SearchVenuesBindingModel(
                             authTokenHeader, maxResultsCount, totalItemsOffset,
-                            latitude, longitude, query, venueBadgeFilterIds, venueCultureFilterIds, localDayOfWeek, localTime, distanceFilterValue);
+                            latitude, longitude, query, venueAccessibilityFilterIds, venueAvailabilityFilterIds, venueAtmosphereFilterIds, venueCultureFilterIds, localDayOfWeek, localTime, distanceFilterValue);
 
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 

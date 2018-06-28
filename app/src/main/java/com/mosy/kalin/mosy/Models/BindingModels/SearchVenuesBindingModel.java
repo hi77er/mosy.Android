@@ -10,7 +10,9 @@ public class SearchVenuesBindingModel {
     public String Query;
     public int MaxResultsCount;
     public int TotalItemsOffset;
-    public List<String> SelectedVenueBadgeFilterIds;
+    public List<String> SelectedVenueAccessibilityFilterIds;
+    public List<String> SelectedVenueAvailabilityFilterIds;
+    public List<String> SelectedVenueAtmosphereFilterIds;
     public List<String> SelectedVenueCultureFilterIds;
     public Integer LocalDayOfWeek;
     public String LocalTime;
@@ -27,7 +29,9 @@ public class SearchVenuesBindingModel {
             double latitude,
             double longitude,
             String query,
-            List<String> selectedVenueBadgeFilterIds,
+            List<String> selectedVenueAccessibilityFilterIds,
+            List<String> selectedVenueAvailabilityFilterIds,
+            List<String> selectedVenueAtmosphereFilterIds,
             List<String> selectedVenueCultureFilterIds,
             Integer localDayOfWeek,
             String localTime,
@@ -39,7 +43,9 @@ public class SearchVenuesBindingModel {
         this.Query = query;
         this.MaxResultsCount = maxResultsCount;
         this.TotalItemsOffset = totalItemsOffset;
-        this.SelectedVenueBadgeFilterIds = selectedVenueBadgeFilterIds;
+        this.SelectedVenueAccessibilityFilterIds = selectedVenueAccessibilityFilterIds;
+        this.SelectedVenueAvailabilityFilterIds = selectedVenueAvailabilityFilterIds;
+        this.SelectedVenueAtmosphereFilterIds = selectedVenueAtmosphereFilterIds;
         this.SelectedVenueCultureFilterIds = selectedVenueCultureFilterIds;
         this.LocalDayOfWeek = localDayOfWeek;
         this.LocalTime = localTime;

@@ -76,7 +76,7 @@
     <string name="DishesFilterMainIngredientKosherName">Κошерный</string>
     <string name="DishesFilterMainIngredientHalalName">Халяль</string>
     <string name="DishesFilterAllergenSulfurDioxideName">Сернистый Диоксид</string>
-    <string name="DishesFilterAllergenGrainName">Злаки</string>
+    <string name="DishesFilterAllergenGlutenName">Злаки</string>
     <string name="DishesFilterAllergenMilkName">Молоко</string>
     <string name="DishesFilterAllergenGarlicName">Чеснок</string>
     <string name="DishesFilterAllergenSoyName">Соя</string>

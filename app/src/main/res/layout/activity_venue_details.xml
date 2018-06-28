@@ -92,52 +92,52 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone">
 
-                <ImageView android:id="@+id/venueDetailsBadge_freeWiFi" android:src="@drawable/free_wifi"
+                <ImageView android:id="@+id/venueDetailsBadge_freeWiFi" android:src="@drawable/filter_fgwhite_bgmain_wifiavailable"
                            android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
                            android:tooltipText="@string/activity_venueDetails_freeWiFiTooltip" android:visibility="gone"
                            android:contentDescription="@string/activity_venueDetails_freeWiFiTooltip" />
 
-                <ImageView android:id="@+id/venueDetailsBadge_workingFriendly" android:src="@drawable/working_friendly"
+                <ImageView android:id="@+id/venueDetailsBadge_workingFriendly" android:src="@drawable/filter_fgwhite_bgmain_workingfriendly"
                            android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
                            android:tooltipText="@string/activity_venueDetails_quietPlaceTooltip" android:visibility="gone"
                            android:contentDescription="@string/activity_venueDetails_quietPlaceTooltip" />
 
-                <ImageView android:id="@+id/venueDetailsBadge_bikeFriendly" android:src="@drawable/bike_friendly"
+                <ImageView android:id="@+id/venueDetailsBadge_bikeFriendly" android:src="@drawable/filter_fgwhite_bgmain_bikeaccessible"
                            android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
                            android:tooltipText="@string/activity_venueDetails_bikeFriendlyTooltip" android:visibility="gone"
                            android:contentDescription="@string/activity_venueDetails_bikeFriendlyTooltip" />
 
-                <ImageView android:id="@+id/venueDetailsBadge_childFriendly" android:src="@drawable/child_friendly"
+                <ImageView android:id="@+id/venueDetailsBadge_childFriendly" android:src="@drawable/filter_fgwhite_bgmain_babyfriendly"
                            android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
                            android:tooltipText="@string/activity_venueDetails_childrenFriendlyTooltip" android:visibility="gone"
                            android:contentDescription="@string/activity_venueDetails_childrenFriendlyTooltip" />
 
-                <ImageView android:id="@+id/venueDetailsBadge_funPlace" android:src="@drawable/fun_place"
+                <ImageView android:id="@+id/venueDetailsBadge_funPlace" android:src="@drawable/filter_fgwhite_bgmain_funplace"
                            android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
                            android:tooltipText="@string/activity_venueDetails_funPlaceTooltip" android:visibility="gone"
                            android:contentDescription="@string/activity_venueDetails_funPlaceTooltip" />
 
-                <ImageView android:id="@+id/venueDetailsBadge_parkingSign" android:src="@drawable/parking_sign"
+                <ImageView android:id="@+id/venueDetailsBadge_parkingSign" android:src="@drawable/filter_fgwhite_bgmain_parkingavailable"
                            android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
                            android:tooltipText="@string/activity_venueDetails_parkingSignTooltip" android:visibility="gone"
                            android:contentDescription="@string/activity_venueDetails_parkingSignTooltip" />
 
-                <ImageView android:id="@+id/venueDetailsBadge_petFriendly" android:src="@drawable/pet_friendly"
+                <ImageView android:id="@+id/venueDetailsBadge_petFriendly" android:src="@drawable/filter_fgwhite_bgmain_petfriendly"
                            android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
                            android:tooltipText="@string/activity_venueDetails_petFriendlyTooltip" android:visibility="gone"
                            android:contentDescription="@string/activity_venueDetails_petFriendlyTooltip" />
 
-                <ImageView android:id="@+id/venueDetailsBadge_romanticPlace" android:src="@drawable/romantic_place"
+                <ImageView android:id="@+id/venueDetailsBadge_romanticPlace" android:src="@drawable/filter_fgwhite_bgmain_romanticplace"
                            android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
                            android:tooltipText="@string/activity_venueDetails_romanticPlaceTooltip" android:visibility="gone"
                            android:contentDescription="@string/activity_venueDetails_romanticPlaceTooltip" />
 
-                <ImageView android:id="@+id/venueDetailsBadge_wheelchairFriendly" android:src="@drawable/wheelchair_friendly"
+                <ImageView android:id="@+id/venueDetailsBadge_wheelchairFriendly" android:src="@drawable/filter_fgwhite_bgmain_wheelchairfriendly"
                            android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
                            android:tooltipText="@string/activity_venueDetails_wheelchairFriendlyTooltip" android:visibility="gone"
                            android:contentDescription="@string/activity_venueDetails_wheelchairFriendlyTooltip" />
 
-                <ImageView android:id="@+id/venueDetailsBadge_noSmoking" android:src="@drawable/no_smoking"
+                <ImageView android:id="@+id/venueDetailsBadge_noSmoking" android:src="@drawable/filter_fgwhite_bgmain_nosmoking"
                            android:layout_width="31dp" android:layout_height="31dp" android:layout_marginStart="6dp"
                            android:tooltipText="@string/activity_venueDetails_noSmokingTooltip" android:visibility="gone"
                            android:contentDescription="@string/activity_venueDetails_noSmokingTooltip" />

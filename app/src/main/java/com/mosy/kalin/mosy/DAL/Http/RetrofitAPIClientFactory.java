@@ -2,6 +2,7 @@ package com.mosy.kalin.mosy.DAL.Http;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mosy.kalin.mosy.DAL.Http.Deserializers.ByteArrayToBase64Deserializer;
 import com.mosy.kalin.mosy.DAL.Http.Deserializers.JsonDateDeserializer;
 import com.mosy.kalin.mosy.DAL.Http.Deserializers.JsonTimeDeserializer;
 import com.mosy.kalin.mosy.DAL.Http.Deserializers.TimeOnlyDateDeserializer;
@@ -27,6 +28,9 @@ public class RetrofitAPIClientFactory {
                     .addInterceptor(interceptor).build();
 
             GsonBuilder builder  = new GsonBuilder();
+
+            builder.registerTypeHierarchyAdapter(byte[].class, new ByteArrayToBase64Deserializer());
+
             builder.registerTypeAdapter(Date.class, new JsonDateDeserializer());
             builder.registerTypeAdapter(Date.class, new TimeOnlyDateDeserializer());
             builder.registerTypeAdapter(Time.class, new JsonTimeDeserializer());
@@ -40,5 +44,6 @@ public class RetrofitAPIClientFactory {
 
             return retrofit;
         }
+
 
     }

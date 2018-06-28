@@ -119,7 +119,11 @@ public class WallActivity
     @Extra
     static boolean ApplyWorkingStatusFilterToDishes = true;
     @Extra
-    static ArrayList<String> SelectedVenuesBadgeFilterIds;
+    static ArrayList<String> SelectedVenueAccessibilityFilterIds;
+    @Extra
+    static ArrayList<String> SelectedVenueAvailabilityFilterIds;
+    @Extra
+    static ArrayList<String> SelectedVenueAtmosphereFilterIds;
     @Extra
     static ArrayList<String> SelectedVenueCultureFilterIds;
     @Extra
@@ -282,7 +286,8 @@ public class WallActivity
 
                         //INFO: WHILE SCROLLING LOAD
                         int totalItemsCount = recyclerView.getAdapter().getItemCount();
-                        loadMoreVenues(itemsToLoadCountWhenScrolled, totalItemsCount, query, SelectedVenuesBadgeFilterIds, SelectedVenueCultureFilterIds);
+                        loadMoreVenues(itemsToLoadCountWhenScrolled, totalItemsCount, query,
+                                SelectedVenueAccessibilityFilterIds, SelectedVenueAvailabilityFilterIds, SelectedVenueAtmosphereFilterIds, SelectedVenueCultureFilterIds);
                     }
                 }
                 @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -313,7 +318,8 @@ public class WallActivity
                     wallVenuesAdapter.clearItems();
 
                     //INFO: REFRESH INITIAL LOAD
-                    loadMoreVenues(itemsInitialLoadCount, 0, "searchall", SelectedVenuesBadgeFilterIds, SelectedVenueCultureFilterIds);
+                    loadMoreVenues(itemsInitialLoadCount, 0, "searchall",
+                            SelectedVenueAccessibilityFilterIds, SelectedVenueAvailabilityFilterIds, SelectedVenueAtmosphereFilterIds, SelectedVenueCultureFilterIds);
                 }
                 venuesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
             });
@@ -321,15 +327,19 @@ public class WallActivity
             //INFO: INITIAL LOAD
             this.wallVenuesAdapter.clearItems();
 
-            this.loadMoreVenues(itemsInitialLoadCount, 0, query, SelectedVenuesBadgeFilterIds, SelectedVenueCultureFilterIds);
+            this.loadMoreVenues(itemsInitialLoadCount, 0, query,
+                    SelectedVenueAccessibilityFilterIds, SelectedVenueAvailabilityFilterIds, SelectedVenueAtmosphereFilterIds, SelectedVenueCultureFilterIds);
 
 //            this.venuesWall.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
             this.venuesWall.addOnScrollListener(venuesScrollListener);
 }
     }
 
-    void loadMoreVenues(int maxResultsCount, int totalItemsOffset,
-                        String query, ArrayList<String> selectedVenueBadgeFilterIds, ArrayList<String> selectedVenueCultureFilterIds){
+    void loadMoreVenues(int maxResultsCount, int totalItemsOffset, String query,
+                        ArrayList<String> selectedVenueAccessibilityFilterIds,
+                        ArrayList<String> selectedVenueAvailabilityFilterIds,
+                        ArrayList<String> selectedVenueAtmosphereFilterIds,
+                        ArrayList<String> selectedVenueCultureFilterIds){
         if (ConnectivityHelper.isConnected(applicationContext) &&
                 this.lastKnownLocation != null) {
             AsyncTaskListener<ArrayList<Venue>> apiCallResultListener = new AsyncTaskListener<ArrayList<Venue>>() {
@@ -373,8 +383,8 @@ public class WallActivity
 
             this.venuesService.getVenues(
                     applicationContext, apiCallResultListener, this::showInvalidHostLayout, maxResultsCount, totalItemsOffset,
-                    lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
-                    query, selectedVenueBadgeFilterIds, selectedVenueCultureFilterIds,
+                    lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), query,
+                    selectedVenueAccessibilityFilterIds, selectedVenueAvailabilityFilterIds, selectedVenueAtmosphereFilterIds, selectedVenueCultureFilterIds,
                     localDayOfWeek, localTime, ApplyDistanceFilterToVenues);
         }
     }
@@ -653,7 +663,9 @@ public class WallActivity
             Intent intent = new Intent(WallActivity.this, VenuesFiltersActivity_.class);
             intent.putExtra("PreselectedDistanceFilterValue", ApplyDistanceFilterToVenues);
             intent.putExtra("PreselectedApplyWorkingStatusFilter", ApplyWorkingStatusFilterToVenues);
-            intent.putExtra("PreselectedVenueBadgeFilterIds", SelectedVenuesBadgeFilterIds);
+            intent.putExtra("PreselectedVenueAccessibilityFilterIds", SelectedVenueAccessibilityFilterIds);
+            intent.putExtra("PreselectedVenueAvailabilityFilterIds", SelectedVenueAvailabilityFilterIds);
+            intent.putExtra("PreselectedVenueAtmosphereFilterIds", SelectedVenueAtmosphereFilterIds);
             intent.putExtra("PreselectedVenueCultureFilterIds", SelectedVenueCultureFilterIds);
             startActivity(intent);
         }
@@ -761,7 +773,9 @@ public class WallActivity
 
         if (this.dishFilters != null){
             for (String filterId : filtersIds) {
-                this.constructLocalizedNamesForFilter(localizedFiltersNames, filterId, this.venueFilters.VenueBadgeFilters);
+                this.constructLocalizedNamesForFilter(localizedFiltersNames, filterId, this.venueFilters.VenueAccessibilityFilters);
+                this.constructLocalizedNamesForFilter(localizedFiltersNames, filterId, this.venueFilters.VenueAvailabilityFilters);
+                this.constructLocalizedNamesForFilter(localizedFiltersNames, filterId, this.venueFilters.VenueAtmosphereFilters);
                 this.constructLocalizedNamesForFilter(localizedFiltersNames, filterId, this.venueFilters.VenueCultureFilters);
                 this.constructLocalizedNamesForFilter(localizedFiltersNames, filterId, this.dishFilters.DishTypeFilters);
                 this.constructLocalizedNamesForFilter(localizedFiltersNames, filterId, this.dishFilters.DishRegionFilters);

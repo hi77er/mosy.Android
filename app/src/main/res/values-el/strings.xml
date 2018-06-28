@@ -75,7 +75,7 @@
     <string name="DishesFilterMainIngredientKosherName">Κασσέρ</string>
     <string name="DishesFilterMainIngredientHalalName">Χαλάλ</string>
     <string name="DishesFilterAllergenSulfurDioxideName">Θειϊκό οξύ</string>
-    <string name="DishesFilterAllergenGrainName">Σιτηρά</string>
+    <string name="DishesFilterAllergenGlutenName">Σιτηρά</string>
     <string name="DishesFilterAllergenMilkName">Γάλα</string>
     <string name="DishesFilterAllergenGarlicName">Σκόρδο</string>
     <string name="DishesFilterAllergenSoyName">Σόγια</string>
