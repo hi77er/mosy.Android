@@ -4,18 +4,15 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
-import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IDishesRepository;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IVenuesRepository;
 import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;
-import com.mosy.kalin.mosy.DTOs.VenueBadgeEndorsement;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
 import com.mosy.kalin.mosy.DTOs.VenueContacts;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.VenueLocation;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
-import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
 import com.mosy.kalin.mosy.Models.Responses.VenueFiltersResult;
 
 import org.androidannotations.annotations.EBean;
@@ -26,7 +23,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 @EBean
 public class VenuesService {
@@ -167,39 +163,6 @@ public class VenuesService {
                     }
                 },
                 onInvalidHost);
-    }
-
-    public void getBadgeEndorsements(Context applicationContext,
-                                     AsyncTaskListener<ArrayList<VenueBadgeEndorsement>> apiCallResultListener,
-                                     Runnable onInvalidHost,
-                                     String venueId)
-    {
-        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
-                apiCallResultListener::onPreExecute,
-                () -> {
-                    try {
-                        String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
-                        Retrofit retrofitClient = RetrofitAPIClientFactory.getClient();
-                        IVenuesRepository repository = retrofitClient.create(IVenuesRepository.class);
-
-                        Call<ArrayList<VenueBadgeEndorsement>> callBadge = repository.getBadgeEndorsements(authToken, venueId);
-                        apiCallResultListener.onPreExecute();
-                        callBadge.enqueue(new Callback<ArrayList<VenueBadgeEndorsement>>() {
-                            @Override public void onResponse(@NonNull Call<ArrayList<VenueBadgeEndorsement>> call, @NonNull Response<ArrayList<VenueBadgeEndorsement>> response) {
-                                ArrayList<VenueBadgeEndorsement> result = response.body();
-                                apiCallResultListener.onPostExecute(result);
-                            }
-                            @Override public void onFailure(@NonNull Call<ArrayList<VenueBadgeEndorsement>> call, @NonNull Throwable t) {
-                                call.cancel();
-                            }
-                        });
-                    }
-                    catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                },
-                onInvalidHost);
-
     }
 
     public void getLocation(Context applicationContext,

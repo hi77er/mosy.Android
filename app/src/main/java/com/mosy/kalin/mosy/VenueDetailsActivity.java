@@ -25,9 +25,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.VenueContacts;
 import com.mosy.kalin.mosy.DTOs.Venue;
-import com.mosy.kalin.mosy.DTOs.VenueBadgeEndorsement;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.VenueLocation;
@@ -123,25 +123,25 @@ public class VenueDetailsActivity
     @ViewById(resName = "venueDetails_ivMapTransparent")
     ImageView TransparentImage;
     @ViewById(resName = "venueDetailsBadge_freeWiFi")
-    ImageView FreeWiFi;
+    ImageView FreeWiFiImageView;
     @ViewById(resName = "venueDetailsBadge_workingFriendly")
-    ImageView WorkingFriendly;
+    ImageView WorkingFriendlyImageView;
     @ViewById(resName = "venueDetailsBadge_bikeFriendly")
-    ImageView BikeFriendly;
+    ImageView BikeFriendlyImageView;
     @ViewById(resName = "venueDetailsBadge_childFriendly")
-    ImageView ChildFriendly;
+    ImageView ChildFriendlyImageView;
     @ViewById(resName = "venueDetailsBadge_funPlace")
-    ImageView FunPlace;
+    ImageView FunPlaceImageView;
     @ViewById(resName = "venueDetailsBadge_parkingSign")
-    ImageView ParkingSign;
+    ImageView ParkingSignImageView;
     @ViewById(resName = "venueDetailsBadge_petFriendly")
-    ImageView PetFriendly;
+    ImageView PetFriendlyImageView;
     @ViewById(resName = "venueDetailsBadge_romanticPlace")
-    ImageView RomanticPlace;
+    ImageView RomanticPlaceImageView;
     @ViewById(resName = "venueDetailsBadge_wheelchairFriendly")
-    ImageView WheelchairFriendly;
+    ImageView WheelchairFriendlyImageView;
     @ViewById(resName = "venueDetailsBadge_noSmoking")
-    ImageView NoSmoking;
+    ImageView NoSmokingImageView;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -157,10 +157,10 @@ public class VenueDetailsActivity
             classTextView.setText(this.Venue.Class);
 
             loadIndoorImage();
-            loadBadgeEndorsements();
             loadContacts();
             loadBusinessHours();
             loadLocation();
+            populateFilters();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -181,20 +181,6 @@ public class VenueDetailsActivity
             }
         };
         this.venueService.getImageMetaIndoor(this.applicationContext, apiCallResultListener, null, this.Venue.Id);
-    }
-
-    private void loadBadgeEndorsements() {
-        AsyncTaskListener<ArrayList<VenueBadgeEndorsement>> apiCallResultListener = new AsyncTaskListener<ArrayList<VenueBadgeEndorsement>>() {
-            @Override public void onPreExecute() {
-                showBadgesLoading();
-            }
-            @Override public void onPostExecute(ArrayList<VenueBadgeEndorsement> result) {
-                Venue.Endorsements = result;
-                populateBadges();
-                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
-            }
-        };
-        this.venueService.getBadgeEndorsements(applicationContext, apiCallResultListener, null, this.Venue.Id);
     }
 
     private void loadContacts() {
@@ -243,13 +229,13 @@ public class VenueDetailsActivity
         // TODO: Decide weather this should be called here on onPostExecute of the upper task
         populateGoogleMap();
     }
-
-    private void showBadgesLoading() {
-        this.badgesLayout.setVisibility(View.GONE);
-        this.badgesProgressLayout.setVisibility(View.VISIBLE);
-        this.badgesContainerLayout.setVisibility(View.VISIBLE);
-    }
-
+//
+//    private void showBadgesLoading() {
+//        this.badgesLayout.setVisibility(View.GONE);
+//        this.badgesProgressLayout.setVisibility(View.VISIBLE);
+//        this.badgesContainerLayout.setVisibility(View.VISIBLE);
+//    }
+//
     private void showContactsLoading() {
         this.contactsLayout.setVisibility(View.GONE);
         this.contactsProgressLayout.setVisibility(View.VISIBLE);
@@ -370,51 +356,51 @@ public class VenueDetailsActivity
         this.contactsContainerLayout.setVisibility(View.GONE);
     }
 
-    private void populateBadges() {
-        ArrayList<VenueBadgeEndorsement> badgeEndorsements = this.Venue.Endorsements;
+    private void populateFilters() {
+        ArrayList<Filter> filters = this.Venue.Filters;
 
-        if (badgeEndorsements != null && badgeEndorsements.size() > 0) {
+        if (filters != null && filters.size() > 0) {
             boolean any = false;
             //INFO: Weak code! Strong dependency to badge ids here.
-            for (VenueBadgeEndorsement endorsement : badgeEndorsements) {
-                if (endorsement.BadgeId.toUpperCase().equals("E48D0871-500E-4D41-8620-840308901970")) {
-                    this.FreeWiFi.setVisibility(View.VISIBLE);
+            for (Filter filter : filters) {
+                if (filter.Id.toUpperCase().equals("E48D0871-500E-4D41-8620-840308901970")) {
+                    this.FreeWiFiImageView.setVisibility(View.VISIBLE);
                     any = true;
                 }
-                if (endorsement.BadgeId.toUpperCase().equals("93252A33-D2A7-44A6-B375-0496EB3B5F9E")) {
-                    this.WorkingFriendly.setVisibility(View.VISIBLE);
+                if (filter.Id.toUpperCase().equals("93252A33-D2A7-44A6-B375-0496EB3B5F9E")) {
+                    this.WorkingFriendlyImageView.setVisibility(View.VISIBLE);
                     any = true;
                 }
-                if (endorsement.BadgeId.toUpperCase().equals("602F1863-A209-4E34-BC5E-871AE52AE684")) {
-                    this.BikeFriendly.setVisibility(View.VISIBLE);
+                if (filter.Id.toUpperCase().equals("602F1863-A209-4E34-BC5E-871AE52AE684")) {
+                    this.BikeFriendlyImageView.setVisibility(View.VISIBLE);
                     any = true;
                 }
-                if (endorsement.BadgeId.toUpperCase().equals("4F952337-5F15-4EFA-934A-7A948800B93F")) {
-                    this.ChildFriendly.setVisibility(View.VISIBLE);
+                if (filter.Id.toUpperCase().equals("4F952337-5F15-4EFA-934A-7A948800B93F")) {
+                    this.ChildFriendlyImageView.setVisibility(View.VISIBLE);
                     any = true;
                 }
-                if (endorsement.BadgeId.toUpperCase().equals("BE06BC04-CB07-4884-866B-907132DE2944")) {
-                    this.FunPlace.setVisibility(View.VISIBLE);
+                if (filter.Id.toUpperCase().equals("BE06BC04-CB07-4884-866B-907132DE2944")) {
+                    this.FunPlaceImageView.setVisibility(View.VISIBLE);
                     any = true;
                 }
-                if (endorsement.BadgeId.toUpperCase().equals("245733F1-35C4-4497-B188-59B1A69480AA")) {
-                    this.ParkingSign.setVisibility(View.VISIBLE);
+                if (filter.Id.toUpperCase().equals("245733F1-35C4-4497-B188-59B1A69480AA")) {
+                    this.ParkingSignImageView.setVisibility(View.VISIBLE);
                     any = true;
                 }
-                if (endorsement.BadgeId.toUpperCase().equals("5CF4A8FA-CA93-4D36-BD67-E4E6A26D751E")) {
-                    this.PetFriendly.setVisibility(View.VISIBLE);
+                if (filter.Id.toUpperCase().equals("5CF4A8FA-CA93-4D36-BD67-E4E6A26D751E")) {
+                    this.PetFriendlyImageView.setVisibility(View.VISIBLE);
                     any = true;
                 }
-                if (endorsement.BadgeId.toUpperCase().equals("D7C4C6BB-A717-4774-B3B3-E4C23893D2BF")) {
-                    this.RomanticPlace.setVisibility(View.VISIBLE);
+                if (filter.Id.toUpperCase().equals("D7C4C6BB-A717-4774-B3B3-E4C23893D2BF")) {
+                    this.RomanticPlaceImageView.setVisibility(View.VISIBLE);
                     any = true;
                 }
-                if (endorsement.BadgeId.toUpperCase().equals("C8C0E9CA-4F73-4A01-93DB-00573BD2E7F0")) {
-                    this.WheelchairFriendly.setVisibility(View.VISIBLE);
+                if (filter.Id.toUpperCase().equals("C8C0E9CA-4F73-4A01-93DB-00573BD2E7F0")) {
+                    this.WheelchairFriendlyImageView.setVisibility(View.VISIBLE);
                     any = true;
                 }
-                if (endorsement.BadgeId.toUpperCase().equals("39814B44-BC9A-4172-B91A-D190213DB112")) {
-                    this.NoSmoking.setVisibility(View.VISIBLE);
+                if (filter.Id.toUpperCase().equals("39814B44-BC9A-4172-B91A-D190213DB112")) {
+                    this.NoSmokingImageView.setVisibility(View.VISIBLE);
                     any = true;
                 }
             }

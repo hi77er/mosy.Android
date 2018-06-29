@@ -2,7 +2,6 @@ package com.mosy.kalin.mosy.DAL.Repositories.Interfaces;
 
 import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;
-import com.mosy.kalin.mosy.DTOs.VenueBadgeEndorsement;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
 import com.mosy.kalin.mosy.DTOs.VenueContacts;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
@@ -17,7 +16,6 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface IVenuesRepository {
@@ -33,9 +31,6 @@ public interface IVenuesRepository {
 
     @GET("fbo/contacts")
     Call<VenueContacts> getContacts(@Header("Authorization") String authorization, @Query("fboId") String venueId);
-
-    @GET("fbo/endorsements")
-    Call<ArrayList<VenueBadgeEndorsement>> getBadgeEndorsements(@Header("Authorization") String authorization, @Query("fboId") String venueId);
 
     @GET("fbo/location")
     Call<VenueLocation> getLocation(@Header("Authorization") String authorization, @Query("fboId") String venueId);
