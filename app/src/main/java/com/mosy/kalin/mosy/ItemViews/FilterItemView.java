@@ -49,8 +49,8 @@ public class FilterItemView
 
         this.selectedCheckBox.setChecked(filterItem.IsChecked);
 
-        String name = StringHelper.getStringAppDefaultLocale(getContext(), getResources(), filterItem.I18nResourceName, filterItem.Name);
-        this.selectedCheckBox.setText(name);
+        String filterNameLocalized = StringHelper.getStringAppDefaultLocale(getContext(), getResources(), filterItem.I18nResourceName, filterItem.Name);
+        this.selectedCheckBox.setText(filterNameLocalized);
 
         if (StringHelper.isNotNullOrEmpty(filterItem.Description))
             iconImageView.setVisibility(VISIBLE);
@@ -71,10 +71,11 @@ public class FilterItemView
     @Click(resName = "filterItem_ivIcon")
     public void ImageClick()
     {
-        if (this.filterItem != null && StringHelper.isNotNullOrEmpty(this.filterItem.Description))
+        String filterDescriptionLocalized = StringHelper.getStringAppDefaultLocale(getContext(), getResources(), filterItem.I18nResourceDescription, filterItem.Description);
+        if (this.filterItem != null && StringHelper.isNotNullOrEmpty(filterDescriptionLocalized))
             new AlertDialog.Builder(getContext())
-                    .setTitle("Information")
-                    .setMessage(filterItem.Description)
+                    .setTitle("Info")
+                    .setMessage(filterDescriptionLocalized)
                     .setPositiveButton(android.R.string.ok, (dialog, which) ->  dialog.cancel())
                     .show();
     }
