@@ -40,9 +40,6 @@ public class Venue
     @SerializedName("DistanceToDevice")
     public double DistanceToCurrentDeviceLocation;
 
-    @SerializedName("FBOEndorsements")
-    public ArrayList<VenueBadgeEndorsement> Endorsements;
-
     @SerializedName("FBOContacts")
     public VenueContacts VenueContacts;
 
