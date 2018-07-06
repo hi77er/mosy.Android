@@ -74,7 +74,7 @@ public class FilterItemView
         String filterDescriptionLocalized = StringHelper.getStringAppDefaultLocale(getContext(), getResources(), filterItem.I18nResourceDescription, filterItem.Description);
         if (this.filterItem != null && StringHelper.isNotNullOrEmpty(filterDescriptionLocalized))
             new AlertDialog.Builder(getContext())
-                    .setTitle("Info")
+                    .setTitle(StringHelper.getStringAppDefaultLocale(getContext(), getResources(), "info_dialog_title", "Info"))
                     .setMessage(filterDescriptionLocalized)
                     .setPositiveButton(android.R.string.ok, (dialog, which) ->  dialog.cancel())
                     .show();

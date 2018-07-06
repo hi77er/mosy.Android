@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">Фуду</string>
     <string name="activity_wall_swipeDownToRefreshMessageTextView">ДРЪПНИ НАДОЛУ ЗА ДА ОПРЕСНИШ</string>
-    <string name="activity_landing_venuesBtn"><![CDATA[РАЗГЛЕДАЙ ЗАВЕДЕНИЯ & МЕНЮТА]]></string>
-    <string name="activity_landing_dishesBtn"><![CDATA[ПОТЪРСИ ЯСТИЯ & НАПИТКИ]]></string>
+    <string name="activity_landing_venuesBtn"><![CDATA[ЗАВЕДЕНИЯ & МЕНЮТА]]></string>
+    <string name="activity_landing_dishesBtn"><![CDATA[ЯСТИЯ & НАПИТКИ]]></string>
     <string name="activity_login_titleTextView">Вход</string>
     <string name="activity_login_emailEditText">Въведи електронна поща</string>
     <string name="activity_login_passwordEditText">Парола</string>
@@ -147,8 +147,19 @@
     <string name="VenuesFilterBadgeFunPlaceName">Развлекателно място</string>
     <string name="VenuesFilterBadgeChildrenFriendlyName">Детски кът</string>
     <string name="VenuesFilterBadgeBikesParkingAvailableName">Налична велосипедна рампа</string>
+    <string name="VenuesFilterBadgeWorkingFriendlyDescription">На разположение са контакти. Спокойна и креативна атмосфера.</string>
+    <string name="VenuesFilterBadgeWiFiAvailableDescription">Налична Wi-Fi мрежа.</string>
+    <string name="VenuesFilterBadgeWheelchairFriendlyDescription">Достъпно за хора с ограничена подвижност.</string>
+    <string name="VenuesFilterBadgeRomanticPlaceDescription">Романтично място.</string>
+    <string name="VenuesFilterBadgePetFriendlyDescription">Разрешено за домашни любимци.</string>
+    <string name="VenuesFilterBadgeParkingAvailableDescription">Наличен автомобилен паркинг.</string>
+    <string name="VenuesFilterBadgeNoSmokingDescription">Пушенето забранено.</string>
+    <string name="VenuesFilterBadgeFunPlaceDescription">Развлекателно място.</string>
+    <string name="VenuesFilterBadgeChildrenFriendlyDescription">Детски кът.</string>
+    <string name="VenuesFilterBadgeBikesParkingAvailableDescription">Налична велосипедна рампа.</string>
     <string name="activity_venuesFilters_cultureFiltersTitle">Културни</string>
     <string name="activity_venuesFilters_atmosphereFiltersTitle">Атмосфера</string>
     <string name="activity_venuesFilters_availabilityFiltersTitle">Наличности</string>
     <string name="activity_venuesFilters_accessibilityFiltersTitle">Достъпност</string>
+    <string name="info_dialog_title" translatable="false">Инфо</string>
 </resources>

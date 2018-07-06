@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--COMMON-->
+    <string name="info_dialog_title" translatable="false">"Info"</string>
+
     <!--Preferences-->
     //TODO: Move this to Preferences
     <string name="google_maps_key" translatable="false">"AIzaSyDkyNsNMAi8VoxWrLnI-8pp0W5P54r2Dvs"</string>
