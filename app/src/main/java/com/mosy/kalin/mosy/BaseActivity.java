@@ -78,4 +78,5 @@ public abstract class BaseActivity
     protected void onDestroy(){
         super.onDestroy();
     }
+
 }

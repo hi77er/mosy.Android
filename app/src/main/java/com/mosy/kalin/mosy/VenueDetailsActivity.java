@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.MotionEvent;
@@ -19,12 +20,14 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.annimon.stream.Stream;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mosy.kalin.mosy.DTOs.Enums.FilterType;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.VenueContacts;
 import com.mosy.kalin.mosy.DTOs.Venue;
@@ -33,7 +36,8 @@ import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.VenueLocation;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.DateHelper;
-import com.mosy.kalin.mosy.Helpers.DimensionsHelper;
+import com.mosy.kalin.mosy.Helpers.DrawablesPathHelper;
+import com.mosy.kalin.mosy.Helpers.MetricsHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
@@ -74,22 +78,28 @@ public class VenueDetailsActivity
     @FragmentById(R.id.venueDetails_frMap)
     SupportMapFragment VenueLocationMap;
 
-    @ViewById(resName = "venueDetails_lBadges")
-    LinearLayout badgesLayout;
+    @ViewById(resName = "venueDetails_lFilters")
+    LinearLayout filtersLayout;
+    @ViewById(resName = "venueDetails_lCultureFilters")
+    LinearLayout cultureFiltersLayout;
     @ViewById(resName = "venueDetails_lContacts")
     LinearLayout contactsLayout;
     @ViewById(resName = "venueDetails_lBusinessHours")
     LinearLayout businessHoursLayout;
 
-    @ViewById(resName = "venueDetails_lBadgesContainer")
-    LinearLayout badgesContainerLayout;
+    @ViewById(resName = "venueDetails_lFiltersContainer")
+    LinearLayout filtersContainerLayout;
+    @ViewById(resName = "venueDetails_lCultureFiltersContainer")
+    LinearLayout cultureFiltersContainerLayout;
     @ViewById(resName = "venueDetails_lContactsContainer")
     LinearLayout contactsContainerLayout;
     @ViewById(resName = "venueDetails_lBusinessHoursContainer")
     LinearLayout getBusinessHoursContainerLayout;
 
-    @ViewById(resName = "venueDetails_lBadgesProgress")
-    LinearLayout badgesProgressLayout;
+    @ViewById(resName = "venueDetails_lFiltersProgress")
+    LinearLayout filtersProgressLayout;
+    @ViewById(resName = "venueDetails_lCultureFiltersProgress")
+    LinearLayout cultureFiltersProgressLayout;
     @ViewById(resName = "venueDetails_lContactsProgress")
     LinearLayout contactsProgressLayout;
     @ViewById(resName = "venueDetails_lBusinessHoursProgress")
@@ -120,28 +130,6 @@ public class VenueDetailsActivity
     @ViewById(resName = "venueDetails_tvBHSundayTime")
     TextView sundayTextView;
 
-    @ViewById(resName = "venueDetails_ivMapTransparent")
-    ImageView TransparentImage;
-    @ViewById(resName = "venueDetailsBadge_freeWiFi")
-    ImageView FreeWiFiImageView;
-    @ViewById(resName = "venueDetailsBadge_workingFriendly")
-    ImageView WorkingFriendlyImageView;
-    @ViewById(resName = "venueDetailsBadge_bikeFriendly")
-    ImageView BikeFriendlyImageView;
-    @ViewById(resName = "venueDetailsBadge_childFriendly")
-    ImageView ChildFriendlyImageView;
-    @ViewById(resName = "venueDetailsBadge_funPlace")
-    ImageView FunPlaceImageView;
-    @ViewById(resName = "venueDetailsBadge_parkingSign")
-    ImageView ParkingSignImageView;
-    @ViewById(resName = "venueDetailsBadge_petFriendly")
-    ImageView PetFriendlyImageView;
-    @ViewById(resName = "venueDetailsBadge_romanticPlace")
-    ImageView RomanticPlaceImageView;
-    @ViewById(resName = "venueDetailsBadge_wheelchairFriendly")
-    ImageView WheelchairFriendlyImageView;
-    @ViewById(resName = "venueDetailsBadge_noSmoking")
-    ImageView NoSmokingImageView;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -161,6 +149,7 @@ public class VenueDetailsActivity
             loadBusinessHours();
             loadLocation();
             populateFilters();
+            populateCultureFilters();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -229,13 +218,7 @@ public class VenueDetailsActivity
         // TODO: Decide weather this should be called here on onPostExecute of the upper task
         populateGoogleMap();
     }
-//
-//    private void showBadgesLoading() {
-//        this.badgesLayout.setVisibility(View.GONE);
-//        this.badgesProgressLayout.setVisibility(View.VISIBLE);
-//        this.badgesContainerLayout.setVisibility(View.VISIBLE);
-//    }
-//
+
     private void showContactsLoading() {
         this.contactsLayout.setVisibility(View.GONE);
         this.contactsProgressLayout.setVisibility(View.VISIBLE);
@@ -319,12 +302,12 @@ public class VenueDetailsActivity
         contactLayout.setOrientation(LinearLayout.HORIZONTAL);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0, 0, 0, DimensionsHelper.dpToPx(5, this));
+        layoutParams.setMargins(0, 0, 0, (int)MetricsHelper.convertDpToPixel(5));
         contactLayout.setLayoutParams(layoutParams);
 
         ImageView iv = new ImageView(this);
-        LinearLayout.LayoutParams ivLayoutParams = new LinearLayout.LayoutParams(DimensionsHelper.dpToPx(25, this), DimensionsHelper.dpToPx(25, this));
-        ivLayoutParams.setMargins(0, 0, DimensionsHelper.dpToPx(3, this), 0);
+        LinearLayout.LayoutParams ivLayoutParams = new LinearLayout.LayoutParams((int)MetricsHelper.convertDpToPixel(25), (int)MetricsHelper.convertDpToPixel(25));
+        ivLayoutParams.setMargins(0, 0, (int)MetricsHelper.convertDpToPixel(3), 0);
         iv.setLayoutParams(ivLayoutParams);
         iv.setImageResource(iconId);
 
@@ -360,73 +343,91 @@ public class VenueDetailsActivity
         ArrayList<Filter> filters = this.Venue.Filters;
 
         if (filters != null && filters.size() > 0) {
-            boolean any = false;
-            //INFO: Weak code! Strong dependency to badge ids here.
-            for (Filter filter : filters) {
-                if (filter.Id.toUpperCase().equals("E48D0871-500E-4D41-8620-840308901970")) {
-                    this.FreeWiFiImageView.setVisibility(View.VISIBLE);
-                    any = true;
-                }
-                if (filter.Id.toUpperCase().equals("93252A33-D2A7-44A6-B375-0496EB3B5F9E")) {
-                    this.WorkingFriendlyImageView.setVisibility(View.VISIBLE);
-                    any = true;
-                }
-                if (filter.Id.toUpperCase().equals("602F1863-A209-4E34-BC5E-871AE52AE684")) {
-                    this.BikeFriendlyImageView.setVisibility(View.VISIBLE);
-                    any = true;
-                }
-                if (filter.Id.toUpperCase().equals("4F952337-5F15-4EFA-934A-7A948800B93F")) {
-                    this.ChildFriendlyImageView.setVisibility(View.VISIBLE);
-                    any = true;
-                }
-                if (filter.Id.toUpperCase().equals("BE06BC04-CB07-4884-866B-907132DE2944")) {
-                    this.FunPlaceImageView.setVisibility(View.VISIBLE);
-                    any = true;
-                }
-                if (filter.Id.toUpperCase().equals("245733F1-35C4-4497-B188-59B1A69480AA")) {
-                    this.ParkingSignImageView.setVisibility(View.VISIBLE);
-                    any = true;
-                }
-                if (filter.Id.toUpperCase().equals("5CF4A8FA-CA93-4D36-BD67-E4E6A26D751E")) {
-                    this.PetFriendlyImageView.setVisibility(View.VISIBLE);
-                    any = true;
-                }
-                if (filter.Id.toUpperCase().equals("D7C4C6BB-A717-4774-B3B3-E4C23893D2BF")) {
-                    this.RomanticPlaceImageView.setVisibility(View.VISIBLE);
-                    any = true;
-                }
-                if (filter.Id.toUpperCase().equals("C8C0E9CA-4F73-4A01-93DB-00573BD2E7F0")) {
-                    this.WheelchairFriendlyImageView.setVisibility(View.VISIBLE);
-                    any = true;
-                }
-                if (filter.Id.toUpperCase().equals("39814B44-BC9A-4172-B91A-D190213DB112")) {
-                    this.NoSmokingImageView.setVisibility(View.VISIBLE);
-                    any = true;
-                }
-            }
-            if (any) {
-                showBadgesContainer();
-            }
-            else {
-                hideBadgesContainer();
-            }
+            ArrayList<Filter> accessibilityFilters = new ArrayList<>(Stream.of(filters).filter(x -> x.FilterType == FilterType.VenueAccessibility).toList());
+            ArrayList<Filter> availabilityFilters = new ArrayList<>(Stream.of(filters).filter(x -> x.FilterType == FilterType.VenueAvailability).toList());
+            ArrayList<Filter> atmosphereFilters = new ArrayList<>(Stream.of(filters).filter(x -> x.FilterType == FilterType.VenueAtmosphere).toList());
+
+            boolean anyAccessibilityFilter = this.iterateFiltersHasAny(accessibilityFilters, true, this.filtersLayout);
+            boolean anyAvailabilityFilter = this.iterateFiltersHasAny(availabilityFilters, true, this.filtersLayout);
+            boolean anyAtmosphereFilter = this.iterateFiltersHasAny(atmosphereFilters, true, this.filtersLayout);
+
+            if (anyAccessibilityFilter || anyAvailabilityFilter || anyAtmosphereFilter)
+                this.showFiltersContainer();
+            else
+                this.hideFiltersContainer();
         }
         else
-        {
-            hideBadgesContainer();
+            this.hideFiltersContainer();
+    }
+
+    private void populateCultureFilters() {
+        ArrayList<Filter> filters = this.Venue.Filters;
+        if (filters != null && filters.size() > 0) {
+            ArrayList<Filter> cultureFilters = new ArrayList<>(Stream.of(filters).filter(x -> x.FilterType == FilterType.VenueCulture).toList());
+
+            boolean anyCultureFilter = this.iterateFiltersHasAny(cultureFilters, false, this.cultureFiltersLayout);
+
+            if (anyCultureFilter)
+                this.showCultureFiltersContainer();
+            else
+                this.hideCultureFiltersContainer();
         }
+        else
+            this.hideCultureFiltersContainer();
     }
 
-    private void showBadgesContainer() {
-        this.contactsProgressLayout.setVisibility(View.GONE);
-        this.badgesLayout.setVisibility(View.VISIBLE);
-        this.badgesContainerLayout.setVisibility(View.VISIBLE);
+    private boolean iterateFiltersHasAny(ArrayList<Filter> filters, boolean needSquareIcon, LinearLayout container) {
+        boolean hasAny = false;
+        for (Filter filter : filters) {
+            int drawableId = DrawablesPathHelper.getDrawableIdByFilterId(filter.Id);
+            if (drawableId != 0) {
+                ImageView filterImageView = this.createFilterImage(drawableId, needSquareIcon ? 31 : 46, filter.I18nResourceDescription, filter.Description);
+                container.addView(filterImageView);
+                hasAny = true;
+            }
+        }
+        return hasAny;
     }
 
-    private void hideBadgesContainer() {
-        this.contactsProgressLayout.setVisibility(View.GONE);
-        this.badgesLayout.setVisibility(View.GONE);
-        this.badgesContainerLayout.setVisibility(View.GONE);
+    private ImageView createFilterImage(int drawableId, int widthDp, String descriptionResourceI18nId, String defaultDescriptionText) {
+        ImageView filterImageView = new ImageView(this.baseContext);
+        filterImageView.setImageDrawable(getResources().getDrawable(drawableId));
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.width = (int)MetricsHelper.convertDpToPixel(widthDp);
+        lp.height = (int)MetricsHelper.convertDpToPixel(31);
+        lp.setMargins((int)MetricsHelper.convertDpToPixel(6), 0, 0, 0);
+        filterImageView.setLayoutParams(lp);
+
+        filterImageView.setOnClickListener(view -> this.filterClick(descriptionResourceI18nId, defaultDescriptionText));
+
+        filterImageView.setVisibility(View.VISIBLE);
+        return filterImageView;
+    }
+
+    private void showFiltersContainer() {
+        this.filtersProgressLayout.setVisibility(View.GONE);
+        this.filtersLayout.setVisibility(View.VISIBLE);
+        this.filtersContainerLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void hideFiltersContainer() {
+        this.filtersProgressLayout.setVisibility(View.GONE);
+        this.filtersLayout.setVisibility(View.GONE);
+        this.filtersContainerLayout.setVisibility(View.GONE);
+    }
+
+
+    public  void showCultureFiltersContainer() {
+        this.cultureFiltersProgressLayout.setVisibility(View.GONE);
+        this.cultureFiltersLayout.setVisibility(View.VISIBLE);
+        this.cultureFiltersContainerLayout.setVisibility(View.VISIBLE);
+    }
+
+    public  void hideCultureFiltersContainer() {
+        this.cultureFiltersProgressLayout.setVisibility(View.GONE);
+        this.cultureFiltersLayout.setVisibility(View.GONE);
+        this.cultureFiltersContainerLayout.setVisibility(View.GONE);
     }
 
     private void populateBusinessHours() {
@@ -498,6 +499,16 @@ public class VenueDetailsActivity
         return this.Venue.IndoorImage != null
                 && this.Venue.IndoorImage.Id != null
                 && this.Venue.IndoorImage.Id.length() > 0;
+    }
+
+    private void filterClick(String descriptionResourceI18nId, String defaultDescriptionText) {
+        String filterDescriptionLocalized = StringHelper.getStringAppDefaultLocale(this, getResources(), descriptionResourceI18nId, defaultDescriptionText);
+        if (StringHelper.isNotNullOrEmpty(filterDescriptionLocalized))
+            new AlertDialog.Builder(this)
+                    .setTitle(StringHelper.getStringAppDefaultLocale(this, getResources(), "info_dialog_title", "Info"))
+                    .setMessage(filterDescriptionLocalized)
+                    .setPositiveButton(android.R.string.ok, (dialog, which) ->  dialog.cancel())
+                    .show();
     }
 
     @Override

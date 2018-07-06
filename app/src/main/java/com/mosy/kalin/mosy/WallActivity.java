@@ -44,7 +44,7 @@ import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
-import com.mosy.kalin.mosy.Helpers.DimensionsHelper;
+import com.mosy.kalin.mosy.Helpers.MetricsHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
@@ -607,7 +607,8 @@ public class WallActivity
             searchView.setQueryHint(getString(R.string.activity_wall_searchDishesHint));
         }
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false);
+
+        //searchView.setIconifiedByDefault(false); // gives focus to the search automatically
 
         return true;
     }
@@ -732,16 +733,16 @@ public class WallActivity
                 float width = mPaint.measureText(labelText, 0, labelText.length());
 
                 int filtersButtonStartingY = location[1];
-                int popupMarginTop = DimensionsHelper.dpToPx(3, WallActivity.this);
+                int popupMarginTop = (int) MetricsHelper.convertDpToPixel(3);
 
                 int filtersButtonStartingX = location[0];
                 int textWidth = (int)width;
-                int textViewMarginEnd = DimensionsHelper.dpToPx(4, WallActivity.this);;
+                int textViewMarginEnd = (int)MetricsHelper.convertDpToPixel(4);;
                 int filtersButtonWidth = filtersButton.getWidth();
-                int filtersButtonMarginEnd = DimensionsHelper.dpToPx(25, WallActivity.this);
-                int popupSidePadding = DimensionsHelper.dpToPx(24, WallActivity.this);
-                int popupMarginRight = DimensionsHelper.dpToPx(20, WallActivity.this);
-                int arrowWidth = DimensionsHelper.dpToPx(8, WallActivity.this);
+                int filtersButtonMarginEnd = (int)MetricsHelper.convertDpToPixel(25);
+                int popupSidePadding = (int)MetricsHelper.convertDpToPixel(24);
+                int popupMarginRight = (int)MetricsHelper.convertDpToPixel(20);
+                int arrowWidth = (int)MetricsHelper.convertDpToPixel(8);
 
                 int popupX = filtersButtonStartingX -
                         filtersButtonWidth -
