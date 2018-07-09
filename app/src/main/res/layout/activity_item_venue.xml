@@ -99,17 +99,46 @@
                 android:textSize="20sp"  />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/venueItem_ivMenu"
+        <Button
+            android:id="@+id/venueItem_btnMenu"
+            android:layout_height="match_parent"
             android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:background="@drawable/button_venue_item_menu" />
+            android:background="@drawable/button_venue_item_menu"
+            android:text="MENU"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="3dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"/>
 
-        <ImageView
-            android:id="@+id/venueItem_ivInfo"
+        <Button
+            android:id="@+id/venueItem_btnInfo"
+            android:layout_height="match_parent"
             android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:background="@drawable/button_venue_item_info" />
+            android:text="MORE INFO"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@drawable/button_venue_item_menu"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp" />
+
+        <!---->
+        <!--<ImageView-->
+            <!--android:id="@+id/venueItem_ivMenu"-->
+            <!--android:layout_width="80dp"-->
+            <!--android:layout_height="80dp"-->
+            <!--android:background="@drawable/button_venue_item_menu" />-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/venueItem_ivInfo"-->
+            <!--android:layout_width="80dp"-->
+            <!--android:layout_height="80dp"-->
+            <!--android:background="@drawable/button_venue_item_info" />-->
 
     </LinearLayout>
 

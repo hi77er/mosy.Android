@@ -141,7 +141,8 @@ public class VenueWallItemView
         }
     }
 
-    @Click(resName = "venueItem_ivMenu")
+//    @Click(resName = "venueItem_ivMenu")
+    @Click(resName = "venueItem_btnMenu")
     public void MenuLinkClick()
     {
         Intent intent = new Intent(this.baseContext, VenueMenuActivity_.class);
@@ -153,7 +154,8 @@ public class VenueWallItemView
         this.baseContext.startActivity(intent);
     }
 
-    @Click(resName = "venueItem_ivInfo")
+//    @Click(resName = "venueItem_ivInfo")
+    @Click(resName = "venueItem_btnInfo")
     public void InfoLinkClick()
     {
         Intent intent = new Intent(this.baseContext, VenueDetailsActivity_.class);
