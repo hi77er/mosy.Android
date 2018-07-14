@@ -111,4 +111,5 @@
     <string name="activity_dishesFilters_distanceMeasureTypeKilometers">km</string>
     <string name="activity_dishesFilters_distanceFilterTextView">Distancia de la búsqueda:</string>
     <string name="activity_wall_missingFiltersInfoLabel">falta:</string>
+    <string name="activity_venueDetails_getDirections">Direcciones</string>
 </resources>

@@ -111,4 +111,5 @@
     <string name="activity_dishesFilters_distanceMeasureTypeKilometers">км</string>
     <string name="activity_dishesFilters_distanceFilterTextView">Расстояние поиска:</string>
     <string name="activity_wall_missingFiltersInfoLabel">отсутствуют:</string>
+    <string name="activity_venueDetails_getDirections">Направления</string>
 </resources>

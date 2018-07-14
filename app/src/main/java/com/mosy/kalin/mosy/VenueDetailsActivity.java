@@ -26,6 +26,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mosy.kalin.mosy.DTOs.Enums.FilterType;
 import com.mosy.kalin.mosy.DTOs.Filter;
@@ -55,6 +56,8 @@ import org.androidannotations.annotations.ViewById;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import retrofit2.http.Url;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_venue_details)
@@ -111,8 +114,12 @@ public class VenueDetailsActivity
     TextView nameTextView;
     @ViewById(resName = "venueDetails_tvClass")
     TextView classTextView;
+
     @ViewById(resName = "venueDetails_btnPhone")
     Button phoneButton;
+    @ViewById(resName = "venueDetails_btnDirections")
+    Button directionsButton;
+
     @ViewById(resName = "venueDetails_ivIndoorThumbnail")
     ImageView indoorImageThumbnailView;
     @ViewById(resName = "venueDetails_tvBHMondayTime")
@@ -262,6 +269,7 @@ public class VenueDetailsActivity
                 this.phoneButton.setVisibility(View.VISIBLE);
                 any = true;
             }
+
             if (StringHelper.isNotNullOrEmpty(venueContacts.Address)) {
                 addContact(venueContacts.Address, R.drawable.contact_address_paprica, false);
                 any = true;
@@ -492,6 +500,10 @@ public class VenueDetailsActivity
     }
 
     private void populateGoogleMap() {
+        if (this.Venue != null && this.Venue.Location != null) {
+            this.directionsButton.setOnClickListener(view -> directionsButtonClicked());
+            this.directionsButton.setVisibility(View.VISIBLE);
+        }
         this.VenueLocationMap.getMapAsync(this);
     }
 
@@ -499,6 +511,17 @@ public class VenueDetailsActivity
         return this.Venue.IndoorImage != null
                 && this.Venue.IndoorImage.Id != null
                 && this.Venue.IndoorImage.Id.length() > 0;
+    }
+
+    private void directionsButtonClicked() {
+        String parameters = "destination=" + this.Venue.Location.Latitude + "," + this.Venue.Location.Longitude;
+        Uri uri = Uri.parse("https://www.google.com/maps/dir/?api=1&" + parameters);
+
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        intent.setData(uri);
+        startActivity(intent);
     }
 
     private void filterClick(String descriptionResourceI18nId, String defaultDescriptionText) {
@@ -515,38 +538,43 @@ public class VenueDetailsActivity
     public void onMapReady(GoogleMap googleMap) {
         if (this.Venue != null && this.Venue.Location != null) {
             LatLng venueLocation = new LatLng(this.Venue.Location.Latitude, this.Venue.Location.Longitude);
-            googleMap.getUiSettings().setZoomControlsEnabled(true);
-            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+//            googleMap.getUiSettings().setZoomControlsEnabled(true);
+//            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
             googleMap.getUiSettings().setMapToolbarEnabled(true);
-            googleMap.addMarker(
+
+            Marker marker = googleMap.addMarker(
                     new MarkerOptions()
                             .position(venueLocation)
-                            .title(this.Venue.Name)
+                            .title(this.Venue.Name) //  + (" - " + "Click the marker to get directions")
             );
+            marker.showInfoWindow();
+
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(venueLocation, 16.0f));
         }
     }
 
-    @Touch(R.id.venueDetails_ivMapTransparent)
-    boolean transparentImage_Touch(View v, MotionEvent event) {
-        int action = event.getAction();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                // Disallow ScrollView to intercept touch events.
-                this.mainScrollView.requestDisallowInterceptTouchEvent(true);
-                // Disable touch on transparent view
-                return false;
-            case MotionEvent.ACTION_UP:
-                // Allow ScrollView to intercept touch events.
-                this.mainScrollView.requestDisallowInterceptTouchEvent(false);
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                this.mainScrollView.requestDisallowInterceptTouchEvent(true);
-                return false;
-            default:
-                return true;
-        }
-    }
+    //INFO: We use that when no Lite Mode is activated
+//    @Touch(R.id.venueDetails_ivMapTransparent)
+//    boolean transparentImage_Touch(View v, MotionEvent event) {
+//        int action = event.getAction();
+//        switch (action) {
+//            case MotionEvent.ACTION_DOWN:
+//                // Disallow ScrollView to intercept touch events.
+//                this.mainScrollView.requestDisallowInterceptTouchEvent(true);
+//                // Disable touch on transparent view
+//                return false;
+//            case MotionEvent.ACTION_UP:
+//                // Allow ScrollView to intercept touch events.
+//                this.mainScrollView.requestDisallowInterceptTouchEvent(false);
+//                return true;
+//            case MotionEvent.ACTION_MOVE:
+//                this.mainScrollView.requestDisallowInterceptTouchEvent(true);
+//                return false;
+//            default:
+//                return true;
+//        }
+//    }
 
     @Click(resName = "venueDetails_ivIndoorThumbnail")
     public void ImageClick() {

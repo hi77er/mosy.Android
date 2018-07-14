@@ -162,4 +162,5 @@
     <string name="activity_venuesFilters_availabilityFiltersTitle">Наличности</string>
     <string name="activity_venuesFilters_accessibilityFiltersTitle">Достъпност</string>
     <string name="info_dialog_title" translatable="false">Инфо</string>
+    <string name="activity_venueDetails_getDirections">Упътвания</string>
 </resources>

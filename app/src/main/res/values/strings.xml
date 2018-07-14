@@ -15,8 +15,8 @@
     <string name="pref_collectionName_webApi" translatable="false">"WebApi"</string>
 
     <!-- AndroidManifest -->
-    <string name="app_name">"Foodoo"</string>
-    <string name="manifest_landingActivityTitle" translatable="false">"Foodoo"</string>
+    <string name="app_name">"Tastespot"</string>
+    <string name="manifest_landingActivityTitle" translatable="false">"Tastespot"</string>
     <string name="manifest_venuesActivityTitle" translatable="false">"Venues"</string>
     <string name="manifest_venueDetailsActivityTitle" translatable="false">"Venue Details"</string>
 
@@ -189,5 +189,6 @@
     <string name="DishesFilterAllergenHotPeppersName">"Hot Peppers"</string>
     <string name="DishesFilterAllergenTreeNutsName">"Tree Nuts"</string>
     <string name="DishesFilterAllergenMustardName">"Mustard"</string>
+    <string name="activity_venueDetails_getDirections">Directions</string>
 
 </resources>

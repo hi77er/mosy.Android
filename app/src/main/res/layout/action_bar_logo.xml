@@ -4,4 +4,4 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    android:src="@drawable/foodoo_dots_logo_transparent_xxs" />
+    android:src="@drawable/tastespot_lollipop" />

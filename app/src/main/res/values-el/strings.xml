@@ -102,4 +102,5 @@
     <string name="activity_dishesFilters_ingredientsFiltersTitle">Υλικά</string>
     <string name="activity_dishesFilters_allergensFiltersTitle">Αλλεργιογόνα</string>
     <string name="activity_dishesFilters_allergensFiltersNote">* Τα επιλλεγμένα αλλεργιογόνα θα μειώσουν την προτεραιότητα εμφάνισης πιάτων συνδεδεμένων με αυτά.</string>
+    <string name="activity_venueDetails_getDirections">κατευθύνσεις</string>
 </resources>

@@ -13,7 +13,7 @@
         android:id="@+id/landing_ivLogo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/foodoo_logo_transparent_rect"
+        android:src="@drawable/tastespot_logo_transparent_rect"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="30dp" />
 

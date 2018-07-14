@@ -44,7 +44,7 @@ public class LocationHelper {
         if (time > 0 && time < 1)
             text = StringHelper.empty();
         if (time > 0 && time < 1)
-            text = "less than 1min";
+            text = "1min";
         if (time > 1 && time < 59)
             text = (int)time + "min";
         if (time > 59 && time < 999999999)

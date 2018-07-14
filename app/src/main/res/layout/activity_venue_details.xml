@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     android:id="@+id/venueDetails_svMain"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
@@ -70,6 +70,24 @@
                     android:textSize="14sp"
                     android:visibility="gone"
                     android:drawableStart="@drawable/contact_phone_50px_white_padding" />
+
+                <Button
+                    android:id="@+id/venueDetails_btnDirections"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/colorWhite"
+                    android:layout_marginTop="5dp"
+                    android:paddingTop="0dp"
+                    android:paddingBottom="0dp"
+                    android:textSize="14sp"
+                    android:visibility="gone"
+                    android:drawableStart="@drawable/contact_directions_50px_bgwhite"
+                    android:text="@string/activity_venueDetails_getDirections"
+                    android:autoLink="all"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -422,7 +440,7 @@
         <RelativeLayout
             android:id="@+id/venueDetails_lMap"
             android:layout_width="match_parent"
-            android:layout_height="250dp">
+            android:layout_height="300dp">
 
             <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
@@ -431,17 +449,16 @@
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="-100dp"
-                android:layout_marginBottom="-100dp" />
+                map:mapType="normal"
+                map:liteMode="true" />
 
-            <ImageView
-                android:id="@+id/venueDetails_ivMapTransparent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@color/transparent" />
 
+            <!--<ImageView-->
+                <!--android:id="@+id/venueDetails_ivMapTransparent"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:src="@color/transparent" />-->
         </RelativeLayout>
 
-
-</LinearLayout>
+    </LinearLayout>
 </ScrollView>
