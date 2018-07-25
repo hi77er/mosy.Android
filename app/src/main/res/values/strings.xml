@@ -109,7 +109,7 @@
     <string name="VenuesFilterTraditionalName">Traditional</string>
     <string name="VenuesFilterLiveSportsName">Live sports</string>
     <string name="VenuesFilterPrivateName">Private</string>
-    <string name="VenuesFilterWorking24hName">Working 24h</string>
+    <string name="VenuesFilterWorking24hName">Open 24h</string>
     <string name="VenuesFilterAllYouCanEatName">All you can eat</string>
     <string name="VenuesFilterOutdoorSittingName">Outdoor sitting</string>
     <string name="VenuesFilterPubGamesName">Pub games</string>
@@ -190,7 +190,7 @@
     <string name="DishesFilterTypeSaladsName">"Salads"</string>
     <string name="DishesFilterTypeAppetizersAndSnacksName">Appetizers &amp; Snacks</string>
     <string name="DishesFilterTypeSandwichesAndWrapsName">Sandwiches &amp; Wraps</string>
-    <string name="DishesFilterTypBurgersName">Burgers</string>
+    <string name="DishesFilterTypeBurgersName">Burgers</string>
     <string name="DishesFilterTypePizzaName">Pizza</string>
     <string name="DishesFilterTypePastaName">Pasta</string>
     <string name="DishesFilterTypeSushiName">Sushi</string>

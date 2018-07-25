@@ -18,7 +18,7 @@ public class DrawablesPathHelper {
                 drawableId = R.drawable.filter_fgwhite_bgmain_bikeaccessible;
                 break;
             case "4F952337-5F15-4EFA-934A-7A948800B93F":
-                drawableId = R.drawable.filter_fgwhite_bgmain_babyfriendly;
+                drawableId = R.drawable.filter_fggray_bgmain_toys_corner;
                 break;
             case "BE06BC04-CB07-4884-866B-907132DE2944":
                 drawableId = R.drawable.filter_fgwhite_bgmain_funplace;
@@ -37,6 +37,61 @@ public class DrawablesPathHelper {
                 break;
             case "39814B44-BC9A-4172-B91A-D190213DB112":
                 drawableId = R.drawable.filter_fgwhite_bgmain_nosmoking;
+                break;
+
+            case "75137D9F-FB72-412C-A2FD-163436A41AA7":
+                drawableId = R.drawable.filter_fgwhite_bgmain_babyfriendly;
+                break;
+            case "D64B4596-86CF-4F5A-B88C-17EB9A6630DB":
+                drawableId = R.drawable.filter_fggray_bgmain_24hours;
+                break;
+            case "9834B6DA-14DD-460A-9633-1A5907473E29":
+                drawableId = R.drawable.filter_fggray_bgmain_outdoor_sitting;
+                break;
+            case "3B7C66E5-8F8B-4091-BC4E-216618F553D9":
+                drawableId = R.drawable.filter_fggray_bgmain_live_music;
+                break;
+            case "657C6B9D-A8CC-4767-A972-2BFE6A3481BF":
+                drawableId = R.drawable.filter_fggray_bgmain_quiet_music;
+                break;
+            case "69ABA68E-56D0-4584-9B05-2C20CC30056A":
+                drawableId = R.drawable.filter_fggray_bgmain_pub_games;
+                break;
+            case "9A9D9045-B356-4A2D-886A-42EA52D2C62B":
+                drawableId = R.drawable.filter_fggray_bgmain_live_sports;
+                break;
+            case "3D725220-451D-4FCF-A36A-49A794569CC8":
+                drawableId = R.drawable.filter_fggray_bgmain_couches;
+                break;
+            case "30AF6432-8A43-4C16-A4E3-55A74565D515":
+                drawableId = R.drawable.filter_fggray_bgmain_traditional;
+                break;
+            case "381B30DD-5023-48D5-AFBA-7AF618AB5EF4":
+                drawableId = R.drawable.filter_fggray_bgmain_art;
+                break;
+            case "2E37A4B1-116D-4ED4-8CCE-7E0F66EB2D03":
+                drawableId = R.drawable.filter_fggray_bgmain_shisha;
+                break;
+            case "C33C8B41-FED4-44DC-9B9A-A5C89DD78D0E":
+                drawableId = R.drawable.filter_fggray_bgmain_private;
+                break;
+            case "00AC4D76-BB97-4C37-8226-B4FFC710C219":
+                drawableId = R.drawable.filter_fggray_bgmain_dancing;
+                break;
+            case "68FE1712-78E9-4067-8B03-BB696BBAD92D":
+                drawableId = R.drawable.filter_fggray_bgmain_cosy;
+                break;
+            case "2AA43519-E136-4B8D-BFF9-C0EBD9655BDF":
+                drawableId = R.drawable.filter_fggray_bgmain_rooftop;
+                break;
+            case "996A19E1-D547-4A05-A31F-D066F7760937":
+                drawableId = R.drawable.filter_fggray_bgmain_self_service;
+                break;
+            case "9614795F-256A-4A17-94DA-D6525DC9E2E8":
+                drawableId = R.drawable.filter_fggray_bgmain_standing_desks;
+                break;
+            case "5AB9966D-122D-49EC-9176-F64193E331E7":
+                drawableId = R.drawable.filter_fggray_bgmain_standing_desks;
                 break;
             case "EA50942C-B218-430D-AF44-233FC64041EA":
                 drawableId = R.drawable.flag_bulgaria;
