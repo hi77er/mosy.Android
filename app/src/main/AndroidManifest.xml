@@ -18,13 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-
         <activity
             android:name=".LandingActivity_"
             android:label="@string/manifest_landingActivityTitle"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -81,6 +81,9 @@
             android:theme="@style/Theme.AppCompat.PopUp" />
         <activity
             android:name=".DishesFiltersActivity_"
+            android:theme="@style/Theme.AppCompat.PopUp" />
+        <activity
+            android:name=".PromotionsActivity_"
             android:theme="@style/Theme.AppCompat.PopUp" />
 
         <meta-data

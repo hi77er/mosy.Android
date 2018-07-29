@@ -37,6 +37,8 @@ public class LandingActivity
     @Bean
     AccountService accountService;
 
+    @ViewById(resName = "landing_btnPromotions")
+    Button buttonPromotions;
     @ViewById(resName = "landing_btnDishes")
     Button buttonDishes;
     @ViewById(resName = "landing_btnVenues")
@@ -157,6 +159,7 @@ public class LandingActivity
     private void showLoading() {
         this.buttonsLayout.setVisibility(View.GONE);
         this.invalidHostLayout.setVisibility(View.GONE);
+        this.buttonPromotions.setEnabled(false);
         this.buttonDishes.setEnabled(false);
         this.buttonVenues.setEnabled(false);
         this.centralProgressLayout.setVisibility(View.VISIBLE);
@@ -165,6 +168,7 @@ public class LandingActivity
     private void showButtonsLayout() {
         this.buttonsLayout.setVisibility(View.VISIBLE);
         this.invalidHostLayout.setVisibility(View.GONE);
+        this.buttonPromotions.setEnabled(true);
         this.buttonDishes.setEnabled(true);
         this.buttonVenues.setEnabled(true);
         this.centralProgressLayout.setVisibility(View.GONE);
@@ -193,6 +197,12 @@ public class LandingActivity
     public void navigateDishesSearch(){
         Intent intent = new Intent(LandingActivity.this, WallActivity_.class);
         intent.putExtra("DishesSearchModeActivated", true); //else find dishesWall
+        startActivity(intent);
+    }
+
+    @Click(resName = "landing_btnPromotions")
+    public void navigatePromotionsSearch(){
+        Intent intent = new Intent(LandingActivity.this,PromotionsActivity_.class);
         startActivity(intent);
     }
 

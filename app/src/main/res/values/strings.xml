@@ -21,6 +21,7 @@
     <string name="manifest_venueDetailsActivityTitle" translatable="false">"Venue Details"</string>
 
     <!-- Activity Landing -->
+    <string name="activity_landing_promotionsBtn">Promotions</string>
     <string name="activity_landing_venuesBtn"><![CDATA[VENUES & MENUS]]></string>
     <string name="activity_landing_dishesBtn"><![CDATA[FIND DISHES & DRINKS]]></string>
     <string name="activity_landing_languageBgSpinner">Bulgarian</string>
@@ -256,5 +257,6 @@
     <string name="DishesFilterRegionSouthAsianDescription">E.g. Indonesian, Philippine, Thai, Vietnamese, etc.</string>
     <string name="DishesFilterMainIngredientWhiteMeatDescription">E.g. Chicken, Turkey, Duck, etc.</string>
     <string name="DishesFilterMainIngredientRedMeatDescription">E.g. Beef, Pork, Game, etc.</string>
+
 
 </resources>

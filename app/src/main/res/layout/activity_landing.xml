@@ -57,6 +57,22 @@
             android:background="@drawable/button_landing_dishes"
             android:textColor="@color/colorPrimary"
             android:stateListAnimator="@null" />
+
+        <Button
+            android:id="@+id/landing_btnPromotions"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginStart="7dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="10dp"
+            android:drawableTop="@drawable/venue_default_thumbnail_100x100"
+            android:text="@string/activity_landing_promotionsBtn"
+            android:textSize="20sp"
+            android:background="@drawable/button_landing_dishes"
+            android:textColor="@color/colorPrimary"
+            android:stateListAnimator="@null"/>
+
     </LinearLayout>
 
     <LinearLayout
