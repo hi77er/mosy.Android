@@ -63,7 +63,7 @@ public class AccountService {
                         TokenResult result = response.body();
                         if (result == null) throw new NullPointerException("Must have Authentication Token response");
 
-                        if (!StringHelper.isNullOrEmpty(result.AccessToken) && !StringHelper.isNullOrEmpty(result.AccessToken)){
+                        if (!StringHelper.isNullOrEmpty(result.AccessToken) && !StringHelper.isNullOrEmpty(result.TokenType)){
                             refreshWebApiAuthTokenSettings(applicationContext, result.AccessToken, result.TokenType, result.IssuedAt, result.ExpiresIn);
 
                             if (onSuccess != null)
@@ -89,7 +89,8 @@ public class AccountService {
             IAccountRepository accountRepo = RetrofitAPIClientFactory.getClient().create(IAccountRepository.class);
             Call<TokenResult> call = accountRepo.tokenLogin(userLoginModel.Email, userLoginModel.Password, "password");
 
-            if (preExecute != null) preExecute.run();
+            if (preExecute != null)
+                preExecute.run();
 
             call.enqueue(new Callback<TokenResult>() {
                 @Override public void onResponse(Call<TokenResult> call, Response<TokenResult> response) {
@@ -101,7 +102,7 @@ public class AccountService {
                         TokenResult result = response.body();
                         if (result == null) throw new NullPointerException("Must have Authentication Token response");
 
-                        if (!StringHelper.isNullOrEmpty(result.AccessToken) && !StringHelper.isNullOrEmpty(result.AccessToken)){
+                        if (!StringHelper.isNullOrEmpty(result.AccessToken) && !StringHelper.isNullOrEmpty(result.TokenType)){
                             refreshUserAuthTokenSettings(applicationContext, result.AccessToken, result.TokenType, result.IssuedAt, result.ExpiresIn);
 
                             if (onSuccess != null)
@@ -128,7 +129,7 @@ public class AccountService {
         return checkTokenValid(applicationContext, token, tokenType, expiresAt);
     }
 
-    private boolean checkUserTokenValid(Context applicationContext) {
+    public boolean checkUserTokenValid(Context applicationContext) {
 //        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_user), Context.MODE_PRIVATE);
 //        String token = mPreferences.getString(applicationContext.getString(R.string.pref_authToken_user), StringHelper.empty());
 //        String tokenType = mPreferences.getString(applicationContext.getString(R.string.pref_authTokenType_user), StringHelper.empty());

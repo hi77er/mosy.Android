@@ -169,7 +169,7 @@ public class LandingActivity
         this.buttonVenues.setEnabled(true);
         this.centralProgressLayout.setVisibility(View.GONE);
         //TODO: Delete before deploying to production!
-        Toast.makeText(applicationContext, "WebApi authToken refreshed!", Toast.LENGTH_LONG).show();
+//        Toast.makeText(applicationContext, "WebApi authToken refreshed!", Toast.LENGTH_LONG).show();
     }
 
     private void showInvalidHostLayout() {

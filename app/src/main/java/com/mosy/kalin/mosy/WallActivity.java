@@ -332,7 +332,7 @@ public class WallActivity
 
 //            this.venuesWall.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll
             this.venuesWall.addOnScrollListener(venuesScrollListener);
-}
+        }
     }
 
     void loadMoreVenues(int maxResultsCount, int totalItemsOffset, String query,
@@ -597,15 +597,20 @@ public class WallActivity
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        if (!DishesSearchModeActivated) {
-            menu.findItem(R.id.action_dishes).setVisible(true);
-            menu.findItem(R.id.action_venues).setVisible(false);
-            searchView.setQueryHint(getString(R.string.activity_wall_searchVenuesHint));
-        } else {
-            menu.findItem(R.id.action_venues).setVisible(true);
-            menu.findItem(R.id.action_dishes).setVisible(false);
-            searchView.setQueryHint(getString(R.string.activity_wall_searchDishesHint));
-        }
+
+
+        menu.findItem(R.id.action_venues).setVisible(!DishesSearchModeActivated);
+        menu.findItem(R.id.action_dishes).setVisible(DishesSearchModeActivated);
+
+        String hint = DishesSearchModeActivated ?
+                getString(R.string.activity_wall_searchDishesHint) :
+                getString(R.string.activity_wall_searchVenuesHint);
+        searchView.setQueryHint(hint);
+
+        boolean isLogged = this.accountService.checkUserTokenValid(this.applicationContext);
+        menu.findItem(R.id.action_login).setVisible(!isLogged);
+        menu.findItem(R.id.action_logout).setVisible(isLogged);
+
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         //searchView.setIconifiedByDefault(false); // gives focus to the search automatically
@@ -623,9 +628,24 @@ public class WallActivity
             case R.id.action_dishes:
                 this.navigateDishesSearch();
                 return true;
+            case R.id.action_login:
+                this.navigateLoginActivity();
+                return true;
+            case R.id.action_logout:
+                this.logout();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void navigateLoginActivity() {
+        Intent intent = new Intent(WallActivity.this, LoginActivity_.class);
+        startActivity(intent);
+    }
+
+    private void logout() {
+
     }
 
     @Override

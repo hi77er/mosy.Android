@@ -1,4 +1,5 @@
 package com.mosy.kalin.mosy;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,28 +14,36 @@ import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
 import com.mosy.kalin.mosy.Services.AccountService;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 
+@SuppressLint("Registered")
 @EActivity(R.layout.activity_login)
 public class LoginActivity
         extends BaseActivity {
-    Button b1,b2;
-    EditText ed1,ed2;
 
-    TextView tx1;
+    @ViewById(R.id.login_btnLogin)
+    Button b1;
+    @ViewById(R.id.login_btnCancel)
+    Button b2;
+    @ViewById(R.id.login_etEmail)
+    EditText ed1;
+    @ViewById(R.id.login_etPassword)
+    EditText ed2;
+
+//    TextView tx1;
     int counter = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
 
-        b1 = findViewById(R.id.login_btnLogin);
-        ed1 = findViewById(R.id.login_etEmail);
-        ed2 = findViewById(R.id.login_etPassword);
-
-        b2 = findViewById(R.id.login_btnCancel);
-        tx1.setVisibility(View.GONE);
+    @AfterViews
+    public void afterViews(){
+//        tx1.setVisibility(View.GONE);
 
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,10 +55,10 @@ public class LoginActivity
                 } else {
                     Toast.makeText(getApplicationContext(), "Wrong Credentials",Toast.LENGTH_SHORT).show();
 
-                    tx1.setVisibility(View.VISIBLE);
-                    tx1.setBackgroundColor(Color.RED);
+//                    tx1.setVisibility(View.VISIBLE);
+//                    tx1.setBackgroundColor(Color.RED);
                     counter--;
-                    tx1.setText(Integer.toString(counter));
+//                    tx1.setText(Integer.toString(counter));
 
                     if (counter == 0) {
                         b1.setEnabled(false);
