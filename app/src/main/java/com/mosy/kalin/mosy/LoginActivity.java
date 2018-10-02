@@ -43,37 +43,14 @@ public class LoginActivity
 
     @AfterViews
     public void afterViews(){
-//        tx1.setVisibility(View.GONE);
 
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(ed1.getText().toString().equals("admin") &&
-                        ed2.getText().toString().equals("admin")) {
-                    Toast.makeText(getApplicationContext(),
-                            "Redirecting...",Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Wrong Credentials",Toast.LENGTH_SHORT).show();
 
-//                    tx1.setVisibility(View.VISIBLE);
-//                    tx1.setBackgroundColor(Color.RED);
-                    counter--;
-//                    tx1.setText(Integer.toString(counter));
-
-                    if (counter == 0) {
-                        b1.setEnabled(false);
-                    }
-                }
-            }
-        });
-
-        b2.setOnClickListener(v -> finish());
     }
 
     @Click(R.id.login_btnLogin)
     public void Login() {
-        String email = ((EditText)findViewById(R.id.login_etEmail)).getText().toString();
-        String password = ((EditText)findViewById(R.id.login_etPassword)).getText().toString();
+        String email = ed1.getText().toString().trim();
+        String password = ed2.getText().toString();
         Context applicationContext = getApplicationContext();
 
         if (!StringHelper.isNullOrWhitespace(email) && !StringHelper.isNullOrWhitespace(password)) {

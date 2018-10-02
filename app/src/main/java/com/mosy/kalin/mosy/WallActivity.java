@@ -645,7 +645,16 @@ public class WallActivity
     }
 
     private void logout() {
+        this.accountService.logoutUser(this.applicationContext);
+        navigateToWallActivity(DishesSearchModeActivated);
 
+        Toast.makeText(this.baseContext, "Logged out.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void navigateToWallActivity(boolean isDishMode) {
+        Intent intent = new Intent(WallActivity.this, WallActivity_.class);
+        intent.putExtra("DishesSearchModeActivated", isDishMode); //else find dishesWall
+        startActivity(intent);
     }
 
     @Override

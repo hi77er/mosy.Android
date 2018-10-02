@@ -37,11 +37,10 @@ public class AccountService {
     }
 
     public String getUserAuthTokenHeader(Context applicationContext){
-//        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_user), Context.MODE_PRIVATE);
-//        String token = mPreferences.getString(applicationContext.getString(R.string.pref_authToken_user), StringHelper.empty());
-//        String type = mPreferences.getString(applicationContext.getString(R.string.pref_authTokenType_user), StringHelper.empty());
-//        return type + " " + token;
-        return null;
+        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_user), Context.MODE_PRIVATE);
+        String token = mPreferences.getString(applicationContext.getString(R.string.pref_authToken_user), StringHelper.empty());
+        String type = mPreferences.getString(applicationContext.getString(R.string.pref_authTokenType_user), StringHelper.empty());
+        return type + " " + token;
     }
 
     public void executeAssuredWebApiTokenValidOrRefreshed(Context applicationContext, Runnable preExecute, Runnable onSuccess, Runnable onInvalidHost) {
@@ -130,13 +129,12 @@ public class AccountService {
     }
 
     public boolean checkUserTokenValid(Context applicationContext) {
-//        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_user), Context.MODE_PRIVATE);
-//        String token = mPreferences.getString(applicationContext.getString(R.string.pref_authToken_user), StringHelper.empty());
-//        String tokenType = mPreferences.getString(applicationContext.getString(R.string.pref_authTokenType_user), StringHelper.empty());
-//        String expiresAt = mPreferences.getString(applicationContext.getString(R.string.pref_authTokenExpiresAt_user), StringHelper.empty());
-//
-//        return checkTokenValid(applicationContext, token, tokenType, expiresAt);
-        return false;
+        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_user), Context.MODE_PRIVATE);
+        String token = mPreferences.getString(applicationContext.getString(R.string.pref_authToken_user), StringHelper.empty());
+        String tokenType = mPreferences.getString(applicationContext.getString(R.string.pref_authTokenType_user), StringHelper.empty());
+        String expiresAt = mPreferences.getString(applicationContext.getString(R.string.pref_authTokenExpiresAt_user), StringHelper.empty());
+
+        return checkTokenValid(applicationContext, token, tokenType, expiresAt);
     }
 
     private boolean checkTokenValid(Context applicationContext, String token, String tokenType, String expiresAt) {
@@ -175,24 +173,24 @@ public class AccountService {
     }
 
     private void refreshUserAuthTokenSettings(Context applicationContext, String token, String tokenType, String issuedAt, int expiresIn){
-//        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_user), Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = mPreferences.edit();
-//        editor.putString(applicationContext.getString(R.string.pref_authToken_user), token);
-//        editor.putString(applicationContext.getString(R.string.pref_authTokenType_user), tokenType);
-//        editor.putInt(applicationContext.getString(R.string.pref_authTokenExpiresInSeconds_user), expiresIn);
-//        //We calc expiresAt here to avoid tracking Server time zone difference.
-//
-//        try {
-//            Date issuedAtDate = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US).parse(issuedAt);
-//            Long expiresAtMilliseconds = issuedAtDate.getTime() + expiresIn * 1000;
-//            Date expiresAtDate = new Date(expiresAtMilliseconds);
-//            String expiresAt = expiresAtDate.toString();
-//            editor.putString(applicationContext.getString(R.string.pref_authTokenExpiresAt_user), expiresAt);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-//        editor.apply();
+        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_user), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(applicationContext.getString(R.string.pref_authToken_user), token);
+        editor.putString(applicationContext.getString(R.string.pref_authTokenType_user), tokenType);
+        editor.putInt(applicationContext.getString(R.string.pref_authTokenExpiresInSeconds_user), expiresIn);
+        //We calc expiresAt here to avoid tracking Server time zone difference.
+
+        try {
+            Date issuedAtDate = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US).parse(issuedAt);
+            Long expiresAtMilliseconds = issuedAtDate.getTime() + expiresIn * 1000;
+            Date expiresAtDate = new Date(expiresAtMilliseconds);
+            String expiresAt = expiresAtDate.toString();
+            editor.putString(applicationContext.getString(R.string.pref_authTokenExpiresAt_user), expiresAt);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        editor.apply();
     }
 
     public void register(Context applicationContext,
@@ -225,4 +223,14 @@ public class AccountService {
 
     }
 
+    public void logoutUser(Context applicationContext) {
+        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_user), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPreferences.edit();
+
+        editor.putString(applicationContext.getString(R.string.pref_authToken_user), StringHelper.empty());
+        editor.putString(applicationContext.getString(R.string.pref_authTokenType_user), StringHelper.empty());
+        editor.putInt(applicationContext.getString(R.string.pref_authTokenExpiresInSeconds_user), 0);
+
+        editor.apply();
+    }
 }

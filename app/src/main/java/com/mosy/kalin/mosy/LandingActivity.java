@@ -184,15 +184,17 @@ public class LandingActivity
 
     @Click(resName = "landing_btnVenues")
     public void navigateVenuesSearch(){
-        Intent intent = new Intent(LandingActivity.this, WallActivity_.class);
-        intent.putExtra("DishesSearchModeActivated", false); //else find dishesWall
-        startActivity(intent);
+        navigateToWallActivity(false);
     }
 
     @Click(resName = "landing_btnDishes")
     public void navigateDishesSearch(){
+        navigateToWallActivity(true);
+    }
+
+    private void navigateToWallActivity(boolean isDishMode) {
         Intent intent = new Intent(LandingActivity.this, WallActivity_.class);
-        intent.putExtra("DishesSearchModeActivated", true); //else find dishesWall
+        intent.putExtra("DishesSearchModeActivated", isDishMode); //else find dishesWall
         startActivity(intent);
     }
 
