@@ -2,11 +2,11 @@ package com.mosy.kalin.mosy;
 
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mosy.kalin.mosy.DAL.Http.Results.RegisterResult;
+import com.mosy.kalin.mosy.DTOs.HttpResponses.CheckEmailAvailableResponse;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
@@ -28,20 +28,15 @@ public class RegisterActivity
 
     @Click(R.id.btnRegister)
     public void Register() {
-        String email = etEmail.getText().toString();
+        String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString();
         String repeatPassword = etPassword.getText().toString();
         Context applicationContext = getApplicationContext();
 
-        //TODO: Check if User with this Username already exists calling an Api method created for this purpose.
-
-        boolean emailOccupied = false;
         if (StringHelper.isNullOrWhitespace(email) || StringHelper.isNullOrWhitespace(password)) {
-            Toast.makeText(applicationContext, "Email and password are required.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(applicationContext, "Email and password are required.", Toast.LENGTH_LONG).show();
         } else if (!StringHelper.isEmailAddress(email)) {
-            Toast.makeText(applicationContext, "Invalid Email address.", Toast.LENGTH_SHORT).show();
-        } else if (emailOccupied) {
-            Toast.makeText(applicationContext,"Email is being used", Toast.LENGTH_LONG).show();
+            Toast.makeText(applicationContext, "Invalid Email address.", Toast.LENGTH_LONG).show();
         } else if (!StringHelper.isMatch("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*(_|[^\\w])).{6,}$", password)) {
             Toast.makeText(applicationContext,
                     "Passwords must have at least one non letter and digit character. " +
@@ -53,20 +48,30 @@ public class RegisterActivity
                     "Repeat password does not match Password",
                     Toast.LENGTH_LONG).show();
         } else {
-            AsyncTaskListener<RegisterResult> listener = new AsyncTaskListener<RegisterResult>() {
-                @Override
-                public void onPreExecute() {
+            AsyncTaskListener<CheckEmailAvailableResponse> isEmailValidListener = new AsyncTaskListener<CheckEmailAvailableResponse>() {
+                @Override public void onPreExecute() {
                     //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
                 }
-
-                @Override
-                public void onPostExecute(final RegisterResult result) {
-                    publishRegisterResult(result);
-                    navigateToLoginActivity();
-                    Toast.makeText(applicationContext,"We've sent you an email. Please verify your registration.", Toast.LENGTH_LONG).show();
+                @Override public void onPostExecute(CheckEmailAvailableResponse checkEmailAvailableResponse) {
+                    if(checkEmailAvailableResponse.IsAvailable) {
+                        AsyncTaskListener<RegisterResult> listener = new AsyncTaskListener<RegisterResult>() {
+                            @Override public void onPreExecute() {
+                                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+                            }
+                            @Override public void onPostExecute(final RegisterResult result) {
+                                publishRegisterResult(result);
+                                navigateToLoginActivity();
+                                Toast.makeText(applicationContext,"We've sent you an email. Please verify your registration.", Toast.LENGTH_LONG).show();
+                            }
+                        };
+                        new AccountService().register(applicationContext, email, password, password, listener, null);
+                    }
+                    else {
+                        Toast.makeText(applicationContext,"Email is being used", Toast.LENGTH_LONG).show();
+                    }
                 }
             };
-            new AccountService().register(applicationContext, email, password, password, listener, null);
+            new AccountService().checkEmailAvailable(applicationContext, email, null, isEmailValidListener);
         }
     }
 

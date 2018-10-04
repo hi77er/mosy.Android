@@ -2,13 +2,18 @@ package com.mosy.kalin.mosy.Services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 
 import com.mosy.kalin.mosy.DAL.Http.Results.RegisterResult;
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IAccountRepository;
 import com.mosy.kalin.mosy.DAL.Http.Results.TokenResult;
+import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IVenuesRepository;
+import com.mosy.kalin.mosy.DTOs.HttpResponses.CheckEmailAvailableResponse;
+import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
+import com.mosy.kalin.mosy.Models.BindingModels.CheckEmailAvailableBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.RegisterBindingModel;
 import com.mosy.kalin.mosy.R;
@@ -200,27 +205,33 @@ public class AccountService {
                          AsyncTaskListener<RegisterResult> apiCallResultListener,
                          Runnable onInvalidHost)
     {
-        RegisterBindingModel model = new RegisterBindingModel(Email, Password, ConfirmPassword);
-        IAccountRepository repository = RetrofitAPIClientFactory.getClient().create(IAccountRepository.class);
-        Call<RegisterResult> callRegResult = repository.register(model);
+        this.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authToken = this.getWebApiAuthTokenHeader(applicationContext);
 
-        callRegResult.enqueue(new Callback<RegisterResult>() {
-            @Override
-            public void onResponse(Call<RegisterResult> call, Response<RegisterResult> response) {
-                if(response.code() == 400)
-                    if(onInvalidHost != null)
-                        onInvalidHost.run();
-                RegisterResult result = response.body();
-                if(result != null && result.isSuccessful() && apiCallResultListener != null)
-                    apiCallResultListener.onPostExecute(result);
-            }
+                    RegisterBindingModel model = new RegisterBindingModel(Email, Password, ConfirmPassword);
+                    IAccountRepository repository = RetrofitAPIClientFactory.getClient().create(IAccountRepository.class);
+                    Call<RegisterResult> callRegResult = repository.register(authToken, model);
 
-            @Override
-            public void onFailure(Call<RegisterResult> call, Throwable t) {
-                call.cancel();
-            }
-        });
+                    callRegResult.enqueue(new Callback<RegisterResult>() {
+                        @Override
+                        public void onResponse(Call<RegisterResult> call, Response<RegisterResult> response) {
+                            if(response.code() == 400)
+                                if(onInvalidHost != null)
+                                    onInvalidHost.run();
+                            RegisterResult result = response.body();
+                            if(result != null && result.isSuccessful() && apiCallResultListener != null)
+                                apiCallResultListener.onPostExecute(result);
+                        }
 
+                        @Override
+                        public void onFailure(Call<RegisterResult> call, Throwable t) {
+                            call.cancel();
+                        }
+                    });
+                },
+                onInvalidHost);
     }
 
     public void logoutUser(Context applicationContext) {
@@ -232,5 +243,39 @@ public class AccountService {
         editor.putInt(applicationContext.getString(R.string.pref_authTokenExpiresInSeconds_user), 0);
 
         editor.apply();
+    }
+
+    public void checkEmailAvailable (Context applicationContext,
+                                     String email,
+                                     Runnable onInvalidHost,
+                                     AsyncTaskListener<CheckEmailAvailableResponse> apiCallResultListener) {
+
+        this.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authToken = this.getWebApiAuthTokenHeader(applicationContext);
+
+                    CheckEmailAvailableBindingModel model = new CheckEmailAvailableBindingModel(email);
+                    IAccountRepository repository = RetrofitAPIClientFactory.getClient().create(IAccountRepository.class);
+                    Call<CheckEmailAvailableResponse> callRegResult = repository.checkEmailAvailable(authToken, model);
+
+                    callRegResult.enqueue(new Callback<CheckEmailAvailableResponse>() {
+                        @Override
+                        public void onResponse(Call<CheckEmailAvailableResponse> call, Response<CheckEmailAvailableResponse> response) {
+                            if(response.code() == 400)
+                                if(onInvalidHost != null)
+                                    onInvalidHost.run();
+                            CheckEmailAvailableResponse result = response.body();
+                            if(apiCallResultListener != null)
+                                apiCallResultListener.onPostExecute(result);
+                        }
+
+                        @Override
+                        public void onFailure(Call<CheckEmailAvailableResponse> call, Throwable t) {
+                            call.cancel();
+                        }
+                    });
+                },
+                onInvalidHost);
     }
 }
