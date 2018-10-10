@@ -81,15 +81,17 @@ public class RegisterActivity
     }
 
     private void publishRegisterResult(RegisterResult result) {
-        if (!result.isSuccessful())
-            Toast.makeText(this, "Register unsuccessful.", Toast.LENGTH_SHORT).show();
-        else {
-            Toast.makeText(this, "Register successfully.", Toast.LENGTH_SHORT).show();
-        }
-
         Context applicationContext = getApplicationContext();
-        Intent intent = new Intent(RegisterActivity.this, LoginActivity_.class);
+        Intent intent;
+
+        if (!result.isSuccessful()) {
+            intent = new Intent(RegisterActivity.this, RegisterActivity_.class);
+            Toast.makeText(applicationContext, "Register unsuccessful ... please try again.", Toast.LENGTH_SHORT).show();
+        } else {
+            intent = new Intent(RegisterActivity.this, LoginActivity_.class);
+            startActivity(intent);
+            Toast.makeText(applicationContext, "Confirm email and login. Register successful.", Toast.LENGTH_SHORT).show();
+        }
         startActivity(intent);
-        Toast.makeText(applicationContext, "Confirm email and login again. Register successful.", Toast.LENGTH_SHORT).show();
     }
 }

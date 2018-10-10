@@ -56,6 +56,19 @@
         android:textColorHint="#ffff299f"
         android:hint="@string/activity_login_passwordEditText" />
 
+    <TextView
+        android:id="@+id/login_etForgotPassword"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Forgot Password"
+        android:layout_below="@+id/login_etPassword"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+
+        />
+
+
+
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/landing_lButtons"

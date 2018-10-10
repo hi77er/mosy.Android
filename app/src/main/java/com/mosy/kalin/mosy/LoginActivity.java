@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +34,8 @@ public class LoginActivity
     EditText ed1;
     @ViewById(R.id.login_etPassword)
     EditText ed2;
+    @ViewById(R.id.login_etForgotPassword)
+    TextView forgotPassword;
 
 //    TextView tx1;
     int counter = 3;
@@ -43,8 +47,10 @@ public class LoginActivity
 
     @AfterViews
     public void afterViews(){
-
-
+        forgotPassword.setClickable(true);
+        forgotPassword.setMovementMethod(LinkMovementMethod.getInstance());
+        String text = "<a href='https://tastespot.app/Account/ForgotPassword'>Forgot Password</a>";
+        forgotPassword.setText(Html.fromHtml(text));
     }
 
     @Click(R.id.login_btnLogin)
