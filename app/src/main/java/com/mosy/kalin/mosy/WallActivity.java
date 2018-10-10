@@ -68,6 +68,7 @@ import org.androidannotations.annotations.ViewById;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Objects;
 
 @SuppressLint("Registered")
@@ -373,19 +374,13 @@ public class WallActivity
                 }
             };
 
-            Integer localDayOfWeek = null;
-            String localTime = null;
-            if (ApplyWorkingStatusFilterToVenues) {
-                Calendar localCalendar = Calendar.getInstance();
-                localTime = localCalendar.get(Calendar.HOUR_OF_DAY) + ":" + localCalendar.get(Calendar.MINUTE);
-                localDayOfWeek = localCalendar.get(Calendar.DAY_OF_WEEK);
-            }
+            String localDateTimeOffset = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).format(Calendar.getInstance().getTime());
 
             this.venuesService.getVenues(
                     applicationContext, apiCallResultListener, this::showInvalidHostLayout, maxResultsCount, totalItemsOffset,
                     lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), query,
                     selectedVenueAccessibilityFilterIds, selectedVenueAvailabilityFilterIds, selectedVenueAtmosphereFilterIds, selectedVenueCultureFilterIds,
-                    localDayOfWeek, localTime, ApplyDistanceFilterToVenues);
+                    !ApplyWorkingStatusFilterToVenues, localDateTimeOffset, ApplyDistanceFilterToVenues);
         }
     }
 
@@ -541,14 +536,7 @@ public class WallActivity
                 }
             };
 
-            Integer localDayOfWeek = null;
-            String localTime = null;
-            if (ApplyWorkingStatusFilterToDishes)
-            {
-                Calendar localCalendar = Calendar.getInstance();
-                localTime = localCalendar.get(Calendar.HOUR_OF_DAY) + ":" + localCalendar.get(Calendar.MINUTE);
-                localDayOfWeek = localCalendar.get(Calendar.DAY_OF_WEEK);
-            }
+            String localDateTimeOffset = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).format(Calendar.getInstance().getTime());
 
             this.dishesService.loadDishes(
                     applicationContext, apiCallResultListener,
@@ -556,7 +544,7 @@ public class WallActivity
                     lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
                     isPromoted, query,
                     selectedDishTypeFilterIds, selectedDishRegionFilterIds, selectedDishMainIngredientFilterIds, selectedDishAllergenFilterIds,
-                    localDayOfWeek, localTime, ApplyDistanceFilterToDishes);
+                    !ApplyWorkingStatusFilterToDishes, localDateTimeOffset, ApplyDistanceFilterToDishes);
         }
         else {
             Toast.makeText(applicationContext, R.string.activity_wall_locationNotResolvedToast, Toast.LENGTH_LONG).show();
@@ -564,11 +552,11 @@ public class WallActivity
 
     }
 
-    private void loadMenuListItemImageThumbnail(DishWallItem dishWallItem) {
-        AsyncTaskListener<byte[]> mliImageResultListener = new AsyncTaskListener<byte[]>() {
-            @Override public void onPreExecute() {
-                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
-            }
+            private void loadMenuListItemImageThumbnail(DishWallItem dishWallItem) {
+                AsyncTaskListener<byte[]> mliImageResultListener = new AsyncTaskListener<byte[]>() {
+                    @Override public void onPreExecute() {
+                        //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+                    }
             @Override public void onPostExecute(byte[] bytes) {
                 if (ArrayHelper.hasValidBitmapContent(bytes)){
                     Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);

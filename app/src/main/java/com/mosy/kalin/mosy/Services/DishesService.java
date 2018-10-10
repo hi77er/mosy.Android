@@ -35,8 +35,8 @@ public class DishesService {
                            ArrayList<String> regionFilterIds,
                            ArrayList<String> spectrumFilterIds,
                            ArrayList<String> allergensFilterIds,
-                           Integer localDayOfWeek,
-                           String localTime,
+                           boolean showNotWorkingVenues,
+                           String localDateTimeOffset,
                            int searchedDistanceMeters)
     {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
@@ -45,7 +45,7 @@ public class DishesService {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(authTokenHeader,
                             maxResultsCount, totalItemsOffset, latitude, longitude, isPromoted, query, phaseFilterIds,
-                            regionFilterIds, spectrumFilterIds, allergensFilterIds, localDayOfWeek, localTime, searchedDistanceMeters);
+                            regionFilterIds, spectrumFilterIds, allergensFilterIds, showNotWorkingVenues, localDateTimeOffset, searchedDistanceMeters);
 
                     IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
 
@@ -69,11 +69,11 @@ public class DishesService {
     }
 
     public void getFilters(Context applicationContext,
-                            AsyncTaskListener<DishFiltersResult> apiCallResultListener)
+                           AsyncTaskListener<DishFiltersResult> apiCallResultListener)
     {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
-                        () -> {
+                () -> {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
                     try {

@@ -12,7 +12,14 @@
     <string name="pref_authTokenType_webApi" translatable="false">"prefAuthTokenType"</string>
     <string name="pref_authTokenExpiresInSeconds_webApi" translatable="false">"prefAuthTokenExpiresInSeconds"</string>
     <string name="pref_authTokenExpiresAt_webApi" translatable="false">"prefAuthTokenExpiresAt"</string>
+    <string name="pref_collectionName_developersMode" translatable="false">DevelopersModePreferences</string>
+    <string name="pref_developersModeEnabled" translatable="false">DevelopersModeEnabled</string>
     <string name="pref_collectionName_webApi" translatable="false">"WebApiToken"</string>
+    <string name="pref_collectionName_user">UserToken</string>
+    <string name="pref_authToken_user">prefAuthTokenUser</string>
+    <string name="pref_authTokenType_user">prefAuthTokenType</string>
+    <string name="pref_authTokenExpiresAt_user">prefAuthTokenExpiresAt</string>
+    <string name="pref_authTokenExpiresInSeconds_user">prefAuthTokenExpiresInSeconds</string>
 
     <!-- AndroidManifest -->
     <string name="app_name">"Tastespot"</string>
@@ -256,10 +263,5 @@
     <string name="DishesFilterRegionSouthAsianDescription">E.g. Indonesian, Philippine, Thai, Vietnamese, etc.</string>
     <string name="DishesFilterMainIngredientWhiteMeatDescription">E.g. Chicken, Turkey, Duck, etc.</string>
     <string name="DishesFilterMainIngredientRedMeatDescription">E.g. Beef, Pork, Game, etc.</string>
-    <string name="pref_collectionName_user">UserToken</string>
-    <string name="pref_authToken_user">prefAuthTokenUser</string>
-    <string name="pref_authTokenType_user">prefAuthTokenType</string>
-    <string name="pref_authTokenExpiresAt_user">prefAuthTokenExpiresAt</string>
-    <string name="pref_authTokenExpiresInSeconds_user">prefAuthTokenExpiresInSeconds</string>
 
 </resources>

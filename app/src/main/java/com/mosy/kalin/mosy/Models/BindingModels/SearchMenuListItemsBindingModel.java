@@ -16,9 +16,9 @@ public class SearchMenuListItemsBindingModel {
     public List<String> SelectedDishRegionFilterIds;
     public List<String> SelectedDishMainIngredientFilterIds;
     public List<String> SelectedDishAllergenFilterIds;
-    public Integer LocalDayOfWeek;
-    public String LocalTime;
+    public String LocalDateTimeOffset;
     public int SearchedDistanceMeters;
+    public boolean ShowNotWorkingVenues;
 
     public SearchMenuListItemsBindingModel() { }
     public SearchMenuListItemsBindingModel(
@@ -33,8 +33,8 @@ public class SearchMenuListItemsBindingModel {
             ArrayList<String> selectedDishRegionFilterIds,
             ArrayList<String> selectedDishMainIngredientFilterIds,
             ArrayList<String> selectedDishAllergenFilterIds,
-            Integer localDayOfWeek,
-            String localTime,
+            boolean showNotWorkingVenues,
+            String localDateTimeOffset,
             int searchedDistanceMeters)
     {
         this.AuthTokenHeader = authTokenHeader;
@@ -48,8 +48,8 @@ public class SearchMenuListItemsBindingModel {
         this.SelectedDishRegionFilterIds = selectedDishRegionFilterIds;
         this.SelectedDishMainIngredientFilterIds = selectedDishMainIngredientFilterIds;
         this.SelectedDishAllergenFilterIds = selectedDishAllergenFilterIds;
-        this.LocalDayOfWeek = localDayOfWeek;
-        this.LocalTime= localTime;
+        this.ShowNotWorkingVenues = showNotWorkingVenues;
+        this.LocalDateTimeOffset = localDateTimeOffset;
         this.SearchedDistanceMeters = searchedDistanceMeters;
     }
 

@@ -2,6 +2,7 @@ package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -100,6 +101,10 @@ public class VenuesFiltersActivity
 
     @AfterViews
     public void afterViews(){
+        SharedPreferences prefs = getSharedPreferences(getString(R.string.pref_collectionName_developersMode), MODE_PRIVATE);
+        boolean developerModeEnabled = prefs.getBoolean(getString(R.string.pref_developersModeEnabled), false);
+        distanceFilterMaxValue = developerModeEnabled ? 10000000 : 10000;
+
         this.workingStatusFilter.setChecked(PreselectedApplyWorkingStatusFilter);
         this.workingStatusFilter.setOnCheckedChangeListener(
             (compoundButton, b) -> selectedApplyWorkingStatusFilter = compoundButton.isChecked()

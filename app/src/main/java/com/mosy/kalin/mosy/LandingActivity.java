@@ -2,10 +2,12 @@ package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -31,11 +33,13 @@ public class LandingActivity
         extends BaseActivity
 
 {
+    int logoClicksCount = 0;
     boolean afterViewsFinished = false;
     boolean networkLost = false;
 
     @Bean
     AccountService accountService;
+
 
     @ViewById(resName = "landing_btnDishes")
     Button buttonDishes;
@@ -52,6 +56,7 @@ public class LandingActivity
 
     @AfterViews
     public void afterViews(){
+
         if (ConnectivityHelper.isConnected(applicationContext)) {
             ensureHasAuthenticationToken();
             networkLost = false;
@@ -98,6 +103,12 @@ public class LandingActivity
     @Override
     public void onDestroy(){
         super.onDestroy();
+    }
+
+    @Override
+    public void onResume(){
+        logoClicksCount = 0;
+        super.onResume();
     }
 
     private void ensureHasAuthenticationToken() {
@@ -198,4 +209,19 @@ public class LandingActivity
         startActivity(intent);
     }
 
+    @Click(R.id.landing_ivLogo)
+    public void click_ivLogo(){
+        SharedPreferences preferences = applicationContext.getSharedPreferences(getString(R.string.pref_collectionName_developersMode), MODE_PRIVATE);
+        SharedPreferences.Editor prefEditor = preferences.edit();
+
+        if (logoClicksCount < 50)
+            logoClicksCount ++;
+        else if (logoClicksCount == 50) {
+            boolean devModeEnabledPrefValue = !preferences.getBoolean(getString(R.string.pref_developersModeEnabled), false);
+            prefEditor.putBoolean(getString(R.string.pref_developersModeEnabled), devModeEnabledPrefValue);
+            prefEditor.apply();
+
+            Toast.makeText(applicationContext, "Developers' mode " + (devModeEnabledPrefValue ? "Enabled!" : "Disabled!"), Toast.LENGTH_SHORT).show();
+        }
+    }
 }
