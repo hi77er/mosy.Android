@@ -34,11 +34,11 @@
         android:icon="@drawable/baseline_lock_open_white_48"/>
 
     <item
-        android:id="@+id/action_logout"
+        android:id="@+id/action_profile"
         android:orderInCategory="1"
         android:title="@string/menu_searchTitle"
         app:showAsAction="always"
-        android:icon="@drawable/baseline_lock_white_48"/>
+        android:icon="@drawable/outline_person_white_48"/>
 
     <item
         android:orderInCategory="2"
