@@ -19,6 +19,7 @@ public class SearchMenuListItemsBindingModel {
     public String LocalDateTimeOffset;
     public int SearchedDistanceMeters;
     public boolean ShowNotWorkingVenues;
+    public boolean IsDevModeActivated;
 
     public SearchMenuListItemsBindingModel() { }
     public SearchMenuListItemsBindingModel(
@@ -35,7 +36,8 @@ public class SearchMenuListItemsBindingModel {
             ArrayList<String> selectedDishAllergenFilterIds,
             boolean showNotWorkingVenues,
             String localDateTimeOffset,
-            int searchedDistanceMeters)
+            int searchedDistanceMeters,
+            boolean isDevModeActivated)
     {
         this.AuthTokenHeader = authTokenHeader;
         this.MaxResultsCount = maxResultsCount;
@@ -51,6 +53,8 @@ public class SearchMenuListItemsBindingModel {
         this.ShowNotWorkingVenues = showNotWorkingVenues;
         this.LocalDateTimeOffset = localDateTimeOffset;
         this.SearchedDistanceMeters = searchedDistanceMeters;
+        this.IsDevModeActivated = isDevModeActivated;
+
     }
 
 }

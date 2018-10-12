@@ -76,7 +76,8 @@ public class VenuesService {
                           List<String> venueCultureFilterIds,
                           boolean showNotWorkingVenues,
                           String localDateTimeOffset,
-                          int distanceFilterValue)
+                          int distanceFilterValue,
+                          boolean isDevModeActivated)
     {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                  apiCallResultListener::onPreExecute,
@@ -85,7 +86,7 @@ public class VenuesService {
                     SearchVenuesBindingModel model = new SearchVenuesBindingModel(
                             authTokenHeader, maxResultsCount, totalItemsOffset,
                             latitude, longitude, query, venueAccessibilityFilterIds, venueAvailabilityFilterIds, venueAtmosphereFilterIds, venueCultureFilterIds,
-                            showNotWorkingVenues, localDateTimeOffset, distanceFilterValue);
+                            showNotWorkingVenues, localDateTimeOffset, distanceFilterValue, isDevModeActivated);
 
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 

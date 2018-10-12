@@ -37,7 +37,8 @@ public class DishesService {
                            ArrayList<String> allergensFilterIds,
                            boolean showNotWorkingVenues,
                            String localDateTimeOffset,
-                           int searchedDistanceMeters)
+                           int searchedDistanceMeters,
+                           boolean isDevModeActivated)
     {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
@@ -45,7 +46,7 @@ public class DishesService {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(authTokenHeader,
                             maxResultsCount, totalItemsOffset, latitude, longitude, isPromoted, query, phaseFilterIds,
-                            regionFilterIds, spectrumFilterIds, allergensFilterIds, showNotWorkingVenues, localDateTimeOffset, searchedDistanceMeters);
+                            regionFilterIds, spectrumFilterIds, allergensFilterIds, showNotWorkingVenues, localDateTimeOffset, searchedDistanceMeters, isDevModeActivated);
 
                     IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
 

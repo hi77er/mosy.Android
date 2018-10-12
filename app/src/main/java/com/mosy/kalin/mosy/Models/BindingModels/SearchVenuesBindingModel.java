@@ -17,6 +17,7 @@ public class SearchVenuesBindingModel {
     public String LocalDateTimeOffset;
     public boolean ShowNotWorkingVenues;
     public int SearchedDistanceMeters;
+    public boolean IsDevModeActivated;
 
     public SearchVenuesBindingModel() { }
 
@@ -33,7 +34,8 @@ public class SearchVenuesBindingModel {
             List<String> selectedVenueCultureFilterIds,
             boolean showNotWorkingVenues,
             String localDateTimeOffset,
-            int searchedDistanceMeters) {
+            int searchedDistanceMeters,
+            boolean isDevModeActivated) {
 
         this.AuthTokenHeader = authTokenHeader;
         this.Latitude = latitude;
@@ -48,6 +50,7 @@ public class SearchVenuesBindingModel {
         this.ShowNotWorkingVenues = showNotWorkingVenues;
         this.LocalDateTimeOffset = localDateTimeOffset;
         this.SearchedDistanceMeters = searchedDistanceMeters;
+        this.IsDevModeActivated = isDevModeActivated;
 
 //        this.ApplyWorkingStatusFilter = applyWorkingStatusFilter;
     }

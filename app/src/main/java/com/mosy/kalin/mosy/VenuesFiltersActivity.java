@@ -101,9 +101,7 @@ public class VenuesFiltersActivity
 
     @AfterViews
     public void afterViews(){
-        SharedPreferences prefs = getSharedPreferences(getString(R.string.pref_collectionName_developersMode), MODE_PRIVATE);
-        boolean developerModeEnabled = prefs.getBoolean(getString(R.string.pref_developersModeEnabled), false);
-        distanceFilterMaxValue = developerModeEnabled ? 10000000 : 10000;
+        distanceFilterMaxValue = this.isDevelopersModeActivated ? 10000000 : 10000;
 
         this.workingStatusFilter.setChecked(PreselectedApplyWorkingStatusFilter);
         this.workingStatusFilter.setOnCheckedChangeListener(

@@ -380,7 +380,7 @@ public class WallActivity
                     applicationContext, apiCallResultListener, this::showInvalidHostLayout, maxResultsCount, totalItemsOffset,
                     lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), query,
                     selectedVenueAccessibilityFilterIds, selectedVenueAvailabilityFilterIds, selectedVenueAtmosphereFilterIds, selectedVenueCultureFilterIds,
-                    !ApplyWorkingStatusFilterToVenues, localDateTimeOffset, ApplyDistanceFilterToVenues);
+                    !ApplyWorkingStatusFilterToVenues, localDateTimeOffset, ApplyDistanceFilterToVenues, this.isDevelopersModeActivated);
         }
     }
 
@@ -544,7 +544,7 @@ public class WallActivity
                     lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
                     isPromoted, query,
                     selectedDishTypeFilterIds, selectedDishRegionFilterIds, selectedDishMainIngredientFilterIds, selectedDishAllergenFilterIds,
-                    !ApplyWorkingStatusFilterToDishes, localDateTimeOffset, ApplyDistanceFilterToDishes);
+                    !ApplyWorkingStatusFilterToDishes, localDateTimeOffset, ApplyDistanceFilterToDishes, this.isDevelopersModeActivated);
         }
         else {
             Toast.makeText(applicationContext, R.string.activity_wall_locationNotResolvedToast, Toast.LENGTH_LONG).show();

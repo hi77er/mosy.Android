@@ -2,6 +2,7 @@ package com.mosy.kalin.mosy;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -16,9 +17,11 @@ public abstract class BaseActivity
         extends AppCompatActivity {
 
     protected boolean activityStopped = false;
+    protected boolean isDevelopersModeActivated = false;
 
     protected Context applicationContext;
     protected Context baseContext;
+
 
     protected ConnectionStateMonitor connectionStateMonitor;
 
@@ -34,6 +37,9 @@ public abstract class BaseActivity
 
         this.applicationContext = getApplicationContext();
         this.baseContext = getBaseContext();
+
+        SharedPreferences prefs = getSharedPreferences(getString(R.string.pref_collectionName_developersMode), MODE_PRIVATE);
+        this.isDevelopersModeActivated = prefs.getBoolean(getString(R.string.pref_developersModeEnabled), false);
     }
 
     @Override
