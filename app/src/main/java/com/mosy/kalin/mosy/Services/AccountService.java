@@ -8,14 +8,17 @@ import com.mosy.kalin.mosy.DAL.Http.Results.RegisterResult;
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IAccountRepository;
 import com.mosy.kalin.mosy.DAL.Http.Results.TokenResult;
+import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IDishesRepository;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IVenuesRepository;
 import com.mosy.kalin.mosy.DTOs.HttpResponses.CheckEmailAvailableResponse;
+import com.mosy.kalin.mosy.DTOs.User;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.CheckEmailAvailableBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.RegisterBindingModel;
+import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
 import com.mosy.kalin.mosy.R;
 
 import org.androidannotations.annotations.EBean;
@@ -278,4 +281,34 @@ public class AccountService {
                 },
                 onInvalidHost);
     }
+
+    public void getUserProfile(Context applicationContext,
+                           AsyncTaskListener<User> apiCallResultListener)
+    {
+        this.executeAssuredUserTokenValidOrRefreshed(applicationContext, null,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authTokenHeader = this.getUserAuthTokenHeader(applicationContext);
+                    IAccountRepository repository = RetrofitAPIClientFactory.getClient().create(IAccountRepository.class);
+                    try {
+                        Call<User> call = repository.getUserProfile(authTokenHeader);
+                        apiCallResultListener.onPreExecute();
+                        call.enqueue(new Callback<User>() {
+                            @Override public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                                User result = response.body();
+                                apiCallResultListener.onPostExecute(result);
+                            }
+                            @Override public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                },
+                null);
+    }
+
+
 }

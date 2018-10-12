@@ -6,10 +6,14 @@
     android:background="@color/colorWhite">
 
     <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="Just Testing"
+        android:id="@+id/userprofile_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="kamen_prodanov@tastespot-yahoo-google.com"
+        android:textSize = "32sp"
+        android:layout_margin="5dp"
         android:textStyle="bold"
+        android:gravity="center"
         android:textColor="@color/colorPrimarySalmonLight"
         />
 
