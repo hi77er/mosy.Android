@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mosy.kalin.mosy.Adapters.MenuPagerAdapter;
@@ -46,16 +47,18 @@ public class VenueMenuActivity
     @Extra
     String SelectedMenuListId; //if the page is navigated via Dishes ListView, this should have value
 
-    @ViewById(resName = "llInitialLoadingProgress")
+    @ViewById(R.id.llInitialLoadingProgress)
     LinearLayout centralProgress;
-    @ViewById(resName = "venue_tvName")
+    @ViewById(R.id.venue_tvName)
     TextView Name;
-    @ViewById(resName = "venue_tvClass")
+    @ViewById(R.id.venue_tvClass)
     TextView Class;
-    @ViewById(resName = "venue_ivIndoor")
+    @ViewById(R.id.venue_ivIndoor)
     ImageView IndoorImage;
-    @ViewById(resName = "venue_vpMenu")
+    @ViewById(R.id.venue_vpMenu)
     ViewPager Menu;
+    @ViewById(R.id.venue_llNoMenu)
+    RelativeLayout NoMenuLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +69,10 @@ public class VenueMenuActivity
     @AfterViews
     void afterViews() {
         try {
-            Name.setText(this.Venue.Name);
-            Class.setText(this.Venue.Class);
+            this.Name.setText(this.Venue.Name);
+            this.Class.setText(this.Venue.Class);
+            this.Menu.setVisibility(View.GONE);
+            this.NoMenuLayout.setVisibility(View.VISIBLE);
 
             loadIndoorImageMeta();
             loadMenu();
@@ -98,16 +103,21 @@ public class VenueMenuActivity
 
             @Override public void onPostExecute(ArrayList<MenuList> result) {
                 ArrayList<MenuList> menuLists = result;
-                MenuPagerAdapter adapter = new MenuPagerAdapter(getSupportFragmentManager(), menuLists, SelectedMenuListId);
-                Menu.setAdapter(adapter);
+                if (menuLists != null && menuLists.size() > 0) {
+                    Menu.setVisibility(View.VISIBLE);
+                    NoMenuLayout.setVisibility(View.GONE);
 
-                if (SelectedMenuListId != null && !SelectedMenuListId.equals(StringHelper.empty())) {
-                    int selectedMenuListIndex = 0;
-                    for (MenuList list : menuLists) {
-                        if (SelectedMenuListId.equals(list.Id))
-                            selectedMenuListIndex = menuLists.indexOf(list);
+                    MenuPagerAdapter adapter = new MenuPagerAdapter(getSupportFragmentManager(), menuLists, SelectedMenuListId);
+                    Menu.setAdapter(adapter);
+
+                    if (SelectedMenuListId != null && !SelectedMenuListId.equals(StringHelper.empty())) {
+                        int selectedMenuListIndex = 0;
+                        for (MenuList list : menuLists) {
+                            if (SelectedMenuListId.equals(list.Id))
+                                selectedMenuListIndex = menuLists.indexOf(list);
+                        }
+                        Menu.setCurrentItem(selectedMenuListIndex, false);
                     }
-                    Menu.setCurrentItem(selectedMenuListIndex, false);
                 }
                 centralProgress.setVisibility(View.GONE);
             }

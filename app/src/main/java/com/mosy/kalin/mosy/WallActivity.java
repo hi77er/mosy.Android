@@ -374,7 +374,7 @@ public class WallActivity
                 }
             };
 
-            String localDateTimeOffset = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).format(Calendar.getInstance().getTime());
+            String localDateTimeOffset = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(Calendar.getInstance().getTime());
 
             this.venuesService.getVenues(
                     applicationContext, apiCallResultListener, this::showInvalidHostLayout, maxResultsCount, totalItemsOffset,
@@ -536,7 +536,7 @@ public class WallActivity
                 }
             };
 
-            String localDateTimeOffset = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).format(Calendar.getInstance().getTime());
+            String localDateTimeOffset = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(Calendar.getInstance().getTime());
 
             this.dishesService.loadDishes(
                     applicationContext, apiCallResultListener,

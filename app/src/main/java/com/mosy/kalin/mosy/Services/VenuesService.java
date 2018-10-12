@@ -17,8 +17,11 @@ import com.mosy.kalin.mosy.Models.Responses.VenueFiltersResult;
 
 import org.androidannotations.annotations.EBean;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -238,7 +241,9 @@ public class VenuesService {
                     String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
                     try {
-                        Call<ArrayList<MenuList>> callMenu = repository.getMenu(authToken, venueId);
+                        String localDateTimeOffset = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(Calendar.getInstance().getTime());
+
+                        Call<ArrayList<MenuList>> callMenu = repository.getMenu(authToken, venueId, localDateTimeOffset);
                         apiCallResultListener.onPreExecute();
                         callMenu.enqueue(new Callback<ArrayList<MenuList>>() {
                             @Override public void onResponse(@NonNull Call<ArrayList<MenuList>> call, @NonNull Response<ArrayList<MenuList>> response) {

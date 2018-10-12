@@ -73,6 +73,7 @@
     <android.support.v4.view.ViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/venue_vpMenu"
+        android:visibility="gone"
         android:layout_weight="5"
         android:layout_height="0dp"
         android:layout_width="match_parent"
@@ -90,8 +91,31 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/colorMenuTitle"
-            android:background="@color/colorMenuBackground"/>
+            android:background="@color/colorMenuBackground" />
 
     </android.support.v4.view.ViewPager>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/venue_llNoMenu"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_weight="5"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_marginBottom="10dp"
+        android:background="@color/colorMenuBackground">
+
+        <TextView
+            android:id="@+id/venue_tvNoMenu"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Menu not available"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
 
 </LinearLayout>

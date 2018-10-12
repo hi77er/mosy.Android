@@ -39,7 +39,7 @@ public interface IVenuesRepository {
     Call<VenueImage> getImageMetaIndoor(@Header("Authorization") String authorization, @Query("fboId") String venueId);
 
     @GET("fbo/publicmenu")
-    Call<ArrayList<MenuList>> getMenu(@Header("Authorization") String authorization, @Query("fboId") String venueId);
+    Call<ArrayList<MenuList>> getMenu(@Header("Authorization") String authorization, @Query("fboId") String venueId, @Query("clientDateTimeOffset") String currentDateTimeOffset);
 
     @GET("fbo/filters/all")
     Call<VenueFiltersResult> getFilters (@Header("Authorization") String authorization);
