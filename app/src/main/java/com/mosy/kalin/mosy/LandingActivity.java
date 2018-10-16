@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -26,6 +25,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_landing)
@@ -41,18 +41,18 @@ public class LandingActivity
     AccountService accountService;
 
 
-    @ViewById(resName = "landing_btnDishes")
-    Button buttonDishes;
-    @ViewById(resName = "landing_btnVenues")
-    Button buttonVenues;
-    @ViewById(resName = "landing_lButtons")
-    LinearLayout buttonsLayout;
-    @ViewById(resName = "landing_llInitialLoadingProgress")
-    LinearLayout centralProgressLayout;
-    @ViewById(resName = "landing_llInvalidHost")
-    LinearLayout invalidHostLayout;
-    @ViewById(resName = "landing_spLanguage")
-    Spinner languagesSpinner;
+    @ViewById(R.id.landing_btnDishes)
+    Button DishesButton;
+    @ViewById(R.id.landing_btnVenues)
+    Button VenuesButton;
+    @ViewById(R.id.landing_lButtons)
+    LinearLayout ButtonsLayout;
+    @ViewById(R.id.landing_llInitialLoadingProgress)
+    LinearLayout CentralProgressLayout;
+    @ViewById(R.id.landing_llInvalidHost)
+    LinearLayout InvalidHostLayout;
+    @ViewById(R.id.landing_spLanguage)
+    Spinner LanguagesSpinner;
 
     @AfterViews
     public void afterViews(){
@@ -66,7 +66,14 @@ public class LandingActivity
             networkLost = true;
         }
 
-        setupLanguagesSpinner();
+        ArrayList<SpinnerLocale> spinnerLocalesList = new ArrayList<>();
+        for (String supportedCultureId : LocaleHelper.SUPPORTED_LOCALES.keySet()) {
+            int localeResourceId = LocaleHelper.SUPPORTED_LOCALES.get(supportedCultureId);
+            spinnerLocalesList.add(new SpinnerLocale(supportedCultureId, constructLanguageSpinnerText(localeResourceId)));
+        }
+        if (spinnerLocalesList.size() > 0)
+            setupLanguagesSpinner(spinnerLocalesList);
+
         afterViewsFinished = true;
     }
 
@@ -119,35 +126,26 @@ public class LandingActivity
 
     }
 
-    private void setupLanguagesSpinner() {
-        ArrayList<SpinnerLocale> spinnerLocaleList = new ArrayList<>();
-
-        spinnerLocaleList.add(new SpinnerLocale("bg", constructLanguageSpinnerText(R.string.activity_landing_languageBgSpinner)));
-        spinnerLocaleList.add(new SpinnerLocale("en", constructLanguageSpinnerText(R.string.activity_landing_languageEnUSSpinner)));
-        spinnerLocaleList.add(new SpinnerLocale("de", constructLanguageSpinnerText(R.string.activity_landing_languageDeSpinner)));
-        spinnerLocaleList.add(new SpinnerLocale("el", constructLanguageSpinnerText(R.string.activity_landing_languageElSpinner)));
-        spinnerLocaleList.add(new SpinnerLocale("ru", constructLanguageSpinnerText(R.string.activity_landing_languageRuSpinner)));
-        spinnerLocaleList.add(new SpinnerLocale("es", constructLanguageSpinnerText(R.string.activity_landing_languageEsSpinner)));
-
+    private void setupLanguagesSpinner(ArrayList<SpinnerLocale> localesList) {
         //fill data in spinner
-        ArrayAdapter<SpinnerLocale> adapter = new ArrayAdapter<>(this.applicationContext, R.layout.languages_spinner_activity_landing, spinnerLocaleList);
+        ArrayAdapter<SpinnerLocale> adapter = new ArrayAdapter<>(this.applicationContext, R.layout.languages_spinner_activity_landing, localesList);
         adapter.setDropDownViewResource(R.layout.languages_spinner_activity_landing);
-        this.languagesSpinner.setAdapter(adapter);
+        this.LanguagesSpinner.setAdapter(adapter);
 
         String currentDefaultSpinnerLocale = LocaleHelper.getLanguage(applicationContext);
 
         //TODO: Linq-like syntax needed!
         //Stream.of(cuisineRegionFilters).filter(filter -> filter.Id.equals(filterId)).single();
-        for(SpinnerLocale sLocale : spinnerLocaleList){
+        for(SpinnerLocale sLocale : localesList){
             if (sLocale.getId().equals(currentDefaultSpinnerLocale)){
-                this.languagesSpinner.setSelection(adapter.getPosition(sLocale));
+                this.LanguagesSpinner.setSelection(adapter.getPosition(sLocale));
                 break;
             }
         }
 
-        this.languagesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        this.LanguagesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String newLocaleId = spinnerLocaleList.get(i).getId();
+                String newLocaleId = localesList.get(i).getId();
                 if (!currentDefaultSpinnerLocale.equals(newLocaleId)){
                     LocaleHelper.setLocale(applicationContext, newLocaleId);
                     recreate();
@@ -166,27 +164,27 @@ public class LandingActivity
     }
 
     private void showLoading() {
-        this.buttonsLayout.setVisibility(View.GONE);
-        this.invalidHostLayout.setVisibility(View.GONE);
-        this.buttonDishes.setEnabled(false);
-        this.buttonVenues.setEnabled(false);
-        this.centralProgressLayout.setVisibility(View.VISIBLE);
+        this.ButtonsLayout.setVisibility(View.GONE);
+        this.InvalidHostLayout.setVisibility(View.GONE);
+        this.DishesButton.setEnabled(false);
+        this.VenuesButton.setEnabled(false);
+        this.CentralProgressLayout.setVisibility(View.VISIBLE);
     }
 
     private void showButtonsLayout() {
-        this.buttonsLayout.setVisibility(View.VISIBLE);
-        this.invalidHostLayout.setVisibility(View.GONE);
-        this.buttonDishes.setEnabled(true);
-        this.buttonVenues.setEnabled(true);
-        this.centralProgressLayout.setVisibility(View.GONE);
+        this.ButtonsLayout.setVisibility(View.VISIBLE);
+        this.InvalidHostLayout.setVisibility(View.GONE);
+        this.DishesButton.setEnabled(true);
+        this.VenuesButton.setEnabled(true);
+        this.CentralProgressLayout.setVisibility(View.GONE);
         //TODO: Delete before deploying to production!
 //        Toast.makeText(applicationContext, "WebApi authToken refreshed!", Toast.LENGTH_LONG).show();
     }
 
     private void showInvalidHostLayout() {
-        this.buttonsLayout.setVisibility(View.GONE);
-        this.invalidHostLayout.setVisibility(View.VISIBLE);
-        this.centralProgressLayout.setVisibility(View.GONE);
+        this.ButtonsLayout.setVisibility(View.GONE);
+        this.InvalidHostLayout.setVisibility(View.VISIBLE);
+        this.CentralProgressLayout.setVisibility(View.GONE);
         if (!this.activityStopped)
             new LocationResolver(this).showWifiSettingsDialog(applicationContext);
         //TODO: Delete before deploying to production!

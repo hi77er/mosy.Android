@@ -38,7 +38,7 @@ public class MenuPagerAdapter
 
         Bundle bundle = new Bundle();
         bundle.putString("MenuListName", menuList.Name);
-        bundle.putParcelableArrayList("MenuListItems", menuList.menuListItems);
+        bundle.putParcelableArrayList("MenuListItems", menuList.MenuListItems);
 
         if (menuList.Id.equals(selectedMenuListId)) {
             if (!selectedMenuListId.equals(""))

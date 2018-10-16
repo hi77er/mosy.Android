@@ -28,7 +28,7 @@ public class MenuList extends ResultBase {
 
     //Collections
     @SerializedName("Requestables")
-    public ArrayList<MenuListItem> menuListItems;
+    public ArrayList<MenuListItem> MenuListItems;
 
 
 }
