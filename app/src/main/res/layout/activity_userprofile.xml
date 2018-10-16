@@ -14,8 +14,7 @@
         android:layout_margin="5dp"
         android:textStyle="bold"
         android:gravity="center"
-        android:textColor="@color/colorPrimarySalmonLight"
-        />
+        android:textColor="@color/colorPrimarySalmonLight" />
 
 
 
