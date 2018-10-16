@@ -21,7 +21,6 @@ public class MenuListItem
 
     @SerializedName("Name")
     public String Name;
-    public String getName(){return this.Name;}
 
     @SerializedName("Summary")
     public String Summary;
@@ -53,6 +52,9 @@ public class MenuListItem
     @SerializedName("QuantityDisplayText")
     public String QuantityDisplayText;
 
+    @SerializedName("DefaultMenuCulture")
+    public String DefaultMenuCulture;
+
     @SerializedName("Ingredients")
     public ArrayList<Ingredient> Ingredients;
 
@@ -64,6 +66,9 @@ public class MenuListItem
 
     @SerializedName("MismatchingFiltersIds")
     public ArrayList<String> MismatchingFiltersIds;
+
+    @SerializedName("RequestableCultures")
+    public ArrayList<MenuListItemCulture> MenuListItemCultures;
 
     @SuppressWarnings("unchecked")
     protected MenuListItem(Parcel in) {
@@ -82,6 +87,7 @@ public class MenuListItem
         this.Filters = in.readArrayList(null);
         this.MatchingFiltersIds = in.readArrayList(null);
         this.MismatchingFiltersIds = in.readArrayList(null);
+        this.MenuListItemCultures = in.readArrayList(null);
     }
 
     @Override
@@ -97,6 +103,7 @@ public class MenuListItem
         parcel.writeList(Filters);
         parcel.writeList(MatchingFiltersIds);
         parcel.writeList(MismatchingFiltersIds);
+        parcel.writeList(MenuListItemCultures);
 
     }
 

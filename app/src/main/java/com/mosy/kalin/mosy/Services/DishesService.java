@@ -13,6 +13,7 @@ import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
 import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,6 +45,7 @@ public class DishesService {
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+
                     SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(authTokenHeader,
                             maxResultsCount, totalItemsOffset, latitude, longitude, isPromoted, query, phaseFilterIds,
                             regionFilterIds, spectrumFilterIds, allergensFilterIds, showNotWorkingVenues, localDateTimeOffset, searchedDistanceMeters, isDevModeActivated);

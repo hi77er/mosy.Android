@@ -17,7 +17,9 @@ import com.mosy.kalin.mosy.DTOs.Enums.FilteredType;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.Ingredient;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.MenuListItemCulture;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
+import com.mosy.kalin.mosy.Helpers.MenuListItemHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
@@ -62,6 +64,9 @@ public class MenuListItemDetailsView
 
     public void bind(MenuListItem menuListItem, LruCache<String, Bitmap> cache) {
         this.inMemoryCache = cache;
+
+        MenuListItemCulture selectedCulture = MenuListItemHelper.getMenuListItemCulture(getContext(), menuListItem);
+
         this.Allergens = new ArrayList<>(com.annimon.stream.Stream
                 .of(menuListItem.Filters)
                 .filter(filter -> filter.FilteredType == FilteredType.Dishes && filter.FilterType == FilterType.DishAllergens)
@@ -77,7 +82,7 @@ public class MenuListItemDetailsView
 
         ArrayList<String> toJoin = new ArrayList<String>();
         String joined = StringHelper.empty();
-        for (Ingredient ingredient: menuListItem.Ingredients)
+        for (Ingredient ingredient: selectedCulture.Ingredients)
             toJoin.add(ingredient.Name);
         joined = StringHelper.join(", ", toJoin);
         if (StringHelper.isNotNullOrEmpty(joined)){

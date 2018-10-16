@@ -10,9 +10,11 @@ import android.widget.TextView;
 
 import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.MenuListItemCulture;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.BusinessHoursHelper;
 import com.mosy.kalin.mosy.Helpers.LocationHelper;
+import com.mosy.kalin.mosy.Helpers.MenuListItemHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
@@ -63,7 +65,10 @@ public class DishWallItemView
 
         if (menuListItem != null) {
             this.MenuListItem = menuListItem;
-            this.nameTextView.setText(menuListItem.Name);
+
+            MenuListItemCulture selectedCulture = MenuListItemHelper.getMenuListItemCulture(this.baseContext, menuListItem);
+
+            this.nameTextView.setText(selectedCulture.MenuListItemName);
             this.venueNameTextView.setText(menuListItem.VenueName);
 
             if (menuListItem.ImageThumbnail != null && menuListItem.ImageThumbnail.Bitmap != null)

@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -86,5 +87,17 @@ public class LocaleHelper {
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
 
         return context;
+    }
+
+    public static ArrayList<String> getPreferredLanguages(Context applicationContext) {
+        ArrayList<String> preferredLanguages = new ArrayList<>();
+        preferredLanguages.add(LocaleHelper.getLanguage(applicationContext));
+        preferredLanguages.add(getSystemLanguage());
+
+        return preferredLanguages;
+    }
+
+    public static String getSystemLanguage() {
+        return Resources.getSystem().getConfiguration().locale.getCountry();
     }
 }
