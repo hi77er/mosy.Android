@@ -2,6 +2,7 @@ package com.mosy.kalin.mosy;
 
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.view.View;
 import android.widget.TextView;
 
 import com.mosy.kalin.mosy.DTOs.User;
@@ -37,7 +38,8 @@ public class UserProfileActivity extends BaseActivity {
                     String usernameText = user.FirstName + " " + user.LastName;
                     if (StringHelper.isNullOrWhitespace(usernameText))
                         usernameText = user.Email;
-                    tvUsername.setText(usernameText.trim());
+                    tvUsername.setText(usernameText);
+                    tvUsername.setVisibility(View.VISIBLE);
                 }
             }
         };
