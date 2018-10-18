@@ -2,7 +2,10 @@ package com.mosy.kalin.mosy;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.mosy.kalin.mosy.DAL.Http.Results.RegisterResult;
@@ -25,6 +28,14 @@ public class RegisterActivity
     EditText etRepeatPassword;
     @ViewById(R.id.etEmail)
     EditText etEmail;
+    @ViewById(R.id.llInitialLoadingProgress)
+    LinearLayout centralProgress;
+
+    @Click(R.id.btnCancel)
+    public void goBack() {
+        Intent intent = new Intent(RegisterActivity.this, LoginActivity_.class);
+        startActivity(intent);
+    }
 
     @Click(R.id.btnRegister)
     public void Register() {
@@ -50,10 +61,10 @@ public class RegisterActivity
         } else {
             AsyncTaskListener<CheckEmailAvailableResponse> isEmailValidListener = new AsyncTaskListener<CheckEmailAvailableResponse>() {
                 @Override public void onPreExecute() {
-                    //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+                    centralProgress.setVisibility(View.VISIBLE);
                 }
-                @Override public void onPostExecute(CheckEmailAvailableResponse checkEmailAvailableResponse) {
-                    if(checkEmailAvailableResponse.IsAvailable) {
+                @Override public void onPostExecute(CheckEmailAvailableResponse result) {
+                    if(result.IsAvailable) {
                         AsyncTaskListener<RegisterResult> listener = new AsyncTaskListener<RegisterResult>() {
                             @Override public void onPreExecute() {
                                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
@@ -69,11 +80,13 @@ public class RegisterActivity
                     else {
                         Toast.makeText(applicationContext,"Email is being used", Toast.LENGTH_LONG).show();
                     }
+                    centralProgress.setVisibility(View.GONE);
                 }
             };
             new AccountService().checkEmailAvailable(applicationContext, email, null, isEmailValidListener);
         }
     }
+
 
     private void navigateToLoginActivity() {
         Intent intent = new Intent(RegisterActivity.this, LoginActivity_.class);

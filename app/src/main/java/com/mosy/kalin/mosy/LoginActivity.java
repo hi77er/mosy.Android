@@ -9,6 +9,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,8 @@ public class LoginActivity
     EditText ed2;
     @ViewById(R.id.login_etForgotPassword)
     TextView forgotPassword;
+    @ViewById(R.id.llInitialLoadingProgress)
+    LinearLayout centralProgress;
 
 //    TextView tx1;
     int counter = 3;
@@ -64,7 +67,8 @@ public class LoginActivity
 
                 LoginBindingModel model = new LoginBindingModel(email, password);
                 new AccountService().executeAssuredUserTokenValidOrRefreshed(
-                        this.applicationContext, model, null,
+                        this.applicationContext, model,
+                        this::showProgress,
                         this::userAuthenticationSucceeded,
                         this::showInvalidHostMessage);
             } else
@@ -77,6 +81,10 @@ public class LoginActivity
                     Toast.LENGTH_SHORT).show();
     }
 
+    public void showProgress() {
+        centralProgress.setVisibility(View.VISIBLE);
+    }
+
     @Click(R.id.login_btnRegister)
     public void goToRegisterActivity(View view)
     {
@@ -86,9 +94,10 @@ public class LoginActivity
 
     private void userAuthenticationSucceeded() {
         Toast.makeText(this, "Login successful.", Toast.LENGTH_SHORT).show();
-
+        centralProgress.setVisibility(View.GONE);
         Intent intent = new Intent(LoginActivity.this, WallActivity_.class);
         startActivity(intent);
+
     }
 
     private void userAuthenticationFailed() {
