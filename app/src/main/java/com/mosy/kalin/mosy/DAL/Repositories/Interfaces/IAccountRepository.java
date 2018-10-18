@@ -17,7 +17,7 @@ import retrofit2.http.POST;
 public interface IAccountRepository {
 
 //    @Header("Authorization") String authorization,
-    @POST("account/register")
+    @POST("account/registerconsumer")
     Call<RegisterResult> register(@Header("Authorization") String authorization, @Body RegisterBindingModel model);
 
     @POST("account/emailavailable")

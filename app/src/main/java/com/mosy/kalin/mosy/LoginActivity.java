@@ -37,7 +37,7 @@ public class LoginActivity
     EditText ed2;
     @ViewById(R.id.login_etForgotPassword)
     TextView forgotPassword;
-    @ViewById(R.id.llInitialLoadingProgress)
+    @ViewById(R.id.login_llInitialLoadingProgress)
     LinearLayout centralProgress;
 
 //    TextView tx1;

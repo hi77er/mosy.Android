@@ -28,7 +28,7 @@ public class RegisterActivity
     EditText etRepeatPassword;
     @ViewById(R.id.etEmail)
     EditText etEmail;
-    @ViewById(R.id.llInitialLoadingProgress)
+    @ViewById(R.id.register_llInitialLoadingProgress)
     LinearLayout centralProgress;
 
     @Click(R.id.btnCancel)
@@ -86,7 +86,6 @@ public class RegisterActivity
             new AccountService().checkEmailAvailable(applicationContext, email, null, isEmailValidListener);
         }
     }
-
 
     private void navigateToLoginActivity() {
         Intent intent = new Intent(RegisterActivity.this, LoginActivity_.class);
