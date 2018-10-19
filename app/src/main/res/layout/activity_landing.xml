@@ -6,7 +6,7 @@
     android:background="@color/colorWhite"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
-    android:paddingTop="80dp"
+    android:paddingTop="50dp"
     android:paddingBottom="15dp">
 
     <ImageView
@@ -92,11 +92,41 @@
         </TextView>
     </LinearLayout>
 
-    <Spinner
-        android:id="@+id/landing_spLanguage"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/landing_llBottomBtns"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_landing_dishes"
-        android:layout_alignParentBottom="true" />
-    
+        android:layout_below="@+id/landing_llInvalidHost"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/landing_btnUserProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_landing_profileBtn"
+            android:background="@drawable/button_landing_dishes"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/colorPrimary"
+            android:visibility="gone"
+            android:stateListAnimator="@null" />
+
+        <Button
+            android:id="@+id/landing_btnLoginSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_landing_loginSignUpBtn"
+            android:background="@drawable/button_landing_dishes"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginBottom="5dp"
+            android:visibility="gone"
+            android:stateListAnimator="@null" />
+
+        <Spinner
+            android:id="@+id/landing_spLanguage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_landing_dishes" />
+    </LinearLayout>
+
 </RelativeLayout>

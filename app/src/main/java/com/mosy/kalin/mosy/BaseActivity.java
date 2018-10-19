@@ -8,17 +8,26 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.mosy.kalin.mosy.Helpers.LocaleHelper;
+import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Services.Connectivity.ConnectionStateMonitor;
+
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EActivity;
 
 import static android.content.pm.PackageManager.GET_META_DATA;
 
+@EActivity
 public abstract class BaseActivity
         extends AppCompatActivity {
 
     protected boolean activityStopped = false;
 
+    protected boolean isUserAuthenticated = false;
+
     protected Context applicationContext;
     protected Context baseContext;
+
+    AccountService accountService;
 
     protected ConnectionStateMonitor connectionStateMonitor;
 
@@ -34,6 +43,9 @@ public abstract class BaseActivity
 
         this.applicationContext = getApplicationContext();
         this.baseContext = getBaseContext();
+
+        this.accountService = new AccountService();
+        isUserAuthenticated = this.accountService.checkUserTokenValid(this.baseContext);
     }
 
     @Override

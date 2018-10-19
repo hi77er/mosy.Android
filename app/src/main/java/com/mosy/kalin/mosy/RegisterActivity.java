@@ -71,8 +71,6 @@ public class RegisterActivity
                             }
                             @Override public void onPostExecute(final RegisterResult result) {
                                 publishRegisterResult(result);
-                                navigateToLoginActivity();
-                                Toast.makeText(applicationContext,"We've sent you an email. Please verify your registration.", Toast.LENGTH_LONG).show();
                             }
                         };
                         new AccountService().register(applicationContext, email, password, password, listener, null);
@@ -87,23 +85,11 @@ public class RegisterActivity
         }
     }
 
-    private void navigateToLoginActivity() {
-        Intent intent = new Intent(RegisterActivity.this, LoginActivity_.class);
-        startActivity(intent);
-    }
-
     private void publishRegisterResult(RegisterResult result) {
-        Context applicationContext = getApplicationContext();
-        Intent intent;
-
         if (!result.isSuccessful()) {
-            intent = new Intent(RegisterActivity.this, RegisterActivity_.class);
             Toast.makeText(applicationContext, "Register unsuccessful ... please try again.", Toast.LENGTH_SHORT).show();
         } else {
-            intent = new Intent(RegisterActivity.this, LoginActivity_.class);
-            startActivity(intent);
-            Toast.makeText(applicationContext, "Confirm email and login. Register successful.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(applicationContext, "Successful. Confirm email and login.", Toast.LENGTH_SHORT).show();
         }
-        startActivity(intent);
     }
 }

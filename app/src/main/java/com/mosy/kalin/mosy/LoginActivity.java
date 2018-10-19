@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
-import com.mosy.kalin.mosy.Services.AccountService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -66,11 +65,13 @@ public class LoginActivity
             if (StringHelper.isEmailAddress(email)) {
 
                 LoginBindingModel model = new LoginBindingModel(email, password);
-                new AccountService().executeAssuredUserTokenValidOrRefreshed(
+                Toast emailNotConfirmedToast = Toast.makeText(this.applicationContext, "Email not confirmed", Toast.LENGTH_LONG);
+                this.accountService.executeAssuredUserTokenValidOrRefreshed(
                         this.applicationContext, model,
                         this::showProgress,
                         this::userAuthenticationSucceeded,
-                        this::showInvalidHostMessage);
+                        this::showInvalidHostMessage,
+                        emailNotConfirmedToast);
             } else
                 Toast.makeText(applicationContext,
                         "Invalid Email address.",
@@ -95,9 +96,9 @@ public class LoginActivity
     private void userAuthenticationSucceeded() {
         Toast.makeText(this, "Login successful.", Toast.LENGTH_SHORT).show();
         centralProgress.setVisibility(View.GONE);
-        Intent intent = new Intent(LoginActivity.this, WallActivity_.class);
-        startActivity(intent);
 
+        Intent intent = new Intent(LoginActivity.this, LandingActivity_.class);
+        startActivity(intent);
     }
 
     private void userAuthenticationFailed() {

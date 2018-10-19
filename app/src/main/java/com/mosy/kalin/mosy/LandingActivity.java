@@ -37,22 +37,22 @@ public class LandingActivity
     boolean afterViewsFinished = false;
     boolean networkLost = false;
 
-    @Bean
-    AccountService accountService;
-
-
-    @ViewById(resName = "landing_btnDishes")
-    Button buttonDishes;
-    @ViewById(resName = "landing_btnVenues")
-    Button buttonVenues;
-    @ViewById(resName = "landing_lButtons")
+    @ViewById(R.id.landing_btnDishes)
+    Button btnDishes;
+    @ViewById(R.id.landing_btnVenues)
+    Button btnVenues;
+    @ViewById(R.id.landing_lButtons)
     LinearLayout buttonsLayout;
-    @ViewById(resName = "landing_llInitialLoadingProgress")
+    @ViewById(R.id.landing_llInitialLoadingProgress)
     LinearLayout centralProgressLayout;
-    @ViewById(resName = "landing_llInvalidHost")
+    @ViewById(R.id.landing_llInvalidHost)
     LinearLayout invalidHostLayout;
-    @ViewById(resName = "landing_spLanguage")
+    @ViewById(R.id.landing_spLanguage)
     Spinner languagesSpinner;
+    @ViewById(R.id.landing_btnUserProfile)
+    Button btnProfile;
+    @ViewById(R.id.landing_btnLoginSignUp)
+    Button btnLogin;
 
     @AfterViews
     public void afterViews(){
@@ -65,6 +65,8 @@ public class LandingActivity
             showInvalidHostLayout();
             networkLost = true;
         }
+
+        showProfileButton(this.isUserAuthenticated);
 
         setupLanguagesSpinner();
         afterViewsFinished = true;
@@ -168,16 +170,16 @@ public class LandingActivity
     private void showLoading() {
         this.buttonsLayout.setVisibility(View.GONE);
         this.invalidHostLayout.setVisibility(View.GONE);
-        this.buttonDishes.setEnabled(false);
-        this.buttonVenues.setEnabled(false);
+        this.btnDishes.setEnabled(false);
+        this.btnVenues.setEnabled(false);
         this.centralProgressLayout.setVisibility(View.VISIBLE);
     }
 
     private void showButtonsLayout() {
         this.buttonsLayout.setVisibility(View.VISIBLE);
         this.invalidHostLayout.setVisibility(View.GONE);
-        this.buttonDishes.setEnabled(true);
-        this.buttonVenues.setEnabled(true);
+        this.btnDishes.setEnabled(true);
+        this.btnVenues.setEnabled(true);
         this.centralProgressLayout.setVisibility(View.GONE);
         //TODO: Delete before deploying to production!
 //        Toast.makeText(applicationContext, "WebApi authToken refreshed!", Toast.LENGTH_LONG).show();
@@ -193,20 +195,9 @@ public class LandingActivity
         Toast.makeText(applicationContext, "No internet!", Toast.LENGTH_LONG).show();
     }
 
-    @Click(resName = "landing_btnVenues")
-    public void navigateVenuesSearch(){
-        navigateToWallActivity(false);
-    }
-
-    @Click(resName = "landing_btnDishes")
-    public void navigateDishesSearch(){
-        navigateToWallActivity(true);
-    }
-
-    private void navigateToWallActivity(boolean isDishMode) {
-        Intent intent = new Intent(LandingActivity.this, WallActivity_.class);
-        intent.putExtra("DishesSearchModeActivated", isDishMode); //else find dishesWall
-        startActivity(intent);
+    private void showProfileButton(boolean isUserAuthenticated) {
+        this.btnProfile.setVisibility(isUserAuthenticated ? View.VISIBLE : View.GONE);
+        this.btnLogin.setVisibility(isUserAuthenticated ? View.GONE : View.VISIBLE);
     }
 
     @Click(R.id.landing_ivLogo)
@@ -224,4 +215,33 @@ public class LandingActivity
             Toast.makeText(applicationContext, "Developers' mode " + (devModeEnabledPrefValue ? "Enabled!" : "Disabled!"), Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Click(R.id.landing_btnVenues)
+    public void navigateVenuesSearch(){
+        navigateToWallActivity(false);
+    }
+
+    @Click(R.id.landing_btnDishes)
+    public void navigateDishesSearch(){
+        navigateToWallActivity(true);
+    }
+
+    @Click(R.id.landing_btnLoginSignUp)
+    public void navigateLogin(){
+        Intent intent = new Intent(LandingActivity.this, LoginActivity_.class);
+        startActivity(intent);
+    }
+
+    @Click(R.id.landing_btnUserProfile)
+    public void navigateProfile(){
+        Intent intent = new Intent(LandingActivity.this, UserProfileActivity_.class);
+        startActivity(intent);
+    }
+
+    private void navigateToWallActivity(boolean isDishMode) {
+        Intent intent = new Intent(LandingActivity.this, WallActivity_.class);
+        intent.putExtra("DishesSearchModeActivated", isDishMode); //else find dishesWall
+        startActivity(intent);
+    }
+
 }

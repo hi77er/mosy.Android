@@ -3,6 +3,7 @@ package com.mosy.kalin.mosy.Services;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import com.mosy.kalin.mosy.DAL.Http.Results.RegisterResult;
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
@@ -89,7 +90,7 @@ public class AccountService {
         }
     }
 
-    public void executeAssuredUserTokenValidOrRefreshed(Context applicationContext, LoginBindingModel userLoginModel, Runnable preExecute, Runnable onSuccess, Runnable onInvalidHost) {
+    public void executeAssuredUserTokenValidOrRefreshed(Context applicationContext, LoginBindingModel userLoginModel, Runnable preExecute, Runnable onSuccess, Runnable onInvalidHost, Toast emailNotConfirmedToast) {
         boolean tokenExistsAndIsValid = this.checkUserTokenValid(applicationContext);
 
         if (!tokenExistsAndIsValid) {
@@ -102,8 +103,19 @@ public class AccountService {
             call.enqueue(new Callback<TokenResult>() {
                 @Override public void onResponse(Call<TokenResult> call, Response<TokenResult> response) {
                     if (response.code() == 400){
-                        if (onInvalidHost != null)
-                            onInvalidHost.run();
+                        try{
+                            if (response.errorBody() != null) {
+                                assert response.errorBody() != null;
+                                String errorBody = response.errorBody().string().toLowerCase();
+                                if (errorBody.contains("email is not confirmed") && emailNotConfirmedToast != null)
+                                    emailNotConfirmedToast.show();
+                                else {
+                                    if (onInvalidHost != null)
+                                        onInvalidHost.run();
+                                }
+                            }
+                        }
+                        catch (Exception ex){ }
                     }
                     else {
                         TokenResult result = response.body();
@@ -285,6 +297,7 @@ public class AccountService {
     public void getUserProfile(Context applicationContext,
                            AsyncTaskListener<User> apiCallResultListener)
     {
+        Toast emailNotConfirmedToast = Toast.makeText(applicationContext, "Email not confirmed", Toast.LENGTH_LONG);
         this.executeAssuredUserTokenValidOrRefreshed(applicationContext, null,
                 apiCallResultListener::onPreExecute,
                 () -> {
@@ -307,7 +320,8 @@ public class AccountService {
                         e.printStackTrace();
                     }
                 },
-                null);
+                null,
+                emailNotConfirmedToast);
     }
 
 
