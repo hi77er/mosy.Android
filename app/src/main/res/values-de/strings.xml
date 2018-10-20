@@ -9,4 +9,6 @@
     <string name="activity_landing_languageDeSpinner">Deutsch</string>
     <string name="activity_landing_languageEsSpinner">Spanisch</string>
     <string name="activity_venueDetails_getDirections">Richtungen</string>
+    <string name="activity_landing_profileBtn">"Mein Profil "</string>
+    <string name="activity_landing_loginSignUpBtn">"Anmelden / Registrieren "</string>
 </resources>

@@ -115,9 +115,9 @@ public class WallActivity
     @Extra
     static boolean ApplyWorkingStatusFilterToVenues = true;
     @Extra
-    static int ApplyDistanceFilterToVenues = 1000;
+    static int ApplyDistanceFilterToVenues = 3000;
     @Extra
-    static int ApplyDistanceFilterToDishes = 1000;
+    static int ApplyDistanceFilterToDishes = 3000;
 
     @Extra
     static boolean ApplyWorkingStatusFilterToDishes = true;

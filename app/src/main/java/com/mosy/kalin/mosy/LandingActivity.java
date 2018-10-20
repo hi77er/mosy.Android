@@ -68,7 +68,6 @@ public class LandingActivity
 
         showProfileButton(this.isUserAuthenticated);
 
-        setupLanguagesSpinner();
         ArrayList<SpinnerLocale> spinnerLocalesList = new ArrayList<>();
         for (String supportedCultureId : LocaleHelper.SUPPORTED_LOCALES.keySet()) {
             int localeResourceId = LocaleHelper.SUPPORTED_LOCALES.get(supportedCultureId);
