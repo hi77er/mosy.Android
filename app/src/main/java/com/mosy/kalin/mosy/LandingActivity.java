@@ -37,22 +37,22 @@ public class LandingActivity
     boolean afterViewsFinished = false;
     boolean networkLost = false;
 
-    @Bean
-    AccountService accountService;
-
-
     @ViewById(R.id.landing_btnDishes)
-    Button DishesButton;
+    Button btnDishes;
     @ViewById(R.id.landing_btnVenues)
-    Button VenuesButton;
+    Button btnVenues;
     @ViewById(R.id.landing_lButtons)
-    LinearLayout ButtonsLayout;
+    LinearLayout buttonsLayout;
     @ViewById(R.id.landing_llInitialLoadingProgress)
-    LinearLayout CentralProgressLayout;
+    LinearLayout centralProgressLayout;
     @ViewById(R.id.landing_llInvalidHost)
-    LinearLayout InvalidHostLayout;
+    LinearLayout invalidHostLayout;
     @ViewById(R.id.landing_spLanguage)
-    Spinner LanguagesSpinner;
+    Spinner languagesSpinner;
+    @ViewById(R.id.landing_btnUserProfile)
+    Button btnProfile;
+    @ViewById(R.id.landing_btnLoginSignUp)
+    Button btnLogin;
 
     @AfterViews
     public void afterViews(){
@@ -66,6 +66,9 @@ public class LandingActivity
             networkLost = true;
         }
 
+        showProfileButton(this.isUserAuthenticated);
+
+        setupLanguagesSpinner();
         ArrayList<SpinnerLocale> spinnerLocalesList = new ArrayList<>();
         for (String supportedCultureId : LocaleHelper.SUPPORTED_LOCALES.keySet()) {
             int localeResourceId = LocaleHelper.SUPPORTED_LOCALES.get(supportedCultureId);
@@ -130,7 +133,7 @@ public class LandingActivity
         //fill data in spinner
         ArrayAdapter<SpinnerLocale> adapter = new ArrayAdapter<>(this.applicationContext, R.layout.languages_spinner_activity_landing, localesList);
         adapter.setDropDownViewResource(R.layout.languages_spinner_activity_landing);
-        this.LanguagesSpinner.setAdapter(adapter);
+        this.languagesSpinner.setAdapter(adapter);
 
         String currentDefaultSpinnerLocale = LocaleHelper.getLanguage(applicationContext);
 
@@ -138,12 +141,12 @@ public class LandingActivity
         //Stream.of(cuisineRegionFilters).filter(filter -> filter.Id.equals(filterId)).single();
         for(SpinnerLocale sLocale : localesList){
             if (sLocale.getId().equals(currentDefaultSpinnerLocale)){
-                this.LanguagesSpinner.setSelection(adapter.getPosition(sLocale));
+                this.languagesSpinner.setSelection(adapter.getPosition(sLocale));
                 break;
             }
         }
 
-        this.LanguagesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        this.languagesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String newLocaleId = localesList.get(i).getId();
                 if (!currentDefaultSpinnerLocale.equals(newLocaleId)){
@@ -164,47 +167,36 @@ public class LandingActivity
     }
 
     private void showLoading() {
-        this.ButtonsLayout.setVisibility(View.GONE);
-        this.InvalidHostLayout.setVisibility(View.GONE);
-        this.DishesButton.setEnabled(false);
-        this.VenuesButton.setEnabled(false);
-        this.CentralProgressLayout.setVisibility(View.VISIBLE);
+        this.buttonsLayout.setVisibility(View.GONE);
+        this.invalidHostLayout.setVisibility(View.GONE);
+        this.btnDishes.setEnabled(false);
+        this.btnVenues.setEnabled(false);
+        this.centralProgressLayout.setVisibility(View.VISIBLE);
     }
 
     private void showButtonsLayout() {
-        this.ButtonsLayout.setVisibility(View.VISIBLE);
-        this.InvalidHostLayout.setVisibility(View.GONE);
-        this.DishesButton.setEnabled(true);
-        this.VenuesButton.setEnabled(true);
-        this.CentralProgressLayout.setVisibility(View.GONE);
+        this.buttonsLayout.setVisibility(View.VISIBLE);
+        this.invalidHostLayout.setVisibility(View.GONE);
+        this.btnDishes.setEnabled(true);
+        this.btnVenues.setEnabled(true);
+        this.centralProgressLayout.setVisibility(View.GONE);
         //TODO: Delete before deploying to production!
 //        Toast.makeText(applicationContext, "WebApi authToken refreshed!", Toast.LENGTH_LONG).show();
     }
 
     private void showInvalidHostLayout() {
-        this.ButtonsLayout.setVisibility(View.GONE);
-        this.InvalidHostLayout.setVisibility(View.VISIBLE);
-        this.CentralProgressLayout.setVisibility(View.GONE);
+        this.buttonsLayout.setVisibility(View.GONE);
+        this.invalidHostLayout.setVisibility(View.VISIBLE);
+        this.centralProgressLayout.setVisibility(View.GONE);
         if (!this.activityStopped)
             new LocationResolver(this).showWifiSettingsDialog(applicationContext);
         //TODO: Delete before deploying to production!
         Toast.makeText(applicationContext, "No internet!", Toast.LENGTH_LONG).show();
     }
 
-    @Click(resName = "landing_btnVenues")
-    public void navigateVenuesSearch(){
-        navigateToWallActivity(false);
-    }
-
-    @Click(resName = "landing_btnDishes")
-    public void navigateDishesSearch(){
-        navigateToWallActivity(true);
-    }
-
-    private void navigateToWallActivity(boolean isDishMode) {
-        Intent intent = new Intent(LandingActivity.this, WallActivity_.class);
-        intent.putExtra("DishesSearchModeActivated", isDishMode); //else find dishesWall
-        startActivity(intent);
+    private void showProfileButton(boolean isUserAuthenticated) {
+        this.btnProfile.setVisibility(isUserAuthenticated ? View.VISIBLE : View.GONE);
+        this.btnLogin.setVisibility(isUserAuthenticated ? View.GONE : View.VISIBLE);
     }
 
     @Click(R.id.landing_ivLogo)
@@ -222,4 +214,33 @@ public class LandingActivity
             Toast.makeText(applicationContext, "Developers' mode " + (devModeEnabledPrefValue ? "Enabled!" : "Disabled!"), Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Click(R.id.landing_btnVenues)
+    public void navigateVenuesSearch(){
+        navigateToWallActivity(false);
+    }
+
+    @Click(R.id.landing_btnDishes)
+    public void navigateDishesSearch(){
+        navigateToWallActivity(true);
+    }
+
+    @Click(R.id.landing_btnLoginSignUp)
+    public void navigateLogin(){
+        Intent intent = new Intent(LandingActivity.this, LoginActivity_.class);
+        startActivity(intent);
+    }
+
+    @Click(R.id.landing_btnUserProfile)
+    public void navigateProfile(){
+        Intent intent = new Intent(LandingActivity.this, UserProfileActivity_.class);
+        startActivity(intent);
+    }
+
+    private void navigateToWallActivity(boolean isDishMode) {
+        Intent intent = new Intent(LandingActivity.this, WallActivity_.class);
+        intent.putExtra("DishesSearchModeActivated", isDishMode); //else find dishesWall
+        startActivity(intent);
+    }
+
 }

@@ -9,12 +9,12 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
-import com.mosy.kalin.mosy.Services.AccountService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -36,6 +36,8 @@ public class LoginActivity
     EditText ed2;
     @ViewById(R.id.login_etForgotPassword)
     TextView forgotPassword;
+    @ViewById(R.id.login_llInitialLoadingProgress)
+    LinearLayout centralProgress;
 
 //    TextView tx1;
     int counter = 3;
@@ -63,10 +65,13 @@ public class LoginActivity
             if (StringHelper.isEmailAddress(email)) {
 
                 LoginBindingModel model = new LoginBindingModel(email, password);
-                new AccountService().executeAssuredUserTokenValidOrRefreshed(
-                        this.applicationContext, model, null,
+                Toast emailNotConfirmedToast = Toast.makeText(this.applicationContext, "Email not confirmed", Toast.LENGTH_LONG);
+                this.accountService.executeAssuredUserTokenValidOrRefreshed(
+                        this.applicationContext, model,
+                        this::showProgress,
                         this::userAuthenticationSucceeded,
-                        this::showInvalidHostMessage);
+                        this::showInvalidHostMessage,
+                        emailNotConfirmedToast);
             } else
                 Toast.makeText(applicationContext,
                         "Invalid Email address.",
@@ -75,6 +80,10 @@ public class LoginActivity
             Toast.makeText(applicationContext,
                     "Email and password are required.",
                     Toast.LENGTH_SHORT).show();
+    }
+
+    public void showProgress() {
+        centralProgress.setVisibility(View.VISIBLE);
     }
 
     @Click(R.id.login_btnRegister)
@@ -86,8 +95,9 @@ public class LoginActivity
 
     private void userAuthenticationSucceeded() {
         Toast.makeText(this, "Login successful.", Toast.LENGTH_SHORT).show();
+        centralProgress.setVisibility(View.GONE);
 
-        Intent intent = new Intent(LoginActivity.this, WallActivity_.class);
+        Intent intent = new Intent(LoginActivity.this, LandingActivity_.class);
         startActivity(intent);
     }
 

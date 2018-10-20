@@ -597,10 +597,6 @@ public class WallActivity
                 getString(R.string.activity_wall_searchVenuesHint);
         searchView.setQueryHint(hint);
 
-        boolean isLogged = this.accountService.checkUserTokenValid(this.applicationContext);
-        menu.findItem(R.id.action_login).setVisible(!isLogged);
-        menu.findItem(R.id.action_logout).setVisible(isLogged);
-
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         //searchView.setIconifiedByDefault(false); // gives focus to the search automatically
@@ -618,12 +614,6 @@ public class WallActivity
             case R.id.action_dishes:
                 this.navigateDishesSearch();
                 return true;
-            case R.id.action_login:
-                this.navigateLoginActivity();
-                return true;
-            case R.id.action_logout:
-                this.logout();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -634,11 +624,9 @@ public class WallActivity
         startActivity(intent);
     }
 
-    private void logout() {
-        this.accountService.logoutUser(this.applicationContext);
-        navigateToWallActivity(DishesSearchModeActivated);
-
-        Toast.makeText(this.baseContext, "Logged out.", Toast.LENGTH_SHORT).show();
+    private void navigateUserProfileActivity () {
+        Intent intent = new Intent (WallActivity.this, UserProfileActivity_.class);
+        startActivity(intent);
     }
 
     private void navigateToWallActivity(boolean isDishMode) {

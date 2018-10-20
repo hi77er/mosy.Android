@@ -2,7 +2,10 @@ package com.mosy.kalin.mosy;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.mosy.kalin.mosy.DAL.Http.Results.RegisterResult;
@@ -25,6 +28,14 @@ public class RegisterActivity
     EditText etRepeatPassword;
     @ViewById(R.id.etEmail)
     EditText etEmail;
+    @ViewById(R.id.register_llInitialLoadingProgress)
+    LinearLayout centralProgress;
+
+    @Click(R.id.btnCancel)
+    public void goBack() {
+        Intent intent = new Intent(RegisterActivity.this, LoginActivity_.class);
+        startActivity(intent);
+    }
 
     @Click(R.id.btnRegister)
     public void Register() {
@@ -50,18 +61,16 @@ public class RegisterActivity
         } else {
             AsyncTaskListener<CheckEmailAvailableResponse> isEmailValidListener = new AsyncTaskListener<CheckEmailAvailableResponse>() {
                 @Override public void onPreExecute() {
-                    //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+                    centralProgress.setVisibility(View.VISIBLE);
                 }
-                @Override public void onPostExecute(CheckEmailAvailableResponse checkEmailAvailableResponse) {
-                    if(checkEmailAvailableResponse.IsAvailable) {
+                @Override public void onPostExecute(CheckEmailAvailableResponse result) {
+                    if(result.IsAvailable) {
                         AsyncTaskListener<RegisterResult> listener = new AsyncTaskListener<RegisterResult>() {
                             @Override public void onPreExecute() {
                                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
                             }
                             @Override public void onPostExecute(final RegisterResult result) {
                                 publishRegisterResult(result);
-                                navigateToLoginActivity();
-                                Toast.makeText(applicationContext,"We've sent you an email. Please verify your registration.", Toast.LENGTH_LONG).show();
                             }
                         };
                         new AccountService().register(applicationContext, email, password, password, listener, null);
@@ -69,29 +78,18 @@ public class RegisterActivity
                     else {
                         Toast.makeText(applicationContext,"Email is being used", Toast.LENGTH_LONG).show();
                     }
+                    centralProgress.setVisibility(View.GONE);
                 }
             };
             new AccountService().checkEmailAvailable(applicationContext, email, null, isEmailValidListener);
         }
     }
 
-    private void navigateToLoginActivity() {
-        Intent intent = new Intent(RegisterActivity.this, LoginActivity_.class);
-        startActivity(intent);
-    }
-
     private void publishRegisterResult(RegisterResult result) {
-        Context applicationContext = getApplicationContext();
-        Intent intent;
-
         if (!result.isSuccessful()) {
-            intent = new Intent(RegisterActivity.this, RegisterActivity_.class);
             Toast.makeText(applicationContext, "Register unsuccessful ... please try again.", Toast.LENGTH_SHORT).show();
         } else {
-            intent = new Intent(RegisterActivity.this, LoginActivity_.class);
-            startActivity(intent);
-            Toast.makeText(applicationContext, "Confirm email and login. Register successful.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(applicationContext, "Successful. Confirm email and login.", Toast.LENGTH_SHORT).show();
         }
-        startActivity(intent);
     }
 }

@@ -263,5 +263,8 @@
     <string name="DishesFilterRegionSouthAsianDescription">E.g. Indonesian, Philippine, Thai, Vietnamese, etc.</string>
     <string name="DishesFilterMainIngredientWhiteMeatDescription">E.g. Chicken, Turkey, Duck, etc.</string>
     <string name="DishesFilterMainIngredientRedMeatDescription">E.g. Beef, Pork, Game, etc.</string>
+    <string name="activity_userprofile_logoutBtn">Sign out</string>
+    <string name="activity_landing_profileBtn">My profile</string>
+    <string name="activity_landing_loginSignUpBtn">Login / SignUp</string>
 
 </resources>
