@@ -37,21 +37,24 @@
     <string name="activity_landing_languageRuSpinner">Russian</string>
     <string name="activity_landing_languageEsSpinner">Spanish</string>
     <string name="activity_landing_noInternetMessageTextView">No internet! Please check your network settings or try again later.</string>
+    <string name="activity_landing_profileBtn">My profile</string>
+    <string name="activity_landing_loginSignUpBtn">Login / Signup</string>
 
     <!-- Activity Login -->
     <string name="activity_login_titleTextView">"Login to"</string>
     <string name="activity_login_emailEditText">"Enter Email"</string>
     <string name="activity_login_passwordEditText">"Password"</string>
-    <string name="activity_login_cancelBtn">"Cancel"</string>
-    <string name="activity_login_loginBtn">"Login"</string>
-    <string name="activity_login_registerBtn">"Register"</string>
+    <string name="activity_login_cancelBtn">"Back"</string>
+    <string name="activity_login_loginBtn">"Go"</string>
+    <string name="activity_login_forgotPasswordBtn">"Forgot password"</string>
+    <string name="activity_login_registerBtn">"Signup"</string>
 
     <!-- Activity Register -->
     <string name="activity_register_titleTextView">"Register to"</string>
     <string name="activity_register_emailEditText">"Enter Email"</string>
     <string name="activity_register_passwordEditText">"Password"</string>
-    <string name="activity_register_cancelBtn">"Cancel"</string>
-    <string name="activity_register_registerBtn">"Register"</string>
+    <string name="activity_register_cancelBtn">"Back"</string>
+    <string name="activity_register_registerBtn">"Create"</string>
 
     <!-- Menu -->
     <string name="menu_searchTitle">"Search"</string>
@@ -264,7 +267,5 @@
     <string name="DishesFilterMainIngredientWhiteMeatDescription">E.g. Chicken, Turkey, Duck, etc.</string>
     <string name="DishesFilterMainIngredientRedMeatDescription">E.g. Beef, Pork, Game, etc.</string>
     <string name="activity_userprofile_logoutBtn">Sign out</string>
-    <string name="activity_landing_profileBtn">My profile</string>
-    <string name="activity_landing_loginSignUpBtn">Login / SignUp</string>
 
 </resources>
