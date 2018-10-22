@@ -90,7 +90,7 @@
     <!-- Activity Venues Filters -->
     <string name="activity_venuesFilters_title">"Filter venues"</string>
     <string name="activity_venuesFilters_goBtn">"Go"</string>
-    <string name="activity_venuesFilters_showClosedTextView">Show only open venues</string>
+    <string name="activity_venuesFilters_showClosedTextView">Onl show open venues</string>
     <string name="activity_venuesFilters_distanceMeasureTypeKilometers">km</string>
     <string name="activity_venuesFilters_distanceFilterTextView">Search distance:</string>
     <string name="activity_venuesFilters_distanceMeasureTypeMeters">m</string>
@@ -100,7 +100,7 @@
     <string name="activity_venuesFilters_cultureFiltersTitle">Culture</string>
     <string name="VenuesFilterBadgeBikesParkingAvailableName">"Bike parking/locks"</string>
     <string name="VenuesFilterBadgeToysCornerName">"Toys corner"</string>
-    <string name="VenuesFilterBabyFriendlyName">Baby friendly.</string>
+    <string name="VenuesFilterBabyFriendlyName">Baby friendly</string>
     <string name="VenuesFilterBadgeNoSmokingName">"No Smoking"</string>
     <string name="VenuesFilterBadgeParkingAvailableName">"Car Parking"</string>
     <string name="VenuesFilterBadgePetFriendlyName">"Pet Friendly"</string>
@@ -186,13 +186,13 @@
 
     <!-- Activity Dishes Filters -->
     <string name="activity_dishesFilters_title">Filter dishes &amp; drinks</string>
-    <string name="activity_dishesFilters_showClosedTextView">"Show only open venues"</string>
+    <string name="activity_dishesFilters_showClosedTextView">"Only show open venues"</string>
     <string name="activity_dishesFilters_goBtn">"Go"</string>
     <string name="activity_dishesFilters_typeFiltersTitle">Type</string>
     <string name="activity_dishesFilters_regionFiltersTitle">Region</string>
     <string name="activity_dishesFilters_ingredientsFiltersTitle">Ingredients</string>
     <string name="activity_dishesFilters_allergensFiltersTitle">Allergens</string>
-    <string name="activity_dishesFilters_allergensFiltersNote">* Selected Allergens will reduce the appearance priority of dishes associated to them.</string>
+    <string name="activity_dishesFilters_allergensFiltersNote">* Selecting allergens will hide dishes and drinks that contain them in your search results.</string>
     <string name="activity_dishesFilters_distanceFilterTextView">Search distance:</string>
     <string name="activity_dishesFilters_distanceMeasureTypeMeters">m</string>
     <string name="activity_dishesFilters_distanceMeasureTypeKilometers">km</string>
@@ -230,7 +230,7 @@
     <string name="DishesFilterMainIngredientVegetarianName">"Vegetarian"</string>
     <string name="DishesFilterMainIngredientKosherName">"Kosher"</string>
     <string name="DishesFilterMainIngredientHalalName">"Halal"</string>
-    <string name="DishesFilterAllergenSulfurDioxideName">Sulfur Dioxide (12)</string>
+    <string name="DishesFilterAllergenSulfurDioxideName">Sulfur dioxide (12)</string>
     <string name="DishesFilterAllergenGlutenName">Gluten / Wheat (1)</string>
     <string name="DishesFilterAllergenMilkName">Milk (7)</string>
     <string name="DishesFilterAllergenGarlicName">Garlic (s)</string>
@@ -240,7 +240,7 @@
     <string name="DishesFilterAllergenLupinName">Lupin (13)</string>
     <string name="DishesFilterAllergenOnionName">Onion (s)</string>
     <string name="DishesFilterAllergenSesameName">Sesame (11)</string>
-    <string name="DishesFilterAllergenCitrusFruitsName">Citrus Fruits (s)</string>
+    <string name="DishesFilterAllergenCitrusFruitsName">Citrus fruits (s)</string>
     <string name="DishesFilterAllergenCeleryName">Celery (9)</string>
     <string name="DishesFilterAllergenAlcoholName">Alcohol (s)</string>
     <string name="DishesFilterAllergenMollusksName">Mollusks (14)</string>
@@ -263,8 +263,8 @@
     <string name="DishesFilterRegionMexicanAndCentralAmericanDescription">E.g. Canjun &amp; Creole, Caribbean, Cuban, etc.</string>
     <string name="DishesFilterRegionSouthAmericanLatinDescription">E.g. Argentinian, Brazilian, Peruvian, etc.</string>
     <string name="DishesFilterRegionSouthAsianDescription">E.g. Indonesian, Philippine, Thai, Vietnamese, etc.</string>
-    <string name="DishesFilterMainIngredientWhiteMeatDescription">E.g. Chicken, Turkey, Duck, etc.</string>
-    <string name="DishesFilterMainIngredientRedMeatDescription">E.g. Beef, Pork, Game, etc.</string>
+    <string name="DishesFilterMainIngredientWhiteMeatDescription">E.g. chicken, turkey, duck, etc.</string>
+    <string name="DishesFilterMainIngredientRedMeatDescription">E.g. beef, Pork, Game, etc.</string>
     <string name="activity_userprofile_logoutBtn">Sign out</string>
     <string name="DishesFilterTypeAlcoholicDrinksName">Alcoholic drinks</string>
     <string name="DishesFilterTypeAlcoholicDrinksDescription">E.g. wine, beers, cocktails, etc.</string>

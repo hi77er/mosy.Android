@@ -91,7 +91,7 @@
     <string name="activity_dishesFilters_regionFiltersTitle">Регион</string>
     <string name="activity_dishesFilters_ingredientsFiltersTitle">Основен продукт</string>
     <string name="activity_dishesFilters_allergensFiltersTitle">Алергени</string>
-    <string name="activity_dishesFilters_allergensFiltersNote">* Избраните Алергени ще направят асоциираните с тях резултати по-малко приоритетни за показване</string>
+    <string name="activity_dishesFilters_allergensFiltersNote">* Избраните Алергени ще скрият ястята и напитките, в които те се съдържат от резлтатите.</string>
     <string name="activity_landing_noInternetMessageTextView">Няма интернет! Моля проверете Вашите настройки или опитайте по-късно.</string>
     <string name="activity_wall_noInternetTextView">Няма интернет!</string>
     <string name="activity_venuesFilters_distanceFilterTextView">Дистанция на търсенето:</string>

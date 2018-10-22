@@ -85,7 +85,7 @@
     <string name="DishesFilterAllergenCrustaceansName">Crustáceos (2)</string>
     <string name="DishesFilterAllergenHotPeppersName">Chile picante (s)</string>
     <string name="DishesFilterAllergenTreeNutsName">Tuerca del Árbol (8)</string>
-    <string name="DishesFilterAllergenMustardName">Mostaza (10)</string>
+    <string name="DishesFilterAllergenMustardName">Mostaza (11)</string>
     <string name="activity_dishesFilters_goBtn">Busca</string>
     <string name="activity_dishesFilters_typeFiltersTitle">Tipo</string>
     <string name="activity_dishesFilters_regionFiltersTitle">Región</string>
