@@ -3,6 +3,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -34,14 +35,11 @@ public class LoginActivity
     EditText ed1;
     @ViewById(R.id.login_etPassword)
     EditText ed2;
-    @ViewById(R.id.login_etForgotPassword)
-    TextView forgotPassword;
     @ViewById(R.id.login_llInitialLoadingProgress)
     LinearLayout centralProgress;
 
-//    TextView tx1;
+    //    TextView tx1;
     int counter = 3;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,10 +47,7 @@ public class LoginActivity
 
     @AfterViews
     public void afterViews(){
-        forgotPassword.setClickable(true);
-        forgotPassword.setMovementMethod(LinkMovementMethod.getInstance());
-        String text = "<a href='https://tastespot.app/Account/ForgotPassword'>Forgot Password</a>";
-        forgotPassword.setText(Html.fromHtml(text));
+
     }
 
     @Click(R.id.login_btnLogin)
@@ -107,5 +102,13 @@ public class LoginActivity
 
     private void showInvalidHostMessage() {
         Toast.makeText(this, "Wrong username or password.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Click(R.id.login_btnForgotPassword)
+    public void forgotPassword() {
+        String url = "https://tastespot.app/Account/ForgotPassword";
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
     }
 }
