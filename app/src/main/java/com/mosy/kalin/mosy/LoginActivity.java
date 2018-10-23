@@ -66,6 +66,7 @@ public class LoginActivity
                         this::showProgress,
                         this::userAuthenticationSucceeded,
                         this::showInvalidHostMessage,
+                        this::userAuthenticationFailed,
                         emailNotConfirmedToast);
             } else
                 Toast.makeText(applicationContext,
@@ -90,7 +91,7 @@ public class LoginActivity
 
     private void userAuthenticationSucceeded() {
         Toast.makeText(this, "Login successful.", Toast.LENGTH_SHORT).show();
-        centralProgress.setVisibility(View.GONE);
+        centralProgress.setVisibility(View.INVISIBLE);
 
         Intent intent = new Intent(LoginActivity.this, LandingActivity_.class);
         startActivity(intent);
@@ -98,10 +99,11 @@ public class LoginActivity
 
     private void userAuthenticationFailed() {
         Toast.makeText(this, "Wrong username or password.", Toast.LENGTH_SHORT).show();
+        centralProgress.setVisibility(View.INVISIBLE);
     }
 
     private void showInvalidHostMessage() {
-        Toast.makeText(this, "Wrong username or password.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "No internet.", Toast.LENGTH_SHORT).show();
     }
 
     @Click(R.id.login_btnForgotPassword)

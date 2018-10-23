@@ -90,7 +90,14 @@ public class AccountService {
         }
     }
 
-    public void executeAssuredUserTokenValidOrRefreshed(Context applicationContext, LoginBindingModel userLoginModel, Runnable preExecute, Runnable onSuccess, Runnable onInvalidHost, Toast emailNotConfirmedToast) {
+    public void executeAssuredUserTokenValidOrRefreshed(
+            Context applicationContext,
+            LoginBindingModel userLoginModel,
+            Runnable preExecute,
+            Runnable onSuccess,
+            Runnable onInvalidHost,
+            Runnable onAuthFail,
+            Toast emailNotConfirmedToast) {
         boolean tokenExistsAndIsValid = this.checkUserTokenValid(applicationContext);
 
         if (!tokenExistsAndIsValid) {
@@ -110,8 +117,8 @@ public class AccountService {
                                 if (errorBody.contains("email is not confirmed") && emailNotConfirmedToast != null)
                                     emailNotConfirmedToast.show();
                                 else {
-                                    if (onInvalidHost != null)
-                                        onInvalidHost.run();
+                                    if (onAuthFail != null)
+                                        onAuthFail.run();
                                 }
                             }
                         }
@@ -320,6 +327,7 @@ public class AccountService {
                         e.printStackTrace();
                     }
                 },
+                null,
                 null,
                 emailNotConfirmedToast);
     }

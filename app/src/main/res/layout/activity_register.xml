@@ -77,7 +77,7 @@
         android:id="@+id/register_llInitialLoadingProgress"
         android:layout_width="fill_parent"
         android:layout_height="35dp"
-        android:layout_below="@+id/landing_lButtons"
+        android:layout_above="@+id/landing_lButtons"
         android:gravity="center"
         android:visibility="invisible">
 
