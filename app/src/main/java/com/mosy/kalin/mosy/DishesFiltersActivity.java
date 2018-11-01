@@ -49,7 +49,10 @@ public class DishesFiltersActivity
     private int distanceFilterMinValue = 100;
     private int distanceFilterMaxValue = 10000;
     private int distanceFilterFormattedValue;
+    private boolean selectedApplyRecommendedFilter;
     private boolean selectedApplyWorkingStatusFilter;
+
+    private boolean stateHasBeenReset;
 
     private FilterDishesPagerAdapter dishFiltersAdapter;
 
@@ -58,6 +61,8 @@ public class DishesFiltersActivity
 
     @Extra
     static int PreselectedDistanceFilterValue;
+    @Extra
+    static boolean PreselectedApplyRecommendedFilter;
     @Extra
     static boolean PreselectedApplyWorkingStatusFilter;
     @Extra
@@ -69,23 +74,25 @@ public class DishesFiltersActivity
     @Extra
     static ArrayList<String> PreselectedDishAllergenFilterIds;
 
-    @ViewById(resName = "filtersDishes_llInitialLoadingProgress")
+    @ViewById(R.id.filtersDishes_llInitialLoadingProgress)
     LinearLayout centralProgress;
 
-    @ViewById(resName = "tl_filters_dishes")
+    @ViewById(R.id.tl_filters_dishes)
     TabLayout dishesFiltersTabs;
-    @ViewById(resName = "vp_filters_dishes")
+    @ViewById(R.id.vp_filters_dishes)
     ViewPager dishesFiltersPager;
 
-    @ViewById(resName = "filters_dishes_scWorkingTimeFilter")
+    @ViewById(R.id.filters_dishes_scRecommendedFilter)
+    public Switch recommendedFilter;
+    @ViewById(R.id.filters_dishes_scWorkingTimeFilter)
     public Switch workingStatusFilter;
-    @ViewById(resName = "filters_dishes_tvDistanceLabel")
+    @ViewById(R.id.filters_dishes_tvDistanceLabel)
     public TextView distanceLabel;
-    @ViewById(resName = "filters_dishes_sbDistanceFilter")
+    @ViewById(R.id.filters_dishes_sbDistanceFilter)
     public SeekBar distanceSeekBar;
 
 
-    @ViewById(resName = "filterDishes_GoButton")
+    @ViewById(R.id.filterDishes_GoButton)
     Button goButton;
 
     @Override
@@ -103,9 +110,14 @@ public class DishesFiltersActivity
     public void afterViews(){
         distanceFilterMaxValue = this.isDevelopersModeActivated ? 10000000 : 10000;
 
+        this.recommendedFilter.setChecked(PreselectedApplyRecommendedFilter);
+        this.recommendedFilter.setOnCheckedChangeListener(
+                (compoundButton, b) -> selectedApplyRecommendedFilter = compoundButton.isChecked()
+        );
+
         this.workingStatusFilter.setChecked(PreselectedApplyWorkingStatusFilter);
         this.workingStatusFilter.setOnCheckedChangeListener(
-            (compoundButton, b) -> selectedApplyWorkingStatusFilter = compoundButton.isChecked()
+                (compoundButton, b) -> selectedApplyWorkingStatusFilter = compoundButton.isChecked()
         );
 
         if (ConnectivityHelper.isConnected(applicationContext)) {
@@ -188,6 +200,7 @@ public class DishesFiltersActivity
             ArrayList<String> selectedDishAllergenFilterIds = new ArrayList<>();
 
             selectedApplyWorkingStatusFilter = this.workingStatusFilter.isChecked();
+            selectedApplyRecommendedFilter = this.recommendedFilter.isChecked();
 
             if (this.dishFiltersAdapter != null && this.dishFiltersAdapter.DishTypeFilterItems != null) {
                 selectedDishTypeFilterIds = new ArrayList<>(Stream
@@ -220,14 +233,16 @@ public class DishesFiltersActivity
             }
 
             boolean filtersStateChanged = checkFiltersStateChanged(distanceFilterFormattedValue,
-                                                                   selectedApplyWorkingStatusFilter,
-                                                                   selectedDishTypeFilterIds,
-                                                                   selectedDishRegionFilterIds,
-                                                                   selectedDishMainIngredientFilterIds,
-                                                                   selectedDishAllergenFilterIds);
+                    selectedApplyRecommendedFilter,
+                    selectedApplyWorkingStatusFilter,
+                    selectedDishTypeFilterIds,
+                    selectedDishRegionFilterIds,
+                    selectedDishMainIngredientFilterIds,
+                    selectedDishAllergenFilterIds);
 
             if (filtersStateChanged) {
                 intent.putExtra("ApplyDistanceFilterToDishes", distanceFilterFormattedValue);
+                intent.putExtra("ApplyRecommendedFilterToDishes", selectedApplyRecommendedFilter);
                 intent.putExtra("ApplyWorkingStatusFilterToDishes", selectedApplyWorkingStatusFilter);
                 intent.putExtra("SelectedDishTypeFilterIds", selectedDishTypeFilterIds);
                 intent.putExtra("SelectedDishRegionFilterIds", selectedDishRegionFilterIds);
@@ -335,6 +350,7 @@ public class DishesFiltersActivity
     }
 
     private boolean checkFiltersStateChanged(int distanceFilterValue,
+                                             boolean selectedApplyRecommendedFilter,
                                              boolean selectedApplyWorkingStatusFilter,
                                              ArrayList<String> selectedDishTypeFilterIds,
                                              ArrayList<String> selectedDishRegionFilterIds,
@@ -342,13 +358,21 @@ public class DishesFiltersActivity
                                              ArrayList<String> selectedDishAllergenFilterIds) {
 
         boolean searchedDistanceChanged = distanceFilterValue != PreselectedDistanceFilterValue;
+        boolean applyRecommendedFilterChanged = selectedApplyRecommendedFilter != PreselectedApplyRecommendedFilter;
         boolean applyWorkingStatusChanged = selectedApplyWorkingStatusFilter != PreselectedApplyWorkingStatusFilter;
         boolean dishTypeFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedDishTypeFilterIds, selectedDishTypeFilterIds);
         boolean dishRegionFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedDishRegionFilterIds, selectedDishRegionFilterIds);
         boolean dishMainIngredientFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedDishMainIngredientFilterIds, selectedDishMainIngredientFilterIds);
         boolean dishAllergenFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedDishAllergenFilterIds, selectedDishAllergenFilterIds);
 
-        return searchedDistanceChanged || applyWorkingStatusChanged || dishTypeFiltersChanged || dishRegionFiltersChanged || dishMainIngredientFiltersChanged || dishAllergenFiltersChanged;
+        return this.stateHasBeenReset ||
+                searchedDistanceChanged ||
+                applyRecommendedFilterChanged ||
+                applyWorkingStatusChanged ||
+                dishTypeFiltersChanged ||
+                dishRegionFiltersChanged ||
+                dishMainIngredientFiltersChanged ||
+                dishAllergenFiltersChanged;
     }
 
     @NonNull
@@ -370,8 +394,24 @@ public class DishesFiltersActivity
         return  progress;
     }
 
+    @Click(R.id.filterDishes_ResetFiltersButton)
+    public void resetButton_Clicked(){
+        PreselectedDishTypeFilterIds = new ArrayList<>();
+        PreselectedDishRegionFilterIds = new ArrayList<>();
+        PreselectedDishMainIngredientFilterIds = new ArrayList<>();
+        PreselectedDishAllergenFilterIds = new ArrayList<>();
+        PreselectedDistanceFilterValue = DEFAULT_MINIMAL_DISTANCE_FILTER_METERS;
+        PreselectedApplyRecommendedFilter = DEFAULT_APPLY_RECOMMENDED_FILTER;
+        PreselectedApplyWorkingStatusFilter = DEFAULT_APPLY_WORKING_STATUS_FILTER;
+        this.recommendedFilter.setChecked(DEFAULT_APPLY_RECOMMENDED_FILTER);
+        this.workingStatusFilter.setChecked(DEFAULT_APPLY_WORKING_STATUS_FILTER);
+        this.stateHasBeenReset = true;
+
+        afterViews();
+    }
+
     @Click(R.id.filterDishes_GoButton)
-    public void GoButton_Clicked(){
+    public void goButton_Clicked(){
         DishesFiltersActivity.this.finish();
     }
 

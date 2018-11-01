@@ -37,6 +37,12 @@ public class MenuListItem
     @SerializedName("WorkingStatus")
     public String VenueWorkingStatus;
 
+    @SerializedName("IsRecommended")
+    public boolean IsRecommended;
+
+    @SerializedName("IsNew")
+    public boolean IsNew;
+
     @SerializedName("RequestableImageMeta")
     public MenuListItemImage ImageThumbnail;
 

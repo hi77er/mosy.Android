@@ -27,7 +27,8 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_margin="5dp"
-            android:src="@drawable/info_fgwhite_bgtransparent"
+            android:src="@drawable/ic_information_outline_24"
+            android:tint="@color/colorWhite"
             android:layout_gravity="center_vertical" />
 
     </LinearLayout>

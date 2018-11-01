@@ -206,6 +206,7 @@ public class LandingActivity
         if (logoClicksCount < 50)
             logoClicksCount ++;
         else if (logoClicksCount == 50) {
+            logoClicksCount = 0;
             boolean devModeEnabledPrefValue = !preferences.getBoolean(getString(R.string.pref_developersModeEnabled), false);
             prefEditor.putBoolean(getString(R.string.pref_developersModeEnabled), devModeEnabledPrefValue);
             prefEditor.apply();

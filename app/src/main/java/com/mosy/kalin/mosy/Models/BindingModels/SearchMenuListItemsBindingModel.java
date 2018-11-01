@@ -11,13 +11,13 @@ public class SearchMenuListItemsBindingModel {
     public String Query;
     public double Latitude;
     public double Longitude;
-    public Boolean IsPromoted;
     public List<String> SelectedDishTypeFilterIds;
     public List<String> SelectedDishRegionFilterIds;
     public List<String> SelectedDishMainIngredientFilterIds;
     public List<String> SelectedDishAllergenFilterIds;
     public String LocalDateTimeOffset;
     public int SearchedDistanceMeters;
+    public boolean ShowNotRecommendedDishes;
     public boolean ShowNotWorkingVenues;
     public boolean IsDevModeActivated;
 
@@ -28,12 +28,12 @@ public class SearchMenuListItemsBindingModel {
             int totalItemsOffset,
             double latitude,
             double longitude,
-            Boolean isPromoted,
             String query,
             ArrayList<String> selectedDishTypeFilterIds,
             ArrayList<String> selectedDishRegionFilterIds,
             ArrayList<String> selectedDishMainIngredientFilterIds,
             ArrayList<String> selectedDishAllergenFilterIds,
+            boolean showNotRecommendedDishes,
             boolean showNotWorkingVenues,
             String localDateTimeOffset,
             int searchedDistanceMeters,
@@ -44,12 +44,12 @@ public class SearchMenuListItemsBindingModel {
         this.TotalItemsOffset = totalItemsOffset;
         this.Latitude = latitude;
         this.Longitude = longitude;
-        this.IsPromoted = isPromoted;
         this.Query = query;
         this.SelectedDishTypeFilterIds = selectedDishTypeFilterIds;
         this.SelectedDishRegionFilterIds = selectedDishRegionFilterIds;
         this.SelectedDishMainIngredientFilterIds = selectedDishMainIngredientFilterIds;
         this.SelectedDishAllergenFilterIds = selectedDishAllergenFilterIds;
+        this.ShowNotRecommendedDishes = showNotRecommendedDishes;
         this.ShowNotWorkingVenues = showNotWorkingVenues;
         this.LocalDateTimeOffset = localDateTimeOffset;
         this.SearchedDistanceMeters = searchedDistanceMeters;

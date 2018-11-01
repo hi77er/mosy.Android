@@ -21,6 +21,10 @@ import static android.content.pm.PackageManager.GET_META_DATA;
 public abstract class BaseActivity
         extends AppCompatActivity {
 
+    protected static final int DEFAULT_MINIMAL_DISTANCE_FILTER_METERS = 3000;
+    protected static final boolean DEFAULT_APPLY_WORKING_STATUS_FILTER = true;
+    protected static final boolean DEFAULT_APPLY_RECOMMENDED_FILTER = true;
+
     protected boolean activityStopped = false;
     protected boolean isDevelopersModeActivated = false;
 

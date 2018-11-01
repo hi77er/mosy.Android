@@ -49,6 +49,7 @@ public class VenuesFiltersActivity
     private int distanceFilterMaxValue = 10000;
     private int distanceFilterFormattedValue;
     private boolean selectedApplyWorkingStatusFilter;
+    private boolean stateHasBeenReset;
 
     private FilterVenuesPagerAdapter venueFiltersAdapter;
 
@@ -68,22 +69,22 @@ public class VenuesFiltersActivity
     @Extra
     static ArrayList<String> PreselectedVenueCultureFilterIds;
 
-    @ViewById(resName = "filtersVenues_llInitialLoadingProgress")
+    @ViewById(R.id.filtersVenues_llInitialLoadingProgress)
     LinearLayout centralProgress;
 
-    @ViewById(resName = "tl_filters_venues")
+    @ViewById(R.id.tl_filters_venues)
     TabLayout venuesFiltersTabs;
-    @ViewById(resName = "vp_filters_venues")
+    @ViewById(R.id.vp_filters_venues)
     ViewPager venuesFiltersPager;
 
-    @ViewById(resName = "filters_venues_sbWorkingTimeFilter")
+    @ViewById(R.id.filters_venues_sbWorkingTimeFilter)
     public Switch workingStatusFilter;
-    @ViewById(resName = "filters_venues_tvDistanceLabel")
+    @ViewById(R.id.filters_venues_tvDistanceLabel)
     public TextView distanceLabel;
-    @ViewById(resName = "filters_venues_sbDistanceFilter")
+    @ViewById(R.id.filters_venues_sbDistanceFilter)
     public SeekBar distanceSeekBar;
 
-    @ViewById(resName = "filterVenues_GoButton")
+    @ViewById(R.id.filterVenues_GoButton)
     public Button goButton;
 
 
@@ -343,7 +344,8 @@ public class VenuesFiltersActivity
         boolean venueAtmosphereFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedVenueAtmosphereFilterIds, selectedVenueAtmosphereFilterIds);
         boolean venueCultureFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedVenueCultureFilterIds, selectedVenueCultureFilterIds);
 
-        return applyWorkingStatusChanged ||
+        return this.stateHasBeenReset ||
+                applyWorkingStatusChanged ||
                 searchedDistanceChanged ||
                 venueAccessibilityFiltersChanged ||
                 venueAvailabilityFiltersChanged ||
@@ -370,8 +372,23 @@ public class VenuesFiltersActivity
         return  progress;
     }
 
+    @Click(R.id.filterVenues_ResetFiltersButton)
+    public void resetButton_Clicked(){
+        PreselectedVenueAccessibilityFilterIds = new ArrayList<>();
+        PreselectedVenueAtmosphereFilterIds = new ArrayList<>();
+        PreselectedVenueAvailabilityFilterIds = new ArrayList<>();
+        PreselectedVenueCultureFilterIds = new ArrayList<>();
+        PreselectedDistanceFilterValue = DEFAULT_MINIMAL_DISTANCE_FILTER_METERS;
+        PreselectedApplyWorkingStatusFilter = DEFAULT_APPLY_WORKING_STATUS_FILTER;
+        this.workingStatusFilter.setChecked(DEFAULT_APPLY_WORKING_STATUS_FILTER);
+        this.setProgress(DEFAULT_MINIMAL_DISTANCE_FILTER_METERS);
+        this.stateHasBeenReset = true;
+
+        afterViews();
+    }
+
     @Click(R.id.filterVenues_GoButton)
-    public void GoButton_Clicked(){
+    public void goButton_Clicked(){
         VenuesFiltersActivity.this.finish();
     }
 

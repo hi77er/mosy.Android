@@ -11,7 +11,6 @@ import android.support.annotation.DrawableRes;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -37,7 +36,7 @@ import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.VenueLocation;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.DateHelper;
-import com.mosy.kalin.mosy.Helpers.DrawablesPathHelper;
+import com.mosy.kalin.mosy.Helpers.DrawableHelper;
 import com.mosy.kalin.mosy.Helpers.MetricsHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
@@ -51,13 +50,10 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.FragmentById;
-import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.ViewById;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
-import retrofit2.http.Url;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_venue_details)
@@ -387,7 +383,7 @@ public class VenueDetailsActivity
     private boolean iterateFiltersHasAny(ArrayList<Filter> filters, boolean needSquareIcon, LinearLayout container) {
         boolean hasAny = false;
         for (Filter filter : filters) {
-            int drawableId = DrawablesPathHelper.getDrawableIdByFilterId(filter.Id);
+            int drawableId = DrawableHelper.getDrawableIdByFilterId(filter.Id);
             if (drawableId != 0) {
                 ImageView filterImageView = this.createFilterImage(drawableId, needSquareIcon ? 31 : 46, filter.I18nResourceDescription, filter.Description);
                 container.addView(filterImageView);

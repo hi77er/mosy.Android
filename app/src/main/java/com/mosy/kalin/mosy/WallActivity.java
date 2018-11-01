@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
@@ -27,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
@@ -44,7 +46,7 @@ import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
-import com.mosy.kalin.mosy.Helpers.LocaleHelper;
+import com.mosy.kalin.mosy.Helpers.DrawableHelper;
 import com.mosy.kalin.mosy.Helpers.MetricsHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
@@ -62,14 +64,15 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -80,7 +83,6 @@ public class WallActivity
         extends BaseActivity {
 
     private long timeStarted = 0;
-    private Boolean searchIsPromoted = true; //INFO: Normally search only promoted dishesWall, but when using query then search among all dishesWall
     private String query = "searchall";
     private int itemsInitialLoadCount = 8;
     private int itemsToLoadCountWhenScrolled = 5;
@@ -112,15 +114,17 @@ public class WallActivity
 
     @Extra
     static boolean DishesSearchModeActivated;
-    @Extra
-    static boolean ApplyWorkingStatusFilterToVenues = true;
-    @Extra
-    static int ApplyDistanceFilterToVenues = 3000;
-    @Extra
-    static int ApplyDistanceFilterToDishes = 3000;
 
     @Extra
-    static boolean ApplyWorkingStatusFilterToDishes = true;
+    static boolean ApplyRecommendedFilterToDishes = DEFAULT_APPLY_RECOMMENDED_FILTER;
+    @Extra
+    static boolean ApplyWorkingStatusFilterToVenues = DEFAULT_APPLY_WORKING_STATUS_FILTER;
+    @Extra
+    static int ApplyDistanceFilterToVenues = DEFAULT_MINIMAL_DISTANCE_FILTER_METERS;
+    @Extra
+    static int ApplyDistanceFilterToDishes = DEFAULT_MINIMAL_DISTANCE_FILTER_METERS;
+    @Extra
+    static boolean ApplyWorkingStatusFilterToDishes = DEFAULT_APPLY_WORKING_STATUS_FILTER;
     @Extra
     static ArrayList<String> SelectedVenueAccessibilityFilterIds;
     @Extra
@@ -138,28 +142,22 @@ public class WallActivity
     @Extra
     static ArrayList<String> SelectedDishAllergenFilterIds;
 
-    @ViewById(resName = "llInitialLoadingProgress")
+    @ViewById(R.id.llInitialLoadingProgress)
     LinearLayout centralProgress;
-    @ViewById(resName = "venues_llInvalidHost")
+    @ViewById(R.id.venues_llInvalidHost)
     LinearLayout invalidHostLayout;
-
     @ViewById(R.id.toolbar)
     Toolbar toolbar;
-
-    @ViewById(resName = "venues_lvVenues")
+    @ViewById(R.id.venues_lvVenues)
     RecyclerView venuesWall;
-    @ViewById(resName = "venues_lvDishes")
+    @ViewById(R.id.venues_lvDishes)
     RecyclerView dishesWall;
-
-    @ViewById(resName = "venues_lVenuesSwipeContainer")
+    @ViewById(R.id.venues_lVenuesSwipeContainer)
     SwipeRefreshLayout venuesSwipeContainer;
-    @ViewById(resName = "venues_lDishesSwipeContainer")
+    @ViewById(R.id.venues_lDishesSwipeContainer)
     SwipeRefreshLayout dishesSwipeContainer;
-
-    @ViewById(resName = "venues_ibFilters")
+    @ViewById(R.id.venues_ibFilters)
     FloatingActionButton filtersButton;
-
-    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,6 +191,17 @@ public class WallActivity
 
 
         afterViewsFinished = true;
+
+        if (checkFiltersSelected()){
+            this.filtersButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorSecondaryAmber)));
+            this.filtersButton.setImageResource(R.drawable.ic_filter_24);
+            this.filtersButton.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite)));
+        }
+        else{
+            this.filtersButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTertiaryLight)));
+            this.filtersButton.setImageResource(R.drawable.ic_filter_remove_outline_24);
+            this.filtersButton.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite)));
+        }
     }
 
     @Override
@@ -232,10 +241,8 @@ public class WallActivity
         refreshLastKnownLocation();
 
         Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction()))
             query = intent.getStringExtra(SearchManager.QUERY);
-            searchIsPromoted = null; //INFO: Normally get only promoted dishesWall, but when searched - search among all dishesWall
-        }
 
         this.loadVenueFilters();
 
@@ -284,6 +291,16 @@ public class WallActivity
         if (ConnectivityHelper.isConnected(applicationContext)) {
             RecyclerView.OnScrollListener venuesScrollListener = new RecyclerView.OnScrollListener() {
                 @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                    TypedValue tv = new TypedValue();
+//                    int actionBarHeight = 0;
+//                    ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) venuesSwipeContainer.getLayoutParams();
+//                    if (dy <= 0){ // scroll down
+//                        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+//                            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+//                    }
+//                    marginLayoutParams.setMargins(0, actionBarHeight, 0, 0);
+//                    venuesSwipeContainer.setLayoutParams(marginLayoutParams);
+
                     if (!venuesLoadingStillInAction && ConnectivityHelper.isConnected(applicationContext) && wallVenuesAdapter.APICallStillReturnsElements) {
                         venuesLoadingStillInAction = true;
 
@@ -294,8 +311,7 @@ public class WallActivity
                     }
                 }
                 @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING ||
-                        newState == RecyclerView.SCROLL_STATE_SETTLING)
+                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING)
                         filtersButton.hide();
                     else
                         filtersButton.show();
@@ -418,18 +434,27 @@ public class WallActivity
         if (ConnectivityHelper.isConnected(applicationContext)) {
             RecyclerView.OnScrollListener dishesScrollListener = new RecyclerView.OnScrollListener() {
                 @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                    TypedValue tv = new TypedValue();
+//                    int actionBarHeight = 0;
+//                    ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) dishesSwipeContainer.getLayoutParams();
+//                    if (dy <= 0){ // scroll down
+//                        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+//                            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+//                    }
+//                    marginLayoutParams.setMargins(0, actionBarHeight, 0, 0);
+//                    dishesSwipeContainer.setLayoutParams(marginLayoutParams);
+
                     if (!dishesLoadingStillInAction && ConnectivityHelper.isConnected(applicationContext) && wallDishesAdapter.APICallStillReturnsElements) {
                         dishesLoadingStillInAction = true;
 
                         //INFO: WHILE SCROLLING LOAD
                         int totalItemsCount = recyclerView.getAdapter().getItemCount();
-                        loadMoreDishes(itemsToLoadCountWhenScrolled, totalItemsCount, searchIsPromoted, query,
+                        loadMoreDishes(itemsToLoadCountWhenScrolled, totalItemsCount, query,
                                 SelectedDishTypeFilterIds, SelectedDishRegionFilterIds, SelectedDishMainIngredientFilterIds, SelectedDishAllergenFilterIds);
                     }
                 }
                 @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING ||
-                        newState == RecyclerView.SCROLL_STATE_SETTLING)
+                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING)
                         filtersButton.hide();
                     else
                         filtersButton.show();
@@ -481,7 +506,7 @@ public class WallActivity
                     wallDishesAdapter.clearItems();
 
                     //INFO: REFRESH INITIAL LOAD
-                    loadMoreDishes(itemsInitialLoadCount, 0, searchIsPromoted, query,
+                    loadMoreDishes(itemsInitialLoadCount, 0, query,
                             SelectedDishTypeFilterIds, SelectedDishRegionFilterIds, SelectedDishMainIngredientFilterIds, SelectedDishAllergenFilterIds);
                 }
                 dishesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
@@ -489,14 +514,13 @@ public class WallActivity
 
             //INFO: INITIAL LOAD
             this.wallDishesAdapter.clearItems();
-            this.loadMoreDishes(itemsInitialLoadCount, 0, searchIsPromoted, query,
+            this.loadMoreDishes(itemsInitialLoadCount, 0, query,
                     SelectedDishTypeFilterIds, SelectedDishRegionFilterIds, SelectedDishMainIngredientFilterIds, SelectedDishAllergenFilterIds);
         }
     }
 
     void loadMoreDishes(int maxResultsCount,
                         int totalItemsOffset,
-                        Boolean isPromoted,
                         String query,
                         ArrayList<String> selectedDishTypeFilterIds,
                         ArrayList<String> selectedDishRegionFilterIds,
@@ -544,15 +568,15 @@ public class WallActivity
                     applicationContext, apiCallResultListener,
                     maxResultsCount, totalItemsOffset,
                     lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
-                    isPromoted, query,
+                    query,
                     selectedDishTypeFilterIds, selectedDishRegionFilterIds, selectedDishMainIngredientFilterIds, selectedDishAllergenFilterIds,
-                    !ApplyWorkingStatusFilterToDishes, localDateTimeOffset, ApplyDistanceFilterToDishes, this.isDevelopersModeActivated);
+                    !ApplyRecommendedFilterToDishes, !ApplyWorkingStatusFilterToDishes, localDateTimeOffset, ApplyDistanceFilterToDishes, this.isDevelopersModeActivated);
         }
         else {
             Toast.makeText(applicationContext, R.string.activity_wall_locationNotResolvedToast, Toast.LENGTH_LONG).show();
         }
 
-    }
+        }
 
             private void loadMenuListItemImageThumbnail(DishWallItem dishWallItem) {
                 AsyncTaskListener<byte[]> mliImageResultListener = new AsyncTaskListener<byte[]>() {
@@ -584,13 +608,17 @@ public class WallActivity
         this.invalidHostLayout.setVisibility(View.VISIBLE);
     }
 
-    @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        MenuItem actionVenues = menu.findItem(R.id.action_venues);
+        DrawableHelper.changeTint(actionVenues.getIcon(), getResources().getColor(R.color.colorWhite), true);
+        actionVenues.setVisible(DishesSearchModeActivated);
 
+        MenuItem actionDishes = menu.findItem(R.id.action_dishes);
+        DrawableHelper.changeTint(actionDishes.getIcon(), getResources().getColor(R.color.colorWhite), true);
+        actionDishes.setVisible(!DishesSearchModeActivated);
 
-        menu.findItem(R.id.action_venues).setVisible(!DishesSearchModeActivated);
-        menu.findItem(R.id.action_dishes).setVisible(DishesSearchModeActivated);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        setSearchIcons(searchView);
 
         String hint = DishesSearchModeActivated ?
                 getString(R.string.activity_wall_searchDishesHint) :
@@ -598,41 +626,57 @@ public class WallActivity
         searchView.setQueryHint(hint);
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
-        //searchView.setIconifiedByDefault(false); // gives focus to the search automatically
-
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_venues:
-                this.navigateVenuesSearch();
-                return true;
-            case R.id.action_dishes:
-                this.navigateDishesSearch();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+    private void setSearchIcons(SearchView searchView) {
+        try {
+            Field closeField = SearchView.class.getDeclaredField("mCloseButton");
+            closeField.setAccessible(true);
+            ImageView closeBtn = (ImageView) closeField.get(searchView);
+            closeBtn.setImageResource(R.drawable.ic_close_32);
+            closeBtn.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite)));
+
+            Field searchField = SearchView.class.getDeclaredField("mSearchButton");
+            searchField.setAccessible(true);
+            ImageView searchButton = (ImageView) searchField.get(searchView);
+            searchButton.setImageResource(R.drawable.ic_magnify_32);
+            searchButton.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite)));
+
+        } catch (NoSuchFieldException e) {
+            Log.e("SearchView", e.getMessage(), e);
+        } catch (IllegalAccessException e) {
+            Log.e("SearchView", e.getMessage(), e);
         }
     }
 
-    private void navigateLoginActivity() {
-        Intent intent = new Intent(WallActivity.this, LoginActivity_.class);
-        startActivity(intent);
+    @OptionsItem(R.id.action_venues)
+    void actionVenuesClicked(MenuItem item) {
+        this.navigateVenuesSearch();
     }
 
-    private void navigateUserProfileActivity () {
-        Intent intent = new Intent (WallActivity.this, UserProfileActivity_.class);
-        startActivity(intent);
+    @OptionsItem(R.id.action_dishes)
+    void actionDishesClicked(MenuItem item) {
+        this.navigateDishesSearch();
     }
 
-    private void navigateToWallActivity(boolean isDishMode) {
-        Intent intent = new Intent(WallActivity.this, WallActivity_.class);
-        intent.putExtra("DishesSearchModeActivated", isDishMode); //else find dishesWall
-        startActivity(intent);
+    private boolean checkFiltersSelected(){
+        return (DishesSearchModeActivated &&
+                ((SelectedDishTypeFilterIds != null && SelectedDishTypeFilterIds.size() > 0) ||
+                (SelectedDishRegionFilterIds != null && SelectedDishRegionFilterIds.size() > 0) ||
+                (SelectedDishMainIngredientFilterIds != null && SelectedDishMainIngredientFilterIds.size() > 0) ||
+                (SelectedDishAllergenFilterIds != null && SelectedDishAllergenFilterIds.size() > 0) ||
+                 ApplyDistanceFilterToDishes != DEFAULT_MINIMAL_DISTANCE_FILTER_METERS ||
+                 ApplyRecommendedFilterToDishes != DEFAULT_APPLY_RECOMMENDED_FILTER ||
+                 ApplyWorkingStatusFilterToDishes != DEFAULT_APPLY_WORKING_STATUS_FILTER))
+                ||
+               (!DishesSearchModeActivated &&
+                ((SelectedVenueAccessibilityFilterIds != null && SelectedVenueAccessibilityFilterIds.size() > 0) ||
+                (SelectedVenueAvailabilityFilterIds != null && SelectedVenueAvailabilityFilterIds.size() > 0) ||
+                (SelectedVenueAtmosphereFilterIds != null && SelectedVenueAtmosphereFilterIds.size() > 0) ||
+                (SelectedVenueCultureFilterIds != null && SelectedVenueCultureFilterIds.size() > 0) ||
+                 ApplyDistanceFilterToVenues != DEFAULT_MINIMAL_DISTANCE_FILTER_METERS ||
+                 ApplyWorkingStatusFilterToVenues != DEFAULT_APPLY_WORKING_STATUS_FILTER));
     }
 
     @Override
@@ -661,6 +705,7 @@ public class WallActivity
         if (DishesSearchModeActivated) {
             Intent intent = new Intent(WallActivity.this, DishesFiltersActivity_.class);
             intent.putExtra("PreselectedDistanceFilterValue", ApplyDistanceFilterToDishes);
+            intent.putExtra("PreselectedApplyRecommendedFilter", ApplyRecommendedFilterToDishes);
             intent.putExtra("PreselectedApplyWorkingStatusFilter", ApplyWorkingStatusFilterToDishes);
             intent.putExtra("PreselectedDishTypeFilterIds", SelectedDishTypeFilterIds);
             intent.putExtra("PreselectedDishRegionFilterIds", SelectedDishRegionFilterIds);

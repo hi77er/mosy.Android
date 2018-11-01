@@ -22,8 +22,8 @@
     <string name="pref_authTokenExpiresInSeconds_user">prefAuthTokenExpiresInSeconds</string>
 
     <!-- AndroidManifest -->
-    <string name="app_name">"Tastespot"</string>
-    <string name="manifest_landingActivityTitle" translatable="false">"Tastespot"</string>
+    <string name="app_name">"Treatspark"</string>
+    <string name="manifest_landingActivityTitle" translatable="false">"Treatspark"</string>
     <string name="manifest_venuesActivityTitle" translatable="false">"Venues"</string>
     <string name="manifest_venueDetailsActivityTitle" translatable="false">"Venue Details"</string>
 
@@ -91,7 +91,7 @@
     <!-- Activity Venues Filters -->
     <string name="activity_venuesFilters_title">"Filter venues"</string>
     <string name="activity_venuesFilters_goBtn">"Go"</string>
-    <string name="activity_venuesFilters_showClosedTextView">Onl show open venues</string>
+    <string name="activity_venuesFilters_showClosedTextView">Only show open venues</string>
     <string name="activity_venuesFilters_distanceMeasureTypeKilometers">km</string>
     <string name="activity_venuesFilters_distanceFilterTextView">Search distance:</string>
     <string name="activity_venuesFilters_distanceMeasureTypeMeters">m</string>
@@ -194,7 +194,7 @@
     <string name="activity_dishesFilters_ingredientsFiltersTitle">Ingredients</string>
     <string name="activity_dishesFilters_allergensFiltersTitle">Allergens</string>
     <string name="activity_dishesFilters_allergensFiltersNote">* Selecting allergens will hide dishes and drinks that contain them in your search results.</string>
-    <string name="activity_dishesFilters_distanceFilterTextView">Search distance:</string>
+    <string name="activity_dishesFilters_distanceFilterTextView">Distance:</string>
     <string name="activity_dishesFilters_distanceMeasureTypeMeters">m</string>
     <string name="activity_dishesFilters_distanceMeasureTypeKilometers">km</string>
     <string name="DishesFilterTypeSaladsName">"Salads"</string>
@@ -267,5 +267,12 @@
     <string name="DishesFilterMainIngredientWhiteMeatDescription">E.g. chicken, turkey, duck, etc.</string>
     <string name="DishesFilterMainIngredientRedMeatDescription">E.g. beef, Pork, Game, etc.</string>
     <string name="activity_userprofile_logoutBtn">Sign out</string>
+    <string name="activity_dishesFilters_showRecommendedTextView">Only show recommended items</string>
+    <string name="activity_dishesFilters_resetFiltersBtn">Reset</string>
+    <string name="item_dish_workingStatusOpenedLabelTextView">OPENED</string>
+    <string name="item_dish_workingStatusClosedLabelTextView">CLOSED</string>
+    <string name="item_dish_workingStatus247LabelTextView">24/7</string>
+    <string name="item_dish_recommendedLabelTextView">R+</string>
+    <string name="item_dish_newLabelTextView">NEW</string>
 
 </resources>

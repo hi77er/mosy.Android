@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.BusinessHoursHelper;
@@ -43,14 +44,18 @@ public class VenueWallItemView
     TextView Name;
     @ViewById(resName = "venueItem_tvClass")
     TextView Class;
-    @ViewById(resName = "menuListItem_tvWorkingStatus")
-    TextView WorkingStatus;
+
     @ViewById(resName = "venueItem_tvDistance")
     TextView DistanceFromDevice;
     @ViewById(resName = "venueItem_tvWalkingMinutes")
     TextView WalkingMinutes;
     @ViewById(resName = "venueItem_ivOutdoorThumbnail")
     ImageView OutdoorImageThumbnail;
+
+    @ViewById(R.id.venueItem_tvWorkingStatusLabel)
+    TextView workingStatusLabel;
+//    @ViewById(R.id.venueItem_tvRecommendedLabel)
+//    TextView newLabel;
 
     public VenueWallItemView(Context context) {
         super(context);
@@ -76,24 +81,28 @@ public class VenueWallItemView
                 IsUsingDefaultThumbnail = true;
             }
 
-            com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus status = BusinessHoursHelper.getWorkingStatus(venue.VenueBusinessHours);
+            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(venue.VenueBusinessHours);
+            this.workingStatusLabel.setVisibility(VISIBLE);
             switch (status){
                 case Open:
-                    this.WorkingStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.open_moss_nopadding, 0, 0, 0);
+                    this.workingStatusLabel.setText(getResources().getString(R.string.item_dish_workingStatusOpenedLabelTextView));
                     break;
                 case Open247:
-                    this.WorkingStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.open247_emerald_nopadding, 0, 0, 0);
+                    this.workingStatusLabel.setText(getResources().getString(R.string.item_dish_workingStatus247LabelTextView));
                     break;
                 case Closed:
-                    this.WorkingStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.closed_salmon_nopadding, 0, 0, 0);
+                    this.workingStatusLabel.setText(getResources().getString(R.string.item_dish_workingStatusClosedLabelTextView));
                     break;
-                case Unknown: break;
+                case Unknown:
+                    this.workingStatusLabel.setVisibility(GONE);
+                    break;
             }
 
             if (venue.DistanceToCurrentDeviceLocation > 0)
             {
                 String distance = LocationHelper.buildDistanceText(venue.DistanceToCurrentDeviceLocation);
                 this.DistanceFromDevice.setText(distance);
+                this.WalkingMinutes.setVisibility(View.VISIBLE);
 
                 String timeWalking = LocationHelper.buildMinutesWalkingText(venue.DistanceToCurrentDeviceLocation);
                 timeWalking = (timeWalking.length() > 0 ? timeWalking : StringHelper.empty());
@@ -102,7 +111,7 @@ public class VenueWallItemView
                     this.WalkingMinutes.setText(timeWalking);
                     this.WalkingMinutes.setVisibility(View.VISIBLE);
                 } else {
-                    this.WalkingMinutes.setVisibility(View.GONE);
+                    this.WalkingMinutes.setVisibility(View.INVISIBLE);
                 }
             }
         }

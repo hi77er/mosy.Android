@@ -37,20 +37,25 @@ public class DishWallItemView
     private MenuListItem MenuListItem;
 
 
-    @ViewById(resName = "menuListItem_tvName")
+    @ViewById(R.id.menuListItem_tvName)
     TextView nameTextView;
-    @ViewById(resName = "menuListItem_tvVenueName")
+    @ViewById(R.id.menuListItem_tvVenueName)
     TextView venueNameTextView;
-    @ViewById(resName = "menuListItem_ivThumbnail")
+    @ViewById(R.id.menuListItem_ivThumbnail)
     ImageView imageThumbnail;
 
-    @ViewById(resName = "menuListItem_tvWorkingStatus")
-    TextView workingStatusTextView;
-    @ViewById(resName = "menuListItem_tvDistance")
+    @ViewById(R.id.menuListItem_tvWorkingStatusLabel)
+    TextView workingStatusLabel;
+    @ViewById(R.id.menuListItem_tvRecommendedLabel)
+    TextView recommendedLabel;
+    @ViewById(R.id.menuListItem_tvNewLabel)
+    TextView newLabel;
+
+    @ViewById(R.id.menuListItem_tvDistance)
     TextView distanceFromDeviceTextView;
-    @ViewById(resName = "menuListItem_tvWalkingTime")
+    @ViewById(R.id.menuListItem_tvWalkingTime)
     TextView walkingTimeTextView;
-    @ViewById(resName = "menuListItem_tvPriceTag")
+    @ViewById(R.id.menuListItem_tvPriceTag)
     TextView priceTagTextVIew;
 //    @ViewById(resName = "menuListItem_tvRatingTag")
 //    TextView ratingTagTextView;
@@ -84,18 +89,20 @@ public class DishWallItemView
                 IsUsingDefaultThumbnail = true;
             }
 
+            this.distanceFromDeviceTextView.setVisibility(INVISIBLE);
+            this.walkingTimeTextView.setVisibility(INVISIBLE);
             if (menuListItem.DistanceToCurrentDeviceLocation > 0)
             {
                 String distance = LocationHelper.buildDistanceText(menuListItem.DistanceToCurrentDeviceLocation);
-                this.distanceFromDeviceTextView.setText(distance);
+                if (StringHelper.isNotNullOrEmpty(distance)){
+                    this.distanceFromDeviceTextView.setText(distance);
+                    this.distanceFromDeviceTextView.setVisibility(VISIBLE);
 
-                String timeWalking = LocationHelper.buildMinutesWalkingText(menuListItem.DistanceToCurrentDeviceLocation);
-                timeWalking = (timeWalking.length() > 0 ? timeWalking : StringHelper.empty());
-                if (!timeWalking.equals(StringHelper.empty())) {
-                    this.walkingTimeTextView.setText(timeWalking);
-                    this.walkingTimeTextView.setVisibility(VISIBLE);
-                } else {
-                    this.walkingTimeTextView.setVisibility(GONE);
+                    String timeWalking = LocationHelper.buildMinutesWalkingText(menuListItem.DistanceToCurrentDeviceLocation);
+                    if (StringHelper.isNotNullOrEmpty(timeWalking)) {
+                        this.walkingTimeTextView.setText(timeWalking);
+                        this.walkingTimeTextView.setVisibility(VISIBLE);
+                    }
                 }
             }
 
@@ -105,18 +112,23 @@ public class DishWallItemView
             }
 
             WorkingStatus status = BusinessHoursHelper.getWorkingStatus(menuListItem.VenueBusinessHours);
+            this.workingStatusLabel.setVisibility(VISIBLE);
             switch (status){
                 case Open:
-                    this.workingStatusTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.open_moss_nopadding, 0, 0, 0);
+                    this.workingStatusLabel.setText(getResources().getString(R.string.item_dish_workingStatusOpenedLabelTextView));
                     break;
                 case Open247:
-                    this.workingStatusTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.open247_emerald_nopadding, 0, 0, 0);
+                    this.workingStatusLabel.setText(getResources().getString(R.string.item_dish_workingStatus247LabelTextView));
                     break;
                 case Closed:
-                    this.workingStatusTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.closed_salmon_nopadding, 0, 0, 0);
+                    this.workingStatusLabel.setText(getResources().getString(R.string.item_dish_workingStatusClosedLabelTextView));
                     break;
-                case Unknown: break;
+                case Unknown:
+                    this.workingStatusLabel.setVisibility(GONE);
+                    break;
             }
+            this.recommendedLabel.setVisibility(menuListItem.IsRecommended ? VISIBLE : GONE);
+            this.newLabel.setVisibility(menuListItem.IsNew ? VISIBLE : GONE);
         }
     }
 
