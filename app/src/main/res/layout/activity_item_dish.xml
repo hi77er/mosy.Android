@@ -5,32 +5,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="ltr"
-    android:layout_alignParentEnd="true"
-    android:paddingEnd="10dp"
     android:background="@color/colorWhite">
 
     <ImageView
         android:id="@+id/menuListItem_ivThumbnail"
         android:layout_width="130dp"
         android:layout_height="130dp"
-        android:layout_marginEnd="5dp"
+        android:layout_margin="7dp"
         android:src="@drawable/eat_paprika_100x100" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="4dp"
+        android:layout_marginTop="7dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
+            android:minHeight="72dp"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="5"
-                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
@@ -39,241 +38,150 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/item_dish_nameTextView"
+                    android:textColor="@color/soft"
                     android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/menuListItem_tvVenueName"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:text="@string/item_dish_venueNameTextView"
                     android:textSize="14sp"
-                    android:textColor="@color/soft"
+                    android:textColor="@color/softer"
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/menuListItem_tvWorkingStatus"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                android:gravity="center_vertical"
-                android:tooltipText="@string/item_dish_venueNameTextView"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!--<TextView-->
+                    <!--android:id="@+id/menuListItem_tvWorkingStatus"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:textSize="25sp"-->
+                    <!--android:textStyle="bold"-->
+                    <!--android:gravity="center"-->
+                    <!--android:tooltipText="@string/item_dish_venueNameTextView"/>-->
+
+                <TextView
+                    android:id="@+id/menuListItem_tvWorkingStatusLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:textAlignment="center"
+                    android:background="@color/colorDarkRed"
+                    android:textSize="9sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorWhite" />
+
+                <TextView
+                    android:id="@+id/menuListItem_tvRecommendedLabel"
+                    android:layout_gravity="start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/item_dish_recommendedLabelTextView"
+                    android:background="@color/colorSecondaryAmber"
+                    android:textSize="10sp"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorWhite" />
+
+                <TextView
+                    android:id="@+id/menuListItem_tvNewLabel"
+                    android:layout_gravity="start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="@string/item_dish_newLabelTextView"
+                    android:background="@color/colorGreen"
+                    android:textSize="9sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorWhite" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="7dp">
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:paddingStart="3dp"
-                android:paddingTop="3dp"
-                android:background="@color/colorPrimaryVeryLight">
+                android:paddingTop="3dp">
 
-                <TextView
-                    android:id="@+id/menuListItem_tvDistance"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:drawableStart="@drawable/distance_paprika"
-                    android:textStyle="bold"
-                    android:textSize="19sp"
-                    android:textColor="@color/colorPrimary"
-                    android:gravity="center_vertical" />
-
-                <TextView
-                    android:id="@+id/menuListItem_tvRatingTag"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:drawableStart="@drawable/rating_apricot"
-                    android:textColor="@color/colorPrimaryApricot"
-                    android:textSize="19sp"
-                    android:textStyle="bold"
-                    android:text="7"
-                    android:gravity="center_vertical"/>
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingStart="3dp"
-                android:paddingBottom="3dp"
-                android:background="@color/colorPrimaryVeryLight">
-
-                <TextView
-                    android:id="@+id/menuListItem_tvWalkingTime"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:drawableStart="@drawable/walkingtime_paprika"
-                    android:textStyle="bold"
-                    android:textSize="19sp"
-                    android:textColor="@color/colorPrimary"
-                    android:gravity="center_vertical"
-                    android:visibility="gone"/>
-
-                <TextView
-                    android:id="@+id/menuListItem_tvPriceTag"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:drawableStart="@drawable/pricetag_paprika"
-                    android:textStyle="bold"
-                    android:textSize="19sp"
-                    android:textColor="@color/colorPrimary"
-                    android:gravity="center_vertical"
-                    android:visibility="invisible" />
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
-
-<!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<LinearLayout-->
-    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:orientation="vertical"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layoutDirection="ltr"-->
-    <!--android:layout_alignParentEnd="true"-->
-    <!--android:paddingStart="10dp"-->
-    <!--android:paddingTop="4dp"-->
-    <!--android:paddingEnd="10dp"-->
-    <!--android:paddingBottom="6dp"-->
-    <!--android:background="@color/colorWhite">-->
-
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="45dp"-->
-        <!--android:orientation="horizontal">-->
-
-        <!--<LinearLayout-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_weight="6"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:orientation="vertical">-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/menuListItem_tvName"-->
-                <!--android:layout_gravity="start"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="@string/item_dish_nameTextView"-->
-                <!--android:textSize="17sp"-->
-                <!--android:textStyle="bold" />-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/menuListItem_tvVenueName"-->
-                <!--android:layout_gravity="start"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="@string/item_dish_venueNameTextView"-->
-                <!--android:textSize="14sp"-->
-                <!--android:textColor="@color/soft"-->
-                <!--android:textStyle="bold" />-->
-        <!--</LinearLayout>-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/menuListItem_tvWorkingStatus"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:textSize="25sp"-->
-            <!--android:textStyle="bold"-->
-            <!--android:gravity="center_vertical"/>-->
-    <!--</LinearLayout>-->
-
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="horizontal">-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/menuListItem_ivThumbnail"-->
-            <!--android:layout_width="80dp"-->
-            <!--android:layout_height="80dp"-->
-            <!--android:layout_marginEnd="5dp"-->
-            <!--android:src="@drawable/eat_paprika_100x100" />-->
-
-        <!--<LinearLayout-->
-            <!--android:orientation="vertical"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
-
-            <!--<LinearLayout-->
-                <!--android:orientation="horizontal"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="40dp"-->
-                <!--android:paddingStart="3dp"-->
-                <!--android:paddingTop="3dp"-->
-                <!--android:background="@color/colorPrimaryVeryLight">-->
-
-                <!--<TextView-->
-                    <!--android:id="@+id/menuListItem_tvDistance"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:drawableStart="@drawable/distance_paprika"-->
-                    <!--android:textStyle="bold"-->
-                    <!--android:textSize="19sp"-->
-                    <!--android:textColor="@color/colorPrimary"-->
-                    <!--android:gravity="center_vertical" />-->
+                android:layout_height="57dp">
 
                 <!--<TextView-->
                     <!--android:id="@+id/menuListItem_tvRatingTag"-->
                     <!--android:layout_width="0dp"-->
-                    <!--android:layout_weight="1"-->
+                    <!--android:layout_weight="2"-->
                     <!--android:layout_height="match_parent"-->
                     <!--android:drawableStart="@drawable/rating_apricot"-->
                     <!--android:textColor="@color/colorPrimaryApricot"-->
-                    <!--android:textSize="19sp"-->
+                    <!--android:textSize="18sp"-->
                     <!--android:textStyle="bold"-->
                     <!--android:text="7"-->
-                    <!--android:gravity="center_vertical"/>-->
-            <!--</LinearLayout>-->
-
-            <!--<LinearLayout-->
-                <!--android:orientation="horizontal"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="40dp"-->
-                <!--android:paddingStart="3dp"-->
-                <!--android:paddingBottom="3dp"-->
-                <!--android:background="@color/colorPrimaryVeryLight">-->
-
-                <!--<TextView-->
-                    <!--android:id="@+id/menuListItem_tvWalkingTime"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:drawableStart="@drawable/walkingtime_paprika"-->
-                    <!--android:textStyle="bold"-->
-                    <!--android:textSize="19sp"-->
-                    <!--android:textColor="@color/colorPrimary"-->
-                    <!--android:gravity="center_vertical"-->
-                    <!--android:visibility="gone"/>-->
-
-                <!--<TextView-->
-                    <!--android:id="@+id/menuListItem_tvPriceTag"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:drawableStart="@drawable/pricetag_paprika"-->
-                    <!--android:textStyle="bold"-->
-                    <!--android:textSize="19sp"-->
-                    <!--android:textColor="@color/colorPrimary"-->
                     <!--android:gravity="center_vertical"-->
                     <!--android:visibility="invisible" />-->
-            <!--</LinearLayout>-->
-        <!--</LinearLayout>-->
-    <!--</LinearLayout>-->
-<!--</LinearLayout>-->
+
+                <TextView
+                    android:id="@+id/menuListItem_tvDistance"
+                    android:visibility="invisible"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:padding="3dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:textColor="@color/soft"
+                    android:drawableTop="@drawable/ic_map_marker_distance_24"
+                    android:drawableTint="@color/soft"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:id="@+id/menuListItem_tvWalkingTime"
+                    android:visibility="invisible"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:textColor="@color/soft"
+                    android:drawableTop="@drawable/ic_timer_sand_24"
+                    android:drawableTint="@color/soft"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:id="@+id/menuListItem_tvPriceTag"
+                    android:visibility="invisible"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:textColor="@color/soft"
+                    android:drawableTop="@drawable/ic_tag_24"
+                    android:drawableTint="@color/soft"
+                    android:gravity="center_vertical" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

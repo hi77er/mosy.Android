@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorWhite"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:id="@+id/venue_lVenueTitle"
+        android:orientation="horizontal"
+        android:layout_gravity="start"
+        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:id="@+id/venue_ivIndoor"
+            android:layout_gravity="start"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/venue_default_thumbnail" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp">
+
+            <TextView
+                android:id="@+id/venue_tvName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Venue Name"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/venue_tvClass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Class"
+                android:layout_marginTop="5dp"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llInitialLoadingProgress"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <ProgressBar
+                android:id="@+id/pbHeaderProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true" >
+            </ProgressBar>
+        </LinearLayout>
+
+        <android.support.v4.view.ViewPager
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/venue_vpMenu"
+            android:visibility="gone"
+            android:layout_weight="13"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_gravity="end"
+            android:background="@color/colorWhite">
+
+            <com.mosy.kalin.mosy.CustomControls.PagerClickTitleStrip
+                android:id="@+id/pager_title_strip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorMenuTitle"
+                android:background="@color/colorMenuBackground" />
+
+        </android.support.v4.view.ViewPager>
+
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/venue_llNoMenu"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_weight="13"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:background="@color/colorMenuBackground">
+
+            <TextView
+                android:id="@+id/venue_tvNoMenu"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Menu not available"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:layout_centerInParent="true" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/venueMenu_llToolbox"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="4dp"
+            android:orientation="horizontal"
+            android:layoutDirection="rtl"
+            android:background="@color/colorMenuToolboxBackground"
+            android:visibility="gone">
+
+            <Spinner
+                android:id="@+id/venueMenu_spLanguage"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimarySalmonLight"
+                android:popupElevation="0dp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

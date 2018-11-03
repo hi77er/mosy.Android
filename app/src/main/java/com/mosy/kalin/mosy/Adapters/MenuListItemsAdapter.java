@@ -11,10 +11,10 @@ import android.widget.ExpandableListAdapter;
 
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.R;
-import com.mosy.kalin.mosy.Views.MenuListItemDetailsView;
-import com.mosy.kalin.mosy.Views.MenuListItemDetailsView_;
-import com.mosy.kalin.mosy.Views.MenuListItemView;
-import com.mosy.kalin.mosy.Views.MenuListItemView_;
+import com.mosy.kalin.mosy.ItemViews.MenuListItemDetailsView;
+import com.mosy.kalin.mosy.ItemViews.MenuListItemDetailsView_;
+import com.mosy.kalin.mosy.ItemViews.MenuListItemView;
+import com.mosy.kalin.mosy.ItemViews.MenuListItemView_;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;

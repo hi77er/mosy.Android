@@ -1,284 +1,295 @@
 package com.mosy.kalin.mosy.Services;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IVenuesRepository;
+import com.mosy.kalin.mosy.DTOs.HttpResponses.PublicMenuResponse;
 import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;
-import com.mosy.kalin.mosy.DTOs.VenueBadgeEndorsement;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
 import com.mosy.kalin.mosy.DTOs.VenueContacts;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.VenueLocation;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
+import com.mosy.kalin.mosy.Models.Responses.VenueFiltersResult;
 
 import org.androidannotations.annotations.EBean;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 @EBean
 public class VenuesService {
 
+    private AccountService accountService = new AccountService();
 
-    public void getById(Context applicationContext, AsyncTaskListener<Venue> listener, String venueId)
+    public void getById(Context applicationContext,
+                        AsyncTaskListener<Venue> apiCallResultListener,
+                        Runnable onInvalidHost,
+                        String venueId)
     {
-        String authTokenHeader = new AccountService().getAuthTokenHeader(applicationContext);
-        IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
-        try {
-            Call<Venue> callResult =  repository.getById(authTokenHeader, venueId);
-            callResult.enqueue(new Callback<Venue>() {
-                @Override
-                public void onResponse(Call<Venue> call, Response<Venue> response) {
-                    Venue venue = response.body();
-                    listener.onPostExecute(venue);
-                }
-                @Override
-                public void onFailure(Call<Venue> call, Throwable t) {
-                    call.cancel();
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                    try {
+                        Call<Venue> callResult =  repository.getById(authTokenHeader, venueId);
+                        apiCallResultListener.onPreExecute();
+                        callResult.enqueue(new Callback<Venue>() {
+                            @Override public void onResponse(@NonNull Call<Venue> call, @NonNull Response<Venue> response) {
+                                Venue venue = response.body();
+                                apiCallResultListener.onPostExecute(venue);
+                            }
+                            @Override public void onFailure(@NonNull Call<Venue> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                },
+                onInvalidHost);
     }
 
     public void getVenues(Context applicationContext,
-                          AsyncTaskListener<ArrayList<Venue>> listener,
+                          AsyncTaskListener<ArrayList<Venue>> apiCallResultListener,
+                          Runnable onInvalidHost,
                           int maxResultsCount,
                           int totalItemsOffset,
                           double latitude,
                           double longitude,
                           String query,
-                          Integer localDayOfWeek,
-                          String localTime)
+                          List<String> venueAccessibilityFilterIds,
+                          List<String> venueAvailabilityFilterIds,
+                          List<String> venueAtmosphereFilterIds,
+                          List<String> venueCultureFilterIds,
+                          boolean showNotWorkingVenues,
+                          String localDateTimeOffset,
+                          int distanceFilterValue,
+                          boolean isDevModeActivated)
     {
-        String authTokenHeader = new AccountService().getAuthTokenHeader(applicationContext);
-        SearchVenuesBindingModel model = new SearchVenuesBindingModel(
-                authTokenHeader,
-                maxResultsCount,
-                totalItemsOffset,
-                latitude,
-                longitude,
-                query,
-                localDayOfWeek,
-                localTime);
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                 apiCallResultListener::onPreExecute,
+                () -> {
+                    String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    SearchVenuesBindingModel model = new SearchVenuesBindingModel(
+                            authTokenHeader, maxResultsCount, totalItemsOffset,
+                            latitude, longitude, query, venueAccessibilityFilterIds, venueAvailabilityFilterIds, venueAtmosphereFilterIds, venueCultureFilterIds,
+                            showNotWorkingVenues, localDateTimeOffset, distanceFilterValue, isDevModeActivated);
 
-        IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
-        try {
-            Call<ArrayList<Venue>> callResult =  repository.loadVenues(authTokenHeader, model);
-            callResult.enqueue(new Callback<ArrayList<Venue>>() {
-                @Override
-                public void onResponse(Call<ArrayList<Venue>> call, Response<ArrayList<Venue>> response) {
-                    ArrayList<Venue> venues = response.body();
-                    listener.onPostExecute(venues);
-                }
-                @Override
-                public void onFailure(Call<ArrayList<Venue>> call, Throwable t) {
-                    call.cancel();
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                    try {
+                        Call<ArrayList<Venue>> callResult =  repository.loadVenues(authTokenHeader, model);
+                        apiCallResultListener.onPreExecute();
+                        callResult.enqueue(new Callback<ArrayList<Venue>>() {
+                            @Override public void onResponse(@NonNull Call<ArrayList<Venue>> call, @NonNull Response<ArrayList<Venue>> response) {
+                                ArrayList<Venue> venues = response.body();
+                                 apiCallResultListener.onPostExecute(venues);
+                            }
+                            @Override public void onFailure(@NonNull Call<ArrayList<Venue>> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                },
+                null);
     }
 
-//    public void getImageMetaIndoor(Context applicationContext, AsyncTaskListener<VenueImage> listener, String venueId)
-//    {
-//        String authTokenHeader = new AccountService().getAuthTokenHeader(applicationContext);
-//
-//        GetVenueIndoorImageMetaBindingModel iiModel = new GetVenueIndoorImageMetaBindingModel(authTokenHeader, venueId);
-//        new LoadVenueIndoorImageMetadataAsyncTask(listener).execute(iiModel);
-//    }
-
-//    public void getMenu(Context applicationContext, AsyncTaskListener<ArrayList<MenuList>> listener, String venueId)
-//    {
-//        String authTokenHeader = new AccountService().getAuthTokenHeader(applicationContext);
-//
-//        GetVenueMenuBindingModel mModel = new GetVenueMenuBindingModel(authTokenHeader, venueId);
-//        new LoadVenueMenuAsyncTask(listener).execute(mModel);
-//    }
-
-//    public void getLocation(Context applicationContext, AsyncTaskListener<VenueLocation> listener, String venueId)
-//    {
-//        String authTokenHeader = new AccountService().getAuthTokenHeader(applicationContext);
-//
-//        GetVenueLocationBindingModel mModel = new GetVenueLocationBindingModel(authTokenHeader, venueId);
-//        new LoadVenueLocationAsyncTask(listener).execute(mModel);
-//    }
-
     public void getContacts(Context applicationContext,
-                                     AsyncTaskListener<VenueContacts> listener,
-                                     String venueId)
+                            AsyncTaskListener<VenueContacts> apiCallResultListener,
+                            Runnable onInvalidHost,
+                            String venueId)
     {
-        String authToken = new AccountService().getAuthTokenHeader(applicationContext);
-        IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
-        try {
-            Call<VenueContacts> call = repository.getContacts(authToken, venueId);
-            call.enqueue(new Callback<VenueContacts>() {
-                @Override
-                public void onResponse(Call<VenueContacts> call, Response<VenueContacts> response) {
-                    VenueContacts result = response.body();
-                    listener.onPostExecute(result);
-
-                }
-
-                @Override
-                public void onFailure(Call<VenueContacts> call, Throwable t) {
-                    call.cancel();
-                }
-            });
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
+                    try {
+                        Call<VenueContacts> call = repository.getContacts(authToken, venueId);
+                        apiCallResultListener.onPreExecute();
+                        call.enqueue(new Callback<VenueContacts>() {
+                            @Override public void onResponse(@NonNull Call<VenueContacts> call, @NonNull Response<VenueContacts> response) {
+                                VenueContacts result = response.body();
+                                apiCallResultListener.onPostExecute(result);
+                            }
+                            @Override public void onFailure(@NonNull Call<VenueContacts> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    }
+                    catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                },
+                onInvalidHost);
     }
 
     public void getBusinessHours(Context applicationContext,
-                                 AsyncTaskListener<VenueBusinessHours> listener,
+                                 AsyncTaskListener<VenueBusinessHours> apiCallResultListener,
+                                 Runnable onInvalidHost,
                                  String venueId)
     {
-        String authToken = new AccountService().getAuthTokenHeader(applicationContext);
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
-        IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
-
-       try {
-            Call<VenueBusinessHours> callResult =  repository.getBusinessHours(authToken, venueId);
-            callResult.enqueue(new Callback<VenueBusinessHours>() {
-                @Override
-                public void onResponse(Call<VenueBusinessHours> call, Response<VenueBusinessHours> response) {
-                    VenueBusinessHours venues = response.body();
-                    listener.onPostExecute(venues);
-                }
-                @Override
-                public void onFailure(Call<VenueBusinessHours> call, Throwable t) {
-                    call.cancel();
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                    try {
+                        Call<VenueBusinessHours> callResult =  repository.getBusinessHours(authToken, venueId);
+                        apiCallResultListener.onPreExecute();
+                        callResult.enqueue(new Callback<VenueBusinessHours>() {
+                            @Override public void onResponse(@NonNull Call<VenueBusinessHours> call, @NonNull Response<VenueBusinessHours> response) {
+                                VenueBusinessHours venues = response.body();
+                                apiCallResultListener.onPostExecute(venues);
+                            }
+                            @Override public void onFailure(@NonNull Call<VenueBusinessHours> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                },
+                onInvalidHost);
     }
 
-    public void getBadgeEndorsements(Context applicationContext,
-                                     AsyncTaskListener<ArrayList<VenueBadgeEndorsement>> listener,
-                                     String venueId)
+    public void getLocation(Context applicationContext,
+                            AsyncTaskListener<VenueLocation> apiCallResultListener,
+                            Runnable onInvalidHost,
+                            String venueId)
     {
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
-        try {
-            String authToken = new AccountService().getAuthTokenHeader(applicationContext);
-            Retrofit retrofitClient = RetrofitAPIClientFactory.getClient();
-            IVenuesRepository repository = retrofitClient.create(IVenuesRepository.class);
-
-            Call<ArrayList<VenueBadgeEndorsement>> callBadge = repository.getBadgeEndorsements(authToken, venueId);
-            callBadge.enqueue(new Callback<ArrayList<VenueBadgeEndorsement>>() {
-                @Override public void onResponse(Call<ArrayList<VenueBadgeEndorsement>> call, Response<ArrayList<VenueBadgeEndorsement>> response) {
-                    ArrayList<VenueBadgeEndorsement> result = response.body();
-                    listener.onPostExecute(result);
-                }
-                @Override public void onFailure(Call<ArrayList<VenueBadgeEndorsement>> call, Throwable t) {
-                    call.cancel();
-                }
-            });
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void getLocation (Context applicationContext,
-                             AsyncTaskListener<VenueLocation> listener,
-                             String venueId)
-    {
-
-        String authToken = new AccountService().getAuthTokenHeader(applicationContext);
-        IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
-
-        try {
-            Call<VenueLocation> callLocation = repository.getLocation(authToken, venueId);
-            callLocation.enqueue(new Callback<VenueLocation>() {
-                @Override
-                public void onResponse(Call<VenueLocation> call, Response<VenueLocation> response) {
-                    VenueLocation result = response.body();
-                    listener.onPostExecute(result);
-                }
-
-                @Override
-                public void onFailure(Call<VenueLocation> call, Throwable t) {
-                    call.cancel();
-                }
-            });
-        }
-        catch(Exception e){
-
-            e.printStackTrace();
-        }
-
+                    try {
+                        Call<VenueLocation> callLocation = repository.getLocation(authToken, venueId);
+                        apiCallResultListener.onPreExecute();
+                        callLocation.enqueue(new Callback<VenueLocation>() {
+                            @Override public void onResponse(@NonNull Call<VenueLocation> call, @NonNull Response<VenueLocation> response) {
+                                VenueLocation result = response.body();
+                                apiCallResultListener.onPostExecute(result);
+                            }
+                            @Override public void onFailure(@NonNull Call<VenueLocation> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
+                },
+                onInvalidHost);
     }
 
     public void getImageMetaIndoor(Context applicationContext,
-                                   AsyncTaskListener<VenueImage> listener,
+                                   AsyncTaskListener<VenueImage> apiCallResultListener,
+                                   Runnable onInvalidHost,
                                    String venueId)
-
     {
-
-        String authToken = new AccountService().getAuthTokenHeader(applicationContext);
-        IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
-        try {
-            Call<VenueImage> callImage = repository.getImageMetaIndoor(authToken, venueId);
-            callImage.enqueue(new Callback<VenueImage>() {
-                @Override
-                public void onResponse(Call<VenueImage> call, Response<VenueImage> response) {
-                    VenueImage result = response.body();
-                    listener.onPostExecute(result);
-                }
-
-                @Override
-                public void onFailure(Call<VenueImage> call, Throwable t) {
-                    call.cancel();
-                }
-            });
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    try {
+                        Call<VenueImage> callImage = repository.getImageMetaIndoor(authToken, venueId);
+                        apiCallResultListener.onPreExecute();
+                        callImage.enqueue(new Callback<VenueImage>() {
+                            @Override public void onResponse(@NonNull Call<VenueImage> call, @NonNull Response<VenueImage> response) {
+                                VenueImage result = response.body();
+                                apiCallResultListener.onPostExecute(result);
+                            }
+                            @Override public void onFailure(@NonNull Call<VenueImage> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                },
+                onInvalidHost);
     }
 
     public void getMenu(Context applicationContext,
-                        AsyncTaskListener<ArrayList<MenuList>> listener,
+                        AsyncTaskListener<PublicMenuResponse> apiCallResultListener,
+                        Runnable onInvalidHost,
                         String venueId)
     {
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    try {
+                        String localDateTimeOffset = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(Calendar.getInstance().getTime());
 
-        String authToken = new AccountService().getAuthTokenHeader(applicationContext);
-        IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
-        try {
-            Call<ArrayList<MenuList>> callMenu = repository.getMenu(authToken, venueId);
-            callMenu.enqueue(new Callback<ArrayList<MenuList>>() {
-                @Override
-                public void onResponse(Call<ArrayList<MenuList>> call, Response<ArrayList<MenuList>> response) {
-                    ArrayList<MenuList> result = response.body();
-                    listener.onPostExecute(result);
-                }
+                        Call<PublicMenuResponse> callMenu = repository.getMenu(authToken, venueId, localDateTimeOffset);
+                        apiCallResultListener.onPreExecute();
+                        callMenu.enqueue(new Callback<PublicMenuResponse>() {
+                            @Override public void onResponse(@NonNull Call<PublicMenuResponse> call, @NonNull Response<PublicMenuResponse> response) {
+                                PublicMenuResponse result = response.body();
+                                apiCallResultListener.onPostExecute(result);
+                            }
+                            @Override public void onFailure(@NonNull Call<PublicMenuResponse> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                },
+                onInvalidHost);
+    }
 
-                @Override
-                public void onFailure(Call<ArrayList<MenuList>> call, Throwable t) {
-                    call.cancel();
-                }
-            });
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
+    public void getFilters(Context applicationContext,
+                           AsyncTaskListener<VenueFiltersResult> apiCallResultListener)
+    {
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    try {
+                        Call<VenueFiltersResult> callFilters = repository.getFilters(authTokenHeader);
+                        apiCallResultListener.onPreExecute();
+                        callFilters.enqueue(new Callback<VenueFiltersResult>() {
+                            @Override public void onResponse(@NonNull Call<VenueFiltersResult> call, @NonNull Response<VenueFiltersResult> response) {
+                                VenueFiltersResult result = response.body();
+                                apiCallResultListener.onPostExecute(result);
+                            }
+                            @Override public void onFailure(@NonNull Call<VenueFiltersResult> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                },
+                null);
     }
 
 }

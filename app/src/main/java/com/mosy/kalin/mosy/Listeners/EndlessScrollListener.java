@@ -1,8 +1,9 @@
 package com.mosy.kalin.mosy.Listeners;
 
+import android.support.v7.widget.RecyclerView;
 import android.widget.AbsListView;
 
-public abstract class EndlessScrollListener implements AbsListView.OnScrollListener {
+public abstract class EndlessScrollListener extends RecyclerView.OnScrollListener implements AbsListView.OnScrollListener {
 
     // The minimum number of items to have below your current scroll position
     // before loading more.

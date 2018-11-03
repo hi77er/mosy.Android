@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--COMMON-->
+    <string name="info_dialog_title" translatable="false">"Info"</string>
+
     <!--Preferences-->
     //TODO: Move this to Preferences
     <string name="google_maps_key" translatable="false">"AIzaSyDkyNsNMAi8VoxWrLnI-8pp0W5P54r2Dvs"</string>
@@ -9,11 +12,18 @@
     <string name="pref_authTokenType_webApi" translatable="false">"prefAuthTokenType"</string>
     <string name="pref_authTokenExpiresInSeconds_webApi" translatable="false">"prefAuthTokenExpiresInSeconds"</string>
     <string name="pref_authTokenExpiresAt_webApi" translatable="false">"prefAuthTokenExpiresAt"</string>
-    <string name="pref_collectionName_webApi" translatable="false">"WebApi"</string>
+    <string name="pref_collectionName_developersMode" translatable="false">DevelopersModePreferences</string>
+    <string name="pref_developersModeEnabled" translatable="false">DevelopersModeEnabled</string>
+    <string name="pref_collectionName_webApi" translatable="false">"WebApiToken"</string>
+    <string name="pref_collectionName_user">UserToken</string>
+    <string name="pref_authToken_user">prefAuthTokenUser</string>
+    <string name="pref_authTokenType_user">prefAuthTokenType</string>
+    <string name="pref_authTokenExpiresAt_user">prefAuthTokenExpiresAt</string>
+    <string name="pref_authTokenExpiresInSeconds_user">prefAuthTokenExpiresInSeconds</string>
 
     <!-- AndroidManifest -->
-    <string name="app_name">"Foodoo"</string>
-    <string name="manifest_landingActivityTitle" translatable="false">"Foodoo"</string>
+    <string name="app_name">"Treatspark"</string>
+    <string name="manifest_landingActivityTitle" translatable="false">"Treatspark"</string>
     <string name="manifest_venuesActivityTitle" translatable="false">"Venues"</string>
     <string name="manifest_venueDetailsActivityTitle" translatable="false">"Venue Details"</string>
 
@@ -26,21 +36,25 @@
     <string name="activity_landing_languageElSpinner">Greek</string>
     <string name="activity_landing_languageRuSpinner">Russian</string>
     <string name="activity_landing_languageEsSpinner">Spanish</string>
+    <string name="activity_landing_noInternetMessageTextView">No internet! Please check your network settings or try again later.</string>
+    <string name="activity_landing_profileBtn">My profile</string>
+    <string name="activity_landing_loginSignUpBtn">Login / Signup</string>
 
     <!-- Activity Login -->
     <string name="activity_login_titleTextView">"Login to"</string>
     <string name="activity_login_emailEditText">"Enter Email"</string>
     <string name="activity_login_passwordEditText">"Password"</string>
-    <string name="activity_login_cancelBtn">"Cancel"</string>
-    <string name="activity_login_loginBtn">"Login"</string>
-    <string name="activity_login_registerBtn">"Register"</string>
+    <string name="activity_login_cancelBtn">"Back"</string>
+    <string name="activity_login_loginBtn">"Go"</string>
+    <string name="activity_login_forgotPasswordBtn">"Forgot password"</string>
+    <string name="activity_login_registerBtn">"Signup"</string>
 
     <!-- Activity Register -->
     <string name="activity_register_titleTextView">"Register to"</string>
     <string name="activity_register_emailEditText">"Enter Email"</string>
     <string name="activity_register_passwordEditText">"Password"</string>
-    <string name="activity_register_cancelBtn">"Cancel"</string>
-    <string name="activity_register_registerBtn">"Register"</string>
+    <string name="activity_register_cancelBtn">"Back"</string>
+    <string name="activity_register_registerBtn">"Create"</string>
 
     <!-- Menu -->
     <string name="menu_searchTitle">"Search"</string>
@@ -48,11 +62,13 @@
     <string name="menu_btnNavigateToDishesText">"Dishes"</string>
 
     <!-- Activity Venues -->
-    <string name="activity_venues_searchVenuesHint">"Search venues …"</string>
-    <string name="activity_venues_searchDishesHint">"Search dishes …"</string>
-    <string name="activity_venues_filtersSettingsTextView">"Filters Settings"</string>
-    <string name="activity_venues_swipeDownToRefreshMessageTextView">SWIPE DOWN TO REFRESH</string>
-    <string name="activity_venues_locationNotResolvedToast">Location was not resolved …</string>
+    <string name="activity_wall_searchVenuesHint">"Search venues …"</string>
+    <string name="activity_wall_searchDishesHint">"Search dishes …"</string>
+    <string name="activity_wall_filtersSettingsTextView">"Filters Settings"</string>
+    <string name="activity_wall_swipeDownToRefreshMessageTextView">SWIPE DOWN TO REFRESH</string>
+    <string name="activity_wall_locationNotResolvedToast">Location was not resolved …</string>
+    <string name="activity_wall_missingFiltersInfoLabel">missing:</string>
+    <string name="activity_wall_noInternetTextView">No internet!</string>
 
     <!-- Activity Venue Details -->
     <string name="activity_venueDetails_mondayHoursTextView">"Mon"</string>
@@ -62,16 +78,7 @@
     <string name="activity_venueDetails_fridayHoursTextView">"Fri"</string>
     <string name="activity_venueDetails_saturdayHoursTextView">"Sat"</string>
     <string name="activity_venueDetails_sundayHoursTextView">"Sun"</string>
-    <string name="activity_venueDetails_freeWiFiTooltip">"Free WiFi available"</string>
-    <string name="activity_venueDetails_quietPlaceTooltip">"Working friendly atmosphere. Quiet place. Electricity hubs available."</string>
-    <string name="activity_venueDetails_bikeFriendlyTooltip">"Reachable by bike. Secure bicycle parking in short distance."</string>
-    <string name="activity_venueDetails_childrenFriendlyTooltip">"Kid's corner available. Baby highchairs available."</string>
-    <string name="activity_venueDetails_funPlaceTooltip"><![CDATA[Club music. Gaming club. Fun place.]]></string>
-    <string name="activity_venueDetails_parkingSignTooltip">"Parking available."</string>
-    <string name="activity_venueDetails_petFriendlyTooltip">"Pet friendly place."</string>
-    <string name="activity_venueDetails_romanticPlaceTooltip">"Romantic place. Romantic view. Romantic music."</string>
-    <string name="activity_venueDetails_wheelchairFriendlyTooltip">"Wheelchair accessible."</string>
-    <string name="activity_venueDetails_noSmokingTooltip">"No smoking allowed."</string>
+    <string name="activity_venueDetails_getDirections">Directions</string>
 
     <!-- Item MenuListItem -->
     <string name="item_menuListItem_nameTextView">"Menu Item Name"</string>
@@ -84,61 +91,188 @@
     <!-- Activity Venues Filters -->
     <string name="activity_venuesFilters_title">"Filter venues"</string>
     <string name="activity_venuesFilters_goBtn">"Go"</string>
-    <string name="activity_venuesFilters_showClosedTextView">Show only open venues</string>
+    <string name="activity_venuesFilters_showClosedTextView">Only show open venues</string>
+    <string name="activity_venuesFilters_distanceMeasureTypeKilometers">km</string>
+    <string name="activity_venuesFilters_distanceFilterTextView">Search distance:</string>
+    <string name="activity_venuesFilters_distanceMeasureTypeMeters">m</string>
+    <string name="activity_venuesFilters_accessibilityFiltersTitle">Accessibility</string>
+    <string name="activity_venuesFilters_availabilityFiltersTitle">Availability</string>
+    <string name="activity_venuesFilters_atmosphereFiltersTitle">Atmosphere</string>
+    <string name="activity_venuesFilters_cultureFiltersTitle">Culture</string>
+    <string name="VenuesFilterBadgeBikesParkingAvailableName">"Bike parking/locks"</string>
+    <string name="VenuesFilterBadgeToysCornerName">"Toys corner"</string>
+    <string name="VenuesFilterBabyFriendlyName">Baby friendly</string>
+    <string name="VenuesFilterBadgeNoSmokingName">"No Smoking"</string>
+    <string name="VenuesFilterBadgeParkingAvailableName">"Car Parking"</string>
+    <string name="VenuesFilterBadgePetFriendlyName">"Pet Friendly"</string>
+    <string name="VenuesFilterBadgeRomanticPlaceName">"Romantic Place"</string>
+    <string name="VenuesFilterBadgeWheelchairFriendlyName">"Wheelchair Friendly"</string>
+    <string name="VenuesFilterBadgeWiFiAvailableName">"Wi-Fi Available"</string>
+    <string name="VenuesFilterBadgeWorkingFriendlyName">"Working Friendly"</string>
+    <string name="VenuesFilterArtName">Art</string>
+    <string name="VenuesFilterCosyName">Cosy</string>
+    <string name="VenuesFilterDancingName">Dancing</string>
+    <string name="VenuesFilterLiveMusicName">Live music</string>
+    <string name="VenuesFilterNoMusicName">No music</string>
+    <string name="VenuesFiltersQuietMusicName">Quiet music</string>
+    <string name="VenuesFilterPanoramaName">Scenic view</string>
+    <string name="VenuesFilterTraditionalName">Traditional</string>
+    <string name="VenuesFilterLiveSportsName">Live sports</string>
+    <string name="VenuesFilterPrivateName">Private</string>
+    <string name="VenuesFilterWorking24hName">Open 24h</string>
+    <string name="VenuesFilterAllYouCanEatName">All you can eat</string>
+    <string name="VenuesFilterOutdoorSittingName">Outdoor sitting</string>
+    <string name="VenuesFilterPubGamesName">Pub games</string>
+    <string name="VenuesFilterRooftopName">Rooftop</string>
+    <string name="VenuesFilterSelfServiceName">Self-service</string>
+    <string name="VenuesFilterSheeshaName">Sheesha</string>
+    <string name="VenuesFilterCultureBulgariaName">"Bulgaria"</string>
+    <string name="VenuesFilterCultureRussiaName">"Russia"</string>
+    <string name="VenuesFilterCultureGreeceName">"Greece"</string>
+    <string name="VenuesFilterCultureSpainName">"Spain"</string>
+    <string name="VenuesFilterCulturePortugalName">"Portugal"</string>
+    <string name="VenuesFilterCultureGermanyName">"Germany"</string>
+    <string name="VenuesFilterCultureCubaName">"Cuba"</string>
+    <string name="VenuesFilterCultureAngolaName">"Angola"</string>
+    <string name="VenuesFilterCultureTurkeyName">"Turkey"</string>
+    <string name="VenuesFilterCultureBrazilName">"Brazil"</string>
+    <string name="VenuesFilterCultureItalyName">"Italy"</string>
+    <string name="VenuesFilterCultureColombiaName">"Colombia"</string>
+    <string name="VenuesFilterCultureArgentinaName">"Argentina"</string>
+    <string name="VenuesFilterCouchesName">Couches</string>
+    <string name="VenuesFilterStandingDesksName">Standing desks</string>
+
+    <string name="VenuesFilterBadgeWorkingFriendlyDescription">Working friendly. Calm and creative atmosphere.</string>
+    <string name="VenuesFilterBadgeWiFiAvailableDescription">Wi-Fi network available.</string>
+    <string name="VenuesFilterBadgeWheelchairFriendlyDescription">Wheelchair accessible.</string>
+    <string name="VenuesFilterBadgeRomanticPlaceDescription">Romantic atmosphere.</string>
+    <string name="VenuesFilterBadgePetFriendlyDescription">Your pet is welcome to this place.</string>
+    <string name="VenuesFilterBadgeParkingAvailableDescription">Car parking available.</string>
+    <string name="VenuesFilterBadgeNoSmokingDescription">Non-smoking place.</string>
+    <string name="VenuesFilterBadgeToysCornerDescription">Kids are welcome and can play.</string>
+    <string name="VenuesFilterBabyFriendlyDescription">Baby chairs and/or other equipment is available.</string>
+    <string name="VenuesFilterBadgeBikesParkingAvailableDescription">Bike parking or bike locks available.</string>
+    <string name="VenuesFilterArtDescription">Art is often exhibited.</string>
+    <string name="VenuesFilterCosyDescription">Cosy atmosphere. Dimmed light, couches etc.</string>
+    <string name="VenuesFilterDancingDescription">People often come to dance here.</string>
+    <string name="VenuesFilterLiveMusicDescription">Occasional live music</string>
+    <string name="VenuesFilterNoMusicDescription">No music. Calm and quiet place. Good for thinking, reading and silence.</string>
+    <string name="VenuesFiltersQuietMusicDescription">Quiet music. Chilled place.</string>
+    <string name="VenuesFilterPanoramaDescription">A place with nice panorama view.</string>
+    <string name="VenuesFilterTraditionalDescription">Traditional for the country.</string>
+    <string name="VenuesFilterLiveSportsDescription">Live sport events are shown.</string>
+    <string name="VenuesFilterPrivateDescription">Can be rented for private events.</string>
+    <string name="VenuesFilterWorking24hDescription">Working for 24h.</string>
+    <string name="VenuesFilterAllYouCanEatDescription">\'All you can eat\' for fixed price.</string>
+    <string name="VenuesFilterOutdoorSittingDescription">Outdoor sitting (if weather permits).</string>
+    <string name="VenuesFilterPubGamesDescription">Pool/Billiard, dart, etc. are available.</string>
+    <string name="VenuesFilterRooftopDescription">Rooftop available.</string>
+    <string name="VenuesFilterSelfServiceDescription">Self-service.</string>
+    <string name="VenuesFilterSheeshaDescription">Sheesha available.</string>
+    <string name="VenuesFilterCultureBulgariaDescription">"This venue is particularly popular for people from Bulgaria."</string>
+    <string name="VenuesFilterCultureRussiaDescription">"This venue is particularly popular for people from Russia."</string>
+    <string name="VenuesFilterCultureGreeceDescription">This venue is particularly popular for people from Greece.</string>
+    <string name="VenuesFilterCultureSpainDescription">This venue is particularly popular for people from Spain.</string>
+    <string name="VenuesFilterCulturePortugalDescription">This venue is particularly popular for people from Portugal.</string>
+    <string name="VenuesFilterCultureGermanyDescription">This venue is particularly popular for people from Germany.</string>
+    <string name="VenuesFilterCultureCubaDescription">This venue is particularly popular for people from Cuba.</string>
+    <string name="VenuesFilterCultureAngolaDescription">This venue is particularly popular for people from Angola.</string>
+    <string name="VenuesFilterCultureTurkeyDescription">This venue is particularly popular for people from Turkey.</string>
+    <string name="VenuesFilterCultureBrazilDescription">This venue is particularly popular for people from Brazil.</string>
+    <string name="VenuesFilterCultureItalyDescription">This venue is particularly popular for people from Italy.</string>
+    <string name="VenuesFilterCultureColombiaDescription">This venue is particularly popular for people from Colombia.</string>
+    <string name="VenuesFilterCultureArgentinaDescription">This venue is particularly popular for people from Argentina.</string>
+    <string name="VenuesFilterCouchesDescription">Couches/Sofas are available.</string>
+    <string name="VenuesFilterStandingDesksDescription">Availability of high tables to work while standing.</string>
 
     <!-- Activity Dishes Filters -->
-    <string name="activity_dishesFilters_title"><![CDATA[Filter dishes & drinks]]></string>
-    <string name="activity_dishesFilters_showClosedTextView">"Show only open venues"</string>
-    <string name="CuisinePhaseSalads">"Salads"</string>
-    <string name="CuisinePhaseAppetizersAndSnacks"><![CDATA[Appetizers & Snacks]]></string>
-    <string name="CuisinePhaseDrinks">"Drinks"</string>
-    <string name="CuisinePhaseBreakfast">"Breakfast"</string>
-    <string name="CuisinePhaseMains">"Mains"</string>
-    <string name="CuisinePhaseDeserts">"Deserts"</string>
-    <string name="CuisineRegionAsian">"Asia"</string>
-    <string name="CuisineRegionMiddleEastern">"Eastern"</string>
-    <string name="CuisineRegionEuropean">"Europe"</string>
-    <string name="CuisineRegionAfrican">"Africa"</string>
-    <string name="CuisineRegionAmerican">"Americas"</string>
-    <string name="CuisineSpectrumFishAndSeafood"><![CDATA[Fish & sea food]]></string>
-    <string name="CuisineSpectrumWhiteMeat">"White meat"</string>
-    <string name="CuisineSpectrumVegan">"Vegan"</string>
-    <string name="CuisineSpectrumGlutenFree">"Gluten free"</string>
-    <string name="CuisineSpectrumRedMeat">"Red meat"</string>
-    <string name="CuisineSpectrumRawVegan">"Raw vegan"</string>
-    <string name="CuisineSpectrumVegetarian">"Vegetarian"</string>
-    <string name="CuisineSpectrumKosher">"Kosher"</string>
-    <string name="CuisineSpectrumHalal">"Halal"</string>
-    <string name="CuisineAllergenSulfurDioxide">"Sulfur Dioxide"</string>
-    <string name="CuisineAllergenGrain">"Grain"</string>
-    <string name="CuisineAllergenMilk">"Milk"</string>
-    <string name="CuisineAllergenGarlic">"Garlic"</string>
-    <string name="CuisineAllergenSoy">"Soy"</string>
-    <string name="CuisineAllergenFish">"Fish"</string>
-    <string name="CuisineAllergenLegumes">"Legumes"</string>
-    <string name="CuisineAllergenLupin">"Lupin"</string>
-    <string name="CuisineAllergenOnion">"Onion"</string>
-    <string name="CuisineAllergenSesame">"Sesame"</string>
-    <string name="CuisineAllergenCitrusFruits">"Citrus Fruits"</string>
-    <string name="CuisineAllergenCelery">"Celery"</string>
-    <string name="CuisineAllergenAlcohol">"Alcohol"</string>
-    <string name="CuisineAllergenMollusks">"Mollusks"</string>
-    <string name="CuisineAllergenCaffeine">"Caffeine"</string>
-    <string name="CuisineAllergenEgg">"Egg"</string>
-    <string name="CuisineAllergenPeanuts">"Peanuts"</string>
-    <string name="CuisineAllergenMushrooms">"Mushrooms"</string>
-    <string name="CuisineAllergenCrustaceans">"Crustaceans"</string>
-    <string name="CuisineAllergenHotPeppers">"Hot Peppers"</string>
-    <string name="CuisineAllergenTreeNuts">"Tree Nuts"</string>
-    <string name="CuisineAllergenMustard">"Mustard"</string>
+    <string name="activity_dishesFilters_title">Filter dishes &amp; drinks</string>
+    <string name="activity_dishesFilters_showClosedTextView">"Only show open venues"</string>
     <string name="activity_dishesFilters_goBtn">"Go"</string>
     <string name="activity_dishesFilters_typeFiltersTitle">Type</string>
     <string name="activity_dishesFilters_regionFiltersTitle">Region</string>
     <string name="activity_dishesFilters_ingredientsFiltersTitle">Ingredients</string>
     <string name="activity_dishesFilters_allergensFiltersTitle">Allergens</string>
-    <string name="activity_dishesFilters_allergensFiltersNote">* Selected Allergens will reduce the appearance priority of dishes associated to them.</string>
-    <string name="activity_landing_noInternetMessageTextView">No internet! Please check your network settings or try again later.</string>
-    <string name="activity_venues_noInternetTextView">No internet!</string>
+    <string name="activity_dishesFilters_allergensFiltersNote">* Selecting allergens will hide dishes and drinks that contain them in your search results.</string>
+    <string name="activity_dishesFilters_distanceFilterTextView">Distance:</string>
+    <string name="activity_dishesFilters_distanceMeasureTypeMeters">m</string>
+    <string name="activity_dishesFilters_distanceMeasureTypeKilometers">km</string>
+    <string name="DishesFilterTypeSaladsName">"Salads"</string>
+    <string name="DishesFilterTypeAppetizersAndSnacksName">Appetizers &amp; Snacks</string>
+    <string name="DishesFilterTypeSandwichesAndWrapsName">Sandwiches &amp; Wraps</string>
+    <string name="DishesFilterTypeBurgersName">Burgers</string>
+    <string name="DishesFilterTypePizzaName">Pizza</string>
+    <string name="DishesFilterTypePastaName">Pasta</string>
+    <string name="DishesFilterTypeSushiName">Sushi</string>
+    <string name="DishesFilterTypeBuffetName">Buffet &amp; Brunch</string>
+    <string name="DishesFilterTypeNonalcoholicDrinksName">Non-alcoholic drinks</string>
+    <string name="DishesFilterTypeBreakfastName">"Breakfast"</string>
+    <string name="DishesFilterTypeMainsName">"Mains"</string>
+    <string name="DishesFilterTypeDesertsName">"Deserts"</string>
 
+    <string name="DishesFilterRegionAfricanName">African</string>
+    <string name="DishesFilterRegionBalkanName">Balkan</string>
+    <string name="DishesFilterRegionChineseName">Chinese</string>
+    <string name="DishesFilterRegionIndianAsianName">"Indian"</string>
+    <string name="DishesFilterRegionItalianName">"Italian"</string>
+    <string name="DishesFilterRegionJapaneseName">"Japanese"</string>
+    <string name="DishesFilterRegionOtherEuropeanName">"Other European"</string>
+    <string name="DishesFilterRegionNorthAmericanName">"North American"</string>
+    <string name="DishesFilterRegionMediterraneanName">Mediterranean</string>
+    <string name="DishesFilterRegionMexicanAndCentralAmericanName">Mexican &amp; Central American</string>
+    <string name="DishesFilterRegionSouthAmericanLatinName">South American / Latin</string>
+    <string name="DishesFilterRegionSouthAsianName">South Asian</string>
+    <string name="DishesFilterMainIngredientFishAndSeafoodName">Fish &amp; Sea food</string>
+    <string name="DishesFilterMainIngredientWhiteMeatName">"White meat"</string>
+    <string name="DishesFilterMainIngredientVeganName">"Vegan"</string>
+    <string name="DishesFilterMainIngredientGlutenFreeName">"Gluten free"</string>
+    <string name="DishesFilterMainIngredientRedMeatName">"Red meat"</string>
+    <string name="DishesFilterMainIngredientRawVeganName">"Raw vegan"</string>
+    <string name="DishesFilterMainIngredientVegetarianName">"Vegetarian"</string>
+    <string name="DishesFilterMainIngredientKosherName">"Kosher"</string>
+    <string name="DishesFilterMainIngredientHalalName">"Halal"</string>
+    <string name="DishesFilterAllergenSulfurDioxideName">Sulfur dioxide (12)</string>
+    <string name="DishesFilterAllergenGlutenName">Gluten / Wheat (1)</string>
+    <string name="DishesFilterAllergenMilkName">Milk (7)</string>
+    <string name="DishesFilterAllergenGarlicName">Garlic (s)</string>
+    <string name="DishesFilterAllergenSoyName">Soybeans (6)</string>
+    <string name="DishesFilterAllergenFishName">Fish (4)</string>
+    <string name="DishesFilterAllergenLegumesName">Legumes (s)</string>
+    <string name="DishesFilterAllergenLupinName">Lupin (13)</string>
+    <string name="DishesFilterAllergenOnionName">Onion (s)</string>
+    <string name="DishesFilterAllergenSesameName">Sesame (11)</string>
+    <string name="DishesFilterAllergenCitrusFruitsName">Citrus fruits (s)</string>
+    <string name="DishesFilterAllergenCeleryName">Celery (9)</string>
+    <string name="DishesFilterAllergenAlcoholName">Alcohol (s)</string>
+    <string name="DishesFilterAllergenMollusksName">Mollusks (14)</string>
+    <string name="DishesFilterAllergenCaffeineName">Caffeine (s)</string>
+    <string name="DishesFilterAllergenEggName">Eggs (3)</string>
+    <string name="DishesFilterAllergenPeanutsName">Peanuts (5)</string>
+    <string name="DishesFilterAllergenMushroomsName">Mushrooms (s)</string>
+    <string name="DishesFilterAllergenCrustaceansName">Crustaceans (2)</string>
+    <string name="DishesFilterAllergenHotPeppersName">Hot Peppers (s)</string>
+    <string name="DishesFilterAllergenTreeNutsName">Tree Nuts (8)</string>
+    <string name="DishesFilterAllergenMustardName">Mustard (10)</string>
+    <string name="DishesFilterTypeAppetizersAndSnacksDescription">E.g. soups, dips, antipasti, etc.</string>
+    <string name="DishesFilterTypeDesertsDescription">"E.g. cakes, ice cream, pancakes, etc."</string>
+    <string name="DishesFilterTypeNonalcoholicDrinksDescription">E.g. smoothies, juices, cocktails, etc.</string>
+    <string name="DishesFilterRegionAfricanDescription">E.g. Ethiopian, Moroccan, South African, etc.</string>
+    <string name="DishesFilterRegionOtherAsianDescription">E.g. Korean, Nepali, Taiwanese, etc.</string>
+    <string name="DishesFilterRegionMiddleEasternDescription">E.g. Armenian, Arabic, Turkish, Georgian, Israeli, Lebanese, Pakistani, Persian, Middle Eastern, etc.</string>
+    <string name="DishesFilterRegionOtherEuropeanDescription">E.g. Austrian, British, European, Eastern European, French, German, Russian, Scandinavian, Ukrainian, etc.</string>
+    <string name="DishesFilterRegionMediterraneanDescription">E.g. Greek, Portuguese, Spanish, etc.</string>
+    <string name="DishesFilterRegionMexicanAndCentralAmericanDescription">E.g. Canjun &amp; Creole, Caribbean, Cuban, etc.</string>
+    <string name="DishesFilterRegionSouthAmericanLatinDescription">E.g. Argentinian, Brazilian, Peruvian, etc.</string>
+    <string name="DishesFilterRegionSouthAsianDescription">E.g. Indonesian, Philippine, Thai, Vietnamese, etc.</string>
+    <string name="DishesFilterMainIngredientWhiteMeatDescription">E.g. chicken, turkey, duck, etc.</string>
+    <string name="DishesFilterMainIngredientRedMeatDescription">E.g. beef, Pork, Game, etc.</string>
+    <string name="activity_userprofile_logoutBtn">Sign out</string>
+    <string name="activity_dishesFilters_showRecommendedTextView">Only show recommended items</string>
+    <string name="activity_dishesFilters_resetFiltersBtn">Reset</string>
+    <string name="item_dish_workingStatusOpenedLabelTextView">OPENED</string>
+    <string name="item_dish_workingStatusClosedLabelTextView">CLOSED</string>
+    <string name="item_dish_workingStatus247LabelTextView">24/7</string>
+    <string name="item_dish_recommendedLabelTextView">R+</string>
+    <string name="item_dish_newLabelTextView">NEW</string>
 
 </resources>

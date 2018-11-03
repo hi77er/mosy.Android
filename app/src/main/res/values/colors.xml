@@ -1,26 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#90002d</color>
-    <color name="colorPrimaryDark">#720023</color>
-    <color name="colorPrimaryVeryDark">#3F0D12</color>
-    <color name="colorPrimarySalmon">#EF6461</color>
-    <color name="colorPrimaryApricot">#EB9373</color>
-    <color name="colorPrimaryAmber">#FFC300</color>
-    <color name="colorPrimaryLight">#CF9893</color>
-    <color name="colorPrimarySalmonLight">#FEC3BF</color>
-    <color name="colorPrimaryVeryLight">#FFEEEE</color>
+
+    <color name="transparent">#00ffffff</color>
+    <color name="colorRed">#f00</color>
+    <color name="colorDarkRed">#c40000</color>
+    <color name="colorGreen">#00b63c</color>
+    <color name="colorYellow">#ffea00</color>
+    <color name="colorWhiteTransparent">#33FFFFFF</color>
+    <color name="soft">#707070</color>
+    <color name="softer">#ababab</color>
+    <color name="colorWhite">#FFF</color>
 
     <color name="colorAccent">#fc7878</color>
 
-    <color name="soft">#ababab</color>
-    <color name="colorWhite">#FFFFFF</color>
-    <color name="colorSecondaryVeryVeryLight">#f7f7f0</color>
-    <color name="colorSecondaryVeryLight">#F1F0CC</color>
-    <color name="colorSecondaryLight">#D5BF86</color>
-    <color name="colorSecondary">#8D775F</color>
-    <color name="colorRed">#f00</color>
+    <color name="colorPrimaryVeryDark">#3F0D12</color>
+    <color name="colorPrimaryDark">#720023</color>
+    <color name="colorPrimary">#90002D</color> <!--Paprika #90002D -->
+    <color name="colorPrimarySalmon">#EF6461</color>
+    <color name="colorPrimarySalmonLightTransparent">#66FEC3BF</color>
+    <color name="colorPrimarySalmonLight">#edc3c2</color>
+    <color name="colorPrimaryApricot">#EB9373</color>
+    <color name="colorPrimaryDusty">#CF9893</color>
+    <color name="colorPrimaryLight">#FFE4E4</color>
+    <color name="colorPrimaryVeryLight">#FFEEEE</color>
 
-    <color name="colorTertiaryLight">#6B9080</color>
+    <color name="colorSecondaryLight">#f7f7f0</color>
+    <color name="colorSecondary">#FAECCC</color> <!--Champagne #FAECCC -->
+    <color name="colorSecondaryDark">#D5BF86</color>
+    <color name="colorSecondaryAmber">#FFC300</color>
+
+
+    <color name="colorTertiaryLight">#9adc75</color>
     <color name="colorTertiary">#00900F</color>
     <color name="colorTertiaryDark">#004307</color>
 
@@ -28,12 +38,9 @@
     <color name="colorQuaternaryLight">#7dbaf6</color>
     <color name="colorQuaternary">#3095f9</color>
 
-
-
     <color name="colorMenuBackground">#ffebeb</color>
+    <color name="colorMenuToolboxBackground">#ffe5e5</color>
     <color name="colorMenuTitle">#fc7878</color>
-    <color name="colorPageBackground1">#FFFFFF</color>
-    <color name="transparent">#00ffffff</color>
 
 
 </resources>

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".VenueActivity_">
+    tools:context=".WallActivity_">
 
     <!--<item-->
         <!--android:orderInCategory="0"-->
@@ -16,21 +16,25 @@
         android:id="@+id/action_venues"
         android:orderInCategory="0"
         android:title="@string/menu_btnNavigateToVenuesText"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_action_venues_white"/>
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_home_map_marker_32"
+        android:iconTint="@color/colorWhite"
+        android:iconTintMode="src_atop" />
 
     <item
         android:id="@+id/action_dishes"
         android:orderInCategory="0"
         android:title="@string/menu_btnNavigateToDishesText"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_action_dishes_white" />
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_food_variant_32"
+        android:iconTint="@color/colorWhite"
+        android:iconTintMode="src_atop" />
 
     <item
-        android:orderInCategory="1"
+        android:orderInCategory="2"
         android:id="@+id/action_search"
         android:title="@string/menu_searchTitle"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:actionLayout="@layout/action_bar_toolbar"/>
 

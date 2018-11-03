@@ -14,20 +14,24 @@ public class LocationHelper {
 
         if (distanceMeters == 0)
             text = StringHelper.empty();
-        else if (distanceMeters < 5)
-            text = "currently inside";
-        else if (distanceMeters < 50)
-            text = "less than 50m";
-        else if (distanceMeters < 100)
-            text = "less than 100m";
+        else if (distanceMeters < 10)
+            text = "inside";
+//        else if (distanceMeters < 50)
+//            text = "less than 50m";
+//        else if (distanceMeters < 100)
+//            text = "less than 100m";
         else if (distanceMeters < 1000) {
             long longValue =  (long) distanceMeters;
             text = String.valueOf(longValue) + "m";
-        } else if (distanceMeters >= 1000  && distanceMeters < 999999 ) {       // 1km > d < 999km
+        } else if (distanceMeters >= 1000  && distanceMeters < 10000 ) {       // 1km > d < 999km
             distanceMeters =  distanceMeters / 1000;
             text = new DecimalFormat("##.#").format(distanceMeters) + "km";
+        } else if (distanceMeters >= 10000  && distanceMeters < 999999 ) {       // 1km > d < 999km
+            distanceMeters =  distanceMeters / 1000;
+            long wholePart = (long) distanceMeters;
+            text = String.valueOf(wholePart) + "km";
         } else if (distanceMeters >= 999999  && distanceMeters < 999999999 )    // d > 999km
-            text = StringHelper.empty();
+            StringHelper.empty();
 
         return text;
     }
@@ -40,7 +44,7 @@ public class LocationHelper {
         if (time > 0 && time < 1)
             text = StringHelper.empty();
         if (time > 0 && time < 1)
-            text = "less than 1min";
+            text = "1min";
         if (time > 1 && time < 59)
             text = (int)time + "min";
         if (time > 59 && time < 999999999)

@@ -1,7 +1,9 @@
 package com.mosy.kalin.mosy.DTOs;
 
+import android.graphics.Bitmap;
+
 import com.google.gson.annotations.SerializedName;
-import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
+import com.mosy.kalin.mosy.DAL.Http.Results.ResultBase;
 
 import java.io.Serializable;
 
@@ -28,7 +30,6 @@ public class MenuListItemImage
     @SerializedName("IsOutdoors")
     public boolean IsOutdoors;
 
-    @SerializedName("Bytes")
-    public byte[] Bytes;
+    public Bitmap Bitmap;
 
 }

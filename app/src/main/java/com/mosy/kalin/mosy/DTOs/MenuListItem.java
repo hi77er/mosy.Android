@@ -4,15 +4,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
-import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
-import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.DAL.Http.Results.ResultBase;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class MenuListItem
         extends ResultBase
-        implements Parcelable {
+        implements Parcelable, Serializable {
 
     @SerializedName("Id")
     public String Id;
@@ -22,7 +21,6 @@ public class MenuListItem
 
     @SerializedName("Name")
     public String Name;
-    public String getName(){return this.Name;}
 
     @SerializedName("Summary")
     public String Summary;
@@ -39,6 +37,12 @@ public class MenuListItem
     @SerializedName("WorkingStatus")
     public String VenueWorkingStatus;
 
+    @SerializedName("IsRecommended")
+    public boolean IsRecommended;
+
+    @SerializedName("IsNew")
+    public boolean IsNew;
+
     @SerializedName("RequestableImageMeta")
     public MenuListItemImage ImageThumbnail;
 
@@ -54,13 +58,25 @@ public class MenuListItem
     @SerializedName("QuantityDisplayText")
     public String QuantityDisplayText;
 
+    @SerializedName("DefaultMenuCulture")
+    public String DefaultMenuCulture;
+
     @SerializedName("Ingredients")
     public ArrayList<Ingredient> Ingredients;
 
-    @SerializedName("CusineAllergens")
-    public ArrayList<DishFilter> CuisineAllergens;
+    @SerializedName("Filters")
+    public ArrayList<Filter> Filters;
 
-@SuppressWarnings("unchecked")
+    @SerializedName("MatchingFiltersIds")
+    public ArrayList<String> MatchingFiltersIds;
+
+    @SerializedName("MismatchingFiltersIds")
+    public ArrayList<String> MismatchingFiltersIds;
+
+    @SerializedName("RequestableCultures")
+    public ArrayList<MenuListItemCulture> MenuListItemCultures;
+
+    @SuppressWarnings("unchecked")
     protected MenuListItem(Parcel in) {
         String[] data = new String[8];
 
@@ -74,7 +90,10 @@ public class MenuListItem
         this.VenueId = data[5];
         this.VenueName = data[6];
         this.Ingredients = in.readArrayList(null);
-        this.CuisineAllergens = in.readArrayList(null);
+        this.Filters = in.readArrayList(null);
+        this.MatchingFiltersIds = in.readArrayList(null);
+        this.MismatchingFiltersIds = in.readArrayList(null);
+        this.MenuListItemCultures = in.readArrayList(null);
     }
 
     @Override
@@ -87,7 +106,10 @@ public class MenuListItem
         parcel.writeString(VenueId);
         parcel.writeString(VenueName);
         parcel.writeList(Ingredients);
-        parcel.writeList(CuisineAllergens);
+        parcel.writeList(Filters);
+        parcel.writeList(MatchingFiltersIds);
+        parcel.writeList(MismatchingFiltersIds);
+        parcel.writeList(MenuListItemCultures);
 
     }
 

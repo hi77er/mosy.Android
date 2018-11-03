@@ -1,6 +1,6 @@
 package com.mosy.kalin.mosy.Helpers;
 
-import com.mosy.kalin.mosy.Models.Interfaces.IServiceEndpointFactory;
+import com.mosy.kalin.mosy.DAL.IServiceEndpointFactory;
 
 /**
  * Created by kkras on 10.7.2016 г..

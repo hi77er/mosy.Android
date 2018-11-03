@@ -1,7 +1,7 @@
 package com.mosy.kalin.mosy.DTOs;
 
 import com.google.gson.annotations.SerializedName;
-import com.mosy.kalin.mosy.DTOs.Results.ResultBase;
+import com.mosy.kalin.mosy.DAL.Http.Results.ResultBase;
 
 import java.util.Date;
 
@@ -29,6 +29,9 @@ public class VenueBusinessHours
     public boolean IsSaturdayDayOff;
     @SerializedName("IsSundayDayOff")
     public boolean IsSundayDayOff;
+
+    @SerializedName("TimeZoneMinutesOffset")
+    public int TimeZoneMinutesOffset;
 
     @SerializedName("MondayFrom")
     public Date MondayFrom;
@@ -59,6 +62,8 @@ public class VenueBusinessHours
     public Date SaturdayTo;
     @SerializedName("SundayTo")
     public Date SundayTo;
+
+
 
     public VenueBusinessHours() {
 
