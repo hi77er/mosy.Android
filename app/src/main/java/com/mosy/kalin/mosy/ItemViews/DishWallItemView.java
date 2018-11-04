@@ -111,7 +111,8 @@ public class DishWallItemView
                 this.priceTagTextVIew.setVisibility(VISIBLE);
             }
 
-            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(menuListItem.VenueBusinessHours);
+//            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(menuListItem.VenueBusinessHours);
+            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(menuListItem.VenueWorkingStatus);
             this.workingStatusLabel.setVisibility(VISIBLE);
             switch (status){
                 case Open:
@@ -132,7 +133,7 @@ public class DishWallItemView
         }
     }
 
-    @Click(resName = "menuListItem_ivThumbnail")
+    @Click(R.id.menuListItem_ivThumbnail)
     public void ImageClick()
     {
         if (!this.IsUsingDefaultThumbnail && this.MenuListItem != null && this.MenuListItem.ImageThumbnail != null && StringHelper.isNotNullOrEmpty(this.MenuListItem.ImageThumbnail.Id)){

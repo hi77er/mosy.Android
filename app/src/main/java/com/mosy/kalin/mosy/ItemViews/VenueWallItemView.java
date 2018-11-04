@@ -81,7 +81,8 @@ public class VenueWallItemView
                 IsUsingDefaultThumbnail = true;
             }
 
-            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(venue.VenueBusinessHours);
+//            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(venue.VenueBusinessHours);
+            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(venue.WorkingStatus);
             this.workingStatusLabel.setVisibility(VISIBLE);
             switch (status){
                 case Open:

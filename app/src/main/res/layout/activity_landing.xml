@@ -108,7 +108,7 @@
             android:layout_weight="1"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="5dp"
-            android:background="@drawable/background_transparent_click_oval" />
+            android:background="@color/transparent" />
 
         <Button
             android:id="@+id/landing_btnUserProfile"
