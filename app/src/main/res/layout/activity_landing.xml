@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    android:paddingTop="50dp"
+    android:paddingTop="20dp"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
     android:paddingBottom="15dp">
@@ -25,7 +25,7 @@
         android:layout_below="@+id/landing_ivLogo"
         android:orientation="horizontal"
         android:background="@color/colorWhite"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="20dp"
         android:visibility="gone">
 
         <Button
@@ -100,7 +100,7 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_below="@+id/landing_lButtons">
 
         <Button
             android:id="@+id/landing_btnUserProfile"
@@ -131,4 +131,35 @@
             android:background="@drawable/button_landing_dishes" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/landing_llSocialLinksBtns"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:id="@+id/landing_ibSocialFacebook"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_facebook_box_24"
+            android:tint="@color/softer" />
+
+        <ImageView
+            android:id="@+id/landing_ibSocialInstagram"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_instagram_24"
+            android:tint="@color/softer" />
+
+        <ImageView
+            android:id="@+id/landing_ibSocialTwitter"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_twitter_24"
+            android:tint="@color/softer" />
+    </LinearLayout>
 </RelativeLayout>

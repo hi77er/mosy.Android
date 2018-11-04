@@ -3,6 +3,7 @@ package com.mosy.kalin.mosy;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -236,6 +237,36 @@ public class LandingActivity
         Intent intent = new Intent(LandingActivity.this, UserProfileActivity_.class);
         startActivity(intent);
     }
+
+    @Click(R.id.landing_ibSocialFacebook)
+    public void navigateFacebook(){
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        intent.setData(Uri.parse("https://www.facebook.com/treatspark/"));
+        startActivity(intent);
+    }
+
+    @Click(R.id.landing_ibSocialInstagram)
+    public void navigateInstagram(){
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        intent.setData(Uri.parse("http://www.instagram.com"));
+        startActivity(intent);
+    }
+
+    @Click(R.id.landing_ibSocialTwitter)
+    public void navigateTwitter(){
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        intent.setData(Uri.parse("https://www.twitter.com/treatspark"));
+        startActivity(intent);
+    }
+
+
+
 
     private void navigateToWallActivity(boolean isDishMode) {
         Intent intent = new Intent(LandingActivity.this, WallActivity_.class);
