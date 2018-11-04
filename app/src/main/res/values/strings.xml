@@ -28,8 +28,8 @@
     <string name="manifest_venueDetailsActivityTitle" translatable="false">"Venue Details"</string>
 
     <!-- Activity Landing -->
-    <string name="activity_landing_venuesBtn"><![CDATA[VENUES & MENUS]]></string>
-    <string name="activity_landing_dishesBtn"><![CDATA[FIND DISHES & DRINKS]]></string>
+    <string name="activity_landing_venuesBtn"><![CDATA[VENUES \n & MENUS]]></string>
+    <string name="activity_landing_dishesBtn"><![CDATA[FIND DISHES \n & DRINKS]]></string>
     <string name="activity_landing_languageBgSpinner">Bulgarian</string>
     <string name="activity_landing_languageEnUSSpinner">English</string>
     <string name="activity_landing_languageDeSpinner">German</string>

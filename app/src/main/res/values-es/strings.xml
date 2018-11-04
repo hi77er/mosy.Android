@@ -15,8 +15,8 @@
     <string name="activity_venueDetails_fridayHoursTextView">Vie</string>
     <string name="activity_venueDetails_saturdayHoursTextView">Sab</string>
     <string name="activity_venueDetails_sundayHoursTextView">Dom</string>
-    <string name="activity_landing_venuesBtn"><![CDATA[LUGARES & MENÚS]]></string>
-    <string name="activity_landing_dishesBtn"><![CDATA[BUSCA COMIDA & BEBIDAS]]></string>
+    <string name="activity_landing_venuesBtn"><![CDATA[LUGARES \n & MENÚS]]></string>
+    <string name="activity_landing_dishesBtn"><![CDATA[BUSCA COMIDA \n & BEBIDAS]]></string>
     <string name="activity_login_titleTextView">Iniciar sesión</string>
     <string name="activity_login_emailEditText">Correo Electrónico</string>
     <string name="activity_login_passwordEditText">Contraseña</string>

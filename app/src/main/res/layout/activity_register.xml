@@ -103,7 +103,7 @@
         android:layout_height="wrap_content"
         android:text="@string/activity_register_registerBtn"
         android:layout_marginBottom="5dp"
-        android:background="@drawable/button_landing_dishes"
+        android:background="@drawable/background_primary_very_light"
         android:textColor="@color/colorPrimary"
         android:stateListAnimator="@null"/>
 
@@ -113,7 +113,7 @@
         android:layout_height="wrap_content"
         android:text="@string/activity_register_cancelBtn"
         android:layout_marginBottom="5dp"
-        android:background="@drawable/button_landing_dishes"
+        android:background="@drawable/background_primary_very_light"
         android:textColor="@color/colorPrimary"
         android:stateListAnimator="@null"/>
 </LinearLayout>
