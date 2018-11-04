@@ -37,6 +37,9 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_filters_venues)
 public class VenuesFiltersActivity
@@ -83,6 +86,8 @@ public class VenuesFiltersActivity
     public TextView distanceLabel;
     @ViewById(R.id.filters_venues_sbDistanceFilter)
     public SeekBar distanceSeekBar;
+    @ViewById(R.id.filters_venues_tvClosedLabel)
+    public TextView closedLabel;
 
     @ViewById(R.id.filterVenues_GoButton)
     public Button goButton;
@@ -139,6 +144,8 @@ public class VenuesFiltersActivity
             @Override public void onStartTrackingTouch(SeekBar seekBar) { }
             @Override public void onStopTrackingTouch(SeekBar seekBar) { }
         });
+
+        this.setWorkingStatusLabels();
 
         afterViewsFinished = true;
     }
@@ -372,6 +379,10 @@ public class VenuesFiltersActivity
         return  progress;
     }
 
+    private void setWorkingStatusLabels() {
+        this.closedLabel.setVisibility(this.workingStatusFilter.isChecked() ? GONE : VISIBLE);
+    }
+
     @Click(R.id.filterVenues_ResetFiltersButton)
     public void resetButton_Clicked(){
         PreselectedVenueAccessibilityFilterIds = new ArrayList<>();
@@ -385,6 +396,11 @@ public class VenuesFiltersActivity
         this.stateHasBeenReset = true;
 
         afterViews();
+    }
+
+    @Click(R.id.filters_venues_sbWorkingTimeFilter)
+    public void workingStatusSwitch_Clicked(){
+        this.closedLabel.setVisibility(this.workingStatusFilter.isChecked() ? GONE : VISIBLE);
     }
 
     @Click(R.id.filterVenues_GoButton)

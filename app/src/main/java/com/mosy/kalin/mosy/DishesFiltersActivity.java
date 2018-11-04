@@ -158,6 +158,9 @@ public class DishesFiltersActivity
             @Override public void onStopTrackingTouch(SeekBar seekBar) { }
         });
 
+        this.setWorkingStatusLabels();
+        this.setRecommendedLabelBackground();
+
         afterViewsFinished = true;
     }
 
@@ -382,6 +385,10 @@ public class DishesFiltersActivity
                 dishAllergenFiltersChanged;
     }
 
+    private void setWorkingStatusLabels() {
+        this.closedLabel.setVisibility(this.workingStatusFilter.isChecked() ? GONE : VISIBLE);
+    }
+
     private void setRecommendedLabelBackground() {
         this.recommendedLabel.setBackgroundColor(this.recommendedFilter.isChecked()
                 ? getResources().getColor(R.color.colorSecondaryAmber)
@@ -425,7 +432,7 @@ public class DishesFiltersActivity
 
     @Click(R.id.filters_dishes_scWorkingTimeFilter)
     public void workingStatusSwitch_Clicked(){
-        this.closedLabel.setVisibility(this.workingStatusFilter.isChecked() ? GONE : VISIBLE);
+        this.setWorkingStatusLabels();
     }
 
     @Click(R.id.filters_dishes_scRecommendedFilter)
