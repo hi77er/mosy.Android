@@ -27,6 +27,7 @@
     <color name="colorSecondaryLight">#f7f7f0</color>
     <color name="colorSecondary">#FAECCC</color> <!--Champagne #FAECCC -->
     <color name="colorSecondaryDark">#D5BF86</color>
+    <color name="colorSecondaryAmberOpacity140">#8cffc300</color>
     <color name="colorSecondaryAmber">#FFC300</color>
 
 

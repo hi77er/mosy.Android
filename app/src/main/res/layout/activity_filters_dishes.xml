@@ -72,21 +72,36 @@
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start">
+            android:gravity="center_vertical">
 
             <Switch
                 android:id="@+id/filters_dishes_scRecommendedFilter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:checked="true" />
 
             <TextView
-                android:id="@+id/filters_dishes_tvRecommendedLabel"
+                android:id="@+id/filters_dishes_tvRecommended"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:text="@string/activity_dishesFilters_showRecommendedTextView"
                 android:textColor="@color/colorPrimaryVeryLight"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/filters_dishes_tvRecommendedLabel"
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_gravity="center_vertical"
+                android:text="@string/item_dish_recommendedLabelTextView"
+                android:textSize="10sp"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:background="@color/colorSecondaryAmber"/>
         </LinearLayout>
 
         <LinearLayout
@@ -94,21 +109,67 @@
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start">
+            android:gravity="center_vertical">
 
             <Switch
                 android:id="@+id/filters_dishes_scWorkingTimeFilter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:checked="true" />
 
             <TextView
                 android:id="@+id/filters_dishes_tvWorkingTimeLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:text="@string/activity_dishesFilters_showClosedTextView"
                 android:textColor="@color/colorPrimaryVeryLight"
                 android:textSize="12sp" />
+
+
+            <TextView
+                android:id="@+id/filters_dishes_tvOpenedLabel"
+                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:padding="1dp"
+                android:textAlignment="center"
+                android:background="@color/colorDarkRed"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:text="@string/item_dish_workingStatusOpenedLabelTextView" />
+
+            <TextView
+                android:id="@+id/filters_dishes_tv247Label"
+                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:padding="1dp"
+                android:textAlignment="center"
+                android:background="@color/colorDarkRed"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:text="@string/item_dish_workingStatus247LabelTextView" />
+
+            <TextView
+                android:id="@+id/filters_dishes_tvClosedLabel"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:padding="1dp"
+                android:textAlignment="center"
+                android:background="@color/colorDarkRed"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:text="@string/item_dish_workingStatusClosedLabelTextView" />
         </LinearLayout>
 
         <LinearLayout

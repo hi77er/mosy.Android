@@ -65,8 +65,10 @@ public class VenueDetailsActivity
     private static final String x200BlobStorageContainerPath = "userimages\\fboalbums\\200x200";
     private static final String originalBlobStorageContainerPath = "userimages\\fboalbums\\original";
 
-    boolean IsUsingDefaultIndoorImageThumbnail;
-    public String PhoneNumber;
+    boolean descriptionExpanded = false;
+    boolean isUsingDefaultIndoorImageThumbnail;
+    public String phoneNumber;
+
 
     @Bean
     VenuesService venueService;
@@ -77,62 +79,65 @@ public class VenueDetailsActivity
     @FragmentById(R.id.venueDetails_frMap)
     SupportMapFragment VenueLocationMap;
 
-    @ViewById(resName = "venueDetails_lFilters")
+    @ViewById(R.id.venueDetails_lFilters)
     LinearLayout filtersLayout;
-    @ViewById(resName = "venueDetails_lCultureFilters")
+    @ViewById(R.id.venueDetails_lCultureFilters)
     LinearLayout cultureFiltersLayout;
-    @ViewById(resName = "venueDetails_lContacts")
+    @ViewById(R.id.venueDetails_lContacts)
     LinearLayout contactsLayout;
-    @ViewById(resName = "venueDetails_lBusinessHours")
+    @ViewById(R.id.venueDetails_lBusinessHours)
     LinearLayout businessHoursLayout;
 
-    @ViewById(resName = "venueDetails_lFiltersContainer")
+    @ViewById(R.id.venueDetails_lDescriptionContainer)
+    LinearLayout descriptionContainerLayout;
+    @ViewById(R.id.venueDetails_lFiltersContainer)
     LinearLayout filtersContainerLayout;
-    @ViewById(resName = "venueDetails_lCultureFiltersContainer")
+    @ViewById(R.id.venueDetails_lCultureFiltersContainer)
     LinearLayout cultureFiltersContainerLayout;
-    @ViewById(resName = "venueDetails_lContactsContainer")
+    @ViewById(R.id.venueDetails_lContactsContainer)
     LinearLayout contactsContainerLayout;
-    @ViewById(resName = "venueDetails_lBusinessHoursContainer")
+    @ViewById(R.id.venueDetails_lBusinessHoursContainer)
     LinearLayout getBusinessHoursContainerLayout;
 
-    @ViewById(resName = "venueDetails_lFiltersProgress")
+    @ViewById(R.id.venueDetails_lFiltersProgress)
     LinearLayout filtersProgressLayout;
-    @ViewById(resName = "venueDetails_lCultureFiltersProgress")
+    @ViewById(R.id.venueDetails_lCultureFiltersProgress)
     LinearLayout cultureFiltersProgressLayout;
-    @ViewById(resName = "venueDetails_lContactsProgress")
+    @ViewById(R.id.venueDetails_lContactsProgress)
     LinearLayout contactsProgressLayout;
-    @ViewById(resName = "venueDetails_lBusinessHoursProgress")
+    @ViewById(R.id.venueDetails_lBusinessHoursProgress)
     LinearLayout getBusinessHoursProgressLayout;
 
-    @ViewById(resName = "venueDetails_svMain")
+    @ViewById(R.id.venueDetails_svMain)
     ScrollView mainScrollView;
-    @ViewById(resName = "venueDetails_tvName")
+    @ViewById(R.id.venueDetails_tvName)
     TextView nameTextView;
-    @ViewById(resName = "venueDetails_tvClass")
+    @ViewById(R.id.venueDetails_tvClass)
     TextView classTextView;
+    @ViewById(R.id.venueDetails_tvDescription)
+    TextView descripionTextView;
 
-    @ViewById(resName = "venueDetails_btnPhone")
+    @ViewById(R.id.venueDetails_btnPhone)
     Button phoneButton;
-    @ViewById(resName = "venueDetails_btnDirections")
+    @ViewById(R.id.venueDetails_btnDirections)
     Button directionsButton;
 
-    @ViewById(resName = "venueDetails_ivIndoorThumbnail")
+    @ViewById(R.id.venueDetails_ivIndoorThumbnail)
     ImageView indoorImageThumbnailView;
-    @ViewById(resName = "venueDetails_tvBHMondayTime")
+    @ViewById(R.id.venueDetails_tvBHMondayTime)
     TextView mondayTextView;
-    @ViewById(resName = "venueDetails_tvBHTuesdayTime")
+    @ViewById(R.id.venueDetails_tvBHTuesdayTime)
     TextView tuesdayTextView;
-    @ViewById(resName = "venueDetails_tvBHWednesdayTime")
+    @ViewById(R.id.venueDetails_tvBHWednesdayTime)
     TextView wednesdayTextView;
-    @ViewById(resName = "venueDetails_tvBHThursdayTime")
+    @ViewById(R.id.venueDetails_tvBHThursdayTime)
     TextView thursdayTextView;
-    @ViewById(resName = "venueDetails_tvBHFridayTime")
+    @ViewById(R.id.venueDetails_tvBHFridayTime)
     TextView fridayTextView;
-    @ViewById(resName = "venueDetails_tvBHSaturdayTime")
+    @ViewById(R.id.venueDetails_tvBHSaturdayTime)
     TextView saturdayTextView;
-    @ViewById(resName = "venueDetails_tvBHSundayTime")
+    @ViewById(R.id.venueDetails_tvBHSundayTime)
     TextView sundayTextView;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -141,11 +146,16 @@ public class VenueDetailsActivity
         this.applicationContext = getApplicationContext();
     }
 
+    @SuppressLint("SetTextI18n")
     @AfterViews
     void afterViews() {
         try {
             nameTextView.setText(this.Venue.Name);
             classTextView.setText(this.Venue.Class);
+            if (StringHelper.isNotNullOrEmpty(this.Venue.Description)) {
+                descriptionContainerLayout.setVisibility(View.VISIBLE);
+                descripionTextView.setText(this.Venue.Description.substring(0, 40) + " ...");
+            }
 
             loadIndoorImage();
             loadContacts();
@@ -243,9 +253,9 @@ public class VenueDetailsActivity
                     if (ArrayHelper.hasValidBitmapContent(bytes)) {
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         indoorImageThumbnailView.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
-                        IsUsingDefaultIndoorImageThumbnail = false;
+                        isUsingDefaultIndoorImageThumbnail = false;
                     } else
-                        IsUsingDefaultIndoorImageThumbnail = true;
+                        isUsingDefaultIndoorImageThumbnail = true;
                     //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
                 }
             };
@@ -260,7 +270,7 @@ public class VenueDetailsActivity
         if (venueContacts != null) {
             boolean any = false;
             if (StringHelper.isNotNullOrEmpty(venueContacts.Phone)) {
-                this.PhoneNumber = venueContacts.Phone;
+                this.phoneNumber = venueContacts.Phone;
                 this.phoneButton.setText(venueContacts.Phone);
                 this.phoneButton.setVisibility(View.VISIBLE);
                 any = true;
@@ -572,9 +582,18 @@ public class VenueDetailsActivity
 //        }
 //    }
 
-    @Click(resName = "venueDetails_ivIndoorThumbnail")
+    @Click(R.id.venueDetails_lDescriptionContainer)
+    public void descriptionClicked() {
+        descriptionExpanded = !descriptionExpanded;
+        if (descriptionExpanded)
+            descripionTextView.setText(this.Venue.Description);
+        else
+            descripionTextView.setText(this.Venue.Description.substring(0, 40) + " ...");
+    }
+
+    @Click(R.id.venueDetails_ivIndoorThumbnail)
     public void ImageClick() {
-        if (!IsUsingDefaultIndoorImageThumbnail && hasValidIndoorImageMetadata()) {
+        if (!isUsingDefaultIndoorImageThumbnail && hasValidIndoorImageMetadata()) {
             final Dialog nagDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             nagDialog.setCancelable(true);
@@ -602,11 +621,11 @@ public class VenueDetailsActivity
         }
     }
 
-    @Click(resName = "venueDetails_btnPhone")
+    @Click(R.id.venueDetails_btnPhone)
     public void phoneCall() {
-        if (StringHelper.isNotNullOrEmpty(this.PhoneNumber))
+        if (StringHelper.isNotNullOrEmpty(this.phoneNumber))
         {
-            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", this.PhoneNumber, null));
+            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", this.phoneNumber, null));
             startActivity(intent);
         }
     }
