@@ -1,11 +1,13 @@
 package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -48,7 +50,7 @@ public class DetailsItemActivity
     @Extra
     public MenuListItemDetailed item;
 
-    @ViewById(R.id.details_item_ivIndoorThumbnail)
+    @ViewById(R.id.details_item_ivThumbnail)
     ImageView itemThumbnailView;
 
     @ViewById(R.id.details_item_svMain)
@@ -123,6 +125,41 @@ public class DetailsItemActivity
         }
     }
 
+    private boolean hasValidIndoorImageMetadata() {
+        return this.item.ImageThumbnail!= null
+                && this.item.ImageThumbnail.Id != null
+                && this.item.ImageThumbnail.Id.length() > 0;
+    }
+
+    @Click(R.id.details_item_ivThumbnail)
+    public void ImageClick() {
+        if (!isUsingDefaultThumbnail && hasValidIndoorImageMetadata()) {
+            final Dialog nagDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+            nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            nagDialog.setCancelable(true);
+            nagDialog.setContentView(R.layout.image_preview_dialog);
+
+            AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
+                @Override public void onPreExecute() {
+                    //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+                }
+
+                @Override public void onPostExecute(byte[] bytes) {
+                    if (ArrayHelper.hasValidBitmapContent(bytes)) {
+                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
+                        ivPreview.setImageBitmap(bmp);
+                        nagDialog.show();
+                    } else
+                        throw new NullPointerException("Image not found");
+                    //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+                }
+            };
+
+            DownloadBlobModel model = new DownloadBlobModel(this.item.ImageThumbnail.Id, itemOriginalBlobStorageContainerPath);
+            new LoadAzureBlobAsyncTask(listener).execute(model);
+        }
+    }
 
     @Click(R.id.details_item_btnShowVenue)
     public void showVenue_Clicked(){
@@ -136,7 +173,7 @@ public class DetailsItemActivity
     }
 
     @Click(R.id.details_item_btnShowMenu)
-    public void showMenue_Clicked(){
+    public void showMenu_Clicked(){
         Intent intent = new Intent(DetailsItemActivity.this, VenueMenuActivity_.class);
         this.venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
         this.venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
