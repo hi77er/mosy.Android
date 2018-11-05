@@ -5,7 +5,10 @@ import android.support.annotation.NonNull;
 
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IDishesRepository;
+import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IVenuesRepository;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.MenuListItemImage;
+import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
 import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
@@ -100,4 +103,32 @@ public class DishesService {
                 null);
     }
 
+    public void getImageMeta(Context applicationContext,
+                             AsyncTaskListener<MenuListItemImage> apiCallResultListener,
+                             Runnable onInvalidHost,
+                             String itemId) {
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
+                    try {
+                        Call<MenuListItemImage> callImage = repository.getImageMeta(authToken, itemId);
+                        apiCallResultListener.onPreExecute();
+                        callImage.enqueue(new Callback<MenuListItemImage>() {
+                            @Override public void onResponse(@NonNull Call<MenuListItemImage> call, @NonNull Response<MenuListItemImage> response) {
+                                MenuListItemImage result = response.body();
+                                apiCallResultListener.onPostExecute(result);
+                            }
+                            @Override public void onFailure(@NonNull Call<MenuListItemImage> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                },
+                onInvalidHost);
+    }
 }

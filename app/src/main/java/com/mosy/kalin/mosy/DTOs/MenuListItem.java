@@ -129,4 +129,28 @@ public class MenuListItem
     public int describeContents() {
         return 0;
     }
+
+    public MenuListItemDetailed toDetailed() {
+        return new MenuListItemDetailed(
+                this.Id,
+                this.BrochureId,
+                this.Name,
+                this.Summary,
+                this.VenueId,
+                this.VenueName,
+                this.VenueWorkingStatus,
+                this.IsRecommended,
+                this.IsNew,
+                this.ImageThumbnail,
+                this.DistanceToCurrentDeviceLocation,
+                this.VenueBusinessHours,
+                this.PriceDisplayText,
+                this.QuantityDisplayText,
+                this.DefaultMenuCulture,
+                this.Ingredients,
+                this.Filters,
+                this.MatchingFiltersIds,
+                this.MismatchingFiltersIds,
+                this.MenuListItemCultures);
+    }
 }

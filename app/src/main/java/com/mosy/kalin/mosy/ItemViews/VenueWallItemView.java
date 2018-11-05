@@ -8,11 +8,11 @@ import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
 import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.DetailsVenueActivity_;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.BusinessHoursHelper;
 import com.mosy.kalin.mosy.Helpers.LocationHelper;
@@ -23,7 +23,6 @@ import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.R;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
 import com.mosy.kalin.mosy.VenueMenuActivity_;
-import com.mosy.kalin.mosy.VenueDetailsActivity_;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
@@ -168,7 +167,7 @@ public class VenueWallItemView
     @Click(resName = "venueItem_btnInfo")
     public void InfoLinkClick()
     {
-        Intent intent = new Intent(this.baseContext, VenueDetailsActivity_.class);
+        Intent intent = new Intent(this.baseContext, DetailsVenueActivity_.class);
         this.Venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
         this.Venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
         this.Venue.Location = null;

@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -43,6 +44,7 @@ import com.mosy.kalin.mosy.DTOs.Base.WallItemBase;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.Enums.ImageResolution;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.MenuListItemDetailed;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
@@ -69,12 +71,15 @@ import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_wall)
@@ -476,8 +481,9 @@ public class WallActivity
 
                 if (itemClicked.getType() == WallItemBase.ITEM_TYPE_DISH_TILE){
                     MenuListItem castedItemClicked = ((DishWallItem)itemClicked).MenuListItem;
+                    MenuListItemDetailed detailed = castedItemClicked.toDetailed();
 
-                    Intent intent = new Intent(WallActivity.this, VenueMenuActivity_.class);
+                    Intent intent = new Intent(WallActivity.this, DetailsItemActivity_.class);
 
                     AsyncTaskListener<Venue> apiCallResultListener = new AsyncTaskListener<Venue>() {
                         @Override public void onPreExecute() {
@@ -489,8 +495,15 @@ public class WallActivity
                             venue.Location = null;
                             venue.VenueBusinessHours = null;
                             venue.VenueContacts = null;
-                            intent.putExtra("Venue", venue);
-                            intent.putExtra("SelectedMenuListId", castedItemClicked.BrochureId);
+                            detailed.MenuListItemCultures = null;
+                            detailed.MismatchingFiltersIds = null;
+                            detailed.MatchingFiltersIds = null;
+                            detailed.Filters = null;
+                            detailed.Ingredients= null;
+                            detailed.VenueBusinessHours = null;
+                            detailed.ImageThumbnail = null;
+                            intent.putExtra("item", detailed);
+                            intent.putExtra("venue", venue);
                             startActivity(intent);
                         }
                     };

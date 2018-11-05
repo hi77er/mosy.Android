@@ -1,6 +1,8 @@
 package com.mosy.kalin.mosy.DAL.Repositories.Interfaces;
 
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.MenuListItemImage;
+import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
 import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
 
@@ -11,6 +13,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface IDishesRepository {
 
@@ -19,5 +22,8 @@ public interface IDishesRepository {
 
     @GET("dishes/filters/all")
     Call<DishFiltersResult> getFilters (@Header("Authorization") String authorization);
+
+    @GET("dishes/images/meta")
+    Call<MenuListItemImage> getImageMeta(@Header("Authorization") String authorization, @Query("itemId") String itemId);
 
 }

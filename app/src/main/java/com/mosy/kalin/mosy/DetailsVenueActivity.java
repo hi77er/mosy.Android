@@ -56,14 +56,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 @SuppressLint("Registered")
-@EActivity(R.layout.activity_venue_details)
-public class VenueDetailsActivity
+@EActivity(R.layout.activity_details_venue)
+public class DetailsVenueActivity
         extends BaseActivity
         implements OnMapReadyCallback {
 
     private static final int REQUEST_PHONE_CALL = 1;
-    private static final String x200BlobStorageContainerPath = "userimages\\fboalbums\\200x200";
-    private static final String originalBlobStorageContainerPath = "userimages\\fboalbums\\original";
+    private static final String itemX200BlobStorageContainerPath = "userimages\\fboalbums\\200x200";
+    private static final String itemOriginalBlobStorageContainerPath = "userimages\\fboalbums\\original";
 
     boolean descriptionExpanded = false;
     boolean isUsingDefaultIndoorImageThumbnail;
@@ -76,93 +76,91 @@ public class VenueDetailsActivity
     @Extra
     public Venue Venue;
 
-    @FragmentById(R.id.venueDetails_frMap)
+    @FragmentById(R.id.details_venue_frMap)
     SupportMapFragment VenueLocationMap;
 
-    @ViewById(R.id.venueDetails_lFilters)
+    @ViewById(R.id.details_venue_lFilters)
     LinearLayout filtersLayout;
-    @ViewById(R.id.venueDetails_lCultureFilters)
+    @ViewById(R.id.details_venue_lCultureFilters)
     LinearLayout cultureFiltersLayout;
-    @ViewById(R.id.venueDetails_lContacts)
+    @ViewById(R.id.details_venue_lContacts)
     LinearLayout contactsLayout;
     @ViewById(R.id.venueDetails_lBusinessHours)
     LinearLayout businessHoursLayout;
 
-    @ViewById(R.id.venueDetails_lDescriptionContainer)
+    @ViewById(R.id.details_venue_lDescriptionContainer)
     LinearLayout descriptionContainerLayout;
-    @ViewById(R.id.venueDetails_lFiltersContainer)
+    @ViewById(R.id.details_venue_lFiltersContainer)
     LinearLayout filtersContainerLayout;
-    @ViewById(R.id.venueDetails_lCultureFiltersContainer)
+    @ViewById(R.id.details_venue_lCultureFiltersContainer)
     LinearLayout cultureFiltersContainerLayout;
-    @ViewById(R.id.venueDetails_lContactsContainer)
+    @ViewById(R.id.details_venue_lContactsContainer)
     LinearLayout contactsContainerLayout;
     @ViewById(R.id.venueDetails_lBusinessHoursContainer)
     LinearLayout getBusinessHoursContainerLayout;
 
-    @ViewById(R.id.venueDetails_lFiltersProgress)
+    @ViewById(R.id.details_venue_lFiltersProgress)
     LinearLayout filtersProgressLayout;
-    @ViewById(R.id.venueDetails_lCultureFiltersProgress)
+    @ViewById(R.id.details_venue_lCultureFiltersProgress)
     LinearLayout cultureFiltersProgressLayout;
-    @ViewById(R.id.venueDetails_lContactsProgress)
+    @ViewById(R.id.details_venue_lContactsProgress)
     LinearLayout contactsProgressLayout;
-    @ViewById(R.id.venueDetails_lBusinessHoursProgress)
+    @ViewById(R.id.details_venue_lBusinessHoursProgress)
     LinearLayout getBusinessHoursProgressLayout;
 
-    @ViewById(R.id.venueDetails_svMain)
+    @ViewById(R.id.details_venue_svMain)
     ScrollView mainScrollView;
-    @ViewById(R.id.venueDetails_tvName)
+    @ViewById(R.id.details_venue_tvName)
     TextView nameTextView;
-    @ViewById(R.id.venueDetails_tvClass)
+    @ViewById(R.id.details_venue__tvClass)
     TextView classTextView;
-    @ViewById(R.id.venueDetails_tvDescription)
-    TextView descripionTextView;
+    @ViewById(R.id.details_venue_tvDescription)
+    TextView descriptionTextView;
 
-    @ViewById(R.id.venueDetails_btnPhone)
+    @ViewById(R.id.details_venue_btnPhone)
     Button phoneButton;
-    @ViewById(R.id.venueDetails_btnDirections)
+    @ViewById(R.id.details_venue__btnDirections)
     Button directionsButton;
 
-    @ViewById(R.id.venueDetails_ivIndoorThumbnail)
+    @ViewById(R.id.details_venue_ivIndoorThumbnail)
     ImageView indoorImageThumbnailView;
-    @ViewById(R.id.venueDetails_tvBHMondayTime)
+    @ViewById(R.id.details_venue_tvBHMondayTime)
     TextView mondayTextView;
-    @ViewById(R.id.venueDetails_tvBHTuesdayTime)
+    @ViewById(R.id.details_venue_tvBHTuesdayTime)
     TextView tuesdayTextView;
-    @ViewById(R.id.venueDetails_tvBHWednesdayTime)
+    @ViewById(R.id.details_venue_tvBHWednesdayTime)
     TextView wednesdayTextView;
-    @ViewById(R.id.venueDetails_tvBHThursdayTime)
+    @ViewById(R.id.details_venue_tvBHThursdayTime)
     TextView thursdayTextView;
-    @ViewById(R.id.venueDetails_tvBHFridayTime)
+    @ViewById(R.id.details_venue_tvBHFridayTime)
     TextView fridayTextView;
-    @ViewById(R.id.venueDetails_tvBHSaturdayTime)
+    @ViewById(R.id.details_venue_tvBHSaturdayTime)
     TextView saturdayTextView;
-    @ViewById(R.id.venueDetails_tvBHSundayTime)
+    @ViewById(R.id.details_venue_tvBHSundayTime)
     TextView sundayTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
-        this.applicationContext = getApplicationContext();
     }
 
     @SuppressLint("SetTextI18n")
     @AfterViews
     void afterViews() {
         try {
-            nameTextView.setText(this.Venue.Name);
-            classTextView.setText(this.Venue.Class);
+            this.nameTextView.setText(this.Venue.Name);
+            this.classTextView.setText(this.Venue.Class);
             if (StringHelper.isNotNullOrEmpty(this.Venue.Description)) {
-                descriptionContainerLayout.setVisibility(View.VISIBLE);
-                descripionTextView.setText(this.Venue.Description.substring(0, 40) + " ...");
+                this.descriptionContainerLayout.setVisibility(View.VISIBLE);
+                this.descriptionTextView.setText(this.Venue.Description.substring(0, 40) + " ...");
             }
 
-            loadIndoorImage();
-            loadContacts();
-            loadBusinessHours();
-            loadLocation();
-            populateFilters();
-            populateCultureFilters();
+            this.loadIndoorImage();
+            this.loadContacts();
+            this.loadBusinessHours();
+            this.loadLocation();
+            this.populateFilters();
+            this.populateCultureFilters();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -260,7 +258,7 @@ public class VenueDetailsActivity
                 }
             };
 
-            DownloadBlobModel model = new DownloadBlobModel(this.Venue.IndoorImage.Id, x200BlobStorageContainerPath);
+            DownloadBlobModel model = new DownloadBlobModel(this.Venue.IndoorImage.Id, itemX200BlobStorageContainerPath);
             new LoadAzureBlobAsyncTask(listener).execute(model);
         }
     }
@@ -582,16 +580,16 @@ public class VenueDetailsActivity
 //        }
 //    }
 
-    @Click(R.id.venueDetails_lDescriptionContainer)
+    @Click(R.id.details_venue_lDescriptionContainer)
     public void descriptionClicked() {
         descriptionExpanded = !descriptionExpanded;
         if (descriptionExpanded)
-            descripionTextView.setText(this.Venue.Description);
+            descriptionTextView.setText(this.Venue.Description);
         else
-            descripionTextView.setText(this.Venue.Description.substring(0, 40) + " ...");
+            descriptionTextView.setText(this.Venue.Description.substring(0, 40) + " ...");
     }
 
-    @Click(R.id.venueDetails_ivIndoorThumbnail)
+    @Click(R.id.details_venue_ivIndoorThumbnail)
     public void ImageClick() {
         if (!isUsingDefaultIndoorImageThumbnail && hasValidIndoorImageMetadata()) {
             final Dialog nagDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
@@ -616,12 +614,12 @@ public class VenueDetailsActivity
                 }
             };
 
-            DownloadBlobModel model = new DownloadBlobModel(this.Venue.IndoorImage.Id, originalBlobStorageContainerPath);
+            DownloadBlobModel model = new DownloadBlobModel(this.Venue.IndoorImage.Id, itemOriginalBlobStorageContainerPath);
             new LoadAzureBlobAsyncTask(listener).execute(model);
         }
     }
 
-    @Click(R.id.venueDetails_btnPhone)
+    @Click(R.id.details_venue_btnPhone)
     public void phoneCall() {
         if (StringHelper.isNotNullOrEmpty(this.phoneNumber))
         {

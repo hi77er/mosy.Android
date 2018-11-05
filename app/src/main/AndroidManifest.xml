@@ -70,8 +70,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".VenueDetailsActivity_"
+            android:name=".DetailsVenueActivity_"
             android:label="@string/manifest_venueDetailsActivityTitle"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DetailsItemActivity_"
+            android:label="@string/manifest_itemDetailsActivityTitle"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".VenuesFiltersActivity_"
