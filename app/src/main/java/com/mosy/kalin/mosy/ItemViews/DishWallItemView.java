@@ -2,13 +2,20 @@ package com.mosy.kalin.mosy.ItemViews;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mosy.kalin.mosy.DTOs.Enums.FilterType;
+import com.mosy.kalin.mosy.DTOs.Enums.FilteredType;
 import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
+import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.MenuListItemCulture;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
@@ -76,17 +83,12 @@ public class DishWallItemView
             this.nameTextView.setText(selectedCulture.MenuListItemName);
             this.venueNameTextView.setText(menuListItem.VenueName);
 
-            if (menuListItem.ImageThumbnail != null && menuListItem.ImageThumbnail.Bitmap != null)
-                this.imageThumbnail.setImageBitmap(menuListItem.ImageThumbnail.Bitmap);
-
             if (menuListItem.ImageThumbnail != null && menuListItem.ImageThumbnail.Bitmap != null) {
                 this.imageThumbnail.setImageBitmap(menuListItem.ImageThumbnail.Bitmap);
                 IsUsingDefaultThumbnail = false;
             }
             else {
-                Bitmap defaultImageBitmap = BitmapFactory.decodeResource(this.baseContext.getResources(), R.drawable.eat_paprika_100x100);
-                this.imageThumbnail.setImageBitmap(defaultImageBitmap);
-                IsUsingDefaultThumbnail = true;
+                this.setDefaultImageThumbnail();
             }
 
             this.distanceFromDeviceTextView.setVisibility(INVISIBLE);
@@ -131,6 +133,68 @@ public class DishWallItemView
             this.recommendedLabel.setVisibility(menuListItem.IsRecommended ? VISIBLE : GONE);
             this.newLabel.setVisibility(menuListItem.IsNew ? VISIBLE : GONE);
         }
+    }
+
+    private void setDefaultImageThumbnail() {
+        boolean isVector = false;
+        int drawableId = R.drawable.eat_paprika_100x100;
+        if (this.MenuListItem != null && this.MenuListItem.Filters != null){
+            for (Filter filter : this.MenuListItem.Filters) {
+                switch (filter.Id.toUpperCase()) {
+                    case "A9C13F74-219A-4FC5-8D81-0A60D7A1173B": // salads
+                        drawableId = R.drawable.ic_salad_96;
+                        break;
+                    case "6A87D0EA-1503-4B99-8998-22D24C17307E": // pasta
+                        drawableId = R.drawable.ic_spaghetti_96;
+                        break;
+                    case "E48B981A-5146-44AB-A78D-2A0029880286": // alcoholic drinks
+                        drawableId = R.drawable.ic_wine_glass_96;
+                        break;
+                    case "84AD4941-A8FA-45A7-9A9B-3C2D9F4278F5": // sushi
+                        drawableId = R.drawable.ic_sushi_96;
+                        break;
+                    case "E8ACF3CB-2C7A-4C8C-A142-5286388EB2AE": // appetizers & snacks
+                        drawableId = R.drawable.ic_tapas_96;
+                        break;
+                    case "71539C9A-7DC6-4C55-860B-528C54DBF80D": // burgers
+                        drawableId = R.drawable.ic_hamburger_96;
+                        break;
+                    case "9F704161-7D3B-4397-A68A-60412FB6A941": // non-alcoholic drinks
+                        drawableId = R.drawable.ic_cup_water_24;
+                        isVector = true;
+                        break;
+                    case "A47E2E84-E190-4B45-92B9-787669050168": // pizza
+                        drawableId = R.drawable.ic_pizza_24;
+                        isVector = true;
+                        break;
+                    case "09BC29A1-A475-4780-85D8-840DFCD3B18D": // breakfast
+                        drawableId = R.drawable.ic_croissant_24;
+                        isVector = true;
+                        break;
+                    case "48CC81A4-C2DE-40E8-A698-B9FE4C15B307": // buffet & brunch
+                        drawableId = R.drawable.eat_paprika_100x100;
+                        break;
+                    case "9412FB28-4236-4202-A817-C35F25CE3B30": // mains
+                        drawableId = R.drawable.eat_paprika_100x100;
+                        break;
+                    case "672A7F77-8087-4B62-BCC3-ECCDE5774B60": // sandwiches & wraps
+                        drawableId = R.drawable.ic_taco_96;
+                        break;
+                    case "58B436F4-7280-4135-8A9B-F87A940B5C7A": // deserts
+                        drawableId = R.drawable.ic_cupcake_24;
+                        isVector = true;
+                        break;
+                }
+            }
+        }
+        if (isVector){
+            this.imageThumbnail.setImageResource(drawableId);
+        }
+        else{
+            Bitmap defaultImageBitmap = BitmapFactory.decodeResource(this.baseContext.getResources(), drawableId);
+            this.imageThumbnail.setImageBitmap(defaultImageBitmap);
+        }
+        IsUsingDefaultThumbnail = true;
     }
 
     @Click(R.id.menuListItem_ivThumbnail)

@@ -12,7 +12,7 @@
         android:layout_width="130dp"
         android:layout_height="130dp"
         android:layout_margin="7dp"
-        android:src="@drawable/eat_paprika_100x100" />
+        android:src="@drawable/eat_paprika_100x100"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="72dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:backgroundTint="@color/colorPrimary">
 
             <LinearLayout
                 android:layout_width="0dp"
