@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -71,15 +70,12 @@ import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_wall)
@@ -288,7 +284,7 @@ public class WallActivity
             }
         };
 
-        this.dishesService.getFilters(this.applicationContext, listener);
+        this.dishesService.getAllFilters(this.applicationContext, listener);
     }
 
     //INFO: Called in "afterViews"

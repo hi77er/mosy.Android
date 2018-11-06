@@ -2,7 +2,6 @@ package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -297,7 +295,7 @@ public class DishesFiltersActivity
             }
         };
 
-        this.dishesService.getFilters(this.applicationContext, listener);
+        this.dishesService.getAllFilters(this.applicationContext, listener);
     }
 
     private ArrayList<FilterItem> toFilterItems(ArrayList<Filter> filters) {

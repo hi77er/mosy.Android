@@ -5,10 +5,9 @@ import android.support.annotation.NonNull;
 
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IDishesRepository;
-import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IVenuesRepository;
+import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.MenuListItemImage;
-import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
 import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
@@ -16,11 +15,11 @@ import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
 import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Body;
 
 @EBean
 public class DishesService {
@@ -75,8 +74,8 @@ public class DishesService {
                 null);
     }
 
-    public void getFilters(Context applicationContext,
-                           AsyncTaskListener<DishFiltersResult> apiCallResultListener)
+    public void getAllFilters(Context applicationContext,
+                              AsyncTaskListener<DishFiltersResult> apiCallResultListener)
     {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
@@ -84,7 +83,7 @@ public class DishesService {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
                     try {
-                        Call<DishFiltersResult> callFilters = repository.getFilters(authTokenHeader);
+                        Call<DishFiltersResult> callFilters = repository.loadAllFilters(authTokenHeader);
                         apiCallResultListener.onPreExecute();
                         callFilters.enqueue(new Callback<DishFiltersResult>() {
                             @Override public void onResponse(@NonNull Call<DishFiltersResult> call, @NonNull Response<DishFiltersResult> response) {
@@ -102,6 +101,37 @@ public class DishesService {
                 },
                 null);
     }
+
+    public void getFilters(Context applicationContext,
+                           AsyncTaskListener<ArrayList<Filter>> apiCallResultListener,
+                           String itemId)
+    {
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
+                    try {
+                        Call<ArrayList<Filter>> callFilters = repository.loadFilters(authTokenHeader, itemId);
+                        apiCallResultListener.onPreExecute();
+                        callFilters.enqueue(new Callback<ArrayList<Filter>>() {
+                            @Override public void onResponse(@NonNull Call<ArrayList<Filter>> call, @NonNull Response<ArrayList<Filter>> response) {
+                                ArrayList<Filter> result = response.body();
+                                apiCallResultListener.onPostExecute(result);
+                            }
+                            @Override public void onFailure(@NonNull Call<ArrayList<Filter>> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                },
+                null);
+    }
+
+
 
     public void getImageMeta(Context applicationContext,
                              AsyncTaskListener<MenuListItemImage> apiCallResultListener,

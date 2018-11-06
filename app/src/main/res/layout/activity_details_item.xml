@@ -93,14 +93,62 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!--<TextView-->
-            <!--android:id="@+id/details_item_tvIngredients"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:layout_marginTop="5dp"-->
-            <!--android:textSize="10sp"-->
-            <!--android:textStyle="italic" />-->
+        <LinearLayout
+            android:id="@+id/details_item_lDescriptionContainer"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_gravity="start"
+            android:background="@color/colorPrimaryVeryLight"
+            android:padding="10dp"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/details_item_tvDescription"
+                android:layout_gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/details_item_lFiltersContainer"
+            android:orientation="horizontal"
+            android:layout_gravity="start"
+            android:background="@color/colorPrimaryVeryLight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_marginBottom="10dp">
+
+            <LinearLayout
+                android:id="@+id/details_item_lFilters"
+                android:orientation="horizontal"
+                android:layout_gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/details_item_lFiltersProgress"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <ProgressBar
+                    android:id="@+id/pbFiltersProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true" >
+                </ProgressBar>
+            </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>
