@@ -157,8 +157,11 @@ public class WallActivity
     SwipeRefreshLayout venuesSwipeContainer;
     @ViewById(R.id.venues_lDishesSwipeContainer)
     SwipeRefreshLayout dishesSwipeContainer;
+
     @ViewById(R.id.venues_ibFilters)
     FloatingActionButton filtersButton;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -292,16 +295,6 @@ public class WallActivity
         if (ConnectivityHelper.isConnected(applicationContext)) {
             RecyclerView.OnScrollListener venuesScrollListener = new RecyclerView.OnScrollListener() {
                 @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                    TypedValue tv = new TypedValue();
-//                    int actionBarHeight = 0;
-//                    ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) venuesSwipeContainer.getLayoutParams();
-//                    if (dy <= 0){ // scroll down
-//                        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-//                            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
-//                    }
-//                    marginLayoutParams.setMargins(0, actionBarHeight, 0, 0);
-//                    venuesSwipeContainer.setLayoutParams(marginLayoutParams);
-
                     if (!venuesLoadingStillInAction && ConnectivityHelper.isConnected(applicationContext) && wallVenuesAdapter.APICallStillReturnsElements) {
                         venuesLoadingStillInAction = true;
 
@@ -318,8 +311,6 @@ public class WallActivity
                         filtersButton.show();
                 }
             };
-
-            final SwipeRefreshLayout venuesSwipeContainer = findViewById(R.id.venues_lVenuesSwipeContainer);
 
             this.venuesWall.setAdapter(wallVenuesAdapter);
             this.venuesWall.setLayoutManager(new GridLayoutManager(this.baseContext, 1));
@@ -360,8 +351,8 @@ public class WallActivity
                         ArrayList<String> selectedVenueAvailabilityFilterIds,
                         ArrayList<String> selectedVenueAtmosphereFilterIds,
                         ArrayList<String> selectedVenueCultureFilterIds){
-        if (ConnectivityHelper.isConnected(applicationContext) &&
-                this.lastKnownLocation != null) {
+        if (ConnectivityHelper.isConnected(applicationContext) && this.lastKnownLocation != null) {
+
             AsyncTaskListener<ArrayList<Venue>> apiCallResultListener = new AsyncTaskListener<ArrayList<Venue>>() {
                 @Override public void onPreExecute() {
                     centralProgress.setVisibility(View.VISIBLE);

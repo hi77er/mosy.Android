@@ -38,21 +38,20 @@ public class VenueWallItemView
     private Context baseContext;
     private Venue Venue;
 
+    @ViewById(R.id.venueItem_ivOutdoorThumbnail)
+    ImageView outdoorImageThumbnailTextView;
 
-    @ViewById(resName = "venueItem_tvName")
-    TextView Name;
-    @ViewById(resName = "venueItem_tvClass")
-    TextView Class;
-
-    @ViewById(resName = "venueItem_tvDistance")
-    TextView DistanceFromDevice;
-    @ViewById(resName = "venueItem_tvWalkingMinutes")
-    TextView WalkingMinutes;
-    @ViewById(resName = "venueItem_ivOutdoorThumbnail")
-    ImageView OutdoorImageThumbnail;
-
+    @ViewById(R.id.venueItem_tvName)
+    TextView nameTextView;
+    @ViewById(R.id.venueItem_tvClass)
+    TextView classTextView;
+    @ViewById(R.id.venueItem_tvDistance)
+    TextView distanceFromDeviceTextView;
+    @ViewById(R.id.venueItem_tvWalkingMinutes)
+    TextView walkingMinutesTextView;
     @ViewById(R.id.venueItem_tvWorkingStatusLabel)
     TextView workingStatusLabel;
+
 //    @ViewById(R.id.venueItem_tvRecommendedLabel)
 //    TextView newLabel;
 
@@ -62,21 +61,21 @@ public class VenueWallItemView
     }
 
     public void bind(Venue venue) {
-        this.OutdoorImageThumbnail.setImageDrawable(null);
+        this.outdoorImageThumbnailTextView.setImageDrawable(null);
 
         if (venue != null) {
             this.Venue = venue;
 
-            this.Name.setText(venue.Name);
-            this.Class.setText(venue.Class);
+            this.nameTextView.setText(venue.Name);
+            this.classTextView.setText(venue.Class);
 
             if (venue.OutdoorImage != null && venue.OutdoorImage.Bitmap != null) {
-                this.OutdoorImageThumbnail.setImageBitmap(venue.OutdoorImage.Bitmap);
+                this.outdoorImageThumbnailTextView.setImageBitmap(venue.OutdoorImage.Bitmap);
                 IsUsingDefaultThumbnail = false;
             }
             else {
                 Bitmap defaultImageBitmap = BitmapFactory.decodeResource(this.baseContext.getResources(), R.drawable.venue_default_thumbnail);
-                this.OutdoorImageThumbnail.setImageBitmap(defaultImageBitmap);
+                this.outdoorImageThumbnailTextView.setImageBitmap(defaultImageBitmap);
                 IsUsingDefaultThumbnail = true;
             }
 
@@ -101,17 +100,17 @@ public class VenueWallItemView
             if (venue.DistanceToCurrentDeviceLocation > 0)
             {
                 String distance = LocationHelper.buildDistanceText(venue.DistanceToCurrentDeviceLocation);
-                this.DistanceFromDevice.setText(distance);
-                this.WalkingMinutes.setVisibility(View.VISIBLE);
+                this.distanceFromDeviceTextView.setText(distance);
+                this.walkingMinutesTextView.setVisibility(View.VISIBLE);
 
                 String timeWalking = LocationHelper.buildMinutesWalkingText(venue.DistanceToCurrentDeviceLocation);
                 timeWalking = (timeWalking.length() > 0 ? timeWalking : StringHelper.empty());
 
                 if (!timeWalking.equals(StringHelper.empty())) {
-                    this.WalkingMinutes.setText(timeWalking);
-                    this.WalkingMinutes.setVisibility(View.VISIBLE);
+                    this.walkingMinutesTextView.setText(timeWalking);
+                    this.walkingMinutesTextView.setVisibility(View.VISIBLE);
                 } else {
-                    this.WalkingMinutes.setVisibility(View.INVISIBLE);
+                    this.walkingMinutesTextView.setVisibility(View.INVISIBLE);
                 }
             }
         }
