@@ -110,6 +110,24 @@
                     <!--android:layout_height="wrap_content" />-->
             <!--</LinearLayout>-->
 
+            <LinearLayout android:id="@+id/details_item_lIngredientsContainer"
+                android:visibility="gone"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:background="@color/colorPrimaryVeryLight"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView android:id="@+id/details_item_tvIngredients"
+                    android:layout_gravity="start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="italic"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
             <LinearLayout android:id="@+id/details_item_lFiltersContainer"
                 android:orientation="horizontal"
                 android:layout_gravity="start"
@@ -176,24 +194,6 @@
                         android:indeterminate="true" >
                     </ProgressBar>
                 </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout android:id="@+id/details_item_lIngredientsContainer"
-                android:visibility="gone"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:background="@color/colorPrimaryVeryLight"
-                android:padding="10dp"
-                android:layout_marginBottom="10dp">
-
-                <TextView android:id="@+id/details_item_tvIngredients"
-                    android:layout_gravity="start"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="italic"
-                    android:textSize="10sp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
