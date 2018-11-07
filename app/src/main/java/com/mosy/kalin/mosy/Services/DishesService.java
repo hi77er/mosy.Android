@@ -7,8 +7,11 @@ import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IDishesRepository;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.MenuListItemCulture;
 import com.mosy.kalin.mosy.DTOs.MenuListItemImage;
+import com.mosy.kalin.mosy.Helpers.LocaleHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
+import com.mosy.kalin.mosy.Models.BindingModels.GetItemPreferredCultureBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
 import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
 
@@ -151,6 +154,35 @@ public class DishesService {
                                 apiCallResultListener.onPostExecute(result);
                             }
                             @Override public void onFailure(@NonNull Call<MenuListItemImage> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                },
+                onInvalidHost);
+    }
+
+    public void getItemPreferredCulture(Context applicationContext, AsyncTaskListener<MenuListItemCulture> apiCallResultListener, Runnable onInvalidHost, String itemId) {
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    ArrayList<String> preferredLocales = LocaleHelper.getPreferredLanguages(applicationContext);
+                    GetItemPreferredCultureBindingModel model = new GetItemPreferredCultureBindingModel(itemId, preferredLocales);
+
+                    IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
+                    try {
+                        Call<MenuListItemCulture> callImage = repository.getItemPreferredCulture(authToken, model);
+                        apiCallResultListener.onPreExecute();
+                        callImage.enqueue(new Callback<MenuListItemCulture>() {
+                            @Override public void onResponse(@NonNull Call<MenuListItemCulture> call, @NonNull Response<MenuListItemCulture> response) {
+                                MenuListItemCulture result = response.body();
+                                apiCallResultListener.onPostExecute(result);
+                            }
+                            @Override public void onFailure(@NonNull Call<MenuListItemCulture> call, @NonNull Throwable t) {
                                 call.cancel();
                             }
                         });

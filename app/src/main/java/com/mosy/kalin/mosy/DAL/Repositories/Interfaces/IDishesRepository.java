@@ -2,8 +2,10 @@ package com.mosy.kalin.mosy.DAL.Repositories.Interfaces;
 
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.MenuListItemCulture;
 import com.mosy.kalin.mosy.DTOs.MenuListItemImage;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
+import com.mosy.kalin.mosy.Models.BindingModels.GetItemPreferredCultureBindingModel;
 import com.mosy.kalin.mosy.Models.BindingModels.LocalizedInfoModel;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
 import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
@@ -33,5 +35,8 @@ public interface IDishesRepository {
 
     @POST("dishes/filters")
     Call<ArrayList<Filter>> loadFilters(@Header("Authorization") String authorization, @Query("itemId") String itemId);
+
+    @POST("dishes/culture/preferred")
+    Call<MenuListItemCulture> getItemPreferredCulture(@Header("Authorization") String authorization, @Body GetItemPreferredCultureBindingModel model);
 
 }

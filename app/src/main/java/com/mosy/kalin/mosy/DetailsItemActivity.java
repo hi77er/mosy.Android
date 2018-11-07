@@ -18,11 +18,15 @@ import android.widget.TextView;
 import com.annimon.stream.Stream;
 import com.mosy.kalin.mosy.DTOs.Enums.FilterType;
 import com.mosy.kalin.mosy.DTOs.Filter;
+import com.mosy.kalin.mosy.DTOs.Ingredient;
+import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.MenuListItemCulture;
 import com.mosy.kalin.mosy.DTOs.MenuListItemDetailed;
 import com.mosy.kalin.mosy.DTOs.MenuListItemImage;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.DrawableHelper;
+import com.mosy.kalin.mosy.Helpers.LocaleHelper;
 import com.mosy.kalin.mosy.Helpers.MetricsHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
@@ -47,8 +51,11 @@ public class DetailsItemActivity
     private static final String itemX200BlobStorageContainerPath = "userimages\\requestablealbums\\200x200";
     private static final String itemOriginalBlobStorageContainerPath = "userimages\\requestablealbums\\original";
 
-    boolean descriptionExpanded = false;
+    boolean ingredientsExpanded = false;
+    String entireIngredientsText = StringHelper.empty();
     boolean isUsingDefaultThumbnail;
+
+    public MenuListItemCulture itemCulture;
 
     @Bean
     DishesService dishesService;
@@ -58,21 +65,31 @@ public class DetailsItemActivity
     @Extra
     public MenuListItemDetailed item;
 
+    @ViewById(R.id.details_item_llMain)
+    LinearLayout mainLayout;
+
     @ViewById(R.id.details_item_ivThumbnail)
     ImageView itemThumbnailView;
 
-    @ViewById(R.id.details_item_svMain)
-    ScrollView mainScrollView;
     @ViewById(R.id.details_item_tvName)
     TextView nameTextView;
-//    @ViewById(R.id.details_item_tvIngredients)
-//    TextView ingredientsTextView;
+//    @ViewById(R.id.details_item_tvDescription)
+//    TextView descriptionTextView;
+    @ViewById(R.id.details_item_tvIngredients)
+    TextView ingredientsTextView;
 
+//    @ViewById(R.id.details_item_lDescriptionContainer)
+//    LinearLayout descriptionContainerLayout;
+    @ViewById(R.id.details_item_lIngredientsContainer)
+    LinearLayout ingredientsContainerLayout;
     @ViewById(R.id.details_item_lFiltersContainer)
     LinearLayout itemFiltersContainer;
     @ViewById(R.id.details_item_lAllergenFiltersContainer)
     LinearLayout itemAllergenFiltersContainer;
 
+
+    @ViewById(R.id.details_item_lMainProgress)
+    LinearLayout mainProgressLayout;
     @ViewById(R.id.details_item_lFiltersProgress)
     LinearLayout itemFiltersProgressLayout;
     @ViewById(R.id.details_item_lAllergenFiltersProgress)
@@ -83,9 +100,6 @@ public class DetailsItemActivity
     @ViewById(R.id.details_item_lAllergenFilters)
     LinearLayout allergenFiltersLayout;
 
-
-
-
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -95,19 +109,71 @@ public class DetailsItemActivity
     @AfterViews
     void afterViews() {
         try {
-            nameTextView.setText(this.item.Name);
-//            ingredientsTextView.setText(this.Venue.Class);
-//            if (StringHelper.isNotNullOrEmpty(this.Venue.Description)) {
-//                descriptionContainerLayout.setVisibility(View.VISIBLE);
-//                descriptionTextView.setText(this.Venue.Description.substring(0, 40) + " ...");
-//            }
-
+            this.loadItemCulture();
             this.loadIndoorImage();
             this.loadFilters();
 //            loadContacts();
 //            populateFilters();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void loadItemCulture() {
+        AsyncTaskListener<MenuListItemCulture> apiCallResultListener = new AsyncTaskListener<MenuListItemCulture>() {
+            @Override
+            public void onPreExecute() {
+                showMainProgress();
+            }
+
+            @Override
+            public void onPostExecute(MenuListItemCulture result) {
+                itemCulture = result;
+                populateItemCulture();
+                hideMainProgress();
+                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+            }
+        };
+        this.dishesService.getItemPreferredCulture(this.applicationContext, apiCallResultListener, null, this.item.Id);
+    }
+
+    private void showMainProgress() {
+        mainProgressLayout.setVisibility(View.VISIBLE);
+        mainLayout.setVisibility(View.GONE);
+    }
+
+    private void hideMainProgress() {
+        mainProgressLayout.setVisibility(View.GONE);
+        mainLayout.setVisibility(View.VISIBLE);
+
+    }
+
+    private void populateItemCulture() {
+        if (this.itemCulture != null){
+            nameTextView.setText(this.itemCulture.MenuListItemName);
+
+            if (this.itemCulture != null && this.itemCulture.Ingredients != null && this.itemCulture.Ingredients.size() > 0) {
+                this.ingredientsContainerLayout.setVisibility(View.VISIBLE);
+                StringBuilder ingredientsTextBuilder = new StringBuilder(StringHelper.empty());
+                boolean firstEntry = true;
+                for(Ingredient ingredient : this.itemCulture.Ingredients)
+                {
+                    String delimiter = firstEntry ? StringHelper.empty() : ", ";
+                    firstEntry = false;
+                    ingredientsTextBuilder.append(delimiter).append(ingredient.Name);
+                }
+                this.entireIngredientsText = ingredientsTextBuilder.toString();
+                String ingredientsText = this.entireIngredientsText.length() < 41
+                        ? this.entireIngredientsText
+                        : this.entireIngredientsText.substring(0, 40) + " ...";
+
+                ingredientsTextView.setText(ingredientsText);
+            }
+
+//        if (StringHelper.isNotNullOrEmpty(this.itemCulture.Description)) {
+//            this.descriptionContainerLayout.setVisibility(View.VISIBLE);
+//            descriptionTextView.setText(this.Venue.Description.substring(0, 40) + " ...");
+//        }
         }
     }
 
@@ -349,6 +415,18 @@ public class DetailsItemActivity
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Click(R.id.details_item_lIngredientsContainer)
+    public void descriptionClicked() {
+        ingredientsExpanded = !ingredientsExpanded;
+
+        if (ingredientsExpanded)
+            ingredientsTextView.setText(this.entireIngredientsText);
+        else{
+            ingredientsTextView.setText(this.entireIngredientsText.substring(0, 40) + " ...");
+        }
     }
 
 }

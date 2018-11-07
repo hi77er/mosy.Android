@@ -152,7 +152,11 @@ public class DetailsVenueActivity
             this.classTextView.setText(this.Venue.Class);
             if (StringHelper.isNotNullOrEmpty(this.Venue.Description)) {
                 this.descriptionContainerLayout.setVisibility(View.VISIBLE);
-                this.descriptionTextView.setText(this.Venue.Description.substring(0, 40) + " ...");
+
+                if (this.Venue.Description.length() <= 41)
+                    this.descriptionTextView.setText(this.Venue.Description);
+                else
+                    this.descriptionTextView.setText(this.Venue.Description.substring(0, 40) + " ...");
             }
 
             this.loadIndoorImage();
@@ -583,13 +587,15 @@ public class DetailsVenueActivity
 //        }
 //    }
 
+    @SuppressLint("SetTextI18n")
     @Click(R.id.details_venue_lDescriptionContainer)
     public void descriptionClicked() {
-        descriptionExpanded = !descriptionExpanded;
-        if (descriptionExpanded)
-            descriptionTextView.setText(this.Venue.Description);
-        else
-            descriptionTextView.setText(this.Venue.Description.substring(0, 40) + " ...");
+        this.descriptionExpanded = !this.descriptionExpanded;
+        if (this.descriptionExpanded)
+            this.descriptionTextView.setText(this.Venue.Description);
+        else{
+            this.descriptionTextView.setText(this.Venue.Description.substring(0, 40) + " ...");
+        }
     }
 
     @Click(R.id.details_venue_ivIndoorThumbnail)
