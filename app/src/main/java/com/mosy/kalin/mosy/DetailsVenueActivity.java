@@ -393,7 +393,8 @@ public class DetailsVenueActivity
         for (Filter filter : filters) {
             int drawableId = DrawableHelper.getDrawableIdByFilterId(filter.Id);
             if (drawableId != 0) {
-                ImageView filterImageView = this.createFilterImage(drawableId, needSquareIcon ? 31 : 46, filter.I18nResourceDescription, filter.Description);
+                ImageView filterImageView = this.createFilterImage(drawableId, needSquareIcon ? 31 : 46,
+                        filter.I18nResourceName, filter.Name, filter.I18nResourceDescription, filter.Description);
                 container.addView(filterImageView);
                 hasAny = true;
             }
@@ -401,7 +402,8 @@ public class DetailsVenueActivity
         return hasAny;
     }
 
-    private ImageView createFilterImage(int drawableId, int widthDp, String descriptionResourceI18nId, String defaultDescriptionText) {
+    private ImageView createFilterImage(int drawableId, int widthDp, String nameResourceI18nId, String defaultNameText,
+                                        String descriptionResourceI18nId, String defaultDescriptionText) {
         ImageView filterImageView = new ImageView(this.baseContext);
         filterImageView.setImageDrawable(getResources().getDrawable(drawableId));
 
@@ -411,7 +413,7 @@ public class DetailsVenueActivity
         lp.setMargins((int)MetricsHelper.convertDpToPixel(6), 0, 0, 0);
         filterImageView.setLayoutParams(lp);
 
-        filterImageView.setOnClickListener(view -> this.filterClick(descriptionResourceI18nId, defaultDescriptionText));
+        filterImageView.setOnClickListener(view -> this.filterClick(nameResourceI18nId, defaultNameText, descriptionResourceI18nId, defaultDescriptionText));
 
         filterImageView.setVisibility(View.VISIBLE);
         return filterImageView;
@@ -528,11 +530,12 @@ public class DetailsVenueActivity
         startActivity(intent);
     }
 
-    private void filterClick(String descriptionResourceI18nId, String defaultDescriptionText) {
+    private void filterClick(String nameResourceI18nId, String defaultNameText, String descriptionResourceI18nId, String defaultDescriptionText) {
+        String filterNameLocalized = StringHelper.getStringAppDefaultLocale(this, getResources(), nameResourceI18nId, defaultNameText);
         String filterDescriptionLocalized = StringHelper.getStringAppDefaultLocale(this, getResources(), descriptionResourceI18nId, defaultDescriptionText);
         if (StringHelper.isNotNullOrEmpty(filterDescriptionLocalized))
             new AlertDialog.Builder(this)
-                    .setTitle(StringHelper.getStringAppDefaultLocale(this, getResources(), "info_dialog_title", "Info"))
+                    .setTitle(filterNameLocalized)
                     .setMessage(filterDescriptionLocalized)
                     .setPositiveButton(android.R.string.ok, (dialog, which) ->  dialog.cancel())
                     .show();

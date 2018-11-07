@@ -2,15 +2,14 @@ package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.ClipData;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -19,12 +18,9 @@ import android.widget.TextView;
 import com.annimon.stream.Stream;
 import com.mosy.kalin.mosy.DTOs.Enums.FilterType;
 import com.mosy.kalin.mosy.DTOs.Filter;
-import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.MenuListItemDetailed;
 import com.mosy.kalin.mosy.DTOs.MenuListItemImage;
 import com.mosy.kalin.mosy.DTOs.Venue;
-import com.mosy.kalin.mosy.DTOs.VenueContacts;
-import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.DrawableHelper;
 import com.mosy.kalin.mosy.Helpers.MetricsHelper;
@@ -73,13 +69,19 @@ public class DetailsItemActivity
 //    TextView ingredientsTextView;
 
     @ViewById(R.id.details_item_lFiltersContainer)
-    LinearLayout itemFiltersLayout;
+    LinearLayout itemFiltersContainer;
+    @ViewById(R.id.details_item_lAllergenFiltersContainer)
+    LinearLayout itemAllergenFiltersContainer;
 
     @ViewById(R.id.details_item_lFiltersProgress)
     LinearLayout itemFiltersProgressLayout;
+    @ViewById(R.id.details_item_lAllergenFiltersProgress)
+    LinearLayout itemAllergenFiltersProgressLayout;
 
     @ViewById(R.id.details_item_lFilters)
     LinearLayout filtersLayout;
+    @ViewById(R.id.details_item_lAllergenFilters)
+    LinearLayout allergenFiltersLayout;
 
 
 
@@ -104,7 +106,6 @@ public class DetailsItemActivity
             this.loadFilters();
 //            loadContacts();
 //            populateFilters();
-//            populateCultureFilters();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -127,7 +128,6 @@ public class DetailsItemActivity
         this.dishesService.getImageMeta(this.applicationContext, apiCallResultListener, null, this.item.Id);
     }
 
-
     private void loadFilters() {
         AsyncTaskListener<ArrayList<Filter>> listener = new AsyncTaskListener<ArrayList<Filter>>() {
             @Override public void onPreExecute() {
@@ -136,6 +136,7 @@ public class DetailsItemActivity
             @Override public void onPostExecute(ArrayList<Filter> result) {
                 item.Filters = result;
                 populateFilters();
+                populateAllergenFilters();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
@@ -161,29 +162,56 @@ public class DetailsItemActivity
         }
         else
             this.hideFiltersContainer();
+    }
 
+    private void populateAllergenFilters() {
+        ArrayList<Filter> filters = this.item.Filters;
+
+        if (filters != null && filters.size() > 0) {
+            ArrayList<Filter> allergenFilters = new ArrayList<>(Stream.of(filters).filter(x -> x.FilterType == FilterType.DishAllergens).toList());
+
+            boolean anyAllergenFilter = this.iterateFiltersHasAny(allergenFilters, true, this.allergenFiltersLayout);
+
+            if (anyAllergenFilter)
+                this.showAllergenFiltersContainer();
+            else
+                this.hideAllergenFiltersContainer();
+        }
+        else
+            this.hideAllergenFiltersContainer();
     }
 
     private void showFiltersContainer() {
         this.itemFiltersProgressLayout.setVisibility(View.GONE);
         this.filtersLayout.setVisibility(View.VISIBLE);
-        this.itemFiltersLayout.setVisibility(View.VISIBLE);
+        this.itemFiltersContainer.setVisibility(View.VISIBLE);
     }
 
     private void hideFiltersContainer() {
         this.itemFiltersProgressLayout.setVisibility(View.GONE);
         this.filtersLayout.setVisibility(View.GONE);
-        this.itemFiltersLayout.setVisibility(View.GONE);
+        this.itemFiltersContainer.setVisibility(View.GONE);
     }
 
+    public  void showAllergenFiltersContainer() {
+        this.itemAllergenFiltersProgressLayout.setVisibility(View.GONE);
+        this.allergenFiltersLayout.setVisibility(View.VISIBLE);
+        this.itemAllergenFiltersContainer.setVisibility(View.VISIBLE);
+    }
 
+    public  void hideAllergenFiltersContainer() {
+        this.itemAllergenFiltersProgressLayout.setVisibility(View.GONE);
+        this.allergenFiltersLayout.setVisibility(View.GONE);
+        this.itemAllergenFiltersContainer.setVisibility(View.GONE);
+    }
 
     private boolean iterateFiltersHasAny(ArrayList<Filter> filters, boolean needSquareIcon, LinearLayout container) {
         boolean hasAny = false;
         for (Filter filter : filters) {
             int drawableId = DrawableHelper.getDrawableIdByFilterId(filter.Id);
             if (drawableId != 0) {
-                ImageView filterImageView = this.createFilterImage(drawableId, needSquareIcon ? 31 : 46, filter.I18nResourceDescription, filter.Description);
+                ImageView filterImageView = this.createFilterImage(drawableId, needSquareIcon ? 31 : 46,
+                        filter.I18nResourceName, filter.Name, filter.I18nResourceDescription, filter.Description);
                 container.addView(filterImageView);
                 hasAny = true;
             }
@@ -191,9 +219,15 @@ public class DetailsItemActivity
         return hasAny;
     }
 
-    private ImageView createFilterImage(int drawableId, int widthDp, String descriptionResourceI18nId, String defaultDescriptionText) {
+    private ImageView createFilterImage(int drawableId, int widthDp,
+            String nameResourceI18nId, String nameDescriptionText, String descriptionResourceI18nId, String defaultDescriptionText) {
         ImageView filterImageView = new ImageView(this.baseContext);
         filterImageView.setImageDrawable(getResources().getDrawable(drawableId));
+        filterImageView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        filterImageView.setPadding((int)MetricsHelper.convertDpToPixel(3),
+                (int)MetricsHelper.convertDpToPixel(3),
+                (int)MetricsHelper.convertDpToPixel(3),
+                (int)MetricsHelper.convertDpToPixel(3));
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.width = (int) MetricsHelper.convertDpToPixel(widthDp);
@@ -201,21 +235,22 @@ public class DetailsItemActivity
         lp.setMargins((int)MetricsHelper.convertDpToPixel(6), 0, 0, 0);
         filterImageView.setLayoutParams(lp);
 
-        filterImageView.setOnClickListener(view -> this.filterClick(descriptionResourceI18nId, defaultDescriptionText));
+        filterImageView.setOnClickListener(view -> this.filterClick(nameResourceI18nId, nameDescriptionText, descriptionResourceI18nId, defaultDescriptionText));
 
         filterImageView.setVisibility(View.VISIBLE);
         return filterImageView;
     }
-    private void filterClick(String descriptionResourceI18nId, String defaultDescriptionText) {
+
+    private void filterClick(String nameResourceI18nId, String defaultNameText, String descriptionResourceI18nId, String defaultDescriptionText) {
+        String filterNameLocalized = StringHelper.getStringAppDefaultLocale(this, getResources(), nameResourceI18nId, defaultNameText);
         String filterDescriptionLocalized = StringHelper.getStringAppDefaultLocale(this, getResources(), descriptionResourceI18nId, defaultDescriptionText);
         if (StringHelper.isNotNullOrEmpty(filterDescriptionLocalized))
             new AlertDialog.Builder(this)
-                    .setTitle(StringHelper.getStringAppDefaultLocale(this, getResources(), "info_dialog_title", "Info"))
+                    .setTitle(filterNameLocalized)
                     .setMessage(filterDescriptionLocalized)
                     .setPositiveButton(android.R.string.ok, (dialog, which) ->  dialog.cancel())
                     .show();
     }
-
 
     private void populateIndoorImageThumbnail() {
         if (this.item.ImageThumbnail != null && this.item.ImageThumbnail.Id != null && this.item.ImageThumbnail.Id.length() > 0) {
@@ -247,7 +282,7 @@ public class DetailsItemActivity
     }
 
     private void showFiltesLoading() {
-        this.itemFiltersLayout.setVisibility(View.GONE);
+        this.itemFiltersContainer.setVisibility(View.GONE);
         this.itemFiltersProgressLayout.setVisibility(View.VISIBLE);
     }
 
