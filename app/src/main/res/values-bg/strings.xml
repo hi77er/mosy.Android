@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">Фуду</string>
     <string name="activity_wall_swipeDownToRefreshMessageTextView">ДРЪПНИ НАДОЛУ ЗА ДА ОПРЕСНИШ</string>
-    <string name="activity_landing_venuesBtn"><![CDATA[ЗАВЕДЕНИЯ & МЕНЮТА]]></string>
-    <string name="activity_landing_dishesBtn"><![CDATA[ЯСТИЯ & НАПИТКИ]]></string>
+    <string name="activity_landing_venuesBtn"><![CDATA[ЗАВЕДЕНИЯ \n & МЕНЮТА]]></string>
+    <string name="activity_landing_dishesBtn"><![CDATA[ЯСТИЯ \n & НАПИТКИ]]></string>
     <string name="activity_login_titleTextView">Вход</string>
     <string name="activity_login_emailEditText">Въведи електронна поща</string>
     <string name="activity_login_passwordEditText">Парола</string>
@@ -39,7 +39,7 @@
     <string name="activity_dishesFilters_showClosedTextView">Само отворени заведения</string>
     <string name="DishesFilterTypeSaladsName">Салати</string>
     <string name="DishesFilterTypeAppetizersAndSnacksName">Предястия</string>
-    <string name="DishesFilterTypeDrinksName">Напитки</string>
+    <string name="DishesFilterTypeNonalcoholicDrinksName">Безалкохолни напитки</string>
     <string name="DishesFilterTypeBreakfastName">Бърза закуска</string>
     <string name="DishesFilterTypeDesertsName">Десерти</string>
     <string name="DishesFilterTypeMainsName">Основни</string>
@@ -59,26 +59,26 @@
     <string name="DishesFilterMainIngredientHalalName">Халал храна</string>
     <string name="DishesFilterAllergenSulfurDioxideName">Въглероден диоксид (12)</string>
     <string name="DishesFilterAllergenGlutenName">Зърнести храни (1)</string>
-    <string name="DishesFilterAllergenMilkName">Мляко (8)</string>
+    <string name="DishesFilterAllergenMilkName">Мляко (7)</string>
     <string name="DishesFilterAllergenGarlicName">Чесън (s)</string>
-    <string name="DishesFilterAllergenSoyName">Соя (7)</string>
-    <string name="DishesFilterAllergenFishName">Риба (5)</string>
+    <string name="DishesFilterAllergenSoyName">Соя (6)</string>
+    <string name="DishesFilterAllergenFishName">Риба (4)</string>
     <string name="DishesFilterAllergenLegumesName">Бобови (s)</string>
-    <string name="DishesFilterAllergenLupinName">Лупина (14)</string>
+    <string name="DishesFilterAllergenLupinName">Лупина (13)</string>
     <string name="DishesFilterAllergenOnionName">Лук (s)</string>
-    <string name="DishesFilterAllergenSesameName">Сусам (12)</string>
+    <string name="DishesFilterAllergenSesameName">Сусам (11)</string>
     <string name="DishesFilterAllergenCitrusFruitsName">Цитрусови плодове (s)</string>
-    <string name="DishesFilterAllergenCeleryName">Целина (10)</string>
+    <string name="DishesFilterAllergenCeleryName">Целина (9)</string>
     <string name="DishesFilterAllergenAlcoholName">Алкохол (s)</string>
-    <string name="DishesFilterAllergenMollusksName">Мекотели (15)</string>
+    <string name="DishesFilterAllergenMollusksName">Мекотели (14)</string>
     <string name="DishesFilterAllergenCaffeineName">Кофеин (s)</string>
-    <string name="DishesFilterAllergenEggName">Яйца (4)</string>
-    <string name="DishesFilterAllergenPeanutsName">Фъстъчени (6)</string>
+    <string name="DishesFilterAllergenEggName">Яйца (3)</string>
+    <string name="DishesFilterAllergenPeanutsName">Фъстъчени (5)</string>
     <string name="DishesFilterAllergenMushroomsName">Гъби (s)</string>
-    <string name="DishesFilterAllergenCrustaceansName">Ракообразни (3)</string>
+    <string name="DishesFilterAllergenCrustaceansName">Ракообразни (2)</string>
     <string name="DishesFilterAllergenHotPeppersName">Люти чушки (s)</string>
-    <string name="DishesFilterAllergenTreeNutsName">Ядки (9)</string>
-    <string name="DishesFilterAllergenMustardName">Горчица (11)</string>
+    <string name="DishesFilterAllergenTreeNutsName">Ядки (8)</string>
+    <string name="DishesFilterAllergenMustardName">Горчица (10)</string>
     <string name="activity_dishesFilters_goBtn">Покажи</string>
     <string name="activity_landing_languageBgSpinner">Български</string>
     <string name="activity_landing_languageEnUSSpinner">Английски</string>
@@ -91,7 +91,7 @@
     <string name="activity_dishesFilters_regionFiltersTitle">Регион</string>
     <string name="activity_dishesFilters_ingredientsFiltersTitle">Основен продукт</string>
     <string name="activity_dishesFilters_allergensFiltersTitle">Алергени</string>
-    <string name="activity_dishesFilters_allergensFiltersNote">* Избраните Алергени ще направят асоциираните с тях резултати по-малко приоритетни за показване</string>
+    <string name="activity_dishesFilters_allergensFiltersNote">* Избраните Алергени ще скрият ястята и напитките, в които те се съдържат от резлтатите.</string>
     <string name="activity_landing_noInternetMessageTextView">Няма интернет! Моля проверете Вашите настройки или опитайте по-късно.</string>
     <string name="activity_wall_noInternetTextView">Няма интернет!</string>
     <string name="activity_venuesFilters_distanceFilterTextView">Дистанция на търсенето:</string>
@@ -208,7 +208,7 @@
     <string name="DishesFilterRegionMexicanAndCentralAmericanName">Мексиканска и централноамериканска</string>
     <string name="DishesFilterTypeAppetizersAndSnacksDescription">Супи, разядки, антипасти и т.н.</string>
     <string name="DishesFilterTypeDesertsDescription">Торти, пасти, кремове, сладоледи и т.н.</string>
-    <string name="DishesFilterTypeDrinksDescription">Смутита, сокове, бири, коктейли и т.н.</string>
+    <string name="DishesFilterTypeNonalcoholicDrinksDescription">Смутита, сокове, коктейли и т.н.</string>
     <string name="DishesFilterRegionSouthAmericanLatinName">Южноамериканска кухня</string>
     <string name="DishesFilterRegionSouthAsianName">Южноазиатска кухня</string>
     <string name="DishesFilterRegionAfricanDescription">Етиопска, мароканска, южно-африканска и т.н.</string>
@@ -220,4 +220,10 @@
     <string name="DishesFilterRegionSouthAmericanLatinDescription">Аржентинска, бразилска, перуанска и т.н.</string>
     <string name="DishesFilterRegionSouthAsianDescription">Индонезийска, филипинска, тайландска, виетнамска и т.н.</string>
     <string name="DishesFilterMainIngredientRedMeatDescription">Телешко, свинско, дивеч и т.н.</string>
+    <string name="activity_landing_profileBtn">Профил</string>
+    <string name="activity_landing_loginSignUpBtn">Вход / Регистрация</string>
+    <string name="DishesFilterTypeAlcoholicDrinksName">Алкохолни напитки</string>
+    <string name="DishesFilterTypeAlcoholicDrinksDescription">Вино, бира, коктейли и т.н.</string>
+    <string name="DishesFilterTypeBurgersName">Бургери</string>
+    <string name="DishesFilterRegionIndianAsianName">Индийска кухня</string>
 </resources>

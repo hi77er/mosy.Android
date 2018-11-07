@@ -1,12 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite">
 
-    <include layout="@layout/action_bar_toolbar" />
+    <!--<include layout="@layout/action_bar_toolbar" />-->
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <android.support.v7.widget.Toolbar
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            android:background="@color/colorPrimary"
+            android:theme="@style/SearchViewStyle"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
         android:id="@+id/llInitialLoadingProgress"
@@ -26,17 +45,19 @@
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/venues_llSwipeToRefresh"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal">
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/ivSwipeToRefresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/swipe_down"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/ic_gesture_swipe_vertical_24"
+            android:tint="@color/colorPrimaryLight"
             android:indeterminate="true" />
 
         <TextView
@@ -44,18 +65,18 @@
             android:layout_width="wrap_content"
             android:text="@string/activity_wall_swipeDownToRefreshMessageTextView"
             android:textStyle="bold"
-            android:textColor="@color/colorPrimarySalmonLight"
-            />
+            android:textColor="@color/colorPrimaryLight" />
     </LinearLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/venues_lVenuesSwipeContainer"
         android:visibility="gone"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?android:attr/actionBarSize">
+        android:layout_gravity="fill_vertical">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/venues_lvVenues"
@@ -66,17 +87,19 @@
                 android:listSelector="@android:color/transparent"
                 android:cacheColorHint="#000000"
                 android:drawSelectorOnTop="false">
+
             </android.support.v7.widget.RecyclerView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/venues_lDishesSwipeContainer"
         android:visibility="gone"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?android:attr/actionBarSize">
+        android:layout_gravity="fill_vertical">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/venues_lvDishes"
@@ -87,6 +110,7 @@
                 android:listSelector="@android:color/transparent"
                 android:cacheColorHint="#000000"
                 android:drawSelectorOnTop="false">
+
             </android.support.v7.widget.RecyclerView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -110,20 +134,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@color/colorWhite">
-        </TextView>
+            android:textColor="@color/colorWhite" />
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/venues_ibFilters"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_marginBottom="25dp"
-        android:layout_marginEnd="25dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_action_filters"
-        android:backgroundTint="@color/colorPrimaryAmber"
-        app:borderWidth="0dp"
-        android:elevation="6dp" />
-</RelativeLayout>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        app:layout_anchor="@id/venues_llSwipeToRefresh"
+        app:layout_anchorGravity="bottom|right|end" />
+
+    <!---->
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/venues_ibFilters"-->
+        <!--android:layout_width="65dp"-->
+        <!--android:layout_height="65dp"-->
+        <!--android:layout_marginBottom="25dp"-->
+        <!--android:layout_marginEnd="25dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--app:borderWidth="0dp"-->
+        <!--android:elevation="6dp" />-->
+</android.support.design.widget.CoordinatorLayout>

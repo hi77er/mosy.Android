@@ -8,7 +8,12 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
 
+import com.mosy.kalin.mosy.R;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * This class is used to change your application locale and persist this change for the next time
@@ -19,6 +24,18 @@ import java.util.Locale;
  * Created by gunhansancar on 07/10/15.
  */
 public class LocaleHelper {
+
+    public static final Map<String, Integer> SUPPORTED_LOCALES; // locale id - resource id
+    static
+    {
+        SUPPORTED_LOCALES = new HashMap<>();
+        SUPPORTED_LOCALES.put("en", R.string.activity_landing_languageEnUSSpinner);
+        SUPPORTED_LOCALES.put("bg", R.string.activity_landing_languageBgSpinner);
+        SUPPORTED_LOCALES.put("de", R.string.activity_landing_languageDeSpinner);
+        SUPPORTED_LOCALES.put("el", R.string.activity_landing_languageElSpinner);
+        SUPPORTED_LOCALES.put("es", R.string.activity_landing_languageEsSpinner);
+        SUPPORTED_LOCALES.put("ru", R.string.activity_landing_languageRuSpinner);
+    }
 
     private static final String SELECTED_LANGUAGE = "SpinnerLocale.Helper.Selected.Language";
 
@@ -86,5 +103,17 @@ public class LocaleHelper {
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
 
         return context;
+    }
+
+    public static ArrayList<String> getPreferredLanguages(Context applicationContext) {
+        ArrayList<String> preferredLanguages = new ArrayList<>();
+        preferredLanguages.add(LocaleHelper.getLanguage(applicationContext));
+        preferredLanguages.add(getSystemLanguage());
+
+        return preferredLanguages;
+    }
+
+    public static String getSystemLanguage() {
+        return Resources.getSystem().getConfiguration().locale.getCountry();
     }
 }

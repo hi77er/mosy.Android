@@ -21,7 +21,6 @@ public class MenuListItem
 
     @SerializedName("Name")
     public String Name;
-    public String getName(){return this.Name;}
 
     @SerializedName("Summary")
     public String Summary;
@@ -38,6 +37,12 @@ public class MenuListItem
     @SerializedName("WorkingStatus")
     public String VenueWorkingStatus;
 
+    @SerializedName("IsRecommended")
+    public boolean IsRecommended;
+
+    @SerializedName("IsNew")
+    public boolean IsNew;
+
     @SerializedName("RequestableImageMeta")
     public MenuListItemImage ImageThumbnail;
 
@@ -53,6 +58,9 @@ public class MenuListItem
     @SerializedName("QuantityDisplayText")
     public String QuantityDisplayText;
 
+    @SerializedName("DefaultMenuCulture")
+    public String DefaultMenuCulture;
+
     @SerializedName("Ingredients")
     public ArrayList<Ingredient> Ingredients;
 
@@ -64,6 +72,9 @@ public class MenuListItem
 
     @SerializedName("MismatchingFiltersIds")
     public ArrayList<String> MismatchingFiltersIds;
+
+    @SerializedName("RequestableCultures")
+    public ArrayList<MenuListItemCulture> MenuListItemCultures;
 
     @SuppressWarnings("unchecked")
     protected MenuListItem(Parcel in) {
@@ -82,6 +93,7 @@ public class MenuListItem
         this.Filters = in.readArrayList(null);
         this.MatchingFiltersIds = in.readArrayList(null);
         this.MismatchingFiltersIds = in.readArrayList(null);
+        this.MenuListItemCultures = in.readArrayList(null);
     }
 
     @Override
@@ -97,6 +109,7 @@ public class MenuListItem
         parcel.writeList(Filters);
         parcel.writeList(MatchingFiltersIds);
         parcel.writeList(MismatchingFiltersIds);
+        parcel.writeList(MenuListItemCultures);
 
     }
 
@@ -115,5 +128,29 @@ public class MenuListItem
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public MenuListItemDetailed toDetailed() {
+        return new MenuListItemDetailed(
+                this.Id,
+                this.BrochureId,
+                this.Name,
+                this.Summary,
+                this.VenueId,
+                this.VenueName,
+                this.VenueWorkingStatus,
+                this.IsRecommended,
+                this.IsNew,
+                this.ImageThumbnail,
+                this.DistanceToCurrentDeviceLocation,
+                this.VenueBusinessHours,
+                this.PriceDisplayText,
+                this.QuantityDisplayText,
+                this.DefaultMenuCulture,
+                this.Ingredients,
+                this.Filters,
+                this.MatchingFiltersIds,
+                this.MismatchingFiltersIds,
+                this.MenuListItemCultures);
     }
 }

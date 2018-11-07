@@ -1,5 +1,6 @@
 package com.mosy.kalin.mosy.DAL.Repositories.Interfaces;
 
+import com.mosy.kalin.mosy.DTOs.HttpResponses.PublicMenuResponse;
 import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
@@ -39,7 +40,7 @@ public interface IVenuesRepository {
     Call<VenueImage> getImageMetaIndoor(@Header("Authorization") String authorization, @Query("fboId") String venueId);
 
     @GET("fbo/publicmenu")
-    Call<ArrayList<MenuList>> getMenu(@Header("Authorization") String authorization, @Query("fboId") String venueId);
+    Call<PublicMenuResponse> getMenu(@Header("Authorization") String authorization, @Query("fboId") String venueId, @Query("clientDateTimeOffset") String currentDateTimeOffset);
 
     @GET("fbo/filters/all")
     Call<VenueFiltersResult> getFilters (@Header("Authorization") String authorization);

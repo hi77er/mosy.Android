@@ -30,6 +30,9 @@ public class VenueBusinessHours
     @SerializedName("IsSundayDayOff")
     public boolean IsSundayDayOff;
 
+    @SerializedName("TimeZoneMinutesOffset")
+    public int TimeZoneMinutesOffset;
+
     @SerializedName("MondayFrom")
     public Date MondayFrom;
     @SerializedName("TuesdayFrom")
@@ -59,6 +62,8 @@ public class VenueBusinessHours
     public Date SaturdayTo;
     @SerializedName("SundayTo")
     public Date SundayTo;
+
+
 
     public VenueBusinessHours() {
 

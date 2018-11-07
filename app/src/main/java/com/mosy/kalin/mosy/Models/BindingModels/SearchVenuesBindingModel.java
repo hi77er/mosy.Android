@@ -14,11 +14,10 @@ public class SearchVenuesBindingModel {
     public List<String> SelectedVenueAvailabilityFilterIds;
     public List<String> SelectedVenueAtmosphereFilterIds;
     public List<String> SelectedVenueCultureFilterIds;
-    public Integer LocalDayOfWeek;
-    public String LocalTime;
+    public String LocalDateTimeOffset;
+    public boolean ShowNotWorkingVenues;
     public int SearchedDistanceMeters;
-
-//    public boolean ApplyWorkingStatusFilter;
+    public boolean IsDevModeActivated;
 
     public SearchVenuesBindingModel() { }
 
@@ -33,9 +32,10 @@ public class SearchVenuesBindingModel {
             List<String> selectedVenueAvailabilityFilterIds,
             List<String> selectedVenueAtmosphereFilterIds,
             List<String> selectedVenueCultureFilterIds,
-            Integer localDayOfWeek,
-            String localTime,
-            int searchedDistanceMeters) {
+            boolean showNotWorkingVenues,
+            String localDateTimeOffset,
+            int searchedDistanceMeters,
+            boolean isDevModeActivated) {
 
         this.AuthTokenHeader = authTokenHeader;
         this.Latitude = latitude;
@@ -47,9 +47,10 @@ public class SearchVenuesBindingModel {
         this.SelectedVenueAvailabilityFilterIds = selectedVenueAvailabilityFilterIds;
         this.SelectedVenueAtmosphereFilterIds = selectedVenueAtmosphereFilterIds;
         this.SelectedVenueCultureFilterIds = selectedVenueCultureFilterIds;
-        this.LocalDayOfWeek = localDayOfWeek;
-        this.LocalTime = localTime;
+        this.ShowNotWorkingVenues = showNotWorkingVenues;
+        this.LocalDateTimeOffset = localDateTimeOffset;
         this.SearchedDistanceMeters = searchedDistanceMeters;
+        this.IsDevModeActivated = isDevModeActivated;
 
 //        this.ApplyWorkingStatusFilter = applyWorkingStatusFilter;
     }

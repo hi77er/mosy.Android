@@ -17,7 +17,9 @@ import com.mosy.kalin.mosy.DTOs.Enums.FilteredType;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.Ingredient;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.MenuListItemCulture;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
+import com.mosy.kalin.mosy.Helpers.MenuListItemHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
@@ -42,26 +44,28 @@ public class MenuListItemDetailsView
     private String ImageId;
     private ArrayList<Filter> Allergens;
 
+    @ViewById(R.id.menuListItemDetails_ivMainImage)
+    ImageView imageThumbnail;
+    @ViewById(R.id.menuListItemDetails_tvQuantityLabel)
+    TextView quantityLabel;
+    @ViewById(R.id.menuListItemDetails_tvIngredients)
+    TextView ingredients;
+    @ViewById(R.id.menuListItemDetails_btnAllergens)
+    ImageButton allergensButton;
+
+    boolean expanded = false;
+
     public MenuListItemDetailsView(Context context) {
         super(context);
     }
-
-    @ViewById(resName = "menuListItemDetails_ivMainImage")
-    ImageView ImageThumbnail;
-
-    @ViewById(resName = "menuListItemDetails_tvQuantityLabel")
-    TextView QuantityLabel;
-
-    @ViewById(resName = "menuListItemDetails_tvIngredients")
-    TextView Ingredients;
-
-    @ViewById(resName = "menuListItemDetails_btnAllergens")
-    ImageButton AllergensButton;
 
     ///Add more controls here
 
     public void bind(MenuListItem menuListItem, LruCache<String, Bitmap> cache) {
         this.inMemoryCache = cache;
+
+        MenuListItemCulture selectedCulture = MenuListItemHelper.getMenuListItemCulture(getContext(), menuListItem);
+
         this.Allergens = new ArrayList<>(com.annimon.stream.Stream
                 .of(menuListItem.Filters)
                 .filter(filter -> filter.FilteredType == FilteredType.Dishes && filter.FilterType == FilterType.DishAllergens)
@@ -71,34 +75,34 @@ public class MenuListItemDetailsView
             this.ImageId = menuListItem.ImageThumbnail.Id;
         }
         if (StringHelper.isNotNullOrEmpty(menuListItem.QuantityDisplayText)){
-            this.QuantityLabel.setText(menuListItem.QuantityDisplayText);
-            this.QuantityLabel.setVisibility(VISIBLE);
+            this.quantityLabel.setText(menuListItem.QuantityDisplayText);
+            this.quantityLabel.setVisibility(VISIBLE);
         }
 
         ArrayList<String> toJoin = new ArrayList<String>();
         String joined = StringHelper.empty();
-        for (Ingredient ingredient: menuListItem.Ingredients)
+        for (Ingredient ingredient: selectedCulture.Ingredients)
             toJoin.add(ingredient.Name);
         joined = StringHelper.join(", ", toJoin);
         if (StringHelper.isNotNullOrEmpty(joined)){
-            this.Ingredients.setText(joined);
-            this.Ingredients.setVisibility(VISIBLE);
+            this.ingredients.setText(joined);
+            this.ingredients.setVisibility(VISIBLE);
         }
 
         final String imageKey = menuListItem.ImageThumbnail != null ? menuListItem.ImageThumbnail.Id : "default";
         final Bitmap bitmap = getBitmapFromMemCache(imageKey);
 
         if (bitmap != null) {
-            ImageThumbnail.setImageBitmap(bitmap);
+            this.imageThumbnail.setImageBitmap(bitmap);
         } else {
-            ImageThumbnail.setImageResource(R.drawable.eat_paprika_100x100);
+            this.imageThumbnail.setImageResource(R.drawable.eat_paprika_100x100);
             this.downloadMenuListItemThumbnail(imageKey);
         }
 
         if (this.Allergens != null && this.Allergens.size() > 0)
-            AllergensButton.setVisibility(VISIBLE);
+            this.allergensButton.setVisibility(VISIBLE);
         else
-            AllergensButton.setVisibility(GONE);
+            this.allergensButton.setVisibility(GONE);
     }
 
     private void downloadMenuListItemThumbnail(String thumbnailId) {
@@ -112,13 +116,13 @@ public class MenuListItemDetailsView
             public void onPostExecute(byte[] bytes) {
                 if (ArrayHelper.hasValidBitmapContent(bytes)){
                     Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    ImageThumbnail.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
+                    imageThumbnail.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
                     IsUsingDefaultImageThumbnail = false;
                     addBitmapToMemoryCache(thumbnailId, bmp);
                 }
                 else {
                     IsUsingDefaultImageThumbnail = true;
-                    ImageThumbnail.setImageResource(R.drawable.eat_paprika_100x100);
+                    imageThumbnail.setImageResource(R.drawable.eat_paprika_100x100);
                 }
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
@@ -128,7 +132,7 @@ public class MenuListItemDetailsView
         new LoadAzureBlobAsyncTask(listener).execute(model);
     }
 
-    @Click(resName = "menuListItemDetails_ivMainImage")
+    @Click(R.id.menuListItemDetails_ivMainImage)
     public void ItemClick()
     {
         if (!IsUsingDefaultImageThumbnail && this.ImageId != null && !this.ImageId.equals(StringHelper.empty())){
@@ -162,7 +166,7 @@ public class MenuListItemDetailsView
         }
     }
 
-    @Click(resName = "menuListItemDetails_btnAllergens")
+    @Click(R.id.menuListItemDetails_btnAllergens)
     public void allergensButtonClick()
     {
         if (this.Allergens != null && this.Allergens.size() > 0)

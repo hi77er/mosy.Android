@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".VenueDetailsActivity_"
-    tools:showIn="@layout/activity_venue_details">
+    tools:context=".DetailsVenueActivity_"
+    tools:showIn="@layout/activity_details_venue">
 
 </android.support.constraint.ConstraintLayout>

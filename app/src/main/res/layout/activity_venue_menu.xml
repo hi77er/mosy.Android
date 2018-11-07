@@ -4,11 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorPageBackground1"
-    android:paddingStart="10dp"
-    android:paddingTop="10dp"
-    android:paddingEnd="10dp">
-
+    android:background="@color/colorWhite"
+    android:padding="10dp">
 
     <LinearLayout
         android:id="@+id/venue_lVenueTitle"
@@ -55,43 +52,94 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/llInitialLoadingProgress"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone" >
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:orientation="vertical">
 
-        <ProgressBar
-            android:id="@+id/pbHeaderProgress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true" >
-        </ProgressBar>
+        <LinearLayout
+            android:id="@+id/llInitialLoadingProgress"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <ProgressBar
+                android:id="@+id/pbHeaderProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true" >
+            </ProgressBar>
+        </LinearLayout>
+
+        <android.support.v4.view.ViewPager
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/venue_vpMenu"
+            android:visibility="gone"
+            android:layout_weight="13"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_gravity="end"
+            android:background="@color/colorWhite">
+
+            <com.mosy.kalin.mosy.CustomControls.PagerClickTitleStrip
+                android:id="@+id/pager_title_strip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorMenuTitle"
+                android:background="@color/colorMenuBackground" />
+
+        </android.support.v4.view.ViewPager>
+
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/venue_llNoMenu"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_weight="13"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:background="@color/colorMenuBackground">
+
+            <TextView
+                android:id="@+id/venue_tvNoMenu"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Menu not available"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:layout_centerInParent="true" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/venueMenu_llToolbox"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="4dp"
+            android:orientation="horizontal"
+            android:layoutDirection="rtl"
+            android:background="@color/colorMenuToolboxBackground"
+            android:visibility="gone">
+
+            <Spinner
+                android:id="@+id/venueMenu_spLanguage"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimarySalmonLight"
+                android:popupElevation="0dp" />
+        </LinearLayout>
+
+
     </LinearLayout>
 
-    <android.support.v4.view.ViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/venue_vpMenu"
-        android:layout_weight="5"
-        android:layout_height="0dp"
-        android:layout_width="match_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="end"
-        android:background="@color/colorWhite">
-
-        <com.mosy.kalin.mosy.CustomControls.PagerClickTitleStrip
-            android:id="@+id/pager_title_strip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorMenuTitle"
-            android:background="@color/colorMenuBackground"/>
-
-    </android.support.v4.view.ViewPager>
 
 </LinearLayout>

@@ -4,11 +4,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layoutDirection="ltr"
-    android:layout_alignParentEnd="true"
     android:paddingStart="10dp"
     android:paddingTop="4dp"
-    android:paddingEnd="10dp"
     android:paddingBottom="6dp"
     android:background="@color/colorWhite">
 
@@ -30,7 +27,8 @@
                 android:layout_height="wrap_content"
                 android:text="Venue Name"
                 android:textSize="17sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/soft"  />
 
             <TextView
                 android:id="@+id/venueItem_tvClass"
@@ -40,18 +38,38 @@
                 android:text="Class"
                 android:textStyle="bold"
                 android:textSize="14sp"
-                android:textColor="@color/soft" />
+                android:textColor="@color/softer" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/menuListItem_tvWorkingStatus"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:textStyle="bold"
-            android:textSize="25sp"
-            android:textColor="@color/colorPrimaryApricot"
-            android:gravity="center_vertical"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/venueItem_tvWorkingStatusLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:textAlignment="center"
+                android:background="@color/colorDarkRed"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite" />
+
+            <!--<TextView-->
+                <!--android:id="@+id/venueItem_tvNewLabel"-->
+                <!--android:layout_gravity="start"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textAlignment="center"-->
+                <!--android:text="@string/item_dish_newLabelTextView"-->
+                <!--android:background="@color/colorGreen"-->
+                <!--android:textSize="9sp"-->
+                <!--android:textStyle="bold"-->
+                <!--android:textColor="@color/colorWhite" />-->
+        </LinearLayout>
     </LinearLayout>
 
 
@@ -60,106 +78,98 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/venueItem_ivOutdoorThumbnail"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginEnd="5dp"
-                android:src="@drawable/venue_default_thumbnail" />
-        </LinearLayout>
-
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/venueItem_tvDistance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingEnd="5dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:background="@color/colorPrimaryVeryLight"
-                android:textColor="@color/colorPrimary"
-                android:drawableStart="@drawable/distance_paprika"
-                android:textStyle="bold"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/venueItem_tvWalkingMinutes"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/colorPrimary"
-                android:drawableStart="@drawable/walkingtime_paprika"
-                android:textStyle="bold"
-                android:textSize="20sp"  />
-        </LinearLayout>
-
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent">
-
-        <Button
-            android:id="@+id/venueItem_btnMenu"
-            android:layout_height="match_parent"
+        <ImageView
+            android:id="@+id/venueItem_ivOutdoorThumbnail"
             android:layout_width="80dp"
-            android:background="@drawable/button_venue_item_menu"
-            android:text="MENU"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            android:layout_marginStart="6dp"
-            android:layout_marginEnd="3dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"/>
-        </LinearLayout>
+            android:layout_height="80dp"
+            android:layout_marginEnd="5dp"
+            android:src="@drawable/venue_default_thumbnail" />
 
         <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent">
+            android:orientation="horizontal"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
 
-            <Button
-                android:id="@+id/venueItem_btnInfo"
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_weight="4"
                 android:layout_height="match_parent"
-                android:layout_width="80dp"
-                android:text="MORE INFO"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:background="@drawable/button_venue_item_menu"
-                android:textColor="@color/colorPrimary"
-                android:layout_marginStart="3dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="0dp" />
+                android:gravity="center"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/venueItem_tvDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:textColor="@color/soft"
+                    android:drawableTop="@drawable/ic_map_marker_distance_24"
+                    android:drawableTint="@color/soft" />
+            </LinearLayout>
+
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/venueItem_tvWalkingMinutes"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:textColor="@color/soft"
+                    android:drawableTop="@drawable/ic_timer_sand_24"
+                    android:drawableTint="@color/soft" />
+            </LinearLayout>
+
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginTop="20dp">
+
+                <Button
+                    android:id="@+id/venueItem_btnMenu"
+                    android:layout_height="match_parent"
+                    android:layout_width="60dp"
+                    android:background="@drawable/button_venue_item_menu"
+                    android:text="MENU"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"/>
+            </LinearLayout>
+
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginTop="20dp">
+
+                <Button
+                    android:id="@+id/venueItem_btnInfo"
+                    android:layout_height="match_parent"
+                    android:layout_width="60dp"
+                    android:text="MORE INFO"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/button_venue_item_menu"
+                    android:textColor="@color/colorPrimary" />
+            </LinearLayout>
         </LinearLayout>
-        <!---->
-        <!--<ImageView-->
-            <!--android:id="@+id/venueItem_ivMenu"-->
-            <!--android:layout_width="80dp"-->
-            <!--android:layout_height="80dp"-->
-            <!--android:background="@drawable/button_venue_item_menu" />-->
-        <!--<ImageView-->
-            <!--android:id="@+id/venueItem_ivInfo"-->
-            <!--android:layout_width="80dp"-->
-            <!--android:layout_height="80dp"-->
-            <!--android:background="@drawable/button_venue_item_info" />-->
-
     </LinearLayout>
-
 </LinearLayout>

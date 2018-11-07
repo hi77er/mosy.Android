@@ -1,91 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8">
+        android:layout_weight="8"
+        android:orientation="vertical">
 
         <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/filtersDishes_llInitialLoadingProgress"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_margin="20dp">
+
+            <ProgressBar
+                android:id="@+id/pbHeaderProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true" >
+            </ProgressBar>
+        </LinearLayout>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tl_filters_dishes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            app:tabTextColor="#FFF"
+            app:tabSelectedTextColor="@color/colorAccent"
+            android:background="@color/colorPrimaryVeryDark"
+            android:minHeight="?android:attr/actionBarSize"
+            app:tabGravity="center"
+            app:tabMode="scrollable" />
 
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tl_filters_dishes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:tabTextColor="#FFF"
-                app:tabSelectedTextColor="@color/colorAccent"
-                android:background="@color/colorPrimaryVeryDark"
-                android:minHeight="?android:attr/actionBarSize"
-                app:tabGravity="center"
-                app:tabMode="scrollable" />
+        <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/filtersDishes_llInitialLoadingProgress"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone"
-                android:layout_margin="20dp">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-                <ProgressBar
-                    android:id="@+id/pbHeaderProgress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="true" >
-                </ProgressBar>
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/vp_filters_dishes"
+                    android:layout_width="match_parent"
+                    android:layout_height="1000dp" />
             </LinearLayout>
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/vp_filters_dishes"
-                android:layout_width="match_parent"
-                android:layout_height="1000dp" />
-
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+    </LinearLayout>
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark">
+        android:background="@color/colorPrimaryDark"
+        android:paddingStart="5dp"
+        android:paddingTop="8dp">
 
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentStart="true">
+            android:gravity="center_vertical">
+
+            <Switch
+                android:id="@+id/filters_dishes_scRecommendedFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:checked="true" />
 
             <TextView
-                android:id="@+id/filters_dishes_tvDistanceLabel"
-                android:layout_width="match_parent"
+                android:id="@+id/filters_dishes_tvRecommended"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
-                android:text="@string/activity_dishesFilters_distanceFilterTextView"
-                android:textColor="@color/colorPrimaryVeryLight" />
+                android:layout_gravity="center_vertical"
+                android:text="@string/activity_dishesFilters_showRecommendedTextView"
+                android:textColor="@color/colorPrimaryVeryLight"
+                android:textSize="12sp"/>
 
-            <android.support.v7.widget.AppCompatSeekBar
-                android:id="@+id/filters_dishes_sbDistanceFilter"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/filters_dishes_tvRecommendedLabel"
+                android:layout_width="35dp"
                 android:layout_height="wrap_content"
-                android:min="100"
-                android:max="10000" />
+                android:layout_marginStart="5dp"
+                android:layout_gravity="center_vertical"
+                android:text="@string/item_dish_recommendedLabelTextView"
+                android:textSize="10sp"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:background="@color/colorSecondaryAmber" />
+        </LinearLayout>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <Switch
+                android:id="@+id/filters_dishes_scWorkingTimeFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:checked="true" />
+
+            <TextView
+                android:id="@+id/filters_dishes_tvWorkingTimeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/activity_dishesFilters_showClosedTextView"
+                android:textColor="@color/colorPrimaryVeryLight"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/filters_dishes_tvOpenedLabel"
+                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:padding="1dp"
+                android:textAlignment="center"
+                android:background="@color/colorDarkRed"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:text="@string/item_dish_workingStatusOpenedLabelTextView" />
+
+            <TextView
+                android:id="@+id/filters_dishes_tv247Label"
+                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:padding="1dp"
+                android:textAlignment="center"
+                android:background="@color/colorDarkRed"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:text="@string/item_dish_workingStatus247LabelTextView" />
+
+            <TextView
+                android:id="@+id/filters_dishes_tvClosedLabel"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:padding="1dp"
+                android:textAlignment="center"
+                android:background="@color/colorDarkRed"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:text="@string/item_dish_workingStatusClosedLabelTextView" />
         </LinearLayout>
 
         <LinearLayout
@@ -93,43 +176,49 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start">
+            android:layout_gravity="start"
+            android:layout_marginTop="5dp">
 
-            <LinearLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
+            <android.support.v7.widget.AppCompatSeekBar
+                android:id="@+id/filters_dishes_sbDistanceFilter"
                 android:layout_width="0dp"
-                android:layout_weight="3"
+                android:layout_weight="2"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="10dp">
+                android:min="100"
+                android:max="10000" />
 
-                <TextView
-                    android:id="@+id/filters_dishes_tvWorkingTimeLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text="@string/activity_dishesFilters_showClosedTextView"
-                    android:textColor="@color/colorPrimaryVeryLight" />
-
-                <Switch
-                    android:id="@+id/filters_dishes_scWorkingTimeFilter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/filterDishes_GoButton"
+            <TextView
+                android:id="@+id/filters_dishes_tvDistanceLabel"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:text="@string/activity_dishesFilters_distanceFilterTextView"
+                android:textColor="@color/colorPrimaryVeryLight"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp">
+
+            <Button
+                android:id="@+id/filterDishes_ResetFiltersButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:text="@string/activity_dishesFilters_resetFiltersBtn"
+                android:background="@color/transparent"
+                android:textColor="@color/colorAccent" />
+
+            <Button
+                android:id="@+id/filterDishes_GoButton"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/activity_dishesFilters_goBtn"
                 android:background="@color/transparent"
                 android:textColor="@color/colorAccent" />
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
-
 </LinearLayout>

@@ -12,18 +12,26 @@
     <string name="pref_authTokenType_webApi" translatable="false">"prefAuthTokenType"</string>
     <string name="pref_authTokenExpiresInSeconds_webApi" translatable="false">"prefAuthTokenExpiresInSeconds"</string>
     <string name="pref_authTokenExpiresAt_webApi" translatable="false">"prefAuthTokenExpiresAt"</string>
-    <string name="pref_collectionName_webApi" translatable="false">"WebApi"</string>
+    <string name="pref_collectionName_developersMode" translatable="false">DevelopersModePreferences</string>
+    <string name="pref_developersModeEnabled" translatable="false">DevelopersModeEnabled</string>
+    <string name="pref_collectionName_webApi" translatable="false">"WebApiToken"</string>
+    <string name="pref_collectionName_user">UserToken</string>
+    <string name="pref_authToken_user">prefAuthTokenUser</string>
+    <string name="pref_authTokenType_user">prefAuthTokenType</string>
+    <string name="pref_authTokenExpiresAt_user">prefAuthTokenExpiresAt</string>
+    <string name="pref_authTokenExpiresInSeconds_user">prefAuthTokenExpiresInSeconds</string>
 
     <!-- AndroidManifest -->
-    <string name="app_name">"Tastespot"</string>
-    <string name="manifest_landingActivityTitle" translatable="false">"Tastespot"</string>
+    <string name="app_name">"Treatspark"</string>
+    <string name="manifest_landingActivityTitle" translatable="false">"Treatspark"</string>
     <string name="manifest_venuesActivityTitle" translatable="false">"Venues"</string>
     <string name="manifest_venueDetailsActivityTitle" translatable="false">"Venue Details"</string>
+    <string name="manifest_itemDetailsActivityTitle" translatable="false">"Item Details"</string>
 
     <!-- Activity Landing -->
     <string name="activity_landing_promotionsBtn">Promotions</string>
-    <string name="activity_landing_venuesBtn"><![CDATA[VENUES & MENUS]]></string>
-    <string name="activity_landing_dishesBtn"><![CDATA[FIND DISHES & DRINKS]]></string>
+    <string name="activity_landing_venuesBtn"><![CDATA[VENUES \n & MENUS]]></string>
+    <string name="activity_landing_dishesBtn"><![CDATA[FIND DISHES \n & DRINKS]]></string>
     <string name="activity_landing_languageBgSpinner">Bulgarian</string>
     <string name="activity_landing_languageEnUSSpinner">English</string>
     <string name="activity_landing_languageDeSpinner">German</string>
@@ -31,21 +39,24 @@
     <string name="activity_landing_languageRuSpinner">Russian</string>
     <string name="activity_landing_languageEsSpinner">Spanish</string>
     <string name="activity_landing_noInternetMessageTextView">No internet! Please check your network settings or try again later.</string>
+    <string name="activity_landing_profileBtn">My profile</string>
+    <string name="activity_landing_loginSignUpBtn">Login / Signup</string>
 
     <!-- Activity Login -->
     <string name="activity_login_titleTextView">"Login to"</string>
     <string name="activity_login_emailEditText">"Enter Email"</string>
     <string name="activity_login_passwordEditText">"Password"</string>
-    <string name="activity_login_cancelBtn">"Cancel"</string>
-    <string name="activity_login_loginBtn">"Login"</string>
-    <string name="activity_login_registerBtn">"Register"</string>
+    <string name="activity_login_cancelBtn">"Back"</string>
+    <string name="activity_login_loginBtn">"Go"</string>
+    <string name="activity_login_forgotPasswordBtn">"Forgot password"</string>
+    <string name="activity_login_registerBtn">"Signup"</string>
 
     <!-- Activity Register -->
     <string name="activity_register_titleTextView">"Register to"</string>
     <string name="activity_register_emailEditText">"Enter Email"</string>
     <string name="activity_register_passwordEditText">"Password"</string>
-    <string name="activity_register_cancelBtn">"Cancel"</string>
-    <string name="activity_register_registerBtn">"Register"</string>
+    <string name="activity_register_cancelBtn">"Back"</string>
+    <string name="activity_register_registerBtn">"Create"</string>
 
     <!-- Menu -->
     <string name="menu_searchTitle">"Search"</string>
@@ -82,7 +93,7 @@
     <!-- Activity Venues Filters -->
     <string name="activity_venuesFilters_title">"Filter venues"</string>
     <string name="activity_venuesFilters_goBtn">"Go"</string>
-    <string name="activity_venuesFilters_showClosedTextView">Show only open venues</string>
+    <string name="activity_venuesFilters_showClosedTextView">Only show open venues</string>
     <string name="activity_venuesFilters_distanceMeasureTypeKilometers">km</string>
     <string name="activity_venuesFilters_distanceFilterTextView">Search distance:</string>
     <string name="activity_venuesFilters_distanceMeasureTypeMeters">m</string>
@@ -92,7 +103,7 @@
     <string name="activity_venuesFilters_cultureFiltersTitle">Culture</string>
     <string name="VenuesFilterBadgeBikesParkingAvailableName">"Bike parking/locks"</string>
     <string name="VenuesFilterBadgeToysCornerName">"Toys corner"</string>
-    <string name="VenuesFilterBabyFriendlyName">Baby friendly.</string>
+    <string name="VenuesFilterBabyFriendlyName">Baby friendly</string>
     <string name="VenuesFilterBadgeNoSmokingName">"No Smoking"</string>
     <string name="VenuesFilterBadgeParkingAvailableName">"Car Parking"</string>
     <string name="VenuesFilterBadgePetFriendlyName">"Pet Friendly"</string>
@@ -178,14 +189,14 @@
 
     <!-- Activity Dishes Filters -->
     <string name="activity_dishesFilters_title">Filter dishes &amp; drinks</string>
-    <string name="activity_dishesFilters_showClosedTextView">"Show only open venues"</string>
+    <string name="activity_dishesFilters_showClosedTextView">"Only show open venues"</string>
     <string name="activity_dishesFilters_goBtn">"Go"</string>
     <string name="activity_dishesFilters_typeFiltersTitle">Type</string>
     <string name="activity_dishesFilters_regionFiltersTitle">Region</string>
     <string name="activity_dishesFilters_ingredientsFiltersTitle">Ingredients</string>
     <string name="activity_dishesFilters_allergensFiltersTitle">Allergens</string>
-    <string name="activity_dishesFilters_allergensFiltersNote">* Selected Allergens will reduce the appearance priority of dishes associated to them.</string>
-    <string name="activity_dishesFilters_distanceFilterTextView">Search distance:</string>
+    <string name="activity_dishesFilters_allergensFiltersNote">* Selecting allergens will hide dishes and drinks that contain them in your search results.</string>
+    <string name="activity_dishesFilters_distanceFilterTextView">Distance:</string>
     <string name="activity_dishesFilters_distanceMeasureTypeMeters">m</string>
     <string name="activity_dishesFilters_distanceMeasureTypeKilometers">km</string>
     <string name="DishesFilterTypeSaladsName">"Salads"</string>
@@ -195,8 +206,8 @@
     <string name="DishesFilterTypePizzaName">Pizza</string>
     <string name="DishesFilterTypePastaName">Pasta</string>
     <string name="DishesFilterTypeSushiName">Sushi</string>
-    <string name="DishesFilterTypeBuffetName">Buffet</string>
-    <string name="DishesFilterTypeDrinksName">"Drinks"</string>
+    <string name="DishesFilterTypeBuffetName">Buffet &amp; Brunch</string>
+    <string name="DishesFilterTypeNonalcoholicDrinksName">Non-alcoholic drinks</string>
     <string name="DishesFilterTypeBreakfastName">"Breakfast"</string>
     <string name="DishesFilterTypeMainsName">"Mains"</string>
     <string name="DishesFilterTypeDesertsName">"Deserts"</string>
@@ -222,31 +233,31 @@
     <string name="DishesFilterMainIngredientVegetarianName">"Vegetarian"</string>
     <string name="DishesFilterMainIngredientKosherName">"Kosher"</string>
     <string name="DishesFilterMainIngredientHalalName">"Halal"</string>
-    <string name="DishesFilterAllergenSulfurDioxideName">Sulfur Dioxide (12)</string>
+    <string name="DishesFilterAllergenSulfurDioxideName">Sulfur dioxide (12)</string>
     <string name="DishesFilterAllergenGlutenName">Gluten / Wheat (1)</string>
-    <string name="DishesFilterAllergenMilkName">Milk (8)</string>
+    <string name="DishesFilterAllergenMilkName">Milk (7)</string>
     <string name="DishesFilterAllergenGarlicName">Garlic (s)</string>
-    <string name="DishesFilterAllergenSoyName">Soybeans (7)</string>
-    <string name="DishesFilterAllergenFishName">Fish (5)</string>
+    <string name="DishesFilterAllergenSoyName">Soybeans (6)</string>
+    <string name="DishesFilterAllergenFishName">Fish (4)</string>
     <string name="DishesFilterAllergenLegumesName">Legumes (s)</string>
-    <string name="DishesFilterAllergenLupinName">Lupin (14)</string>
+    <string name="DishesFilterAllergenLupinName">Lupin (13)</string>
     <string name="DishesFilterAllergenOnionName">Onion (s)</string>
-    <string name="DishesFilterAllergenSesameName">Sesame (12)</string>
-    <string name="DishesFilterAllergenCitrusFruitsName">Citrus Fruits (s)</string>
-    <string name="DishesFilterAllergenCeleryName">Celery (10)</string>
+    <string name="DishesFilterAllergenSesameName">Sesame (11)</string>
+    <string name="DishesFilterAllergenCitrusFruitsName">Citrus fruits (s)</string>
+    <string name="DishesFilterAllergenCeleryName">Celery (9)</string>
     <string name="DishesFilterAllergenAlcoholName">Alcohol (s)</string>
-    <string name="DishesFilterAllergenMollusksName">Mollusks (15)</string>
+    <string name="DishesFilterAllergenMollusksName">Mollusks (14)</string>
     <string name="DishesFilterAllergenCaffeineName">Caffeine (s)</string>
-    <string name="DishesFilterAllergenEggName">Eggs (4)</string>
-    <string name="DishesFilterAllergenPeanutsName">Peanuts (6)</string>
+    <string name="DishesFilterAllergenEggName">Eggs (3)</string>
+    <string name="DishesFilterAllergenPeanutsName">Peanuts (5)</string>
     <string name="DishesFilterAllergenMushroomsName">Mushrooms (s)</string>
-    <string name="DishesFilterAllergenCrustaceansName">Crustaceans (3)</string>
+    <string name="DishesFilterAllergenCrustaceansName">Crustaceans (2)</string>
     <string name="DishesFilterAllergenHotPeppersName">Hot Peppers (s)</string>
-    <string name="DishesFilterAllergenTreeNutsName">Tree Nuts (9)</string>
-    <string name="DishesFilterAllergenMustardName">Mustard (11)</string>
+    <string name="DishesFilterAllergenTreeNutsName">Tree Nuts (8)</string>
+    <string name="DishesFilterAllergenMustardName">Mustard (10)</string>
     <string name="DishesFilterTypeAppetizersAndSnacksDescription">E.g. soups, dips, antipasti, etc.</string>
     <string name="DishesFilterTypeDesertsDescription">"E.g. cakes, ice cream, pancakes, etc."</string>
-    <string name="DishesFilterTypeDrinksDescription">"E.g. smoothies, juices, beers, cocktails, etc."</string>
+    <string name="DishesFilterTypeNonalcoholicDrinksDescription">E.g. smoothies, juices, cocktails, etc.</string>
     <string name="DishesFilterRegionAfricanDescription">E.g. Ethiopian, Moroccan, South African, etc.</string>
     <string name="DishesFilterRegionOtherAsianDescription">E.g. Korean, Nepali, Taiwanese, etc.</string>
     <string name="DishesFilterRegionMiddleEasternDescription">E.g. Armenian, Arabic, Turkish, Georgian, Israeli, Lebanese, Pakistani, Persian, Middle Eastern, etc.</string>
@@ -255,8 +266,16 @@
     <string name="DishesFilterRegionMexicanAndCentralAmericanDescription">E.g. Canjun &amp; Creole, Caribbean, Cuban, etc.</string>
     <string name="DishesFilterRegionSouthAmericanLatinDescription">E.g. Argentinian, Brazilian, Peruvian, etc.</string>
     <string name="DishesFilterRegionSouthAsianDescription">E.g. Indonesian, Philippine, Thai, Vietnamese, etc.</string>
-    <string name="DishesFilterMainIngredientWhiteMeatDescription">E.g. Chicken, Turkey, Duck, etc.</string>
-    <string name="DishesFilterMainIngredientRedMeatDescription">E.g. Beef, Pork, Game, etc.</string>
+    <string name="DishesFilterMainIngredientWhiteMeatDescription">E.g. chicken, turkey, duck, etc.</string>
+    <string name="DishesFilterMainIngredientRedMeatDescription">E.g. beef, Pork, Game, etc.</string>
+    <string name="activity_userprofile_logoutBtn">Sign out</string>
+    <string name="activity_dishesFilters_showRecommendedTextView">Only show recommended items</string>
+    <string name="activity_dishesFilters_resetFiltersBtn">Reset</string>
+    <string name="item_dish_workingStatusOpenedLabelTextView">OPENED</string>
+    <string name="item_dish_workingStatusClosedLabelTextView">CLOSED</string>
+    <string name="item_dish_workingStatus247LabelTextView">24/7</string>
+    <string name="item_dish_recommendedLabelTextView">R+</string>
+    <string name="item_dish_newLabelTextView">NEW</string>
 
 
 </resources>

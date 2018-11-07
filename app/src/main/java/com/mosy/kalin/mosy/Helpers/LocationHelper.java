@@ -31,7 +31,7 @@ public class LocationHelper {
             long wholePart = (long) distanceMeters;
             text = String.valueOf(wholePart) + "km";
         } else if (distanceMeters >= 999999  && distanceMeters < 999999999 )    // d > 999km
-            text = StringHelper.empty();
+            StringHelper.empty();
 
         return text;
     }

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IVenuesRepository;
+import com.mosy.kalin.mosy.DTOs.HttpResponses.PublicMenuResponse;
 import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
@@ -17,8 +18,11 @@ import com.mosy.kalin.mosy.Models.Responses.VenueFiltersResult;
 
 import org.androidannotations.annotations.EBean;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -71,9 +75,10 @@ public class VenuesService {
                           List<String> venueAvailabilityFilterIds,
                           List<String> venueAtmosphereFilterIds,
                           List<String> venueCultureFilterIds,
-                          Integer localDayOfWeek,
-                          String localTime,
-                          int distanceFilterValue)
+                          boolean showNotWorkingVenues,
+                          String localDateTimeOffset,
+                          int distanceFilterValue,
+                          boolean isDevModeActivated)
     {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                  apiCallResultListener::onPreExecute,
@@ -81,7 +86,8 @@ public class VenuesService {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     SearchVenuesBindingModel model = new SearchVenuesBindingModel(
                             authTokenHeader, maxResultsCount, totalItemsOffset,
-                            latitude, longitude, query, venueAccessibilityFilterIds, venueAvailabilityFilterIds, venueAtmosphereFilterIds, venueCultureFilterIds, localDayOfWeek, localTime, distanceFilterValue);
+                            latitude, longitude, query, venueAccessibilityFilterIds, venueAvailabilityFilterIds, venueAtmosphereFilterIds, venueCultureFilterIds,
+                            showNotWorkingVenues, localDateTimeOffset, distanceFilterValue, isDevModeActivated);
 
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
@@ -227,7 +233,7 @@ public class VenuesService {
     }
 
     public void getMenu(Context applicationContext,
-                        AsyncTaskListener<ArrayList<MenuList>> apiCallResultListener,
+                        AsyncTaskListener<PublicMenuResponse> apiCallResultListener,
                         Runnable onInvalidHost,
                         String venueId)
     {
@@ -237,14 +243,16 @@ public class VenuesService {
                     String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
                     try {
-                        Call<ArrayList<MenuList>> callMenu = repository.getMenu(authToken, venueId);
+                        String localDateTimeOffset = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(Calendar.getInstance().getTime());
+
+                        Call<PublicMenuResponse> callMenu = repository.getMenu(authToken, venueId, localDateTimeOffset);
                         apiCallResultListener.onPreExecute();
-                        callMenu.enqueue(new Callback<ArrayList<MenuList>>() {
-                            @Override public void onResponse(@NonNull Call<ArrayList<MenuList>> call, @NonNull Response<ArrayList<MenuList>> response) {
-                                ArrayList<MenuList> result = response.body();
+                        callMenu.enqueue(new Callback<PublicMenuResponse>() {
+                            @Override public void onResponse(@NonNull Call<PublicMenuResponse> call, @NonNull Response<PublicMenuResponse> response) {
+                                PublicMenuResponse result = response.body();
                                 apiCallResultListener.onPostExecute(result);
                             }
-                            @Override public void onFailure(@NonNull Call<ArrayList<MenuList>> call, @NonNull Throwable t) {
+                            @Override public void onFailure(@NonNull Call<PublicMenuResponse> call, @NonNull Throwable t) {
                                 call.cancel();
                             }
                         });

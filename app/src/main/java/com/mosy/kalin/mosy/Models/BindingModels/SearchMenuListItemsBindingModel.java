@@ -11,14 +11,15 @@ public class SearchMenuListItemsBindingModel {
     public String Query;
     public double Latitude;
     public double Longitude;
-    public Boolean IsPromoted;
     public List<String> SelectedDishTypeFilterIds;
     public List<String> SelectedDishRegionFilterIds;
     public List<String> SelectedDishMainIngredientFilterIds;
     public List<String> SelectedDishAllergenFilterIds;
-    public Integer LocalDayOfWeek;
-    public String LocalTime;
+    public String LocalDateTimeOffset;
     public int SearchedDistanceMeters;
+    public boolean ShowNotRecommendedDishes;
+    public boolean ShowNotWorkingVenues;
+    public boolean IsDevModeActivated;
 
     public SearchMenuListItemsBindingModel() { }
     public SearchMenuListItemsBindingModel(
@@ -27,30 +28,33 @@ public class SearchMenuListItemsBindingModel {
             int totalItemsOffset,
             double latitude,
             double longitude,
-            Boolean isPromoted,
             String query,
             ArrayList<String> selectedDishTypeFilterIds,
             ArrayList<String> selectedDishRegionFilterIds,
             ArrayList<String> selectedDishMainIngredientFilterIds,
             ArrayList<String> selectedDishAllergenFilterIds,
-            Integer localDayOfWeek,
-            String localTime,
-            int searchedDistanceMeters)
+            boolean showNotRecommendedDishes,
+            boolean showNotWorkingVenues,
+            String localDateTimeOffset,
+            int searchedDistanceMeters,
+            boolean isDevModeActivated)
     {
         this.AuthTokenHeader = authTokenHeader;
         this.MaxResultsCount = maxResultsCount;
         this.TotalItemsOffset = totalItemsOffset;
         this.Latitude = latitude;
         this.Longitude = longitude;
-        this.IsPromoted = isPromoted;
         this.Query = query;
         this.SelectedDishTypeFilterIds = selectedDishTypeFilterIds;
         this.SelectedDishRegionFilterIds = selectedDishRegionFilterIds;
         this.SelectedDishMainIngredientFilterIds = selectedDishMainIngredientFilterIds;
         this.SelectedDishAllergenFilterIds = selectedDishAllergenFilterIds;
-        this.LocalDayOfWeek = localDayOfWeek;
-        this.LocalTime= localTime;
+        this.ShowNotRecommendedDishes = showNotRecommendedDishes;
+        this.ShowNotWorkingVenues = showNotWorkingVenues;
+        this.LocalDateTimeOffset = localDateTimeOffset;
         this.SearchedDistanceMeters = searchedDistanceMeters;
+        this.IsDevModeActivated = isDevModeActivated;
+
     }
 
 }

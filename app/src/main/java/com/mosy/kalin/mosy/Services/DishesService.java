@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IDishesRepository;
+import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.MenuListItemImage;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
 import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Body;
 
 @EBean
 public class DishesService {
@@ -29,23 +32,26 @@ public class DishesService {
                            int totalItemsOffset,
                            double latitude,
                            double longitude,
-                           Boolean isPromoted,
                            String query,
                            ArrayList<String> phaseFilterIds,
                            ArrayList<String> regionFilterIds,
                            ArrayList<String> spectrumFilterIds,
                            ArrayList<String> allergensFilterIds,
-                           Integer localDayOfWeek,
-                           String localTime,
-                           int searchedDistanceMeters)
+                           boolean showNotRecommendedDishes,
+                           boolean showNotWorkingVenues,
+                           String localDateTimeOffset,
+                           int searchedDistanceMeters,
+                           boolean isDevModeActivated)
     {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+
                     SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(authTokenHeader,
-                            maxResultsCount, totalItemsOffset, latitude, longitude, isPromoted, query, phaseFilterIds,
-                            regionFilterIds, spectrumFilterIds, allergensFilterIds, localDayOfWeek, localTime, searchedDistanceMeters);
+                            maxResultsCount, totalItemsOffset, latitude, longitude, query, phaseFilterIds,
+                            regionFilterIds, spectrumFilterIds, allergensFilterIds, showNotRecommendedDishes, showNotWorkingVenues,
+                            localDateTimeOffset, searchedDistanceMeters, isDevModeActivated);
 
                     IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
 
@@ -68,16 +74,16 @@ public class DishesService {
                 null);
     }
 
-    public void getFilters(Context applicationContext,
-                            AsyncTaskListener<DishFiltersResult> apiCallResultListener)
+    public void getAllFilters(Context applicationContext,
+                              AsyncTaskListener<DishFiltersResult> apiCallResultListener)
     {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
-                        () -> {
+                () -> {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
                     try {
-                        Call<DishFiltersResult> callFilters = repository.getFilters(authTokenHeader);
+                        Call<DishFiltersResult> callFilters = repository.loadAllFilters(authTokenHeader);
                         apiCallResultListener.onPreExecute();
                         callFilters.enqueue(new Callback<DishFiltersResult>() {
                             @Override public void onResponse(@NonNull Call<DishFiltersResult> call, @NonNull Response<DishFiltersResult> response) {
@@ -96,4 +102,63 @@ public class DishesService {
                 null);
     }
 
+    public void getFilters(Context applicationContext,
+                           AsyncTaskListener<ArrayList<Filter>> apiCallResultListener,
+                           String itemId)
+    {
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
+                    try {
+                        Call<ArrayList<Filter>> callFilters = repository.loadFilters(authTokenHeader, itemId);
+                        apiCallResultListener.onPreExecute();
+                        callFilters.enqueue(new Callback<ArrayList<Filter>>() {
+                            @Override public void onResponse(@NonNull Call<ArrayList<Filter>> call, @NonNull Response<ArrayList<Filter>> response) {
+                                ArrayList<Filter> result = response.body();
+                                apiCallResultListener.onPostExecute(result);
+                            }
+                            @Override public void onFailure(@NonNull Call<ArrayList<Filter>> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                },
+                null);
+    }
+
+
+
+    public void getImageMeta(Context applicationContext,
+                             AsyncTaskListener<MenuListItemImage> apiCallResultListener,
+                             Runnable onInvalidHost,
+                             String itemId) {
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                apiCallResultListener::onPreExecute,
+                () -> {
+                    String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
+                    try {
+                        Call<MenuListItemImage> callImage = repository.getImageMeta(authToken, itemId);
+                        apiCallResultListener.onPreExecute();
+                        callImage.enqueue(new Callback<MenuListItemImage>() {
+                            @Override public void onResponse(@NonNull Call<MenuListItemImage> call, @NonNull Response<MenuListItemImage> response) {
+                                MenuListItemImage result = response.body();
+                                apiCallResultListener.onPostExecute(result);
+                            }
+                            @Override public void onFailure(@NonNull Call<MenuListItemImage> call, @NonNull Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                },
+                onInvalidHost);
+    }
 }
