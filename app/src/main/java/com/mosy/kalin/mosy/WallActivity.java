@@ -650,16 +650,6 @@ public class WallActivity
         }
     }
 
-    @OptionsItem(R.id.action_venues)
-    void actionVenuesClicked(MenuItem item) {
-        this.navigateVenuesSearch();
-    }
-
-    @OptionsItem(R.id.action_dishes)
-    void actionDishesClicked(MenuItem item) {
-        this.navigateDishesSearch();
-    }
-
     private boolean checkFiltersSelected(){
         return (DishesSearchModeActivated &&
                 ((SelectedDishTypeFilterIds != null && SelectedDishTypeFilterIds.size() > 0) ||
@@ -722,19 +712,6 @@ public class WallActivity
             intent.putExtra("PreselectedVenueCultureFilterIds", SelectedVenueCultureFilterIds);
             startActivity(intent);
         }
-    }
-
-    public void navigateVenuesSearch() {
-        Intent intent = new Intent(WallActivity.this, WallActivity_.class);
-        intent.putExtra("DishesSearchModeActivated", false);
-        startActivity(intent);
-    }
-
-    public void navigateDishesSearch() {
-        Intent intent = new Intent(WallActivity.this, WallActivity_.class);
-        intent.putExtra("DishesSearchModeActivated", true);
-
-        startActivity(intent);
     }
 
     void refreshLastKnownLocation() {
@@ -858,4 +835,35 @@ public class WallActivity
         return mMemoryCache.get(key);
     }
 
+    public void navigateVenuesSearch() {
+        Intent intent = new Intent(WallActivity.this, WallActivity_.class);
+        intent.putExtra("DishesSearchModeActivated", false);
+        startActivity(intent);
+    }
+
+    public void navigateDishesSearch() {
+        Intent intent = new Intent(WallActivity.this, WallActivity_.class);
+        intent.putExtra("DishesSearchModeActivated", true);
+        startActivity(intent);
+    }
+
+    public void navigateLanding() {
+        Intent intent = new Intent(WallActivity.this, LandingActivity_.class);
+        startActivity(intent);
+    }
+
+    @OptionsItem(R.id.action_venues)
+    void actionVenuesClicked(MenuItem item) {
+        this.navigateVenuesSearch();
+    }
+
+    @OptionsItem(R.id.action_dishes)
+    void actionDishesClicked(MenuItem item) {
+        this.navigateDishesSearch();
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.navigateLanding();
+    }
 }

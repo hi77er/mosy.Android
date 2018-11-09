@@ -95,27 +95,16 @@
 
     <LinearLayout
         android:id="@+id/landing_llBottomBtns"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/landing_llSocialLinksBtns"
         android:layout_marginBottom="10dp">
 
-        <Spinner
-            android:id="@+id/landing_spLanguage"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="5dp"
-            android:background="@color/transparent" />
-
         <Button
             android:id="@+id/landing_btnUserProfile"
             android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginStart="5dp"
+            android:layout_width="match_parent"
             android:text="@string/activity_landing_profileBtn"
             android:background="@drawable/background_transparent_click_oval"
             android:textSize="14sp"
@@ -127,9 +116,7 @@
         <Button
             android:id="@+id/landing_btnLoginSignUp"
             android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginStart="5dp"
+            android:layout_width="match_parent"
             android:text="@string/activity_landing_loginSignUpBtn"
             android:background="@drawable/background_transparent_click_oval"
             android:textSize="14sp"
@@ -137,6 +124,12 @@
             android:textStyle="bold"
             android:visibility="gone"
             android:stateListAnimator="@null" />
+
+        <Spinner
+            android:id="@+id/landing_spLanguage"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:background="@color/transparent" />
     </LinearLayout>
 
     <LinearLayout

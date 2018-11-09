@@ -85,12 +85,15 @@ public class VenueWallItemView
             switch (status){
                 case Open:
                     this.workingStatusLabel.setText(getResources().getString(R.string.item_dish_workingStatusOpenedLabelTextView));
+                    this.workingStatusLabel.setBackgroundResource(R.color.colorTertiary);
                     break;
                 case Open247:
                     this.workingStatusLabel.setText(getResources().getString(R.string.item_dish_workingStatus247LabelTextView));
+                    this.workingStatusLabel.setBackgroundResource(R.color.colorTertiaryLight);
                     break;
                 case Closed:
                     this.workingStatusLabel.setText(getResources().getString(R.string.item_dish_workingStatusClosedLabelTextView));
+                    this.workingStatusLabel.setBackgroundResource(R.color.colorDarkRed);
                     break;
                 case Unknown:
                     this.workingStatusLabel.setVisibility(GONE);

@@ -148,25 +148,30 @@ public class DetailsVenueActivity
     @AfterViews
     void afterViews() {
         try {
-            this.nameTextView.setText(this.Venue.Name);
-            this.classTextView.setText(this.Venue.Class);
-            if (StringHelper.isNotNullOrEmpty(this.Venue.Description)) {
-                this.descriptionContainerLayout.setVisibility(View.VISIBLE);
-
-                if (this.Venue.Description.length() <= 41)
-                    this.descriptionTextView.setText(this.Venue.Description);
-                else
-                    this.descriptionTextView.setText(this.Venue.Description.substring(0, 40) + " ...");
-            }
+            this.publishVenue();
 
             this.loadIndoorImage();
             this.loadContacts();
             this.loadBusinessHours();
             this.loadLocation();
-            this.populateFilters();
-            this.populateCultureFilters();
+            this.publishFilters();
+            this.publishCultureFilters();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void publishVenue() {
+        this.nameTextView.setText(this.Venue.Name);
+        this.classTextView.setText(this.Venue.Class);
+        if (StringHelper.isNotNullOrEmpty(this.Venue.Description)) {
+            String descriptionText = this.Venue.Description.length() < 41
+                    ? this.Venue.Description
+                    : this.Venue.Description.substring(0, 40) + " ...";
+
+            this.descriptionTextView.setText(descriptionText);
+
+            this.descriptionContainerLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -355,7 +360,7 @@ public class DetailsVenueActivity
         this.contactsContainerLayout.setVisibility(View.GONE);
     }
 
-    private void populateFilters() {
+    private void publishFilters() {
         ArrayList<Filter> filters = this.Venue.Filters;
 
         if (filters != null && filters.size() > 0) {
@@ -376,7 +381,7 @@ public class DetailsVenueActivity
             this.hideFiltersContainer();
     }
 
-    private void populateCultureFilters() {
+    private void publishCultureFilters() {
         ArrayList<Filter> filters = this.Venue.Filters;
         if (filters != null && filters.size() > 0) {
             ArrayList<Filter> cultureFilters = new ArrayList<>(Stream.of(filters).filter(x -> x.FilterType == FilterType.VenueCulture).toList());
@@ -591,10 +596,15 @@ public class DetailsVenueActivity
     @Click(R.id.details_venue_lDescriptionContainer)
     public void descriptionClicked() {
         this.descriptionExpanded = !this.descriptionExpanded;
+
         if (this.descriptionExpanded)
             this.descriptionTextView.setText(this.Venue.Description);
         else{
-            this.descriptionTextView.setText(this.Venue.Description.substring(0, 40) + " ...");
+            String descriptionText = this.Venue.Description.length() < 41
+                    ? this.Venue.Description
+                    : this.Venue.Description.substring(0, 40) + " ...";
+
+            this.descriptionTextView.setText(descriptionText);
         }
     }
 

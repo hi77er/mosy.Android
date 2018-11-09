@@ -41,7 +41,8 @@
         <activity
             android:name=".WallActivity_"
             android:label="@string/manifest_venuesActivityTitle"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:alwaysRetainTaskState="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <action android:name="android.intent.action.VIEW" />
