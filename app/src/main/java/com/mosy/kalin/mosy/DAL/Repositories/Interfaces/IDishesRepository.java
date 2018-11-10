@@ -12,6 +12,7 @@ import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -38,5 +39,8 @@ public interface IDishesRepository {
 
     @POST("dishes/culture/preferred")
     Call<MenuListItemCulture> getItemPreferredCulture(@Header("Authorization") String authorization, @Body GetItemPreferredCultureBindingModel model);
+
+    @GET("dishes/view/checkadd")
+    Call<Void> checkAddView(@Header("Authorization") String authorization, @Query("itemId") String itemId);
 
 }

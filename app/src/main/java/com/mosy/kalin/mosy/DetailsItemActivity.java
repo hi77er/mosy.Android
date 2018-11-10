@@ -77,6 +77,8 @@ public class DetailsItemActivity
 
     @ViewById(R.id.details_item_tvName)
     TextView nameTextView;
+    @ViewById(R.id.details_item_tvViews)
+    TextView viewsTextView;
     @ViewById(R.id.details_item_tvDescription)
     TextView descriptionTextView;
     @ViewById(R.id.details_item_tvIngredients)
@@ -121,15 +123,18 @@ public class DetailsItemActivity
         try {
             new Handler().postDelayed(() -> {
                 // test functions
-                String asda0 = NetworkHelper.getMACAddress("wlan0");
-                String asda1 = NetworkHelper.getMACAddress("eth0");
-                String asda2 = NetworkHelper.getIPAddress(true); // IPv4
-                String asda3 = NetworkHelper.getIPAddress(false); // IPv6
+//                String asda0 = NetworkHelper.getMACAddress("wlan0");
+//                String asda1 = NetworkHelper.getMACAddress("eth0");
+//                String asda2 = NetworkHelper.getIPAddress(true); // IPv4
+//                String asda3 = NetworkHelper.getIPAddress(false); // IPv6
 
-                if (resumed)
-                    Toast.makeText(this.applicationContext, "5 seconds passed!", Toast.LENGTH_LONG).show();
+                if (resumed){
+                    this.dishesService.checkAddView(this.applicationContext, item.Id);
+//                    Toast.makeText(this.applicationContext, "5 seconds passed!", Toast.LENGTH_LONG).show();
+                }
             }, SEEN_TIME_OUT);
 
+            this.publishViews();
             this.loadItemCulture();
             this.loadIndoorImage();
             this.loadFilters();
@@ -140,10 +145,15 @@ public class DetailsItemActivity
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    protected void publishViews(){
+        this.viewsTextView.setText(this.item.SeenCount + " " + getString(R.string.activity_itemDetails_viewsTextView));
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        this.resumed = false;
+        resumed = false;
     }
 
     private void loadItemCulture() {

@@ -278,5 +278,6 @@
     <string name="link_social_facebook">https://www.facebook.com/treatspark/</string>
     <string name="link_social_instagram">https://www.instagram.com/treatsparks</string>
     <string name="link_social_twitter">https://www.twitter.com/treatspark</string>
+    <string name="activity_itemDetails_viewsTextView">Views</string>
 
 </resources>

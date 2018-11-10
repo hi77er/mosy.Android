@@ -19,6 +19,7 @@ import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -192,5 +193,27 @@ public class DishesService {
                     }
                 },
                 onInvalidHost);
+    }
+
+    public void checkAddView(Context applicationContext, String itemId) {
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                null,
+                () -> {
+                    String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
+                    try {
+                        Call<Void> call = repository.checkAddView(authToken, itemId);
+                        call.enqueue(new Callback<Void>() {
+                            @Override public void onResponse(Call<Void> call, Response<Void> response) {
+                                String asda = "";
+                            }
+                            @Override public void onFailure(Call<Void> call, Throwable t) { }
+                        });
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                },
+                null);
     }
 }

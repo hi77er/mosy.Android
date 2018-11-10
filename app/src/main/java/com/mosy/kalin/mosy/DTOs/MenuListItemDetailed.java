@@ -23,6 +23,7 @@ public class MenuListItemDetailed
     public String VenueWorkingStatus;
     public boolean IsRecommended;
     public boolean IsNew;
+    public int SeenCount;
     public MenuListItemImage ImageThumbnail;
     public double DistanceToCurrentDeviceLocation;
     public VenueBusinessHours VenueBusinessHours;
@@ -44,6 +45,7 @@ public class MenuListItemDetailed
             ,String venueWorkingStatus
             ,boolean isRecommended
             ,boolean isNew
+            ,int seenCount
             ,MenuListItemImage imageThumbnail
             ,double distanceToCurrentDeviceLocation
             ,VenueBusinessHours venueBusinessHours
@@ -64,6 +66,7 @@ public class MenuListItemDetailed
         this.VenueWorkingStatus = venueWorkingStatus;
         this.IsRecommended = isRecommended;
         this.IsNew  = isNew;
+        this.SeenCount  = seenCount;
         this.ImageThumbnail = imageThumbnail;
         this.DistanceToCurrentDeviceLocation = distanceToCurrentDeviceLocation;
         this.VenueBusinessHours = venueBusinessHours;

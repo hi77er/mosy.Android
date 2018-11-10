@@ -43,6 +43,9 @@ public class MenuListItem
     @SerializedName("IsNew")
     public boolean IsNew;
 
+    @SerializedName("SeenCount")
+    public int SeenCount;
+
     @SerializedName("RequestableImageMeta")
     public MenuListItemImage ImageThumbnail;
 
@@ -141,6 +144,7 @@ public class MenuListItem
                 this.VenueWorkingStatus,
                 this.IsRecommended,
                 this.IsNew,
+                this.SeenCount,
                 this.ImageThumbnail,
                 this.DistanceToCurrentDeviceLocation,
                 this.VenueBusinessHours,
