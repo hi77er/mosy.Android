@@ -127,15 +127,20 @@
             android:padding="10dp"
             android:layout_marginBottom="10dp">
 
-            <LinearLayout
-                android:id="@+id/details_venue_lFilters"
-                android:orientation="horizontal"
-                android:layout_gravity="start"
+            <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+                <LinearLayout
+                    android:id="@+id/details_venue_lFilters"
+                    android:orientation="horizontal"
+                    android:layout_gravity="start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
-            </LinearLayout>
+                </LinearLayout>
+            </HorizontalScrollView>
 
             <LinearLayout
                 android:id="@+id/details_venue_lFiltersProgress"
@@ -164,15 +169,21 @@
             android:padding="10dp"
             android:layout_marginBottom="10dp">
 
-            <LinearLayout
-                android:id="@+id/details_venue_lCultureFilters"
-                android:orientation="horizontal"
-                android:layout_gravity="start"
+            <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:layout_height="match_parent"
+                android:fillViewport="true">
 
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/details_venue_lCultureFilters"
+                    android:orientation="horizontal"
+                    android:layout_gravity="start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                </LinearLayout>
+            </HorizontalScrollView>
 
             <LinearLayout
                 android:id="@+id/details_venue_lCultureFiltersProgress"
