@@ -45,4 +45,7 @@ public interface IVenuesRepository {
     @GET("fbo/filters/all")
     Call<VenueFiltersResult> getFilters (@Header("Authorization") String authorization);
 
+    @GET("fbo/view/checkadd")
+    Call<Void> checkAddView(@Header("Authorization") String authorization, @Query("fboId") String itemId);
+
 }

@@ -46,8 +46,8 @@ android {
     }
     defaultConfig {
         applicationId "com.mosy.kalin.mosy"
-        versionName '0.5.3'
-        versionCode 8
+        versionName '0.5.4'
+        versionCode 9
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         targetSdkVersion 27
         minSdkVersion 21

@@ -128,10 +128,8 @@ public class DetailsItemActivity
 //                String asda2 = NetworkHelper.getIPAddress(true); // IPv4
 //                String asda3 = NetworkHelper.getIPAddress(false); // IPv6
 
-                if (resumed){
+                if (resumed)
                     this.dishesService.checkAddView(this.applicationContext, item.Id);
-//                    Toast.makeText(this.applicationContext, "5 seconds passed!", Toast.LENGTH_LONG).show();
-                }
             }, SEEN_TIME_OUT);
 
             this.publishViews();

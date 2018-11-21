@@ -292,4 +292,26 @@ public class VenuesService {
                 null);
     }
 
+    public void checkAddView(Context applicationContext, String itemId) {
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                null,
+                () -> {
+                    String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    try {
+                        Call<Void> call = repository.checkAddView(authToken, itemId);
+                        call.enqueue(new Callback<Void>() {
+                            @Override public void onResponse(Call<Void> call, Response<Void> response) {
+
+                            }
+                            @Override public void onFailure(Call<Void> call, Throwable t) { }
+                        });
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                },
+                null);
+    }
+
 }
