@@ -79,7 +79,8 @@ public class DishesService {
     }
 
     public void getAllFilters(Context applicationContext,
-                              AsyncTaskListener<DishFiltersResult> apiCallResultListener)
+                              AsyncTaskListener<DishFiltersResult> apiCallResultListener,
+                              boolean devMode)
     {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
@@ -87,7 +88,7 @@ public class DishesService {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
                     try {
-                        Call<DishFiltersResult> callFilters = repository.loadAllFilters(authTokenHeader);
+                        Call<DishFiltersResult> callFilters = repository.loadAllFilters(authTokenHeader, devMode);
                         apiCallResultListener.onPreExecute();
                         callFilters.enqueue(new Callback<DishFiltersResult>() {
                             @Override public void onResponse(@NonNull Call<DishFiltersResult> call, @NonNull Response<DishFiltersResult> response) {

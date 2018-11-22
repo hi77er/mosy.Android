@@ -270,7 +270,7 @@ public class WallActivity
             }
         };
 
-        this.venuesService.getFilters(this.applicationContext, listener);
+        this.venuesService.getFilters(this.applicationContext, listener, this.isDevelopersModeActivated);
     }
 
     private void loadDishFilters(){
@@ -287,7 +287,7 @@ public class WallActivity
             }
         };
 
-        this.dishesService.getAllFilters(this.applicationContext, listener);
+        this.dishesService.getAllFilters(this.applicationContext, listener, this.isDevelopersModeActivated);
     }
 
     //INFO: Called in "afterViews"

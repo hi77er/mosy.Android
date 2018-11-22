@@ -275,7 +275,7 @@ public class VenuesFiltersActivity
             }
         };
 
-        this.venuesService.getFilters(this.applicationContext, listener);
+        this.venuesService.getFilters(this.applicationContext, listener, this.isDevelopersModeActivated);
     }
 
     private ArrayList<FilterItem> toFilterItems(ArrayList<Filter> filters) {
@@ -317,23 +317,27 @@ public class VenuesFiltersActivity
             ArrayList<Filter> venueCultureFilters) {
 
         Stream.of(PreselectedVenueAccessibilityFilterIds).forEach(filterId -> {
-            Filter matchingFilter = Stream.of(venueAccessibilityFilters).filter(filter -> filter.Id.equals(filterId)).single();
-            matchingFilter.IsChecked = true;
+            Filter matchingFilter = Stream.of(venueAccessibilityFilters).filter(filter -> filter.Id.equals(filterId)).findFirst().orElse(null);
+            //preselectedFilters might deffer depending on whether devMode enabled.
+            if (matchingFilter != null) matchingFilter.IsChecked = true;
         });
 
         Stream.of(PreselectedVenueAvailabilityFilterIds).forEach(filterId -> {
-            Filter matchingFilter = Stream.of(venueAvailabilityFilters).filter(filter -> filter.Id.equals(filterId)).single();
-            matchingFilter.IsChecked = true;
+            Filter matchingFilter = Stream.of(venueAvailabilityFilters).filter(filter -> filter.Id.equals(filterId)).findFirst().orElse(null);
+            //preselectedFilters might deffer depending on whether devMode enabled.
+            if (matchingFilter != null) matchingFilter.IsChecked = true;
         });
 
         Stream.of(PreselectedVenueAtmosphereFilterIds).forEach(filterId -> {
-            Filter matchingFilter = Stream.of(venueAtmosphereFilters).filter(filter -> filter.Id.equals(filterId)).single();
-            matchingFilter.IsChecked = true;
+            Filter matchingFilter = Stream.of(venueAtmosphereFilters).filter(filter -> filter.Id.equals(filterId)).findFirst().orElse(null);
+            //preselectedFilters might deffer depending on whether devMode enabled.
+            if (matchingFilter != null) matchingFilter.IsChecked = true;
         });
 
         Stream.of(PreselectedVenueCultureFilterIds).forEach(filterId -> {
-            Filter matchingFilter = Stream.of(venueCultureFilters).filter(filter -> filter.Id.equals(filterId)).single();
-            matchingFilter.IsChecked = true;
+            Filter matchingFilter = Stream.of(venueCultureFilters).filter(filter -> filter.Id.equals(filterId)).findFirst().orElse(null);
+            //preselectedFilters might deffer depending on whether devMode enabled.
+            if (matchingFilter != null) matchingFilter.IsChecked = true;
         });
 
     }

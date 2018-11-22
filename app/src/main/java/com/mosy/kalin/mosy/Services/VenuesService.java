@@ -265,7 +265,8 @@ public class VenuesService {
     }
 
     public void getFilters(Context applicationContext,
-                           AsyncTaskListener<VenueFiltersResult> apiCallResultListener)
+                           AsyncTaskListener<VenueFiltersResult> apiCallResultListener,
+                           boolean devMode)
     {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
@@ -273,7 +274,7 @@ public class VenuesService {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
                     try {
-                        Call<VenueFiltersResult> callFilters = repository.getFilters(authTokenHeader);
+                        Call<VenueFiltersResult> callFilters = repository.getFilters(authTokenHeader, devMode);
                         apiCallResultListener.onPreExecute();
                         callFilters.enqueue(new Callback<VenueFiltersResult>() {
                             @Override public void onResponse(@NonNull Call<VenueFiltersResult> call, @NonNull Response<VenueFiltersResult> response) {

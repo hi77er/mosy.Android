@@ -295,7 +295,7 @@ public class DishesFiltersActivity
             }
         };
 
-        this.dishesService.getAllFilters(this.applicationContext, listener);
+        this.dishesService.getAllFilters(this.applicationContext, listener, this.isDevelopersModeActivated);
     }
 
     private ArrayList<FilterItem> toFilterItems(ArrayList<Filter> filters) {
