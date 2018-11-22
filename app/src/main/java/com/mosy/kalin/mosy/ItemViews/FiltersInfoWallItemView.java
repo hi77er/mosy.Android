@@ -17,11 +17,11 @@ public class FiltersInfoWallItemView
 
     private Context baseContext;
 
-    @ViewById(resName = "filtersInfoItem_tvMatchingFiltersInfo")
+    @ViewById(R.id.filtersInfoItem_tvMatchingFiltersInfo)
     TextView matchingFiltersInfo;
-    @ViewById(resName = "filtersInfoItem_tvMismatchingFiltersInfo")
+    @ViewById(R.id.filtersInfoItem_tvMismatchingFiltersInfo)
     TextView mismatchingFiltersInfo;
-    @ViewById(resName = "filtersInfoItem_tvMismatchingFiltersInfoLabel")
+    @ViewById(R.id.filtersInfoItem_tvMismatchingFiltersInfoLabel)
     TextView mismatchingFiltersInfoLabel;
 
     public FiltersInfoWallItemView(Context context) {

@@ -8,8 +8,8 @@
     <string name="activity_landing_languageEsSpinner">Ισπανική</string>
     <string name="activity_landing_languageElSpinner">Ελληνική</string>
     <string name="activity_landing_languageDeSpinner">Γερμανική</string>
-    <string name="activity_landing_venuesBtn"><![CDATA[ΕΣΤΙΑΤΟΡΙΑ & ΜΕΝΟΥ]]></string>
-    <string name="activity_landing_dishesBtn"><![CDATA[ΒΡΕΣ ΠΙΑΤΑ & ΠΟΤΑ]]></string>
+    <string name="activity_landing_venuesBtn"><![CDATA[ΕΣΤΙΑΤΟΡΙΑ \n & ΜΕΝΟΥ]]></string>
+    <string name="activity_landing_dishesBtn"><![CDATA[ΒΡΕΣ ΠΙΑΤΑ \n & ΠΟΤΑ]]></string>
     <string name="activity_login_titleTextView">Σύνδεση σε</string>
     <string name="activity_login_emailEditText">Συνδεση με e-mail</string>
     <string name="activity_login_passwordEditText">Κωδικός</string>

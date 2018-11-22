@@ -43,6 +43,9 @@ public class MenuListItem
     @SerializedName("IsNew")
     public boolean IsNew;
 
+    @SerializedName("SeenCount")
+    public int SeenCount;
+
     @SerializedName("RequestableImageMeta")
     public MenuListItemImage ImageThumbnail;
 
@@ -128,5 +131,30 @@ public class MenuListItem
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public MenuListItemDetailed toDetailed() {
+        return new MenuListItemDetailed(
+                this.Id,
+                this.BrochureId,
+                this.Name,
+                this.Summary,
+                this.VenueId,
+                this.VenueName,
+                this.VenueWorkingStatus,
+                this.IsRecommended,
+                this.IsNew,
+                this.SeenCount,
+                this.ImageThumbnail,
+                this.DistanceToCurrentDeviceLocation,
+                this.VenueBusinessHours,
+                this.PriceDisplayText,
+                this.QuantityDisplayText,
+                this.DefaultMenuCulture,
+                this.Ingredients,
+                this.Filters,
+                this.MatchingFiltersIds,
+                this.MismatchingFiltersIds,
+                this.MenuListItemCultures);
     }
 }

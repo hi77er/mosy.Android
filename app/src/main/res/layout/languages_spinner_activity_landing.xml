@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:textAlignment="center"
-    android:textColor="@color/colorPrimary"
-    android:textSize="17sp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp" />
+    android:textColor="@color/softer"
+    android:textSize="14sp"
+    android:textStyle="bold"
+    android:padding="10dp" />

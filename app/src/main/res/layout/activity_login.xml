@@ -90,7 +90,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/button_landing_dishes"
+            android:background="@drawable/background_primary_very_light"
             android:textColor="@color/colorPrimary"
             android:text="@string/activity_login_loginBtn"
             android:stateListAnimator="@null"/>
@@ -101,7 +101,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            android:background="@drawable/button_landing_dishes"
+            android:background="@drawable/background_primary_very_light"
             android:textColor="@color/colorPrimary"
             android:text="@string/activity_login_forgotPasswordBtn"
             android:stateListAnimator="@null"/>
@@ -112,7 +112,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/button_landing_dishes"
+            android:background="@drawable/background_primary_very_light"
             android:textColor="@color/colorPrimary"
             android:text="@string/activity_login_registerBtn"
             android:stateListAnimator="@null"/>
@@ -123,7 +123,7 @@
             android:layout_weight="1"
             android:layout_marginBottom="5dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_landing_dishes"
+            android:background="@drawable/background_primary_very_light"
             android:textColor="@color/colorPrimary"
             android:text="@string/activity_login_cancelBtn"
             android:stateListAnimator="@null"/>

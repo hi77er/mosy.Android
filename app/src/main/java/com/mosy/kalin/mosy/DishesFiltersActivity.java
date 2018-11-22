@@ -2,7 +2,6 @@ package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -36,6 +34,9 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 
 @SuppressLint("Registered")
@@ -90,6 +91,10 @@ public class DishesFiltersActivity
     public TextView distanceLabel;
     @ViewById(R.id.filters_dishes_sbDistanceFilter)
     public SeekBar distanceSeekBar;
+    @ViewById(R.id.filters_dishes_tvClosedLabel)
+    public TextView closedLabel;
+    @ViewById(R.id.filters_dishes_tvRecommendedLabel)
+    public TextView recommendedLabel;
 
 
     @ViewById(R.id.filterDishes_GoButton)
@@ -150,6 +155,9 @@ public class DishesFiltersActivity
             @Override public void onStartTrackingTouch(SeekBar seekBar) { }
             @Override public void onStopTrackingTouch(SeekBar seekBar) { }
         });
+
+        this.setWorkingStatusLabels();
+        this.setRecommendedLabelBackground();
 
         afterViewsFinished = true;
     }
@@ -287,7 +295,7 @@ public class DishesFiltersActivity
             }
         };
 
-        this.dishesService.getFilters(this.applicationContext, listener);
+        this.dishesService.getAllFilters(this.applicationContext, listener, this.isDevelopersModeActivated);
     }
 
     private ArrayList<FilterItem> toFilterItems(ArrayList<Filter> filters) {
@@ -311,15 +319,15 @@ public class DishesFiltersActivity
     }
 
     private void showFiltersLoadingLayout() {
-        dishesFiltersPager.setVisibility(View.GONE);
-        goButton.setVisibility(View.GONE);
-        centralProgress.setVisibility(View.VISIBLE);
+        dishesFiltersPager.setVisibility(GONE);
+        goButton.setVisibility(GONE);
+        centralProgress.setVisibility(VISIBLE);
     }
 
     private void onFiltersLoaded() {
-        centralProgress.setVisibility(View.GONE);
-        dishesFiltersPager.setVisibility(View.VISIBLE);
-        goButton.setVisibility(View.VISIBLE);
+        centralProgress.setVisibility(GONE);
+        dishesFiltersPager.setVisibility(VISIBLE);
+        goButton.setVisibility(VISIBLE);
     }
 
     private void populateAlreadySelectedFilters(
@@ -375,6 +383,16 @@ public class DishesFiltersActivity
                 dishAllergenFiltersChanged;
     }
 
+    private void setWorkingStatusLabels() {
+        this.closedLabel.setVisibility(this.workingStatusFilter.isChecked() ? GONE : VISIBLE);
+    }
+
+    private void setRecommendedLabelBackground() {
+        this.recommendedLabel.setBackgroundColor(this.recommendedFilter.isChecked()
+                ? getResources().getColor(R.color.colorSecondaryAmber)
+                : getResources().getColor(R.color.colorSecondaryAmberOpacity140));
+    }
+
     @NonNull
     private String getDistanceFilterLabelText(int distanceFilterProgressMeters) {
         double distanceText = distanceFilterProgressMeters;
@@ -408,6 +426,16 @@ public class DishesFiltersActivity
         this.stateHasBeenReset = true;
 
         afterViews();
+    }
+
+    @Click(R.id.filters_dishes_scWorkingTimeFilter)
+    public void workingStatusSwitch_Clicked(){
+        this.setWorkingStatusLabels();
+    }
+
+    @Click(R.id.filters_dishes_scRecommendedFilter)
+    public void recommendedSwitch_Clicked(){
+        this.setRecommendedLabelBackground();
     }
 
     @Click(R.id.filterDishes_GoButton)

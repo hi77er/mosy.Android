@@ -51,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                <android.support.v4.view.ViewPager
+                <com.mosy.kalin.mosy.CustomControls.DynamicHeightViewPager
                     android:id="@+id/vp_filters_venues"
                     android:layout_width="match_parent"
                     android:layout_height="1000dp" />
@@ -90,6 +90,49 @@
                 android:text="@string/activity_venuesFilters_showClosedTextView"
                 android:textColor="@color/colorPrimaryVeryLight"
                 android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/filters_venues_tvOpenedLabel"
+                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:padding="1dp"
+                android:textAlignment="center"
+                android:background="@color/colorDarkRed"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:text="@string/item_dish_workingStatusOpenedLabelTextView" />
+
+            <TextView
+                android:id="@+id/filters_venues_tv247Label"
+                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:padding="1dp"
+                android:textAlignment="center"
+                android:background="@color/colorDarkRed"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:text="@string/item_dish_workingStatus247LabelTextView" />
+
+            <TextView
+                android:id="@+id/filters_venues_tvClosedLabel"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:padding="1dp"
+                android:textAlignment="center"
+                android:background="@color/colorDarkRed"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:text="@string/item_dish_workingStatusClosedLabelTextView" />
         </LinearLayout>
 
         <LinearLayout

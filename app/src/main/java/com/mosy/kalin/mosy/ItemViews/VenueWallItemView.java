@@ -8,11 +8,11 @@ import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
 import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.DetailsVenueActivity_;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.BusinessHoursHelper;
 import com.mosy.kalin.mosy.Helpers.LocationHelper;
@@ -23,7 +23,6 @@ import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.R;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
 import com.mosy.kalin.mosy.VenueMenuActivity_;
-import com.mosy.kalin.mosy.VenueDetailsActivity_;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
@@ -39,21 +38,20 @@ public class VenueWallItemView
     private Context baseContext;
     private Venue Venue;
 
+    @ViewById(R.id.venueItem_ivOutdoorThumbnail)
+    ImageView outdoorImageThumbnailTextView;
 
-    @ViewById(resName = "venueItem_tvName")
-    TextView Name;
-    @ViewById(resName = "venueItem_tvClass")
-    TextView Class;
-
-    @ViewById(resName = "venueItem_tvDistance")
-    TextView DistanceFromDevice;
-    @ViewById(resName = "venueItem_tvWalkingMinutes")
-    TextView WalkingMinutes;
-    @ViewById(resName = "venueItem_ivOutdoorThumbnail")
-    ImageView OutdoorImageThumbnail;
-
+    @ViewById(R.id.venueItem_tvName)
+    TextView nameTextView;
+    @ViewById(R.id.venueItem_tvClass)
+    TextView classTextView;
+    @ViewById(R.id.venueItem_tvDistance)
+    TextView distanceFromDeviceTextView;
+    @ViewById(R.id.venueItem_tvWalkingMinutes)
+    TextView walkingMinutesTextView;
     @ViewById(R.id.venueItem_tvWorkingStatusLabel)
     TextView workingStatusLabel;
+
 //    @ViewById(R.id.venueItem_tvRecommendedLabel)
 //    TextView newLabel;
 
@@ -63,35 +61,39 @@ public class VenueWallItemView
     }
 
     public void bind(Venue venue) {
-        this.OutdoorImageThumbnail.setImageDrawable(null);
+        this.outdoorImageThumbnailTextView.setImageDrawable(null);
 
         if (venue != null) {
             this.Venue = venue;
 
-            this.Name.setText(venue.Name);
-            this.Class.setText(venue.Class);
+            this.nameTextView.setText(venue.Name);
+            this.classTextView.setText(venue.Class);
 
             if (venue.OutdoorImage != null && venue.OutdoorImage.Bitmap != null) {
-                this.OutdoorImageThumbnail.setImageBitmap(venue.OutdoorImage.Bitmap);
+                this.outdoorImageThumbnailTextView.setImageBitmap(venue.OutdoorImage.Bitmap);
                 IsUsingDefaultThumbnail = false;
             }
             else {
                 Bitmap defaultImageBitmap = BitmapFactory.decodeResource(this.baseContext.getResources(), R.drawable.venue_default_thumbnail);
-                this.OutdoorImageThumbnail.setImageBitmap(defaultImageBitmap);
+                this.outdoorImageThumbnailTextView.setImageBitmap(defaultImageBitmap);
                 IsUsingDefaultThumbnail = true;
             }
 
-            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(venue.VenueBusinessHours);
+//            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(venue.VenueBusinessHours);
+            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(venue.WorkingStatus);
             this.workingStatusLabel.setVisibility(VISIBLE);
             switch (status){
                 case Open:
                     this.workingStatusLabel.setText(getResources().getString(R.string.item_dish_workingStatusOpenedLabelTextView));
+                    this.workingStatusLabel.setBackgroundResource(R.color.colorTertiary);
                     break;
                 case Open247:
                     this.workingStatusLabel.setText(getResources().getString(R.string.item_dish_workingStatus247LabelTextView));
+                    this.workingStatusLabel.setBackgroundResource(R.color.colorTertiaryLight);
                     break;
                 case Closed:
                     this.workingStatusLabel.setText(getResources().getString(R.string.item_dish_workingStatusClosedLabelTextView));
+                    this.workingStatusLabel.setBackgroundResource(R.color.colorDarkRed);
                     break;
                 case Unknown:
                     this.workingStatusLabel.setVisibility(GONE);
@@ -101,17 +103,17 @@ public class VenueWallItemView
             if (venue.DistanceToCurrentDeviceLocation > 0)
             {
                 String distance = LocationHelper.buildDistanceText(venue.DistanceToCurrentDeviceLocation);
-                this.DistanceFromDevice.setText(distance);
-                this.WalkingMinutes.setVisibility(View.VISIBLE);
+                this.distanceFromDeviceTextView.setText(distance);
+                this.walkingMinutesTextView.setVisibility(View.VISIBLE);
 
                 String timeWalking = LocationHelper.buildMinutesWalkingText(venue.DistanceToCurrentDeviceLocation);
                 timeWalking = (timeWalking.length() > 0 ? timeWalking : StringHelper.empty());
 
                 if (!timeWalking.equals(StringHelper.empty())) {
-                    this.WalkingMinutes.setText(timeWalking);
-                    this.WalkingMinutes.setVisibility(View.VISIBLE);
+                    this.walkingMinutesTextView.setText(timeWalking);
+                    this.walkingMinutesTextView.setVisibility(View.VISIBLE);
                 } else {
-                    this.WalkingMinutes.setVisibility(View.INVISIBLE);
+                    this.walkingMinutesTextView.setVisibility(View.INVISIBLE);
                 }
             }
         }
@@ -167,7 +169,7 @@ public class VenueWallItemView
     @Click(resName = "venueItem_btnInfo")
     public void InfoLinkClick()
     {
-        Intent intent = new Intent(this.baseContext, VenueDetailsActivity_.class);
+        Intent intent = new Intent(this.baseContext, DetailsVenueActivity_.class);
         this.Venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
         this.Venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
         this.Venue.Location = null;

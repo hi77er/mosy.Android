@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">Фуду</string>
     <string name="activity_wall_swipeDownToRefreshMessageTextView">ДРЪПНИ НАДОЛУ ЗА ДА ОПРЕСНИШ</string>
-    <string name="activity_landing_venuesBtn"><![CDATA[ЗАВЕДЕНИЯ & МЕНЮТА]]></string>
-    <string name="activity_landing_dishesBtn"><![CDATA[ЯСТИЯ & НАПИТКИ]]></string>
+    <string name="activity_landing_venuesBtn"><![CDATA[ЗАВЕДЕНИЯ \n & МЕНЮТА]]></string>
+    <string name="activity_landing_dishesBtn"><![CDATA[ЯСТИЯ \n & НАПИТКИ]]></string>
     <string name="activity_login_titleTextView">Вход</string>
     <string name="activity_login_emailEditText">Въведи електронна поща</string>
     <string name="activity_login_passwordEditText">Парола</string>

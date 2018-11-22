@@ -34,7 +34,6 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
@@ -182,7 +181,7 @@ public class VenueMenuActivity
 
     @Click(R.id.venue_lVenueTitle)
     void venueTitle_Click() {
-        Intent intent = new Intent(VenueMenuActivity.this, VenueDetailsActivity_.class);
+        Intent intent = new Intent(VenueMenuActivity.this, DetailsVenueActivity_.class);
         this.Venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
         this.Venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
         this.Venue.Location = null;

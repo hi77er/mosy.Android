@@ -43,6 +43,7 @@ import com.mosy.kalin.mosy.DTOs.Base.WallItemBase;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.Enums.ImageResolution;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.MenuListItemDetailed;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
@@ -156,8 +157,11 @@ public class WallActivity
     SwipeRefreshLayout venuesSwipeContainer;
     @ViewById(R.id.venues_lDishesSwipeContainer)
     SwipeRefreshLayout dishesSwipeContainer;
+
     @ViewById(R.id.venues_ibFilters)
     FloatingActionButton filtersButton;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -266,7 +270,7 @@ public class WallActivity
             }
         };
 
-        this.venuesService.getFilters(this.applicationContext, listener);
+        this.venuesService.getFilters(this.applicationContext, listener, this.isDevelopersModeActivated);
     }
 
     private void loadDishFilters(){
@@ -283,7 +287,7 @@ public class WallActivity
             }
         };
 
-        this.dishesService.getFilters(this.applicationContext, listener);
+        this.dishesService.getAllFilters(this.applicationContext, listener, this.isDevelopersModeActivated);
     }
 
     //INFO: Called in "afterViews"
@@ -291,16 +295,6 @@ public class WallActivity
         if (ConnectivityHelper.isConnected(applicationContext)) {
             RecyclerView.OnScrollListener venuesScrollListener = new RecyclerView.OnScrollListener() {
                 @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                    TypedValue tv = new TypedValue();
-//                    int actionBarHeight = 0;
-//                    ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) venuesSwipeContainer.getLayoutParams();
-//                    if (dy <= 0){ // scroll down
-//                        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-//                            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
-//                    }
-//                    marginLayoutParams.setMargins(0, actionBarHeight, 0, 0);
-//                    venuesSwipeContainer.setLayoutParams(marginLayoutParams);
-
                     if (!venuesLoadingStillInAction && ConnectivityHelper.isConnected(applicationContext) && wallVenuesAdapter.APICallStillReturnsElements) {
                         venuesLoadingStillInAction = true;
 
@@ -317,8 +311,6 @@ public class WallActivity
                         filtersButton.show();
                 }
             };
-
-            final SwipeRefreshLayout venuesSwipeContainer = findViewById(R.id.venues_lVenuesSwipeContainer);
 
             this.venuesWall.setAdapter(wallVenuesAdapter);
             this.venuesWall.setLayoutManager(new GridLayoutManager(this.baseContext, 1));
@@ -359,8 +351,8 @@ public class WallActivity
                         ArrayList<String> selectedVenueAvailabilityFilterIds,
                         ArrayList<String> selectedVenueAtmosphereFilterIds,
                         ArrayList<String> selectedVenueCultureFilterIds){
-        if (ConnectivityHelper.isConnected(applicationContext) &&
-                this.lastKnownLocation != null) {
+        if (ConnectivityHelper.isConnected(applicationContext) && this.lastKnownLocation != null) {
+
             AsyncTaskListener<ArrayList<Venue>> apiCallResultListener = new AsyncTaskListener<ArrayList<Venue>>() {
                 @Override public void onPreExecute() {
                     centralProgress.setVisibility(View.VISIBLE);
@@ -476,8 +468,9 @@ public class WallActivity
 
                 if (itemClicked.getType() == WallItemBase.ITEM_TYPE_DISH_TILE){
                     MenuListItem castedItemClicked = ((DishWallItem)itemClicked).MenuListItem;
+                    MenuListItemDetailed detailed = castedItemClicked.toDetailed();
 
-                    Intent intent = new Intent(WallActivity.this, VenueMenuActivity_.class);
+                    Intent intent = new Intent(WallActivity.this, DetailsItemActivity_.class);
 
                     AsyncTaskListener<Venue> apiCallResultListener = new AsyncTaskListener<Venue>() {
                         @Override public void onPreExecute() {
@@ -489,8 +482,15 @@ public class WallActivity
                             venue.Location = null;
                             venue.VenueBusinessHours = null;
                             venue.VenueContacts = null;
-                            intent.putExtra("Venue", venue);
-                            intent.putExtra("SelectedMenuListId", castedItemClicked.BrochureId);
+                            detailed.MenuListItemCultures = null;
+                            detailed.MismatchingFiltersIds = null;
+                            detailed.MatchingFiltersIds = null;
+                            detailed.Filters = null;
+                            detailed.Ingredients= null;
+                            detailed.VenueBusinessHours = null;
+                            detailed.ImageThumbnail = null;
+                            intent.putExtra("item", detailed);
+                            intent.putExtra("venue", venue);
                             startActivity(intent);
                         }
                     };
@@ -650,16 +650,6 @@ public class WallActivity
         }
     }
 
-    @OptionsItem(R.id.action_venues)
-    void actionVenuesClicked(MenuItem item) {
-        this.navigateVenuesSearch();
-    }
-
-    @OptionsItem(R.id.action_dishes)
-    void actionDishesClicked(MenuItem item) {
-        this.navigateDishesSearch();
-    }
-
     private boolean checkFiltersSelected(){
         return (DishesSearchModeActivated &&
                 ((SelectedDishTypeFilterIds != null && SelectedDishTypeFilterIds.size() > 0) ||
@@ -722,19 +712,6 @@ public class WallActivity
             intent.putExtra("PreselectedVenueCultureFilterIds", SelectedVenueCultureFilterIds);
             startActivity(intent);
         }
-    }
-
-    public void navigateVenuesSearch() {
-        Intent intent = new Intent(WallActivity.this, WallActivity_.class);
-        intent.putExtra("DishesSearchModeActivated", false);
-        startActivity(intent);
-    }
-
-    public void navigateDishesSearch() {
-        Intent intent = new Intent(WallActivity.this, WallActivity_.class);
-        intent.putExtra("DishesSearchModeActivated", true);
-
-        startActivity(intent);
     }
 
     void refreshLastKnownLocation() {
@@ -858,4 +835,35 @@ public class WallActivity
         return mMemoryCache.get(key);
     }
 
+    public void navigateVenuesSearch() {
+        Intent intent = new Intent(WallActivity.this, WallActivity_.class);
+        intent.putExtra("DishesSearchModeActivated", false);
+        startActivity(intent);
+    }
+
+    public void navigateDishesSearch() {
+        Intent intent = new Intent(WallActivity.this, WallActivity_.class);
+        intent.putExtra("DishesSearchModeActivated", true);
+        startActivity(intent);
+    }
+
+    public void navigateLanding() {
+        Intent intent = new Intent(WallActivity.this, LandingActivity_.class);
+        startActivity(intent);
+    }
+
+    @OptionsItem(R.id.action_venues)
+    void actionVenuesClicked(MenuItem item) {
+        this.navigateVenuesSearch();
+    }
+
+    @OptionsItem(R.id.action_dishes)
+    void actionDishesClicked(MenuItem item) {
+        this.navigateDishesSearch();
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.navigateLanding();
+    }
 }

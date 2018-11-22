@@ -56,7 +56,7 @@
             android:id="@+id/ivSwipeToRefresh"
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:src="@drawable/ic_gesture_swipe_vertical_24"
+            android:src="@drawable/ic_gesture_swipe_down_24"
             android:tint="@color/colorPrimaryLight"
             android:indeterminate="true" />
 

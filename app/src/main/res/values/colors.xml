@@ -27,16 +27,18 @@
     <color name="colorSecondaryLight">#f7f7f0</color>
     <color name="colorSecondary">#FAECCC</color> <!--Champagne #FAECCC -->
     <color name="colorSecondaryDark">#D5BF86</color>
+    <color name="colorSecondaryAmberOpacity140">#8cffc300</color>
     <color name="colorSecondaryAmber">#FFC300</color>
 
 
     <color name="colorTertiaryLight">#9adc75</color>
-    <color name="colorTertiary">#00900F</color>
+    <color name="colorTertiary">#00a411</color>
     <color name="colorTertiaryDark">#004307</color>
 
     <color name="colorQuaternaryVeryLight">#BFDBF7</color>
     <color name="colorQuaternaryLight">#7dbaf6</color>
     <color name="colorQuaternary">#3095f9</color>
+    <color name="colorQuaternaryDark">#1f90ff</color>
 
     <color name="colorMenuBackground">#ffebeb</color>
     <color name="colorMenuToolboxBackground">#ffe5e5</color>

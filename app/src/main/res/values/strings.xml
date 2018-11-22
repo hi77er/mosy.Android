@@ -26,10 +26,11 @@
     <string name="manifest_landingActivityTitle" translatable="false">"Treatspark"</string>
     <string name="manifest_venuesActivityTitle" translatable="false">"Venues"</string>
     <string name="manifest_venueDetailsActivityTitle" translatable="false">"Venue Details"</string>
+    <string name="manifest_itemDetailsActivityTitle" translatable="false">"Item Details"</string>
 
     <!-- Activity Landing -->
     <string name="activity_landing_venuesBtn"><![CDATA[VENUES & MENUS]]></string>
-    <string name="activity_landing_dishesBtn"><![CDATA[FIND DISHES & DRINKS]]></string>
+    <string name="activity_landing_dishesBtn"><![CDATA[DISHES & DRINKS]]></string>
     <string name="activity_landing_languageBgSpinner">Bulgarian</string>
     <string name="activity_landing_languageEnUSSpinner">English</string>
     <string name="activity_landing_languageDeSpinner">German</string>
@@ -98,17 +99,17 @@
     <string name="activity_venuesFilters_accessibilityFiltersTitle">Accessibility</string>
     <string name="activity_venuesFilters_availabilityFiltersTitle">Availability</string>
     <string name="activity_venuesFilters_atmosphereFiltersTitle">Atmosphere</string>
-    <string name="activity_venuesFilters_cultureFiltersTitle">Culture</string>
+    <string name="activity_venuesFilters_cultureFiltersTitle">Ethnicity</string>
     <string name="VenuesFilterBadgeBikesParkingAvailableName">"Bike parking/locks"</string>
     <string name="VenuesFilterBadgeToysCornerName">"Toys corner"</string>
     <string name="VenuesFilterBabyFriendlyName">Baby friendly</string>
-    <string name="VenuesFilterBadgeNoSmokingName">"No Smoking"</string>
-    <string name="VenuesFilterBadgeParkingAvailableName">"Car Parking"</string>
-    <string name="VenuesFilterBadgePetFriendlyName">"Pet Friendly"</string>
-    <string name="VenuesFilterBadgeRomanticPlaceName">"Romantic Place"</string>
-    <string name="VenuesFilterBadgeWheelchairFriendlyName">"Wheelchair Friendly"</string>
-    <string name="VenuesFilterBadgeWiFiAvailableName">"Wi-Fi Available"</string>
-    <string name="VenuesFilterBadgeWorkingFriendlyName">"Working Friendly"</string>
+    <string name="VenuesFilterBadgeNoSmokingName">"No smoking"</string>
+    <string name="VenuesFilterBadgeParkingAvailableName">"Car parking"</string>
+    <string name="VenuesFilterBadgePetFriendlyName">"Pet friendly"</string>
+    <string name="VenuesFilterBadgeRomanticPlaceName">"Romantic place"</string>
+    <string name="VenuesFilterBadgeWheelchairFriendlyName">"Wheelchair friendly"</string>
+    <string name="VenuesFilterBadgeWiFiAvailableName">"Wi-Fi available"</string>
+    <string name="VenuesFilterBadgeWorkingFriendlyName">"Working friendly"</string>
     <string name="VenuesFilterArtName">Art</string>
     <string name="VenuesFilterCosyName">Cosy</string>
     <string name="VenuesFilterDancingName">Dancing</string>
@@ -168,7 +169,7 @@
     <string name="VenuesFilterPubGamesDescription">Pool/Billiard, dart, etc. are available.</string>
     <string name="VenuesFilterRooftopDescription">Rooftop available.</string>
     <string name="VenuesFilterSelfServiceDescription">Self-service.</string>
-    <string name="VenuesFilterSheeshaDescription">Sheesha available.</string>
+    <string name="VenuesFilterSheeshaDescription">Hookah (shisha) available.</string>
     <string name="VenuesFilterCultureBulgariaDescription">"This venue is particularly popular for people from Bulgaria."</string>
     <string name="VenuesFilterCultureRussiaDescription">"This venue is particularly popular for people from Russia."</string>
     <string name="VenuesFilterCultureGreeceDescription">This venue is particularly popular for people from Greece.</string>
@@ -191,7 +192,7 @@
     <string name="activity_dishesFilters_goBtn">"Go"</string>
     <string name="activity_dishesFilters_typeFiltersTitle">Type</string>
     <string name="activity_dishesFilters_regionFiltersTitle">Region</string>
-    <string name="activity_dishesFilters_ingredientsFiltersTitle">Ingredients</string>
+    <string name="activity_dishesFilters_ingredientsFiltersTitle">Dietary</string>
     <string name="activity_dishesFilters_allergensFiltersTitle">Allergens</string>
     <string name="activity_dishesFilters_allergensFiltersNote">* Selecting allergens will hide dishes and drinks that contain them in your search results.</string>
     <string name="activity_dishesFilters_distanceFilterTextView">Distance:</string>
@@ -208,7 +209,7 @@
     <string name="DishesFilterTypeNonalcoholicDrinksName">Non-alcoholic drinks</string>
     <string name="DishesFilterTypeBreakfastName">"Breakfast"</string>
     <string name="DishesFilterTypeMainsName">"Mains"</string>
-    <string name="DishesFilterTypeDesertsName">"Deserts"</string>
+    <string name="DishesFilterTypeDesertsName">"Desserts"</string>
 
     <string name="DishesFilterRegionAfricanName">African</string>
     <string name="DishesFilterRegionBalkanName">Balkan</string>
@@ -269,10 +270,14 @@
     <string name="activity_userprofile_logoutBtn">Sign out</string>
     <string name="activity_dishesFilters_showRecommendedTextView">Only show recommended items</string>
     <string name="activity_dishesFilters_resetFiltersBtn">Reset</string>
-    <string name="item_dish_workingStatusOpenedLabelTextView">OPENED</string>
+    <string name="item_dish_workingStatusOpenedLabelTextView">OPEN</string>
     <string name="item_dish_workingStatusClosedLabelTextView">CLOSED</string>
     <string name="item_dish_workingStatus247LabelTextView">24/7</string>
     <string name="item_dish_recommendedLabelTextView">R+</string>
     <string name="item_dish_newLabelTextView">NEW</string>
+    <string name="link_social_facebook">https://www.facebook.com/treatspark/</string>
+    <string name="link_social_instagram">https://www.instagram.com/treatsparks</string>
+    <string name="link_social_twitter">https://www.twitter.com/treatspark</string>
+    <string name="activity_itemDetails_viewsTextView">Views</string>
 
 </resources>

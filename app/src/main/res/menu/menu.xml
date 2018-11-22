@@ -12,6 +12,12 @@
         <!--android:title="@string/app_name"-->
         <!--app:showAsAction="ifRoom" />-->
 
+    <!--<item-->
+        <!--android:id="@+id/action_share"-->
+        <!--android:title="Share"-->
+        <!--app:showAsAction="ifRoom" />-->
+    <!--app:actionProviderClass="android.widget.ShareActionProvider"-->
+
     <item
         android:id="@+id/action_venues"
         android:orderInCategory="0"

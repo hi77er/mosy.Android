@@ -93,7 +93,7 @@ public class WallVenuesAdapter
 
     @Override
     public int getItemViewType(int position) {
-        return items.get(position).getType();
+        return this.items.get(position).getType();
     }
 
     public WallItemBase getItemAt(int position) {

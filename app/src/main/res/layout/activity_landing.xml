@@ -4,18 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    android:paddingTop="50dp"
+    android:paddingTop="20dp"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
     android:paddingBottom="15dp">
 
-    <ImageView
+    <TextView
         android:id="@+id/landing_ivLogo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/tastespot_logo_transparent_rect"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="30dp" />
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="80dp"
+        android:text="@string/app_name"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorPrimary"/>
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -25,39 +30,37 @@
         android:layout_below="@+id/landing_ivLogo"
         android:orientation="horizontal"
         android:background="@color/colorWhite"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="20dp"
         android:visibility="gone">
 
         <Button
             android:id="@+id/landing_btnDishes"
+            android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="7dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="10dp"
+            android:padding="10dp"
             android:scaleType="fitXY"
-            android:drawableTop="@drawable/ic_food_variant_64"
+            android:drawableTop="@drawable/ic_food_variant_72"
             android:drawableTint="@color/colorPrimary"
             android:text="@string/activity_landing_dishesBtn"
-            android:textSize="20sp"
-            android:background="@drawable/button_landing_dishes"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:background="@drawable/background_transparent_click_oval"
             android:textColor="@color/colorPrimary"
             android:stateListAnimator="@null" />
 
         <Button
             android:id="@+id/landing_btnVenues"
+            android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:layout_marginStart="7dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="10dp"
-            android:drawableTop="@drawable/ic_home_map_marker_64"
+            android:padding="10dp"
+            android:drawableTop="@drawable/ic_home_map_marker_72"
             android:drawableTint="@color/colorPrimary"
             android:text="@string/activity_landing_venuesBtn"
-            android:textSize="20sp"
-            android:background="@drawable/button_landing_dishes"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:background="@drawable/background_transparent_click_oval"
             android:textColor="@color/colorPrimary"
             android:stateListAnimator="@null" />
     </LinearLayout>
@@ -98,37 +101,71 @@
     <LinearLayout
         android:id="@+id/landing_llBottomBtns"
         android:orientation="vertical"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_above="@+id/landing_llSocialLinksBtns"
+        android:layout_marginBottom="10dp">
 
         <Button
             android:id="@+id/landing_btnUserProfile"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:text="@string/activity_landing_profileBtn"
-            android:background="@drawable/button_landing_dishes"
-            android:layout_marginBottom="5dp"
-            android:textColor="@color/colorPrimary"
+            android:background="@drawable/background_transparent_click_oval"
+            android:textSize="14sp"
+            android:textColor="@color/soft"
+            android:textStyle="bold"
             android:visibility="gone"
             android:stateListAnimator="@null" />
 
         <Button
             android:id="@+id/landing_btnLoginSignUp"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:text="@string/activity_landing_loginSignUpBtn"
-            android:background="@drawable/button_landing_dishes"
-            android:textColor="@color/colorPrimary"
-            android:layout_marginBottom="5dp"
+            android:background="@drawable/background_transparent_click_oval"
+            android:textSize="14sp"
+            android:textColor="@color/soft"
+            android:textStyle="bold"
             android:visibility="gone"
             android:stateListAnimator="@null" />
 
         <Spinner
             android:id="@+id/landing_spLanguage"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_landing_dishes" />
+            android:layout_width="match_parent"
+            android:background="@color/transparent" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/landing_llSocialLinksBtns"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:id="@+id/landing_ibSocialFacebook"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_facebook_box_24"
+            android:tint="@color/softer" />
+
+        <ImageView
+            android:id="@+id/landing_ibSocialInstagram"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_instagram_24"
+            android:tint="@color/softer" />
+
+        <ImageView
+            android:id="@+id/landing_ibSocialTwitter"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_twitter_24"
+            android:tint="@color/softer" />
+    </LinearLayout>
 </RelativeLayout>

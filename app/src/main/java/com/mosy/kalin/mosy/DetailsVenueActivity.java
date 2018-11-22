@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
@@ -56,17 +57,23 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 @SuppressLint("Registered")
-@EActivity(R.layout.activity_venue_details)
-public class VenueDetailsActivity
+@EActivity(R.layout.activity_details_venue)
+public class DetailsVenueActivity
         extends BaseActivity
         implements OnMapReadyCallback {
 
     private static final int REQUEST_PHONE_CALL = 1;
-    private static final String x200BlobStorageContainerPath = "userimages\\fboalbums\\200x200";
-    private static final String originalBlobStorageContainerPath = "userimages\\fboalbums\\original";
+    private static final String itemX200BlobStorageContainerPath = "userimages\\fboalbums\\200x200";
+    private static final String itemOriginalBlobStorageContainerPath = "userimages\\fboalbums\\original";
 
-    boolean IsUsingDefaultIndoorImageThumbnail;
-    public String PhoneNumber;
+    private static int SEEN_TIME_OUT = 5000; // 5 seconds
+
+    static boolean resumed = false;
+
+    boolean descriptionExpanded = false;
+    boolean isUsingDefaultIndoorImageThumbnail;
+    public String phoneNumber;
+
 
     @Bean
     VenuesService venueService;
@@ -74,87 +81,125 @@ public class VenueDetailsActivity
     @Extra
     public Venue Venue;
 
-    @FragmentById(R.id.venueDetails_frMap)
+    @FragmentById(R.id.details_venue_frMap)
     SupportMapFragment VenueLocationMap;
 
-    @ViewById(resName = "venueDetails_lFilters")
+    @ViewById(R.id.details_venue_lFilters)
     LinearLayout filtersLayout;
-    @ViewById(resName = "venueDetails_lCultureFilters")
+    @ViewById(R.id.details_venue_lCultureFilters)
     LinearLayout cultureFiltersLayout;
-    @ViewById(resName = "venueDetails_lContacts")
+    @ViewById(R.id.details_venue_lContacts)
     LinearLayout contactsLayout;
-    @ViewById(resName = "venueDetails_lBusinessHours")
+    @ViewById(R.id.venueDetails_lBusinessHours)
     LinearLayout businessHoursLayout;
 
-    @ViewById(resName = "venueDetails_lFiltersContainer")
+    @ViewById(R.id.details_venue_lDescriptionContainer)
+    LinearLayout descriptionContainerLayout;
+    @ViewById(R.id.details_venue_lFiltersContainer)
     LinearLayout filtersContainerLayout;
-    @ViewById(resName = "venueDetails_lCultureFiltersContainer")
+    @ViewById(R.id.details_venue_lCultureFiltersContainer)
     LinearLayout cultureFiltersContainerLayout;
-    @ViewById(resName = "venueDetails_lContactsContainer")
+    @ViewById(R.id.details_venue_lContactsContainer)
     LinearLayout contactsContainerLayout;
-    @ViewById(resName = "venueDetails_lBusinessHoursContainer")
+    @ViewById(R.id.venueDetails_lBusinessHoursContainer)
     LinearLayout getBusinessHoursContainerLayout;
 
-    @ViewById(resName = "venueDetails_lFiltersProgress")
+    @ViewById(R.id.details_venue_lFiltersProgress)
     LinearLayout filtersProgressLayout;
-    @ViewById(resName = "venueDetails_lCultureFiltersProgress")
+    @ViewById(R.id.details_venue_lCultureFiltersProgress)
     LinearLayout cultureFiltersProgressLayout;
-    @ViewById(resName = "venueDetails_lContactsProgress")
+    @ViewById(R.id.details_venue_lContactsProgress)
     LinearLayout contactsProgressLayout;
-    @ViewById(resName = "venueDetails_lBusinessHoursProgress")
+    @ViewById(R.id.details_venue_lBusinessHoursProgress)
     LinearLayout getBusinessHoursProgressLayout;
 
-    @ViewById(resName = "venueDetails_svMain")
+    @ViewById(R.id.details_venue_svMain)
     ScrollView mainScrollView;
-    @ViewById(resName = "venueDetails_tvName")
+    @ViewById(R.id.details_venue_tvName)
     TextView nameTextView;
-    @ViewById(resName = "venueDetails_tvClass")
+    @ViewById(R.id.details_venue__tvClass)
     TextView classTextView;
+    @ViewById(R.id.details_venue_tvDescription)
+    TextView descriptionTextView;
+    @ViewById(R.id.details_item_tvViews)
+    TextView viewsTextView;
 
-    @ViewById(resName = "venueDetails_btnPhone")
+    @ViewById(R.id.details_venue_btnPhone)
     Button phoneButton;
-    @ViewById(resName = "venueDetails_btnDirections")
+    @ViewById(R.id.details_venue__btnDirections)
     Button directionsButton;
 
-    @ViewById(resName = "venueDetails_ivIndoorThumbnail")
+    @ViewById(R.id.details_venue_ivIndoorThumbnail)
     ImageView indoorImageThumbnailView;
-    @ViewById(resName = "venueDetails_tvBHMondayTime")
+    @ViewById(R.id.details_venue_tvBHMondayTime)
     TextView mondayTextView;
-    @ViewById(resName = "venueDetails_tvBHTuesdayTime")
+    @ViewById(R.id.details_venue_tvBHTuesdayTime)
     TextView tuesdayTextView;
-    @ViewById(resName = "venueDetails_tvBHWednesdayTime")
+    @ViewById(R.id.details_venue_tvBHWednesdayTime)
     TextView wednesdayTextView;
-    @ViewById(resName = "venueDetails_tvBHThursdayTime")
+    @ViewById(R.id.details_venue_tvBHThursdayTime)
     TextView thursdayTextView;
-    @ViewById(resName = "venueDetails_tvBHFridayTime")
+    @ViewById(R.id.details_venue_tvBHFridayTime)
     TextView fridayTextView;
-    @ViewById(resName = "venueDetails_tvBHSaturdayTime")
+    @ViewById(R.id.details_venue_tvBHSaturdayTime)
     TextView saturdayTextView;
-    @ViewById(resName = "venueDetails_tvBHSundayTime")
+    @ViewById(R.id.details_venue_tvBHSundayTime)
     TextView sundayTextView;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
-        this.applicationContext = getApplicationContext();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        resumed = true;
+    }
+
+    @SuppressLint("SetTextI18n")
     @AfterViews
     void afterViews() {
         try {
-            nameTextView.setText(this.Venue.Name);
-            classTextView.setText(this.Venue.Class);
+            new Handler().postDelayed(() -> {
+                // test functions
+//                String asda0 = NetworkHelper.getMACAddress("wlan0");
+//                String asda1 = NetworkHelper.getMACAddress("eth0");
+//                String asda2 = NetworkHelper.getIPAddress(true); // IPv4
+//                String asda3 = NetworkHelper.getIPAddress(false); // IPv6
 
-            loadIndoorImage();
-            loadContacts();
-            loadBusinessHours();
-            loadLocation();
-            populateFilters();
-            populateCultureFilters();
+                if (resumed)
+                    this.venueService.checkAddView(this.applicationContext, this.Venue.Id);
+            }, SEEN_TIME_OUT);
+
+
+            this.publishVenue();
+
+            this.loadIndoorImage();
+            this.loadContacts();
+            this.loadBusinessHours();
+            this.loadLocation();
+            this.publishFilters();
+            this.publishCultureFilters();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void publishVenue() {
+        this.nameTextView.setText(this.Venue.Name);
+        this.classTextView.setText(this.Venue.Class);
+        this.viewsTextView.setText(this.Venue.SeenCount + " " + getString(R.string.activity_itemDetails_viewsTextView));
+
+        if (StringHelper.isNotNullOrEmpty(this.Venue.Description)) {
+            String descriptionText = this.Venue.Description.length() < 41
+                    ? this.Venue.Description
+                    : this.Venue.Description.substring(0, 40) + " ...";
+
+            this.descriptionTextView.setText(descriptionText);
+
+            this.descriptionContainerLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -243,14 +288,14 @@ public class VenueDetailsActivity
                     if (ArrayHelper.hasValidBitmapContent(bytes)) {
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         indoorImageThumbnailView.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
-                        IsUsingDefaultIndoorImageThumbnail = false;
+                        isUsingDefaultIndoorImageThumbnail = false;
                     } else
-                        IsUsingDefaultIndoorImageThumbnail = true;
+                        isUsingDefaultIndoorImageThumbnail = true;
                     //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
                 }
             };
 
-            DownloadBlobModel model = new DownloadBlobModel(this.Venue.IndoorImage.Id, x200BlobStorageContainerPath);
+            DownloadBlobModel model = new DownloadBlobModel(this.Venue.IndoorImage.Id, itemX200BlobStorageContainerPath);
             new LoadAzureBlobAsyncTask(listener).execute(model);
         }
     }
@@ -260,7 +305,7 @@ public class VenueDetailsActivity
         if (venueContacts != null) {
             boolean any = false;
             if (StringHelper.isNotNullOrEmpty(venueContacts.Phone)) {
-                this.PhoneNumber = venueContacts.Phone;
+                this.phoneNumber = venueContacts.Phone;
                 this.phoneButton.setText(venueContacts.Phone);
                 this.phoneButton.setVisibility(View.VISIBLE);
                 any = true;
@@ -343,7 +388,7 @@ public class VenueDetailsActivity
         this.contactsContainerLayout.setVisibility(View.GONE);
     }
 
-    private void populateFilters() {
+    private void publishFilters() {
         ArrayList<Filter> filters = this.Venue.Filters;
 
         if (filters != null && filters.size() > 0) {
@@ -364,7 +409,7 @@ public class VenueDetailsActivity
             this.hideFiltersContainer();
     }
 
-    private void populateCultureFilters() {
+    private void publishCultureFilters() {
         ArrayList<Filter> filters = this.Venue.Filters;
         if (filters != null && filters.size() > 0) {
             ArrayList<Filter> cultureFilters = new ArrayList<>(Stream.of(filters).filter(x -> x.FilterType == FilterType.VenueCulture).toList());
@@ -385,7 +430,8 @@ public class VenueDetailsActivity
         for (Filter filter : filters) {
             int drawableId = DrawableHelper.getDrawableIdByFilterId(filter.Id);
             if (drawableId != 0) {
-                ImageView filterImageView = this.createFilterImage(drawableId, needSquareIcon ? 31 : 46, filter.I18nResourceDescription, filter.Description);
+                ImageView filterImageView = this.createFilterImage(drawableId, needSquareIcon ? 31 : 46,
+                        filter.I18nResourceName, filter.Name, filter.I18nResourceDescription, filter.Description);
                 container.addView(filterImageView);
                 hasAny = true;
             }
@@ -393,7 +439,8 @@ public class VenueDetailsActivity
         return hasAny;
     }
 
-    private ImageView createFilterImage(int drawableId, int widthDp, String descriptionResourceI18nId, String defaultDescriptionText) {
+    private ImageView createFilterImage(int drawableId, int widthDp, String nameResourceI18nId, String defaultNameText,
+                                        String descriptionResourceI18nId, String defaultDescriptionText) {
         ImageView filterImageView = new ImageView(this.baseContext);
         filterImageView.setImageDrawable(getResources().getDrawable(drawableId));
 
@@ -403,7 +450,7 @@ public class VenueDetailsActivity
         lp.setMargins((int)MetricsHelper.convertDpToPixel(6), 0, 0, 0);
         filterImageView.setLayoutParams(lp);
 
-        filterImageView.setOnClickListener(view -> this.filterClick(descriptionResourceI18nId, defaultDescriptionText));
+        filterImageView.setOnClickListener(view -> this.filterClick(nameResourceI18nId, defaultNameText, descriptionResourceI18nId, defaultDescriptionText));
 
         filterImageView.setVisibility(View.VISIBLE);
         return filterImageView;
@@ -520,11 +567,12 @@ public class VenueDetailsActivity
         startActivity(intent);
     }
 
-    private void filterClick(String descriptionResourceI18nId, String defaultDescriptionText) {
+    private void filterClick(String nameResourceI18nId, String defaultNameText, String descriptionResourceI18nId, String defaultDescriptionText) {
+        String filterNameLocalized = StringHelper.getStringAppDefaultLocale(this, getResources(), nameResourceI18nId, defaultNameText);
         String filterDescriptionLocalized = StringHelper.getStringAppDefaultLocale(this, getResources(), descriptionResourceI18nId, defaultDescriptionText);
         if (StringHelper.isNotNullOrEmpty(filterDescriptionLocalized))
             new AlertDialog.Builder(this)
-                    .setTitle(StringHelper.getStringAppDefaultLocale(this, getResources(), "info_dialog_title", "Info"))
+                    .setTitle(filterNameLocalized)
                     .setMessage(filterDescriptionLocalized)
                     .setPositiveButton(android.R.string.ok, (dialog, which) ->  dialog.cancel())
                     .show();
@@ -572,9 +620,25 @@ public class VenueDetailsActivity
 //        }
 //    }
 
-    @Click(resName = "venueDetails_ivIndoorThumbnail")
+    @SuppressLint("SetTextI18n")
+    @Click(R.id.details_venue_lDescriptionContainer)
+    public void descriptionClicked() {
+        this.descriptionExpanded = !this.descriptionExpanded;
+
+        if (this.descriptionExpanded)
+            this.descriptionTextView.setText(this.Venue.Description);
+        else{
+            String descriptionText = this.Venue.Description.length() < 41
+                    ? this.Venue.Description
+                    : this.Venue.Description.substring(0, 40) + " ...";
+
+            this.descriptionTextView.setText(descriptionText);
+        }
+    }
+
+    @Click(R.id.details_venue_ivIndoorThumbnail)
     public void ImageClick() {
-        if (!IsUsingDefaultIndoorImageThumbnail && hasValidIndoorImageMetadata()) {
+        if (!isUsingDefaultIndoorImageThumbnail && hasValidIndoorImageMetadata()) {
             final Dialog nagDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             nagDialog.setCancelable(true);
@@ -597,16 +661,16 @@ public class VenueDetailsActivity
                 }
             };
 
-            DownloadBlobModel model = new DownloadBlobModel(this.Venue.IndoorImage.Id, originalBlobStorageContainerPath);
+            DownloadBlobModel model = new DownloadBlobModel(this.Venue.IndoorImage.Id, itemOriginalBlobStorageContainerPath);
             new LoadAzureBlobAsyncTask(listener).execute(model);
         }
     }
 
-    @Click(resName = "venueDetails_btnPhone")
+    @Click(R.id.details_venue_btnPhone)
     public void phoneCall() {
-        if (StringHelper.isNotNullOrEmpty(this.PhoneNumber))
+        if (StringHelper.isNotNullOrEmpty(this.phoneNumber))
         {
-            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", this.PhoneNumber, null));
+            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", this.phoneNumber, null));
             startActivity(intent);
         }
     }

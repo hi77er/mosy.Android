@@ -12,7 +12,7 @@
         android:layout_width="130dp"
         android:layout_height="130dp"
         android:layout_margin="7dp"
-        android:src="@drawable/eat_paprika_100x100" />
+        android:src="@drawable/eat_paprika_100x100"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="72dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:backgroundTint="@color/colorPrimary">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -75,7 +76,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:textAlignment="center"
-                    android:background="@color/colorDarkRed"
                     android:textSize="9sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorWhite" />
@@ -87,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/item_dish_recommendedLabelTextView"
                     android:background="@color/colorSecondaryAmber"
-                    android:textSize="10sp"
+                    android:textSize="9sp"
                     android:textAlignment="center"
                     android:textStyle="bold"
                     android:textColor="@color/colorWhite" />
@@ -99,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:text="@string/item_dish_newLabelTextView"
-                    android:background="@color/colorGreen"
+                    android:background="@color/colorQuaternaryDark"
                     android:textSize="9sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorWhite" />

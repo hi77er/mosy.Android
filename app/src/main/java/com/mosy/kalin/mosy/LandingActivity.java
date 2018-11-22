@@ -3,6 +3,9 @@ package com.mosy.kalin.mosy;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.net.wifi.WifiManager;
+import android.text.format.Formatter;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,11 +15,14 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
+import com.mosy.kalin.mosy.Helpers.NetworkHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.Views.SpinnerLocale;
 import com.mosy.kalin.mosy.Helpers.LocaleHelper;
 import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Services.Location.LocationResolver;
+import com.mosy.kalin.mosy.Services.SecurityService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -56,7 +62,6 @@ public class LandingActivity
 
     @AfterViews
     public void afterViews(){
-
         if (ConnectivityHelper.isConnected(applicationContext)) {
             ensureHasAuthenticationToken();
             networkLost = false;
@@ -237,9 +242,47 @@ public class LandingActivity
         startActivity(intent);
     }
 
+    @Click(R.id.landing_ibSocialFacebook)
+    public void navigateFacebook(){
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        intent.setData(Uri.parse(getString(R.string.link_social_facebook)));
+        startActivity(intent);
+    }
+
+    @Click(R.id.landing_ibSocialInstagram)
+    public void navigateInstagram(){
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        intent.setData(Uri.parse(getString(R.string.link_social_instagram)));
+        startActivity(intent);
+    }
+
+    @Click(R.id.landing_ibSocialTwitter)
+    public void navigateTwitter(){
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        intent.setData(Uri.parse(getString(R.string.link_social_twitter)));
+        startActivity(intent);
+    }
+
+
+
+
     private void navigateToWallActivity(boolean isDishMode) {
         Intent intent = new Intent(LandingActivity.this, WallActivity_.class);
         intent.putExtra("DishesSearchModeActivated", isDishMode); //else find dishesWall
+        startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

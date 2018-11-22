@@ -14,6 +14,24 @@ import java.util.concurrent.TimeUnit;
 
 public class BusinessHoursHelper {
 
+    public static WorkingStatus getWorkingStatus(String workingStatus){
+        WorkingStatus status = WorkingStatus.Unknown;
+
+        switch (workingStatus) {
+            case "Open":
+                status = WorkingStatus.Open;
+                break;
+            case "Closed":
+                status = WorkingStatus.Closed;
+                break;
+            case "Open247":
+                status = WorkingStatus.Open247;
+                break;
+        }
+
+        return status;
+    }
+
     public static WorkingStatus getWorkingStatus(VenueBusinessHours businessHours){
         if (businessHours == null)
             return WorkingStatus.Unknown;

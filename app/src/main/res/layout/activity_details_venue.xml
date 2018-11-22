@@ -2,8 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:map="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/venueDetails_svMain"
-    android:layout_width="fill_parent"
+    android:id="@+id/details_venue_svMain"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -15,7 +15,7 @@
         android:padding="10dp">
 
         <LinearLayout
-            android:id="@+id/venueDetails_lVenueHeading"
+            android:id="@+id/details_venue_lVenueHeading"
             android:orientation="horizontal"
             android:layout_gravity="start"
             android:layout_height="wrap_content"
@@ -23,14 +23,14 @@
             android:layout_marginBottom="10dp">
 
             <ImageView
-                android:id="@+id/venueDetails_ivIndoorThumbnail"
+                android:id="@+id/details_venue_ivIndoorThumbnail"
                 android:layout_gravity="start"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:src="@drawable/venue_default_thumbnail"/>
 
             <LinearLayout
-                android:id="@+id/venueDetails_lTitle"
+                android:id="@+id/details_venue_lTitle"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -38,25 +38,31 @@
                 android:layout_marginEnd="10dp">
 
                 <TextView
-                    android:id="@+id/venueDetails_tvName"
+                    android:id="@+id/details_venue_tvName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Venue Name"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
 
                 <TextView
-                    android:id="@+id/venueDetails_tvClass"
+                    android:id="@+id/details_venue__tvClass"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Class"
                     android:layout_marginTop="5dp"
                     android:textSize="19sp" />
 
+                <TextView android:id="@+id/details_item_tvViews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:textSize="10sp"
+                    android:textStyle="italic"
+                    android:textColor="@color/soft" />
+
                 <Button
-                    android:id="@+id/venueDetails_btnPhone"
+                    android:id="@+id/details_venue_btnPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="0dp"
@@ -72,7 +78,7 @@
                     android:drawableStart="@drawable/contact_phone_50px_white_padding" />
 
                 <Button
-                    android:id="@+id/venueDetails_btnDirections"
+                    android:id="@+id/details_venue__btnDirections"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="0dp"
@@ -91,9 +97,28 @@
             </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/details_venue_lDescriptionContainer"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_gravity="start"
+            android:background="@color/colorPrimaryVeryLight"
+            android:padding="10dp"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/details_venue_tvDescription"
+                android:layout_gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </TextView>
+        </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/venueDetails_lFiltersContainer"
+            android:id="@+id/details_venue_lFiltersContainer"
             android:orientation="horizontal"
             android:layout_gravity="start"
             android:background="@color/colorPrimaryVeryLight"
@@ -102,19 +127,23 @@
             android:padding="10dp"
             android:layout_marginBottom="10dp">
 
-            <LinearLayout
-                android:id="@+id/venueDetails_lFilters"
-                android:orientation="horizontal"
-                android:layout_gravity="start"
+            <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+                <LinearLayout
+                    android:id="@+id/details_venue_lFilters"
+                    android:orientation="horizontal"
+                    android:layout_gravity="start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
-
-            </LinearLayout>
+                </LinearLayout>
+            </HorizontalScrollView>
 
             <LinearLayout
-                android:id="@+id/venueDetails_lFiltersProgress"
+                android:id="@+id/details_venue_lFiltersProgress"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:gravity="center"
@@ -128,11 +157,10 @@
                     android:indeterminate="true" >
                 </ProgressBar>
             </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/venueDetails_lCultureFiltersContainer"
+            android:id="@+id/details_venue_lCultureFiltersContainer"
             android:orientation="horizontal"
             android:layout_gravity="start"
             android:background="@color/colorPrimaryVeryLight"
@@ -141,18 +169,24 @@
             android:padding="10dp"
             android:layout_marginBottom="10dp">
 
-            <LinearLayout
-                android:id="@+id/venueDetails_lCultureFilters"
-                android:orientation="horizontal"
-                android:layout_gravity="start"
+            <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:layout_height="match_parent"
+                android:fillViewport="true">
 
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/details_venue_lCultureFilters"
+                    android:orientation="horizontal"
+                    android:layout_gravity="start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                </LinearLayout>
+            </HorizontalScrollView>
 
             <LinearLayout
-                android:id="@+id/venueDetails_lCultureFiltersProgress"
+                android:id="@+id/details_venue_lCultureFiltersProgress"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:gravity="center"
@@ -166,11 +200,10 @@
                     android:indeterminate="true" >
                 </ProgressBar>
             </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/venueDetails_lContactsContainer"
+            android:id="@+id/details_venue_lContactsContainer"
             android:orientation="vertical"
             android:layout_gravity="start"
             android:background="@color/colorPrimaryVeryLight"
@@ -180,7 +213,7 @@
             android:padding="10dp">
 
             <LinearLayout
-                android:id="@+id/venueDetails_lContacts"
+                android:id="@+id/details_venue_lContacts"
                 android:orientation="vertical"
                 android:visibility="gone"
                 android:layout_width="match_parent"
@@ -190,7 +223,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/venueDetails_lContactsProgress"
+                android:id="@+id/details_venue_lContactsProgress"
                 android:orientation="vertical"
                 android:visibility="gone"
                 android:layout_width="match_parent"
@@ -233,14 +266,14 @@
                     android:layout_marginEnd="10dp">
 
                     <LinearLayout
-                        android:id="@+id/venueDetails_lMonday"
+                        android:id="@+id/details_venue_lMonday"
                         android:orientation="horizontal"
                         android:layout_gravity="start"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content">
 
                         <TextView
-                            android:id="@+id/venueDetails_tvBHMondayTitle"
+                            android:id="@+id/details_venue_tvBHMondayTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
@@ -250,7 +283,7 @@
                             android:layout_marginEnd="5dp" />
 
                         <TextView
-                            android:id="@+id/venueDetails_tvBHMondayTime"
+                            android:id="@+id/details_venue_tvBHMondayTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="15sp" />
@@ -258,14 +291,14 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/venueDetails_lTuesday"
+                        android:id="@+id/details_venue_lTuesday"
                         android:orientation="horizontal"
                         android:layout_gravity="start"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content">
 
                         <TextView
-                            android:id="@+id/venueDetails_tvBHTuesdayTitle"
+                            android:id="@+id/details_venue_tvBHTuesdayTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
@@ -275,7 +308,7 @@
                             android:layout_marginEnd="5dp" />
 
                         <TextView
-                            android:id="@+id/venueDetails_tvBHTuesdayTime"
+                            android:id="@+id/details_venue_tvBHTuesdayTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="15sp" />
@@ -283,14 +316,14 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/venueDetails_lWednesday"
+                        android:id="@+id/details_venue_lWednesday"
                         android:orientation="horizontal"
                         android:layout_gravity="start"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content">
 
                         <TextView
-                            android:id="@+id/venueDetails_tvBHWednesdayTitle"
+                            android:id="@+id/details_venue_tvBHWednesdayTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textStyle="bold"
@@ -300,7 +333,7 @@
                             android:layout_marginEnd="5dp" />
 
                         <TextView
-                            android:id="@+id/venueDetails_tvBHWednesdayTime"
+                            android:id="@+id/details_venue_tvBHWednesdayTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="15sp" />
@@ -308,14 +341,14 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/venueDetails_lThursday"
+                        android:id="@+id/details_venue_lThursday"
                         android:orientation="horizontal"
                         android:layout_gravity="start"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content">
 
                         <TextView
-                            android:id="@+id/venueDetails_tvBHThursdayTitle"
+                            android:id="@+id/details_venue_tvBHThursdayTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
@@ -325,7 +358,7 @@
                             android:layout_marginEnd="5dp" />
 
                         <TextView
-                            android:id="@+id/venueDetails_tvBHThursdayTime"
+                            android:id="@+id/details_venue_tvBHThursdayTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="15sp" />
@@ -335,7 +368,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/venueDetails_lBusinessHoursRight"
+                    android:id="@+id/details_venue_lBusinessHoursRight"
                     android:orientation="vertical"
                     android:layout_gravity="start"
                     android:layout_height="wrap_content"
@@ -343,14 +376,14 @@
                     android:layout_marginEnd="10dp">
 
                     <LinearLayout
-                        android:id="@+id/venueDetails_lFriday"
+                        android:id="@+id/details_venue_lFriday"
                         android:orientation="horizontal"
                         android:layout_gravity="start"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content">
 
                         <TextView
-                            android:id="@+id/venueDetails_tvBHFridayTitle"
+                            android:id="@+id/details_venue_tvBHFridayTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
@@ -360,7 +393,7 @@
                             android:layout_marginEnd="5dp" />
 
                         <TextView
-                            android:id="@+id/venueDetails_tvBHFridayTime"
+                            android:id="@+id/details_venue_tvBHFridayTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="15sp" />
@@ -368,14 +401,14 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/venueDetails_lSaturday"
+                        android:id="@+id/details_venue_lSaturday"
                         android:orientation="horizontal"
                         android:layout_gravity="start"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content">
 
                         <TextView
-                            android:id="@+id/venueDetails_tvBHSaturdayTitle"
+                            android:id="@+id/details_venue_tvBHSaturdayTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
@@ -385,7 +418,7 @@
                             android:layout_marginEnd="5dp" />
 
                         <TextView
-                            android:id="@+id/venueDetails_tvBHSaturdayTime"
+                            android:id="@+id/details_venue_tvBHSaturdayTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="15sp" />
@@ -393,14 +426,14 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/venueDetails_lSunday"
+                        android:id="@+id/details_venue_lSunday"
                         android:orientation="horizontal"
                         android:layout_gravity="start"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content">
 
                         <TextView
-                            android:id="@+id/venueDetails_tvBHSundayTitle"
+                            android:id="@+id/details_venue_tvBHSundayTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
@@ -410,7 +443,7 @@
                             android:layout_marginEnd="5dp" />
 
                         <TextView
-                            android:id="@+id/venueDetails_tvBHSundayTime"
+                            android:id="@+id/details_venue_tvBHSundayTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="15sp" />
@@ -421,7 +454,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/venueDetails_lBusinessHoursProgress"
+                android:id="@+id/details_venue_lBusinessHoursProgress"
                 android:orientation="vertical"
                 android:visibility="gone"
                 android:layout_width="match_parent"
@@ -438,14 +471,14 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/venueDetails_lMap"
+            android:id="@+id/details_venue_lMap"
             android:layout_width="match_parent"
             android:layout_height="300dp">
 
             <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 tools:context="com.example.mapwithmarker.MapsMarkerActivity"
-                android:id="@+id/venueDetails_frMap"
+                android:id="@+id/details_venue_frMap"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

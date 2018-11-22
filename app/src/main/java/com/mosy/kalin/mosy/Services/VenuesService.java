@@ -265,7 +265,8 @@ public class VenuesService {
     }
 
     public void getFilters(Context applicationContext,
-                           AsyncTaskListener<VenueFiltersResult> apiCallResultListener)
+                           AsyncTaskListener<VenueFiltersResult> apiCallResultListener,
+                           boolean devMode)
     {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
@@ -273,7 +274,7 @@ public class VenuesService {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
                     try {
-                        Call<VenueFiltersResult> callFilters = repository.getFilters(authTokenHeader);
+                        Call<VenueFiltersResult> callFilters = repository.getFilters(authTokenHeader, devMode);
                         apiCallResultListener.onPreExecute();
                         callFilters.enqueue(new Callback<VenueFiltersResult>() {
                             @Override public void onResponse(@NonNull Call<VenueFiltersResult> call, @NonNull Response<VenueFiltersResult> response) {
@@ -283,6 +284,28 @@ public class VenuesService {
                             @Override public void onFailure(@NonNull Call<VenueFiltersResult> call, @NonNull Throwable t) {
                                 call.cancel();
                             }
+                        });
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                },
+                null);
+    }
+
+    public void checkAddView(Context applicationContext, String itemId) {
+        this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
+                null,
+                () -> {
+                    String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    try {
+                        Call<Void> call = repository.checkAddView(authToken, itemId);
+                        call.enqueue(new Callback<Void>() {
+                            @Override public void onResponse(Call<Void> call, Response<Void> response) {
+
+                            }
+                            @Override public void onFailure(Call<Void> call, Throwable t) { }
                         });
                     }
                     catch (Exception e){
