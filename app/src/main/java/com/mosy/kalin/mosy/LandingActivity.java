@@ -59,6 +59,9 @@ public class LandingActivity
     Button btnProfile;
     @ViewById(R.id.landing_btnLoginSignUp)
     Button btnLogin;
+    @ViewById(R.id.landing_btnAppInfo)
+    Button btnAppInfo;
+
 
     @AfterViews
     public void afterViews(){
@@ -203,6 +206,7 @@ public class LandingActivity
         this.btnLogin.setVisibility(isUserAuthenticated ? View.GONE : View.VISIBLE);
     }
 
+
     @Click(R.id.landing_ivLogo)
     public void click_ivLogo(){
         SharedPreferences preferences = applicationContext.getSharedPreferences(getString(R.string.pref_collectionName_developersMode), MODE_PRIVATE);
@@ -228,6 +232,17 @@ public class LandingActivity
     @Click(R.id.landing_btnDishes)
     public void navigateDishesSearch(){
         navigateToWallActivity(true);
+    }
+
+    @Click(R.id.landing_btnAppInfo)
+    public void navigateAppInfo()
+    {
+        if (isDevelopersModeActivated) {
+            btnAppInfo.setVisibility(View.VISIBLE);
+        }
+        Intent intent = new Intent(LandingActivity.this, ApplicationInfoActivity_.class);
+        startActivity(intent);
+
     }
 
     @Click(R.id.landing_btnLoginSignUp)
