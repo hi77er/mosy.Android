@@ -75,6 +75,8 @@ public class LandingActivity
         }
 
         showProfileButton(this.isUserAuthenticated);
+        showAppInfoButton();
+
 
         ArrayList<SpinnerLocale> spinnerLocalesList = new ArrayList<>();
         for (String supportedCultureId : LocaleHelper.SUPPORTED_LOCALES.keySet()) {
@@ -91,6 +93,7 @@ public class LandingActivity
     public void onStart() {
         super.onStart();
         this.activityStopped = false;
+
     }
 
     @Override
@@ -206,6 +209,12 @@ public class LandingActivity
         this.btnLogin.setVisibility(isUserAuthenticated ? View.GONE : View.VISIBLE);
     }
 
+    private void showAppInfoButton() {
+        if(isDevelopersModeActivated) {
+            this.btnAppInfo.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     @Click(R.id.landing_ivLogo)
     public void click_ivLogo(){
@@ -237,12 +246,8 @@ public class LandingActivity
     @Click(R.id.landing_btnAppInfo)
     public void navigateAppInfo()
     {
-        if (isDevelopersModeActivated) {
-            btnAppInfo.setVisibility(View.VISIBLE);
-        }
         Intent intent = new Intent(LandingActivity.this, ApplicationInfoActivity_.class);
         startActivity(intent);
-
     }
 
     @Click(R.id.landing_btnLoginSignUp)
