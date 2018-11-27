@@ -55,6 +55,9 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
+            android:name=".ApplicationInfoActivity_"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".UserProfileActivity_"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

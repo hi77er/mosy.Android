@@ -230,6 +230,10 @@ public class LandingActivity
             prefEditor.apply();
 
             Toast.makeText(applicationContext, "Developers' mode " + (devModeEnabledPrefValue ? "Enabled!" : "Disabled!"), Toast.LENGTH_SHORT).show();
+
+            if(devModeEnabledPrefValue) {
+                btnAppInfo.setVisibility(View.VISIBLE);
+            }else {btnAppInfo.setVisibility(View.GONE);}
         }
     }
 
