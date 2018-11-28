@@ -54,5 +54,14 @@ public class FiltersPage
         }
     }
 
+    public int getItemsCount(){
+        return this.Filters.size();
+    }
 
+    public int getExcessHeight(){
+        int height = 0;
+        if (StringHelper.isNotNullOrEmpty(this.Note))
+            height = 142;
+        return height;
+    }
 }

@@ -17,7 +17,6 @@
 
         <ImageView
             android:id="@+id/menuListItemDetails_ivMainImage"
-            android:src="@drawable/eat_paprika_100x100"
             android:layout_width="80dp"
             android:layout_height="80dp" />
 

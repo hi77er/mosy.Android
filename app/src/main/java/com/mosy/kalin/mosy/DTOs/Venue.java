@@ -25,6 +25,9 @@ public class Venue
     @SerializedName("Description")
     public String Description;
 
+    @SerializedName("SeenCount")
+    public String SeenCount;
+
     @SerializedName("FBOLocation")
     public VenueLocation Location;
 

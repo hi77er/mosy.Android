@@ -99,7 +99,7 @@
     <string name="activity_venuesFilters_accessibilityFiltersTitle">Accessibility</string>
     <string name="activity_venuesFilters_availabilityFiltersTitle">Availability</string>
     <string name="activity_venuesFilters_atmosphereFiltersTitle">Atmosphere</string>
-    <string name="activity_venuesFilters_cultureFiltersTitle">Culture</string>
+    <string name="activity_venuesFilters_cultureFiltersTitle">Ethnicity</string>
     <string name="VenuesFilterBadgeBikesParkingAvailableName">"Bike parking/locks"</string>
     <string name="VenuesFilterBadgeToysCornerName">"Toys corner"</string>
     <string name="VenuesFilterBabyFriendlyName">Baby friendly</string>

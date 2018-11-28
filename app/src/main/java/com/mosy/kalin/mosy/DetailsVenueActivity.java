@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
@@ -65,6 +66,10 @@ public class DetailsVenueActivity
     private static final String itemX200BlobStorageContainerPath = "userimages\\fboalbums\\200x200";
     private static final String itemOriginalBlobStorageContainerPath = "userimages\\fboalbums\\original";
 
+    private static int SEEN_TIME_OUT = 5000; // 5 seconds
+
+    static boolean resumed = false;
+
     boolean descriptionExpanded = false;
     boolean isUsingDefaultIndoorImageThumbnail;
     public String phoneNumber;
@@ -116,6 +121,8 @@ public class DetailsVenueActivity
     TextView classTextView;
     @ViewById(R.id.details_venue_tvDescription)
     TextView descriptionTextView;
+    @ViewById(R.id.details_item_tvViews)
+    TextView viewsTextView;
 
     @ViewById(R.id.details_venue_btnPhone)
     Button phoneButton;
@@ -144,10 +151,28 @@ public class DetailsVenueActivity
         super.onCreate(savedInstanceState);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        resumed = true;
+    }
+
     @SuppressLint("SetTextI18n")
     @AfterViews
     void afterViews() {
         try {
+            new Handler().postDelayed(() -> {
+                // test functions
+//                String asda0 = NetworkHelper.getMACAddress("wlan0");
+//                String asda1 = NetworkHelper.getMACAddress("eth0");
+//                String asda2 = NetworkHelper.getIPAddress(true); // IPv4
+//                String asda3 = NetworkHelper.getIPAddress(false); // IPv6
+
+                if (resumed)
+                    this.venueService.checkAddView(this.applicationContext, this.Venue.Id);
+            }, SEEN_TIME_OUT);
+
+
             this.publishVenue();
 
             this.loadIndoorImage();
@@ -161,9 +186,12 @@ public class DetailsVenueActivity
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void publishVenue() {
         this.nameTextView.setText(this.Venue.Name);
         this.classTextView.setText(this.Venue.Class);
+        this.viewsTextView.setText(this.Venue.SeenCount + " " + getString(R.string.activity_itemDetails_viewsTextView));
+
         if (StringHelper.isNotNullOrEmpty(this.Venue.Description)) {
             String descriptionText = this.Venue.Description.length() < 41
                     ? this.Venue.Description

@@ -128,10 +128,8 @@ public class DetailsItemActivity
 //                String asda2 = NetworkHelper.getIPAddress(true); // IPv4
 //                String asda3 = NetworkHelper.getIPAddress(false); // IPv6
 
-                if (resumed){
+                if (resumed)
                     this.dishesService.checkAddView(this.applicationContext, item.Id);
-//                    Toast.makeText(this.applicationContext, "5 seconds passed!", Toast.LENGTH_LONG).show();
-                }
             }, SEEN_TIME_OUT);
 
             this.publishViews();
@@ -452,7 +450,7 @@ public class DetailsItemActivity
 
     @Click(R.id.details_item_btnShare)
     public void share_Clicked(){
-        String baseItemUrl = "https://www.tastespot.app/MenuItem/Index?id=";
+        String baseItemUrl = "https://www.treatspark.com/MenuItem/Index?id=";
         String fullItemUrl = baseItemUrl + this.item.Id;
 
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);

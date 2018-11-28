@@ -66,7 +66,8 @@ public class MenuListItemsAdapter
 
     @Override
     public Object getChild(int listPosition, int expandedListPosition) {
-        return this.menuListItems.get(listPosition);
+        Object child = this.menuListItems.get(listPosition);
+        return child;
     }
 
     @Override
@@ -90,7 +91,7 @@ public class MenuListItemsAdapter
 
     @Override
     public int getChildrenCount(int i) {
-        if (this.menuListItems.get(i).Ingredients.size() < 1)
+        if (this.menuListItems.size() < 1)
             return 0;
         return 1;
     }
@@ -151,7 +152,9 @@ public class MenuListItemsAdapter
     }
 
     @Override
-    public void onGroupExpanded(int i) { }
+    public void onGroupExpanded(int i) {
+        String assdasda = "";
+    }
     @Override
     public void onGroupCollapsed(int i) { }
     @Override

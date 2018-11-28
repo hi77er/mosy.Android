@@ -53,6 +53,14 @@
                     android:layout_marginTop="5dp"
                     android:textSize="19sp" />
 
+                <TextView android:id="@+id/details_item_tvViews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:textSize="10sp"
+                    android:textStyle="italic"
+                    android:textColor="@color/soft" />
+
                 <Button
                     android:id="@+id/details_venue_btnPhone"
                     android:layout_width="match_parent"

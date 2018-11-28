@@ -43,6 +43,9 @@ public interface IVenuesRepository {
     Call<PublicMenuResponse> getMenu(@Header("Authorization") String authorization, @Query("fboId") String venueId, @Query("clientDateTimeOffset") String currentDateTimeOffset);
 
     @GET("fbo/filters/all")
-    Call<VenueFiltersResult> getFilters (@Header("Authorization") String authorization);
+    Call<VenueFiltersResult> getFilters (@Header("Authorization") String authorization, @Query("devMode") boolean devMode);
+
+    @GET("fbo/view/checkadd")
+    Call<Void> checkAddView(@Header("Authorization") String authorization, @Query("fboId") String itemId);
 
 }

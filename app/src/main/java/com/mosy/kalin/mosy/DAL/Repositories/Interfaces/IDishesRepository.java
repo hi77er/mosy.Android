@@ -26,7 +26,7 @@ public interface IDishesRepository {
     Call<ArrayList<MenuListItem>> loadDishes(@Header("Authorization") String authorization, @Body SearchMenuListItemsBindingModel model);
 
     @GET("dishes/filters/all")
-    Call<DishFiltersResult> loadAllFilters(@Header("Authorization") String authorization);
+    Call<DishFiltersResult> loadAllFilters(@Header("Authorization") String authorization, @Query("devMode") boolean devMode);
 
     @GET("dishes/images/meta")
     Call<MenuListItemImage> getImageMeta(@Header("Authorization") String authorization, @Query("itemId") String itemId);

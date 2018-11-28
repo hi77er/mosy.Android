@@ -42,6 +42,10 @@ public class MenuListPage
             menuListItemsAdapter.setMenuListItems(this.menuListItems);
 
             menuList_lvItems.setAdapter(menuListItemsAdapter);
+//            menuList_lvItems.setOnGroupClickListener((parent, v, groupPosition, id) -> {
+//                parent.expandGroup(groupPosition);
+//                return false;
+//            });
         }
     }
 

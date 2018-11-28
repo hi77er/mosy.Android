@@ -9,13 +9,18 @@
     android:paddingEnd="20dp"
     android:paddingBottom="15dp">
 
-    <ImageView
+    <TextView
         android:id="@+id/landing_ivLogo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/tastespot_logo_transparent_rect"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="30dp" />
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="80dp"
+        android:text="@string/app_name"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorPrimary"/>
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -123,7 +128,7 @@
             android:text="@string/activity_landing_profileBtn"
             android:background="@drawable/background_transparent_click_oval"
             android:textSize="14sp"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/soft"
             android:textStyle="bold"
             android:visibility="gone"
             android:stateListAnimator="@null" />
@@ -135,7 +140,7 @@
             android:text="@string/activity_landing_loginSignUpBtn"
             android:background="@drawable/background_transparent_click_oval"
             android:textSize="14sp"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/soft"
             android:textStyle="bold"
             android:visibility="gone"
             android:stateListAnimator="@null" />

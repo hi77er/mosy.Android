@@ -11,7 +11,6 @@ import com.mosy.kalin.mosy.DTOs.MenuListItemCulture;
 import com.mosy.kalin.mosy.Helpers.MenuListItemHelper;
 import com.mosy.kalin.mosy.R;
 
-import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
@@ -43,5 +42,10 @@ public class MenuListItemView
             // this.setBackgroundColor(Color.WHITE);
         }
     }
+//
+//    @Click(R.id.menuListItem_llRow)
+//    public void itemClick() {
+//        String asdas = "";
+//    }
 
 }
