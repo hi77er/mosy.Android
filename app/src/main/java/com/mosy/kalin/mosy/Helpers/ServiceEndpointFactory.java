@@ -31,8 +31,8 @@ public class ServiceEndpointFactory implements IServiceEndpointFactory {
 //    private static final String apiTokenEndpoint = "http://192.168.1.10:8080/token"; // When debugging on actual Device
 
     // PUBLIC endpoints
-    public static final String apiEndpoint = "http://mosyws.azurewebsites.net/api/";
-    public static final String apiTokenEndpoint = "http://mosyws.azurewebsites.net/token";
+    public static final String apiEndpoint = "https://mosyws.azurewebsites.net/api/";
+    public static final String apiTokenEndpoint = "https://mosyws.azurewebsites.net/token";
 
 //    @Override
 //    public String getMosyWebAPIPublicEndpoint(String action) { return publicEndpoint + action; }
