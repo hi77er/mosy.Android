@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
-import android.text.format.Formatter;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,23 +13,17 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
-import com.mosy.kalin.mosy.Helpers.NetworkHelper;
-import com.mosy.kalin.mosy.Helpers.StringHelper;
-import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Models.Views.SpinnerLocale;
 import com.mosy.kalin.mosy.Helpers.LocaleHelper;
-import com.mosy.kalin.mosy.Services.AccountService;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Models.Views.SpinnerLocale;
 import com.mosy.kalin.mosy.Services.Location.LocationResolver;
-import com.mosy.kalin.mosy.Services.SecurityService;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_landing)
@@ -251,7 +243,7 @@ public class LandingActivity
     public void navigateAppInfo()
     {
         Intent intent = new Intent(LandingActivity.this, ApplicationInfoActivity_.class);
-        startActivity(intent);
+         startActivity(intent);
     }
 
     @Click(R.id.landing_btnLoginSignUp)
