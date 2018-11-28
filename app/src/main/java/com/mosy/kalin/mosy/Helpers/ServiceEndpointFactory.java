@@ -32,7 +32,6 @@ public class ServiceEndpointFactory implements IServiceEndpointFactory {
 
     // PUBLIC endpoints
     public static final String apiEndpoint = "https://mosyws.azurewebsites.net/api/";
-
     public static final String apiTokenEndpoint = "https://mosyws.azurewebsites.net/token";
 
 //    @Override
