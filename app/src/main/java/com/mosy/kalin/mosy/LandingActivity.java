@@ -224,8 +224,11 @@ public class LandingActivity
             Toast.makeText(applicationContext, "Developers' mode " + (devModeEnabledPrefValue ? "Enabled!" : "Disabled!"), Toast.LENGTH_SHORT).show();
 
             if(devModeEnabledPrefValue) {
-                btnAppInfo.setVisibility(View.VISIBLE);
-            }else {btnAppInfo.setVisibility(View.GONE);}
+                this.btnAppInfo.setVisibility(View.VISIBLE);
+            }
+            else {
+                this.btnAppInfo.setVisibility(View.GONE);
+            }
         }
     }
 

@@ -280,5 +280,6 @@
     <string name="link_social_twitter">https://www.twitter.com/treatspark</string>
     <string name="activity_itemDetails_viewsTextView">Views</string>
     <string name="activity_landing_appInfoBtn">App info</string>
+    <string name="activityAppInfo_appVersionLabel">Release Version:</string>
 
 </resources>

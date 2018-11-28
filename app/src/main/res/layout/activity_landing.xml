@@ -109,19 +109,6 @@
         android:layout_marginBottom="10dp">
 
         <Button
-            android:id="@+id/landing_btnAppInfo"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:text="@string/activity_landing_appInfoBtn"
-            android:background="@drawable/background_transparent_click_oval"
-            android:textSize="14sp"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"
-            android:visibility="gone"
-            android:stateListAnimator="@null" />
-
-
-        <Button
             android:id="@+id/landing_btnUserProfile"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
@@ -138,6 +125,18 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:text="@string/activity_landing_loginSignUpBtn"
+            android:background="@drawable/background_transparent_click_oval"
+            android:textSize="14sp"
+            android:textColor="@color/soft"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:stateListAnimator="@null" />
+
+        <Button
+            android:id="@+id/landing_btnAppInfo"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/activity_landing_appInfoBtn"
             android:background="@drawable/background_transparent_click_oval"
             android:textSize="14sp"
             android:textColor="@color/soft"
