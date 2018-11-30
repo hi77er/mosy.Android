@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mosy.kalin.mosy.DTOs.Enums.FilterType;
+import com.mosy.kalin.mosy.DTOs.Enums.ImageResolution;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.VenueContacts;
 import com.mosy.kalin.mosy.DTOs.Venue;
@@ -41,8 +42,7 @@ import com.mosy.kalin.mosy.Helpers.DrawableHelper;
 import com.mosy.kalin.mosy.Helpers.MetricsHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
+import com.mosy.kalin.mosy.Services.AzureBlobService;
 import com.mosy.kalin.mosy.Services.VenuesService;
 
 import org.androidannotations.annotations.AfterViews;
@@ -62,16 +62,12 @@ public class DetailsVenueActivity
         extends BaseActivity
         implements OnMapReadyCallback {
 
-    private static final int REQUEST_PHONE_CALL = 1;
-    private static final String itemX200BlobStorageContainerPath = "userimages\\fboalbums\\200x200";
-    private static final String itemOriginalBlobStorageContainerPath = "userimages\\fboalbums\\original";
-
     private static int SEEN_TIME_OUT = 5000; // 5 seconds
 
     static boolean resumed = false;
 
     boolean descriptionExpanded = false;
-    boolean isUsingDefaultIndoorImageThumbnail;
+    boolean isUsingDefaultImageThumbnail;
     public String phoneNumber;
 
 
@@ -129,8 +125,8 @@ public class DetailsVenueActivity
     @ViewById(R.id.details_venue__btnDirections)
     Button directionsButton;
 
-    @ViewById(R.id.details_venue_ivIndoorThumbnail)
-    ImageView indoorImageThumbnailView;
+    @ViewById(R.id.details_venue_ivExteriorThumbnail)
+    ImageView exteriorImageThumbnailView;
     @ViewById(R.id.details_venue_tvBHMondayTime)
     TextView mondayTextView;
     @ViewById(R.id.details_venue_tvBHTuesdayTime)
@@ -175,7 +171,7 @@ public class DetailsVenueActivity
 
             this.publishVenue();
 
-            this.loadIndoorImage();
+            this.loadExteriorImage();
             this.loadContacts();
             this.loadBusinessHours();
             this.loadLocation();
@@ -203,21 +199,18 @@ public class DetailsVenueActivity
         }
     }
 
-    private void loadIndoorImage() {
+    private void loadExteriorImage() {
         AsyncTaskListener<VenueImage> apiCallResultListener = new AsyncTaskListener<VenueImage>() {
-            @Override
-            public void onPreExecute() {
+            @Override public void onPreExecute() {
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
             }
-
-            @Override
-            public void onPostExecute(VenueImage result) {
-                Venue.IndoorImage = result;
-                populateIndoorImageThumbnail();
+            @Override public void onPostExecute(VenueImage result) {
+                Venue.OutdoorImage = result;
+                populateExteriorImageThumbnail();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getImageMetaIndoor(this.applicationContext, apiCallResultListener, null, this.Venue.Id);
+        this.venueService.getImageMeta(this.applicationContext, apiCallResultListener, null, this.Venue.Id, true);
     }
 
     private void loadContacts() {
@@ -277,27 +270,28 @@ public class DetailsVenueActivity
         this.getBusinessHoursProgressLayout.setVisibility(View.VISIBLE);
     }
 
-    private void populateIndoorImageThumbnail() {
-        if (this.Venue.IndoorImage != null && this.Venue.IndoorImage.Id != null && this.Venue.IndoorImage.Id.length() > 0) {
+    private void populateExteriorImageThumbnail() {
+        if (this.Venue!= null &&
+                this.Venue.OutdoorImage != null &&
+                StringHelper.isNotNullOrEmpty(this.Venue.OutdoorImage.Id)) {
+
             AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
                 @Override public void onPreExecute() {
                     //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
                 }
-
                 @Override public void onPostExecute(byte[] bytes) {
                     if (ArrayHelper.hasValidBitmapContent(bytes)) {
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        indoorImageThumbnailView.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
-                        isUsingDefaultIndoorImageThumbnail = false;
+                        exteriorImageThumbnailView.setImageBitmap(Bitmap.createScaledBitmap(bmp, 200, 200, false));
+                        isUsingDefaultImageThumbnail = false;
                     } else
-                        isUsingDefaultIndoorImageThumbnail = true;
+                        isUsingDefaultImageThumbnail = true;
                     //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
                 }
             };
 
-            DownloadBlobModel model = new DownloadBlobModel(this.Venue.IndoorImage.Id, itemX200BlobStorageContainerPath);
-            new LoadAzureBlobAsyncTask(listener).execute(model);
-        }
+            new AzureBlobService().downloadVenueThumbnail(this.baseContext, this.Venue.OutdoorImage.Id, ImageResolution.Format200x200, listener);
+        } //IN ALL 3 'ELSE'S DO NOTHING. The Item has already been set the default image
     }
 
     private void populateContacts() {
@@ -550,10 +544,10 @@ public class DetailsVenueActivity
         this.VenueLocationMap.getMapAsync(this);
     }
 
-    private boolean hasValidIndoorImageMetadata() {
-        return this.Venue.IndoorImage != null
-                && this.Venue.IndoorImage.Id != null
-                && this.Venue.IndoorImage.Id.length() > 0;
+    private boolean hasValidExteriorImageMetadata() {
+        return this.Venue.OutdoorImage != null
+                && this.Venue.OutdoorImage.Id != null
+                && this.Venue.OutdoorImage.Id.length() > 0;
     }
 
     private void directionsButtonClicked() {
@@ -636,9 +630,14 @@ public class DetailsVenueActivity
         }
     }
 
-    @Click(R.id.details_venue_ivIndoorThumbnail)
+    @Click(R.id.details_venue_ivExteriorThumbnail)
     public void ImageClick() {
-        if (!isUsingDefaultIndoorImageThumbnail && hasValidIndoorImageMetadata()) {
+        if (!isUsingDefaultImageThumbnail &&
+                hasValidExteriorImageMetadata() &&
+                this.Venue!= null &&
+                this.Venue.OutdoorImage != null &&
+                StringHelper.isNotNullOrEmpty(this.Venue.OutdoorImage.Id)) {
+
             final Dialog nagDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             nagDialog.setCancelable(true);
@@ -648,7 +647,6 @@ public class DetailsVenueActivity
                 @Override public void onPreExecute() {
                     //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
                 }
-
                 @Override public void onPostExecute(byte[] bytes) {
                     if (ArrayHelper.hasValidBitmapContent(bytes)) {
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -661,9 +659,9 @@ public class DetailsVenueActivity
                 }
             };
 
-            DownloadBlobModel model = new DownloadBlobModel(this.Venue.IndoorImage.Id, itemOriginalBlobStorageContainerPath);
-            new LoadAzureBlobAsyncTask(listener).execute(model);
-        }
+            new AzureBlobService().downloadVenueThumbnail(this.baseContext, this.Venue.OutdoorImage.Id, ImageResolution.FormatOriginal, listener);
+        } //IN ALL 3 'ELSE'S DO NOTHING. The Item has already been set the default image
+
     }
 
     @Click(R.id.details_venue_btnPhone)

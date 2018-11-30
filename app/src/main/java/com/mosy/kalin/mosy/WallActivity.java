@@ -375,7 +375,7 @@ public class WallActivity
                             wallVenuesAdapter.addVenueWallItem(item);
 
                             VenueWallItem wallItem = wallVenuesAdapter.getItemByVenueId(item.Id);
-                            loadVenueItemOutdoorImage(wallItem);
+                            loadVenueItemInteriorImage(wallItem);
                         }
 
                         wallVenuesAdapter.APICallStillReturnsElements = results.size() >= itemsToLoadCountWhenScrolled;
@@ -394,29 +394,32 @@ public class WallActivity
         }
     }
 
-    private void loadVenueItemOutdoorImage(VenueWallItem venueWallItem) {
-        AsyncTaskListener<byte[]> outdoorImageResultListener = new AsyncTaskListener<byte[]>() {
-            @Override public void onPreExecute() {
-                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
-            }
-            @Override public void onPostExecute(byte[] bytes) {
-                if (ArrayHelper.hasValidBitmapContent(bytes)) {
-                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, 200, 200, false);
-                    venueWallItem.Venue.OutdoorImage.Bitmap = scaledBmp;
-                    addBitmapToMemoryCache(venueWallItem.Venue.OutdoorImage.Id, scaledBmp);
+    private void loadVenueItemInteriorImage(VenueWallItem venueWallItem) {
+        if (venueWallItem.Venue != null &&
+                venueWallItem.Venue.IndoorImage != null &&
+                StringHelper.isNotNullOrEmpty(venueWallItem.Venue.IndoorImage.Id)) {
 
-                    wallVenuesAdapter.onItemChanged(venueWallItem);
-                }
-                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
-            }
-        };
+            venueWallItem.Venue.IndoorImage.Bitmap = getBitmapFromMemCache(venueWallItem.Venue.IndoorImage.Id);
 
-        if (venueWallItem.Venue != null && venueWallItem.Venue.OutdoorImage != null) {
-            if (StringHelper.isNotNullOrEmpty(venueWallItem.Venue.OutdoorImage.Id)) {
-                venueWallItem.Venue.OutdoorImage.Bitmap = getBitmapFromMemCache(venueWallItem.Venue.OutdoorImage.Id);
-                if (venueWallItem.Venue.OutdoorImage.Bitmap == null)
-                    new AzureBlobService().downloadVenueThumbnail(venueWallItem.Venue.OutdoorImage.Id, ImageResolution.Format100x100, outdoorImageResultListener);
+            if (venueWallItem.Venue.IndoorImage.Bitmap == null){
+                AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
+                    @Override public void onPreExecute() {
+                        //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+                    }
+                    @Override public void onPostExecute(byte[] bytes) {
+                        if (ArrayHelper.hasValidBitmapContent(bytes)) {
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, 200, 200, false);
+                            venueWallItem.Venue.IndoorImage.Bitmap = scaledBmp;
+                            addBitmapToMemoryCache(venueWallItem.Venue.IndoorImage.Id, scaledBmp);
+
+                            wallVenuesAdapter.onItemChanged(venueWallItem);
+                        }
+                        //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+                    }
+                };
+
+                new AzureBlobService().downloadVenueThumbnail(this.baseContext, venueWallItem.Venue.IndoorImage.Id, ImageResolution.Format100x100, listener);
             }
         } //IN ALL 3 'ELSE'S DO NOTHING. The Item has already been set the default image
     }
@@ -575,31 +578,34 @@ public class WallActivity
         else {
             Toast.makeText(applicationContext, R.string.activity_wall_locationNotResolvedToast, Toast.LENGTH_LONG).show();
         }
+    }
 
-        }
+    private void loadMenuListItemImageThumbnail(DishWallItem dishWallItem) {
+        if (dishWallItem != null &&
+                dishWallItem.MenuListItem != null &&
+                dishWallItem.MenuListItem.ImageThumbnail != null &&
+                StringHelper.isNotNullOrEmpty(dishWallItem.MenuListItem.ImageThumbnail.Id)) {
 
-            private void loadMenuListItemImageThumbnail(DishWallItem dishWallItem) {
+            dishWallItem.MenuListItem.ImageThumbnail.Bitmap = getBitmapFromMemCache(dishWallItem.MenuListItem.ImageThumbnail.Id);
+
+            if (dishWallItem.MenuListItem.ImageThumbnail.Bitmap == null){
                 AsyncTaskListener<byte[]> mliImageResultListener = new AsyncTaskListener<byte[]>() {
                     @Override public void onPreExecute() {
                         //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
                     }
-            @Override public void onPostExecute(byte[] bytes) {
-                if (ArrayHelper.hasValidBitmapContent(bytes)){
-                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, 200, 200, false);
-                    dishWallItem.MenuListItem.ImageThumbnail.Bitmap = scaledBmp;
-                    addBitmapToMemoryCache(dishWallItem.MenuListItem.ImageThumbnail.Id, scaledBmp);
-                }
-                wallDishesAdapter.onItemChanged(dishWallItem);
-                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
-            }
-        };
+                    @Override public void onPostExecute(byte[] bytes) {
+                        if (ArrayHelper.hasValidBitmapContent(bytes)){
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, 200, 200, false);
+                            dishWallItem.MenuListItem.ImageThumbnail.Bitmap = scaledBmp;
+                            addBitmapToMemoryCache(dishWallItem.MenuListItem.ImageThumbnail.Id, scaledBmp);
+                        }
+                        wallDishesAdapter.onItemChanged(dishWallItem);
+                        //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+                    }
+                };
 
-        if (dishWallItem != null && dishWallItem.MenuListItem != null && dishWallItem.MenuListItem.ImageThumbnail != null) {
-            if (StringHelper.isNotNullOrEmpty(dishWallItem.MenuListItem.ImageThumbnail.Id)) {
-                dishWallItem.MenuListItem.ImageThumbnail.Bitmap = getBitmapFromMemCache(dishWallItem.MenuListItem.ImageThumbnail.Id);
-                if (dishWallItem.MenuListItem.ImageThumbnail.Bitmap == null)
-                    new AzureBlobService().downloadMenuListItemThumbnail(dishWallItem.MenuListItem.ImageThumbnail.Id, ImageResolution.Format200x200, mliImageResultListener);
+                new AzureBlobService().downloadMenuListItemThumbnail(this.baseContext, dishWallItem.MenuListItem.ImageThumbnail.Id, ImageResolution.Format200x200, mliImageResultListener);
             }
         } //IN ALL 3 'ELSE'S DO NOTHING. The Item has already been set the default image
     }

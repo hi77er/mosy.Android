@@ -7,6 +7,11 @@
     <!--Preferences-->
     //TODO: Move this to Preferences
     <string name="google_maps_key" translatable="false">"AIzaSyDkyNsNMAi8VoxWrLnI-8pp0W5P54r2Dvs"</string>
+
+    <string name="webAPI_username" translatable="false">webapiadmin@mosy.com</string>
+    <string name="webAPI_pass" translatable="false">!23Qwe</string>
+    <string name="webAPI_grant_type" translatable="false">password</string>
+
     <string name="pref_walls_visited" translatable="false">"prefWallsVisited"</string>
     <string name="pref_authToken_webApi" translatable="false">"prefAuthTokenWebApi"</string>
     <string name="pref_authTokenType_webApi" translatable="false">"prefAuthTokenType"</string>
@@ -15,11 +20,11 @@
     <string name="pref_collectionName_developersMode" translatable="false">DevelopersModePreferences</string>
     <string name="pref_developersModeEnabled" translatable="false">DevelopersModeEnabled</string>
     <string name="pref_collectionName_webApi" translatable="false">"WebApiToken"</string>
-    <string name="pref_collectionName_user">UserToken</string>
-    <string name="pref_authToken_user">prefAuthTokenUser</string>
-    <string name="pref_authTokenType_user">prefAuthTokenType</string>
-    <string name="pref_authTokenExpiresAt_user">prefAuthTokenExpiresAt</string>
-    <string name="pref_authTokenExpiresInSeconds_user">prefAuthTokenExpiresInSeconds</string>
+    <string name="pref_collectionName_user" translatable="false">UserToken</string>
+    <string name="pref_authToken_user" translatable="false">prefAuthTokenUser</string>
+    <string name="pref_authTokenType_user" translatable="false">prefAuthTokenType</string>
+    <string name="pref_authTokenExpiresAt_user" translatable="false">prefAuthTokenExpiresAt</string>
+    <string name="pref_authTokenExpiresInSeconds_user" translatable="false">prefAuthTokenExpiresInSeconds</string>
 
     <!-- AndroidManifest -->
     <string name="app_name">"Treatspark"</string>
@@ -279,5 +284,17 @@
     <string name="link_social_instagram">https://www.instagram.com/treatsparks</string>
     <string name="link_social_twitter">https://www.twitter.com/treatspark</string>
     <string name="activity_itemDetails_viewsTextView">Views</string>
+    <string name="azureBlobContainerPath_fboalbums_100x100">userimages\\fboalbums\\100x100</string>
+    <string name="azureBlobContainerPath_requestableAlbums_100x100">userimages\\requestablealbums\\100x100</string>
+    <string name="azureBlobContainerPath_profile_100x100">userimages\\profile\\100x100</string>
+    <string name="azureBlobContainerPath_fboAlbums_200x200">userimages\\fboalbums\\200x200</string>
+    <string name="azureBlobContainerPath_requestablesAlbums_200x200">userimages\\requestablealbums\\200x200</string>
+    <string name="azureBlobContainerPath_profile_200x200">userimages\\profile\\200x200</string>
+    <string name="azureBlobContainerPath_fboAlbums_300x300">userimages\\fboalbums\\300x300</string>
+    <string name="azureBlobContainerPath_requestablesAlbums_300x300">userimages\\requestablealbums\\300x300</string>
+    <string name="azureBlobContainerPath_profile_300x300">userimages\\profile\\300x300</string>
+    <string name="azureBlobContainerPath_profile_original">userimages\\profile\\original</string>
+    <string name="azureBlobContainerPath_requestablesAlbums_original">userimages\\requestablealbums\\original</string>
+    <string name="azureBlobContainerPath_fboAlbums_original">userimages\\fboalbums\\original</string>
 
 </resources>

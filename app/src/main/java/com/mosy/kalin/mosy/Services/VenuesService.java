@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IVenuesRepository;
 import com.mosy.kalin.mosy.DTOs.HttpResponses.PublicMenuResponse;
-import com.mosy.kalin.mosy.DTOs.MenuList;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
 import com.mosy.kalin.mosy.DTOs.VenueContacts;
@@ -202,10 +201,11 @@ public class VenuesService {
                 onInvalidHost);
     }
 
-    public void getImageMetaIndoor(Context applicationContext,
-                                   AsyncTaskListener<VenueImage> apiCallResultListener,
-                                   Runnable onInvalidHost,
-                                   String venueId)
+    public void getImageMeta(Context applicationContext,
+                                     AsyncTaskListener<VenueImage> apiCallResultListener,
+                                     Runnable onInvalidHost,
+                                     String venueId,
+                                     boolean isExterior)
     {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
@@ -213,7 +213,7 @@ public class VenuesService {
                     String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
                     try {
-                        Call<VenueImage> callImage = repository.getImageMetaIndoor(authToken, venueId);
+                        Call<VenueImage> callImage = repository.getImageMeta(authToken, venueId, isExterior);
                         apiCallResultListener.onPreExecute();
                         callImage.enqueue(new Callback<VenueImage>() {
                             @Override public void onResponse(@NonNull Call<VenueImage> call, @NonNull Response<VenueImage> response) {

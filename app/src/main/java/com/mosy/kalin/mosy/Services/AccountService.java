@@ -57,7 +57,10 @@ public class AccountService {
 
         if (!tokenExistsAndIsValid) {
             IAccountRepository accountRepo = RetrofitAPIClientFactory.getClient().create(IAccountRepository.class);
-            Call<TokenResult> call = accountRepo.tokenLogin("webapiadmin@mosy.com", "!23Qwe", "password");
+            Call<TokenResult> call = accountRepo.tokenLogin(
+                    applicationContext.getString(R.string.webAPI_username),
+                    applicationContext.getString(R.string.webAPI_pass),
+                    applicationContext.getString(R.string.webAPI_grant_type));
 
             if (preExecute != null) preExecute.run();
 

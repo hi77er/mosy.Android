@@ -10,6 +10,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mosy.kalin.mosy.DTOs.Enums.ImageResolution;
 import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DetailsVenueActivity_;
@@ -19,9 +20,8 @@ import com.mosy.kalin.mosy.Helpers.LocationHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.ItemViews.Base.WallItemViewBase;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.R;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
+import com.mosy.kalin.mosy.Services.AzureBlobService;
 import com.mosy.kalin.mosy.VenueMenuActivity_;
 
 import org.androidannotations.annotations.Click;
@@ -32,14 +32,13 @@ import org.androidannotations.annotations.ViewById;
 public class VenueWallItemView
         extends WallItemViewBase {
 
-    private static final String originalBlobStorageContainerPath = "userimages\\fboalbums\\original";
     private boolean IsUsingDefaultThumbnail;
 
     private Context baseContext;
     private Venue Venue;
 
-    @ViewById(R.id.venueItem_ivOutdoorThumbnail)
-    ImageView outdoorImageThumbnailTextView;
+    @ViewById(R.id.venueItem_ivInteriorThumbnail)
+    ImageView interiorImageThumbnail;
 
     @ViewById(R.id.venueItem_tvName)
     TextView nameTextView;
@@ -52,16 +51,13 @@ public class VenueWallItemView
     @ViewById(R.id.venueItem_tvWorkingStatusLabel)
     TextView workingStatusLabel;
 
-//    @ViewById(R.id.venueItem_tvRecommendedLabel)
-//    TextView newLabel;
-
     public VenueWallItemView(Context context) {
         super(context);
         this.baseContext = context;
     }
 
     public void bind(Venue venue) {
-        this.outdoorImageThumbnailTextView.setImageDrawable(null);
+        this.interiorImageThumbnail.setImageDrawable(null);
 
         if (venue != null) {
             this.Venue = venue;
@@ -69,13 +65,13 @@ public class VenueWallItemView
             this.nameTextView.setText(venue.Name);
             this.classTextView.setText(venue.Class);
 
-            if (venue.OutdoorImage != null && venue.OutdoorImage.Bitmap != null) {
-                this.outdoorImageThumbnailTextView.setImageBitmap(venue.OutdoorImage.Bitmap);
+            if (venue.IndoorImage != null && venue.IndoorImage.Bitmap != null) {
+                this.interiorImageThumbnail.setImageBitmap(venue.IndoorImage.Bitmap);
                 IsUsingDefaultThumbnail = false;
             }
             else {
                 Bitmap defaultImageBitmap = BitmapFactory.decodeResource(this.baseContext.getResources(), R.drawable.venue_default_thumbnail);
-                this.outdoorImageThumbnailTextView.setImageBitmap(defaultImageBitmap);
+                this.interiorImageThumbnail.setImageBitmap(defaultImageBitmap);
                 IsUsingDefaultThumbnail = true;
             }
 
@@ -119,10 +115,13 @@ public class VenueWallItemView
         }
     }
 
-    @Click(resName = "venueItem_ivOutdoorThumbnail")
-    public void OutdoorThumbnailClick()
+    @Click(R.id.venueItem_ivInteriorThumbnail)
+    public void InteriorThumbnailClick()
     {
-        if (!IsUsingDefaultThumbnail && this.Venue != null && this.Venue.OutdoorImage != null && StringHelper.isNotNullOrEmpty(this.Venue.OutdoorImage.Id)){
+        if (!IsUsingDefaultThumbnail &&
+                this.Venue != null &&
+                this.Venue.IndoorImage != null &&
+                StringHelper.isNotNullOrEmpty(this.Venue.IndoorImage.Id)){
 
             final Dialog nagDialog = new Dialog(this.baseContext, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -135,7 +134,6 @@ public class VenueWallItemView
                 public void onPreExecute() {
 //                    progressBar.setVisibility(View.VISIBLE);
                 }
-
                 @Override
                 public void onPostExecute(byte[] bytes) {
                     if (ArrayHelper.hasValidBitmapContent(bytes)){
@@ -147,13 +145,11 @@ public class VenueWallItemView
                 }
             };
 
-            DownloadBlobModel model = new DownloadBlobModel(this.Venue.OutdoorImage.Id, originalBlobStorageContainerPath);
-            new LoadAzureBlobAsyncTask(listener).execute(model);
+            new AzureBlobService().downloadVenueThumbnail(this.baseContext, this.Venue.IndoorImage.Id, ImageResolution.FormatOriginal, listener);
         }
     }
 
-//    @Click(resName = "venueItem_ivMenu")
-    @Click(resName = "venueItem_btnMenu")
+    @Click(R.id.venueItem_btnMenu)
     public void MenuLinkClick()
     {
         Intent intent = new Intent(this.baseContext, VenueMenuActivity_.class);
@@ -165,8 +161,7 @@ public class VenueWallItemView
         this.baseContext.startActivity(intent);
     }
 
-//    @Click(resName = "venueItem_ivInfo")
-    @Click(resName = "venueItem_btnInfo")
+    @Click(R.id.venueItem_btnInfo)
     public void InfoLinkClick()
     {
         Intent intent = new Intent(this.baseContext, DetailsVenueActivity_.class);

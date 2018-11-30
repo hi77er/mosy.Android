@@ -103,7 +103,7 @@ public class VenueMenuActivity
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getImageMetaIndoor(this.applicationContext, apiCallResultListener, null, this.Venue.Id);
+        this.venueService.getImageMeta(this.applicationContext, apiCallResultListener, null, this.Venue.Id, false);
     }
 
     private void loadMenu(){

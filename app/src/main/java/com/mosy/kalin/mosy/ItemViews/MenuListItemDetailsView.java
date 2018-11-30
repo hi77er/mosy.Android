@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.mosy.kalin.mosy.DTOs.Enums.FilterType;
 import com.mosy.kalin.mosy.DTOs.Enums.FilteredType;
+import com.mosy.kalin.mosy.DTOs.Enums.ImageResolution;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.Ingredient;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
@@ -25,6 +26,7 @@ import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.R;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
+import com.mosy.kalin.mosy.Services.AzureBlobService;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
@@ -207,7 +209,8 @@ public class MenuListItemDetailsView
     @Click(R.id.menuListItemDetails_ivMainImage)
     public void ItemImageClick()
     {
-        if (!IsUsingDefaultImageThumbnail && this.ImageId != null && !this.ImageId.equals(StringHelper.empty())){
+        if (!IsUsingDefaultImageThumbnail && StringHelper.isNotNullOrEmpty(this.ImageId)){
+
             final Dialog nagDialog = new Dialog(this.getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             nagDialog.setCancelable(true);
@@ -220,7 +223,6 @@ public class MenuListItemDetailsView
                     public void onPreExecute() {
 //                        progressBar.setVisibility(View.VISIBLE);
                     }
-
                     @Override
                     public void onPostExecute(byte[] bytes) {
                         if (ArrayHelper.hasValidBitmapContent(bytes)){
@@ -232,8 +234,7 @@ public class MenuListItemDetailsView
                     }
                 };
 
-                DownloadBlobModel model = new DownloadBlobModel(this.ImageId, originalBlobStorageContainerPath);
-                new LoadAzureBlobAsyncTask(listener).execute(model);
+                new AzureBlobService().downloadMenuListItemThumbnail(this.context, this.ImageId, ImageResolution.FormatOriginal, listener);
             }
         }
     }

@@ -36,8 +36,8 @@ public interface IVenuesRepository {
     @GET("fbo/location")
     Call<VenueLocation> getLocation(@Header("Authorization") String authorization, @Query("fboId") String venueId);
 
-    @GET("fbo/images/metadataindoor")
-    Call<VenueImage> getImageMetaIndoor(@Header("Authorization") String authorization, @Query("fboId") String venueId);
+    @GET("fbo/images/metadata")
+    Call<VenueImage> getImageMeta(@Header("Authorization") String authorization, @Query("fboId") String venueId, @Query("isExterior") boolean isExterior);
 
     @GET("fbo/publicmenu")
     Call<PublicMenuResponse> getMenu(@Header("Authorization") String authorization, @Query("fboId") String venueId, @Query("clientDateTimeOffset") String currentDateTimeOffset);

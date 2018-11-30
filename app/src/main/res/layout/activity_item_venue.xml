@@ -78,7 +78,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/venueItem_ivOutdoorThumbnail"
+            android:id="@+id/venueItem_ivInteriorThumbnail"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginEnd="5dp"

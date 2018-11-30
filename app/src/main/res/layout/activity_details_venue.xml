@@ -23,7 +23,7 @@
             android:layout_marginBottom="10dp">
 
             <ImageView
-                android:id="@+id/details_venue_ivIndoorThumbnail"
+                android:id="@+id/details_venue_ivExteriorThumbnail"
                 android:layout_gravity="start"
                 android:layout_width="150dp"
                 android:layout_height="150dp"

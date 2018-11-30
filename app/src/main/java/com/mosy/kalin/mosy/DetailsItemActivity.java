@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.annimon.stream.Stream;
 import com.mosy.kalin.mosy.DTOs.Enums.FilterType;
+import com.mosy.kalin.mosy.DTOs.Enums.ImageResolution;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.Ingredient;
 import com.mosy.kalin.mosy.DTOs.MenuListItemCulture;
@@ -31,6 +32,7 @@ import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
+import com.mosy.kalin.mosy.Services.AzureBlobService;
 import com.mosy.kalin.mosy.Services.DishesService;
 
 import org.androidannotations.annotations.AfterViews;
@@ -360,12 +362,14 @@ public class DetailsItemActivity
     }
 
     private void publishIndoorImageThumbnail() {
-        if (this.item.ImageThumbnail != null && this.item.ImageThumbnail.Id != null && this.item.ImageThumbnail.Id.length() > 0) {
+        if (this.item != null &&
+                this.item.ImageThumbnail != null &&
+                StringHelper.isNotNullOrEmpty(this.item.ImageThumbnail.Id)) {
+
             AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
                 @Override public void onPreExecute() {
                     //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
                 }
-
                 @Override public void onPostExecute(byte[] bytes) {
                     if (ArrayHelper.hasValidBitmapContent(bytes)) {
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -377,8 +381,7 @@ public class DetailsItemActivity
                 }
             };
 
-            DownloadBlobModel model = new DownloadBlobModel(this.item.ImageThumbnail.Id, itemX200BlobStorageContainerPath);
-            new LoadAzureBlobAsyncTask(listener).execute(model);
+            new AzureBlobService().downloadMenuListItemThumbnail(this.baseContext, this.item.ImageThumbnail.Id, ImageResolution.Format200x200, listener);
         }
     }
 
@@ -393,10 +396,15 @@ public class DetailsItemActivity
         this.itemFiltersProgressLayout.setVisibility(View.VISIBLE);
     }
 
-
     @Click(R.id.details_item_ivThumbnail)
     public void ImageClick() {
-        if (!isUsingDefaultThumbnail && hasValidIndoorImageMetadata()) {
+        if (!isUsingDefaultThumbnail &&
+                hasValidIndoorImageMetadata() &&
+                !isUsingDefaultThumbnail && hasValidIndoorImageMetadata() &&
+                this.item != null &&
+                this.item.ImageThumbnail != null &&
+                StringHelper.isNotNullOrEmpty(this.item.ImageThumbnail.Id)) {
+
             final Dialog nagDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             nagDialog.setCancelable(true);
@@ -419,8 +427,7 @@ public class DetailsItemActivity
                 }
             };
 
-            DownloadBlobModel model = new DownloadBlobModel(this.item.ImageThumbnail.Id, itemOriginalBlobStorageContainerPath);
-            new LoadAzureBlobAsyncTask(listener).execute(model);
+            new AzureBlobService().downloadMenuListItemThumbnail(this.baseContext, this.item.ImageThumbnail.Id, ImageResolution.FormatOriginal, listener);
         }
     }
 

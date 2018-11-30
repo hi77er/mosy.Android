@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.mosy.kalin.mosy.DTOs.Enums.FilterType;
 import com.mosy.kalin.mosy.DTOs.Enums.FilteredType;
+import com.mosy.kalin.mosy.DTOs.Enums.ImageResolution;
 import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.MenuListItem;
@@ -28,6 +29,7 @@ import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.R;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
 import com.mosy.kalin.mosy.ItemViews.Base.WallItemViewBase;
+import com.mosy.kalin.mosy.Services.AzureBlobService;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
@@ -203,7 +205,10 @@ public class DishWallItemView
     @Click(R.id.menuListItem_ivThumbnail)
     public void ImageClick()
     {
-        if (!this.IsUsingDefaultThumbnail && this.MenuListItem != null && this.MenuListItem.ImageThumbnail != null && StringHelper.isNotNullOrEmpty(this.MenuListItem.ImageThumbnail.Id)){
+        if (!this.IsUsingDefaultThumbnail &&
+                this.MenuListItem != null &&
+                this.MenuListItem.ImageThumbnail != null &&
+                StringHelper.isNotNullOrEmpty(this.MenuListItem.ImageThumbnail.Id)){
 
             final Dialog nagDialog = new Dialog(this.getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -225,8 +230,7 @@ public class DishWallItemView
                 }
             };
 
-            DownloadBlobModel model = new DownloadBlobModel(this.MenuListItem.ImageThumbnail.Id, originalBlobStorageContainerPath);
-            new LoadAzureBlobAsyncTask(listener).execute(model);
+            new AzureBlobService().downloadMenuListItemThumbnail(this.baseContext, this.MenuListItem.ImageThumbnail.Id, ImageResolution.FormatOriginal, listener);
         }
     }
 
