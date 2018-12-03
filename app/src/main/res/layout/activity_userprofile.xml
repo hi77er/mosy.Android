@@ -22,7 +22,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/ic_account_24"
-            android:tint="@color/colorPrimary"/>
+            android:tint="@color/colorPrimary" />
 
         <RelativeLayout
             android:id="@+id/userprofile_llUsername"

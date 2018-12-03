@@ -68,16 +68,16 @@ public class AzureBlobService {
 
             switch (imageResolution){
                 case Format100x100:
-                    context.getString(R.string.azureBlobContainerPath_profile_100x100);
+                    storagePath = context.getString(R.string.azureBlobContainerPath_profile_100x100);
                     break;
                 case Format200x200:
-                    context.getString(R.string.azureBlobContainerPath_profile_200x200);
+                    storagePath = context.getString(R.string.azureBlobContainerPath_profile_200x200);
                     break;
                 case Format300x300:
-                    context.getString(R.string.azureBlobContainerPath_profile_300x300);
+                    storagePath = context.getString(R.string.azureBlobContainerPath_profile_300x300);
                     break;
                 case FormatOriginal:
-                    context.getString(R.string.azureBlobContainerPath_profile_original);
+                    storagePath = context.getString(R.string.azureBlobContainerPath_profile_original);
                     break;
             }
 

@@ -15,6 +15,8 @@ public class User
     @SerializedName("LastName")
     public String LastName;
 
+    @SerializedName("ProfileImage")
+    public UserImage ProfileImage;
 
 
 }
