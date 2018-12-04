@@ -2,16 +2,12 @@ package com.mosy.kalin.mosy;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mosy.kalin.mosy.Helpers.StringHelper;
@@ -48,6 +44,12 @@ public class LoginActivity
     @AfterViews
     public void afterViews(){
 
+    }
+
+    @Click(R.id.login_btnCancel)
+    public void goBack() {
+        Intent intent = new Intent(LoginActivity.this, LandingActivity_.class);
+        startActivity(intent);
     }
 
     @Click(R.id.login_btnLogin)
