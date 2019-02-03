@@ -1,7 +1,7 @@
 package com.mosy.kalin.mosy.DTOs;
 
 import com.google.gson.annotations.SerializedName;
-import com.mosy.kalin.mosy.DAL.Http.Results.ResultBase;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.HttpResult;
 
 import java.util.Date;
 
@@ -10,7 +10,7 @@ import java.util.Date;
  */
 
 public class VenueBusinessHours
-        extends ResultBase {
+        extends HttpResult {
 
     @SerializedName("Id")
     public String Id;

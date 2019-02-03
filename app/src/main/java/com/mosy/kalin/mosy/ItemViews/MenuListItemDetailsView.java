@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.support.v7.app.AlertDialog;
 import android.util.LruCache;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -17,7 +18,7 @@ import com.mosy.kalin.mosy.DTOs.Enums.FilteredType;
 import com.mosy.kalin.mosy.DTOs.Enums.ImageResolution;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.Ingredient;
-import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.WallMenuListItem;
 import com.mosy.kalin.mosy.DTOs.MenuListItemCulture;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.MenuListItemHelper;
@@ -33,7 +34,6 @@ import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-import java.util.stream.Stream;
 
 @EViewGroup(R.layout.activity_item_menulistitem_details)
 public class MenuListItemDetailsView
@@ -56,10 +56,10 @@ public class MenuListItemDetailsView
     TextView ingredients;
     @ViewById(R.id.menuListItemDetails_btnAllergens)
     ImageButton allergensButton;
+    @ViewById(R.id.menuListItemDetails_btnAddItemToAccount)
+    Button btnAddItemToAccount;
 
-
-
-    boolean expanded = false;
+    boolean venueHasOrdersManagementSubscription = false;
 
     public MenuListItemDetailsView(Context context) {
         super(context);
@@ -68,23 +68,26 @@ public class MenuListItemDetailsView
 
     ///Add more controls here
 
-    public void bind(MenuListItem menuListItem, LruCache<String, Bitmap> cache) {
+    public void bind(WallMenuListItem wallMenuListItem, LruCache<String, Bitmap> cache, boolean venueHasOrdersManagementSubscription) {
         this.inMemoryCache = cache;
+        this.venueHasOrdersManagementSubscription = venueHasOrdersManagementSubscription;
+        this.btnAddItemToAccount.setVisibility(this.venueHasOrdersManagementSubscription ? VISIBLE : INVISIBLE);
 
-        MenuListItemCulture selectedCulture = MenuListItemHelper.getMenuListItemCulture(getContext(), menuListItem);
+        MenuListItemCulture selectedCulture = MenuListItemHelper.getMenuListItemCulture(getContext(), wallMenuListItem);
 
         this.Allergens = new ArrayList<>(com.annimon.stream.Stream
-                .of(menuListItem.Filters)
+                .of(wallMenuListItem.Filters)
                 .filter(filter -> filter.FilteredType == FilteredType.Dishes && filter.FilterType == FilterType.DishAllergens)
                 .toList());
+        this.allergensButton.setVisibility(this.Allergens.size() > 0 ? VISIBLE : INVISIBLE);
 
         this.DishTypes = new ArrayList<>(com.annimon.stream.Stream
-                .of(menuListItem.Filters)
+                .of(wallMenuListItem.Filters)
                 .filter(filter -> filter.FilteredType == FilteredType.Dishes && filter.FilterType == FilterType.DishType)
                 .toList());
 
-        if (StringHelper.isNotNullOrEmpty(menuListItem.QuantityDisplayText)){
-            this.quantityLabel.setText(menuListItem.QuantityDisplayText);
+        if (StringHelper.isNotNullOrEmpty(wallMenuListItem.QuantityDisplayText)){
+            this.quantityLabel.setText(wallMenuListItem.QuantityDisplayText);
             this.quantityLabel.setVisibility(VISIBLE);
         }
 
@@ -98,7 +101,7 @@ public class MenuListItemDetailsView
             this.ingredients.setVisibility(VISIBLE);
         }
 
-        final String imageKey = menuListItem.ImageThumbnail != null ? menuListItem.ImageThumbnail.Id : "default";
+        final String imageKey = wallMenuListItem.ImageThumbnail != null ? wallMenuListItem.ImageThumbnail.Id : "default";
         if (imageKey.equals("default")){
             this.setDefaultImageThumbnail();
         } else {
@@ -111,10 +114,6 @@ public class MenuListItemDetailsView
             }
         }
 
-        if (this.Allergens != null && this.Allergens.size() > 0)
-            this.allergensButton.setVisibility(VISIBLE);
-        else
-            this.allergensButton.setVisibility(GONE);
     }
 
     private void downloadMenuListItemThumbnail(String thumbnailId) {

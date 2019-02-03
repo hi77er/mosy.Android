@@ -32,7 +32,7 @@ import com.mosy.kalin.mosy.DTOs.Enums.FilterType;
 import com.mosy.kalin.mosy.DTOs.Enums.ImageResolution;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.VenueContacts;
-import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.DTOs.WallVenue;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.VenueLocation;
@@ -75,7 +75,7 @@ public class DetailsVenueActivity
     VenuesService venueService;
 
     @Extra
-    public Venue Venue;
+    public WallVenue WallVenue;
 
     @FragmentById(R.id.details_venue_frMap)
     SupportMapFragment VenueLocationMap;
@@ -165,7 +165,7 @@ public class DetailsVenueActivity
 //                String asda3 = NetworkHelper.getIPAddress(false); // IPv6
 
                 if (resumed)
-                    this.venueService.checkAddView(this.applicationContext, this.Venue.Id);
+                    this.venueService.checkAddView(this.applicationContext, this.WallVenue.Id);
             }, SEEN_TIME_OUT);
 
 
@@ -184,14 +184,14 @@ public class DetailsVenueActivity
 
     @SuppressLint("SetTextI18n")
     private void publishVenue() {
-        this.nameTextView.setText(this.Venue.Name);
-        this.classTextView.setText(this.Venue.Class);
-        this.viewsTextView.setText(this.Venue.SeenCount + " " + getString(R.string.activity_itemDetails_viewsTextView));
+        this.nameTextView.setText(this.WallVenue.Name);
+        this.classTextView.setText(this.WallVenue.Class);
+        this.viewsTextView.setText(this.WallVenue.SeenCount + " " + getString(R.string.activity_itemdetails_viewstextview));
 
-        if (StringHelper.isNotNullOrEmpty(this.Venue.Description)) {
-            String descriptionText = this.Venue.Description.length() < 41
-                    ? this.Venue.Description
-                    : this.Venue.Description.substring(0, 40) + " ...";
+        if (StringHelper.isNotNullOrEmpty(this.WallVenue.Description)) {
+            String descriptionText = this.WallVenue.Description.length() < 41
+                    ? this.WallVenue.Description
+                    : this.WallVenue.Description.substring(0, 40) + " ...";
 
             this.descriptionTextView.setText(descriptionText);
 
@@ -205,12 +205,12 @@ public class DetailsVenueActivity
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
             }
             @Override public void onPostExecute(VenueImage result) {
-                Venue.OutdoorImage = result;
+                WallVenue.OutdoorImage = result;
                 populateExteriorImageThumbnail();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getImageMeta(this.applicationContext, apiCallResultListener, null, this.Venue.Id, true);
+        this.venueService.getImageMeta(this.applicationContext, apiCallResultListener, null, this.WallVenue.Id, true);
     }
 
     private void loadContacts() {
@@ -219,12 +219,12 @@ public class DetailsVenueActivity
                 showContactsLoading();
             }
             @Override public void onPostExecute(VenueContacts result) {
-                Venue.VenueContacts = result;
+                WallVenue.VenueContacts = result;
                 populateContacts();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getContacts(this.applicationContext, listener, null, this.Venue.Id);
+        this.venueService.getContacts(this.applicationContext, listener, null, this.WallVenue.Id);
     }
 
     private void loadBusinessHours() {
@@ -234,12 +234,12 @@ public class DetailsVenueActivity
             }
 
             @Override public void onPostExecute(VenueBusinessHours result) {
-                Venue.VenueBusinessHours = result;
+                WallVenue.VenueBusinessHours = result;
                 populateBusinessHours();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getBusinessHours(applicationContext, apiCallResultListener, null, this.Venue.Id);
+        this.venueService.getBusinessHours(applicationContext, apiCallResultListener, null, this.WallVenue.Id);
     }
 
     private void loadLocation() {
@@ -249,12 +249,12 @@ public class DetailsVenueActivity
             }
 
             @Override public void onPostExecute(VenueLocation result) {
-                Venue.Location = result;
+                WallVenue.Location = result;
                 populateGoogleMap();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getLocation(applicationContext, listener, null, this.Venue.Id);
+        this.venueService.getLocation(applicationContext, listener, null, this.WallVenue.Id);
 
         // TODO: Decide weather this should be called here on onPostExecute of the upper task
         populateGoogleMap();
@@ -271,9 +271,9 @@ public class DetailsVenueActivity
     }
 
     private void populateExteriorImageThumbnail() {
-        if (this.Venue!= null &&
-                this.Venue.OutdoorImage != null &&
-                StringHelper.isNotNullOrEmpty(this.Venue.OutdoorImage.Id)) {
+        if (this.WallVenue != null &&
+                this.WallVenue.OutdoorImage != null &&
+                StringHelper.isNotNullOrEmpty(this.WallVenue.OutdoorImage.Id)) {
 
             AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
                 @Override public void onPreExecute() {
@@ -290,12 +290,12 @@ public class DetailsVenueActivity
                 }
             };
 
-            new AzureBlobService().downloadVenueThumbnail(this.baseContext, this.Venue.OutdoorImage.Id, ImageResolution.Format200x200, listener);
+            new AzureBlobService().downloadVenueThumbnail(this.baseContext, this.WallVenue.OutdoorImage.Id, ImageResolution.Format200x200, listener);
         } //IN ALL 3 'ELSE'S DO NOTHING. The Item has already been set the default image
     }
 
     private void populateContacts() {
-        VenueContacts venueContacts = this.Venue.VenueContacts;
+        VenueContacts venueContacts = this.WallVenue.VenueContacts;
         if (venueContacts != null) {
             boolean any = false;
             if (StringHelper.isNotNullOrEmpty(venueContacts.Phone)) {
@@ -383,7 +383,7 @@ public class DetailsVenueActivity
     }
 
     private void publishFilters() {
-        ArrayList<Filter> filters = this.Venue.Filters;
+        ArrayList<Filter> filters = this.WallVenue.Filters;
 
         if (filters != null && filters.size() > 0) {
             ArrayList<Filter> accessibilityFilters = new ArrayList<>(Stream.of(filters).filter(x -> x.FilterType == FilterType.VenueAccessibility).toList());
@@ -404,7 +404,7 @@ public class DetailsVenueActivity
     }
 
     private void publishCultureFilters() {
-        ArrayList<Filter> filters = this.Venue.Filters;
+        ArrayList<Filter> filters = this.WallVenue.Filters;
         if (filters != null && filters.size() > 0) {
             ArrayList<Filter> cultureFilters = new ArrayList<>(Stream.of(filters).filter(x -> x.FilterType == FilterType.VenueCulture).toList());
 
@@ -476,7 +476,7 @@ public class DetailsVenueActivity
     }
 
     private void populateBusinessHours() {
-        VenueBusinessHours businessHours = this.Venue.VenueBusinessHours;
+        VenueBusinessHours businessHours = this.WallVenue.VenueBusinessHours;
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
         if (businessHours != null // and a single day has business hours set ->
                 && (businessHours.IsMondayDayOff || businessHours.IsTuesdayDayOff || businessHours.IsWednesdayDayOff ||
@@ -537,7 +537,7 @@ public class DetailsVenueActivity
     }
 
     private void populateGoogleMap() {
-        if (this.Venue != null && this.Venue.Location != null) {
+        if (this.WallVenue != null && this.WallVenue.Location != null) {
             this.directionsButton.setOnClickListener(view -> directionsButtonClicked());
             this.directionsButton.setVisibility(View.VISIBLE);
         }
@@ -545,13 +545,13 @@ public class DetailsVenueActivity
     }
 
     private boolean hasValidExteriorImageMetadata() {
-        return this.Venue.OutdoorImage != null
-                && this.Venue.OutdoorImage.Id != null
-                && this.Venue.OutdoorImage.Id.length() > 0;
+        return this.WallVenue.OutdoorImage != null
+                && this.WallVenue.OutdoorImage.Id != null
+                && this.WallVenue.OutdoorImage.Id.length() > 0;
     }
 
     private void directionsButtonClicked() {
-        String parameters = "destination=" + this.Venue.Location.Latitude + "," + this.Venue.Location.Longitude;
+        String parameters = "destination=" + this.WallVenue.Location.Latitude + "," + this.WallVenue.Location.Longitude;
         Uri uri = Uri.parse("https://www.google.com/maps/dir/?api=1&" + parameters);
 
         Intent intent = new Intent();
@@ -574,8 +574,8 @@ public class DetailsVenueActivity
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        if (this.Venue != null && this.Venue.Location != null) {
-            LatLng venueLocation = new LatLng(this.Venue.Location.Latitude, this.Venue.Location.Longitude);
+        if (this.WallVenue != null && this.WallVenue.Location != null) {
+            LatLng venueLocation = new LatLng(this.WallVenue.Location.Latitude, this.WallVenue.Location.Longitude);
 
 //            googleMap.getUiSettings().setZoomControlsEnabled(true);
 //            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -584,7 +584,7 @@ public class DetailsVenueActivity
             Marker marker = googleMap.addMarker(
                     new MarkerOptions()
                             .position(venueLocation)
-                            .title(this.Venue.Name) //  + (" - " + "Click the marker to get directions")
+                            .title(this.WallVenue.Name) //  + (" - " + "Click the marker to get directions")
             );
             marker.showInfoWindow();
 
@@ -620,11 +620,11 @@ public class DetailsVenueActivity
         this.descriptionExpanded = !this.descriptionExpanded;
 
         if (this.descriptionExpanded)
-            this.descriptionTextView.setText(this.Venue.Description);
+            this.descriptionTextView.setText(this.WallVenue.Description);
         else{
-            String descriptionText = this.Venue.Description.length() < 41
-                    ? this.Venue.Description
-                    : this.Venue.Description.substring(0, 40) + " ...";
+            String descriptionText = this.WallVenue.Description.length() < 41
+                    ? this.WallVenue.Description
+                    : this.WallVenue.Description.substring(0, 40) + " ...";
 
             this.descriptionTextView.setText(descriptionText);
         }
@@ -634,9 +634,9 @@ public class DetailsVenueActivity
     public void ImageClick() {
         if (!isUsingDefaultImageThumbnail &&
                 hasValidExteriorImageMetadata() &&
-                this.Venue!= null &&
-                this.Venue.OutdoorImage != null &&
-                StringHelper.isNotNullOrEmpty(this.Venue.OutdoorImage.Id)) {
+                this.WallVenue != null &&
+                this.WallVenue.OutdoorImage != null &&
+                StringHelper.isNotNullOrEmpty(this.WallVenue.OutdoorImage.Id)) {
 
             final Dialog nagDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -659,7 +659,7 @@ public class DetailsVenueActivity
                 }
             };
 
-            new AzureBlobService().downloadVenueThumbnail(this.baseContext, this.Venue.OutdoorImage.Id, ImageResolution.FormatOriginal, listener);
+            new AzureBlobService().downloadVenueThumbnail(this.baseContext, this.WallVenue.OutdoorImage.Id, ImageResolution.FormatOriginal, listener);
         } //IN ALL 3 'ELSE'S DO NOTHING. The Item has already been set the default image
 
     }

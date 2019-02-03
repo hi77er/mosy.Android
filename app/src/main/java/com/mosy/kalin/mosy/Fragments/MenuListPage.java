@@ -3,7 +3,7 @@ package com.mosy.kalin.mosy.Fragments;
 import android.widget.ExpandableListView;
 
 import com.mosy.kalin.mosy.Adapters.MenuListItemsAdapter;
-import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.WallMenuListItem;
 import com.mosy.kalin.mosy.R;
 
 import org.androidannotations.annotations.AfterViews;
@@ -18,11 +18,14 @@ import java.util.ArrayList;
 public class MenuListPage
         extends BaseFragment {
 
+    @FragmentArg("venueHasOrdersManagementSubscription")
+    boolean venueHasOrdersManagementSubscription;
+
     @FragmentArg("MenuListName")
     String MenuListName;
 
-    @FragmentArg("MenuListItems")
-    ArrayList<MenuListItem> menuListItems;
+    @FragmentArg("wallMenuListItems")
+    ArrayList<WallMenuListItem> wallMenuListItems;
 
     @FragmentArg("SelectedMenuListItemId")
     String selectedMenuListItemId;
@@ -38,8 +41,10 @@ public class MenuListPage
 
     @AfterViews
     void init() {
-        if (this.menuListItems != null) {
-            menuListItemsAdapter.setMenuListItems(this.menuListItems);
+        menuListItemsAdapter.setVenueHasOrdersManagementSubscription(this.venueHasOrdersManagementSubscription);
+
+        if (this.wallMenuListItems != null) {
+            menuListItemsAdapter.setWallMenuListItems(this.wallMenuListItems);
 
             menuList_lvItems.setAdapter(menuListItemsAdapter);
 //            menuList_lvItems.setOnGroupClickListener((parent, v, groupPosition, id) -> {

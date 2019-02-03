@@ -1,9 +1,9 @@
 package com.mosy.kalin.mosy.DTOs;
 
 import com.google.gson.annotations.SerializedName;
-import com.mosy.kalin.mosy.DAL.Http.Results.ResultBase;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.HttpResult;
 
-public class VenueContacts extends ResultBase {
+public class VenueContacts extends HttpResult {
 
     @SerializedName("Id")
     public String Id;

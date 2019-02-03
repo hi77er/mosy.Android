@@ -2,7 +2,6 @@ package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,7 +23,7 @@ import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Helpers.ListHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Models.Responses.VenueFiltersResult;
+import com.mosy.kalin.mosy.Models.Responses.VenueFiltersHttpResult;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.FilterItem;
 import com.mosy.kalin.mosy.Services.VenuesService;
 
@@ -247,12 +246,12 @@ public class VenuesFiltersActivity
 
     private void loadVenueFilters() {
 
-        AsyncTaskListener<VenueFiltersResult> listener = new AsyncTaskListener<VenueFiltersResult>() {
+        AsyncTaskListener<VenueFiltersHttpResult> listener = new AsyncTaskListener<VenueFiltersHttpResult>() {
             @Override public void onPreExecute() {
                 showFiltersLoadingLayout();
             }
 
-            @Override public void onPostExecute(VenueFiltersResult result) {
+            @Override public void onPostExecute(VenueFiltersHttpResult result) {
                 if (result != null) {
                     populateAlreadySelectedFilters(
                             result.VenueAccessibilityFilters,

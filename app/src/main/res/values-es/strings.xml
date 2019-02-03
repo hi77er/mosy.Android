@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Foodoo</string>
+    <string name="app_name">Treatspark</string>
     <string name="activity_wall_swipeDownToRefreshMessageTextView">ACTUALIZAR EL CONTENIDO</string>
     <string name="activity_landing_languageBgSpinner">Búlgaro</string>
     <string name="activity_landing_languageEnUSSpinner">Inglés</string>
@@ -50,11 +50,7 @@
     <string name="DishesFilterTypeBreakfastName">Desayuno</string>
     <string name="DishesFilterTypeMainsName">Platos principales</string>
     <string name="DishesFilterTypeDesertsName">Postres</string>
-    <string name="DishesFilterRegionAsianName">Asia</string>
-    <string name="DishesFilterRegionMiddleEasternName">Oriental</string>
-    <string name="DishesFilterRegionEuropeanName">Europa</string>
     <string name="DishesFilterRegionAfricanName">África</string>
-    <string name="DishesFilterRegionAmericanName">Americas</string>
     <string name="DishesFilterMainIngredientFishAndSeafoodName"><![CDATA[Pescado & mariscos]]></string>
     <string name="DishesFilterMainIngredientWhiteMeatName">Carne blanca</string>
     <string name="DishesFilterMainIngredientRedMeatName">Carne roja</string>
@@ -104,5 +100,4 @@
     <string name="activity_venueDetails_getDirections">Direcciones</string>
     <string name="activity_landing_profileBtn">Perfíl</string>
     <string name="activity_landing_loginSignUpBtn">Entrar / Registrarse</string>
-    <string name="DishesFilterTypeAlcoholicDrinksName">Bebidas con alcohol</string>
 </resources>

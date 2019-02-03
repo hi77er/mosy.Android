@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="@color/colorWhite">
+
+    <TextView
+        android:id="@+id/tableAccountsVenueItem_tvName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:textColor="@color/soft"  />
+
+    <TextView
+        android:id="@+id/tableAccountsVenueItem_tvClass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:textColor="@color/softer" />
+
+    <TextView
+        android:id="@+id/tableAccountsVenueItem_tvManage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="MANAGE TABLE ACCOUNTS"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:textColor="@color/colorPrimary" />
+
+</LinearLayout>

@@ -14,11 +14,16 @@ import java.util.ArrayList;
 public class MenuPagerAdapter
         extends FragmentStatePagerAdapter {
 
-    ArrayList<MenuList> menuLists;
-    String venueId;
-    String selectedMenuListId;
+    private ArrayList<MenuList> menuLists;
 
+    private String venueId;
     public void setVenueId(String venueId){ this.venueId = venueId; }
+
+    private String selectedMenuListId;
+
+    private boolean venueHasOrdersManagementSubscription;
+    public void setVenueHasOrdersManagementSubscription(boolean value){ this.venueHasOrdersManagementSubscription = value; }
+
 
     public MenuPagerAdapter(FragmentManager fm, ArrayList<MenuList> menuLists, String menuListId) {
         super(fm);
@@ -38,7 +43,8 @@ public class MenuPagerAdapter
 
         Bundle bundle = new Bundle();
         bundle.putString("MenuListName", menuList.Name);
-        bundle.putParcelableArrayList("MenuListItems", menuList.MenuListItems);
+        bundle.putParcelableArrayList("wallMenuListItems", menuList.wallMenuListItems);
+        bundle.putBoolean("venueHasOrdersManagementSubscription", venueHasOrdersManagementSubscription);
 
         if (menuList.Id.equals(selectedMenuListId)) {
             if (!selectedMenuListId.equals(""))

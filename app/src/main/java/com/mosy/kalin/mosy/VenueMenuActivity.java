@@ -16,9 +16,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.mosy.kalin.mosy.Adapters.MenuPagerAdapter;
-import com.mosy.kalin.mosy.DTOs.HttpResponses.PublicMenuResponse;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.PublicMenuResult;
 import com.mosy.kalin.mosy.DTOs.MenuList;
-import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.DTOs.WallVenue;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.LocaleHelper;
@@ -49,7 +49,7 @@ public class VenueMenuActivity
     VenuesService venueService;
 
     @Extra
-    Venue Venue;
+    WallVenue WallVenue;
     @Extra
     String SelectedMenuListId; //if the page is navigated via Dishes ListView, this should have value
 
@@ -80,8 +80,8 @@ public class VenueMenuActivity
     @AfterViews
     void afterViews() {
         try {
-            this.NameTextView.setText(this.Venue.Name);
-            this.ClassTextView.setText(this.Venue.Class);
+            this.NameTextView.setText(this.WallVenue.Name);
+            this.ClassTextView.setText(this.WallVenue.Class);
             this.MenuViewPager.setVisibility(View.GONE);
             this.NoMenuLayout.setVisibility(View.VISIBLE);
 
@@ -98,22 +98,22 @@ public class VenueMenuActivity
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
             }
             @Override public void onPostExecute(VenueImage result) {
-                Venue.IndoorImage = result;
+                WallVenue.IndoorImage = result;
                 populateIndoorImageThumbnail();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getImageMeta(this.applicationContext, apiCallResultListener, null, this.Venue.Id, false);
+        this.venueService.getImageMeta(this.applicationContext, apiCallResultListener, null, this.WallVenue.Id, false);
     }
 
     private void loadMenu(){
-        AsyncTaskListener<PublicMenuResponse> apiCallResultListener = new AsyncTaskListener<PublicMenuResponse>() {
+        AsyncTaskListener<PublicMenuResult> apiCallResultListener = new AsyncTaskListener<PublicMenuResult>() {
             @Override public void onPreExecute() {
                 CentralProgress.setVisibility(View.VISIBLE);
             }
 
-            @Override public void onPostExecute(PublicMenuResponse result) {
-                PublicMenuResponse publicMenu = result;
+            @Override public void onPostExecute(PublicMenuResult result) {
+                PublicMenuResult publicMenu = result;
                 if (publicMenu != null && publicMenu.MenuLists != null && publicMenu.MenuLists.size() > 0) {
                     MenuViewPager.setVisibility(View.VISIBLE);
                     NoMenuLayout.setVisibility(View.GONE);
@@ -140,6 +140,7 @@ public class VenueMenuActivity
                     }
 
                     MenuPagerAdapter adapter = new MenuPagerAdapter(getSupportFragmentManager(), publicMenu.MenuLists, SelectedMenuListId);
+                    adapter.setVenueHasOrdersManagementSubscription(WallVenue.HasOrdersManagementSubscription);
                     MenuViewPager.setAdapter(adapter);
 
                     if (SelectedMenuListId != null && !SelectedMenuListId.equals(StringHelper.empty())) {
@@ -154,12 +155,12 @@ public class VenueMenuActivity
                 CentralProgress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getMenu(this.applicationContext, apiCallResultListener, null, this.Venue.Id);
+        this.venueService.getMenu(this.applicationContext, apiCallResultListener, null, this.WallVenue.Id);
     }
 
     private void populateIndoorImageThumbnail() {
-        if (this.Venue.IndoorImage != null && this.Venue.IndoorImage.Id != null && this.Venue.IndoorImage.Id.length() > 0) {
-            //INFO: TryGet Venue Image
+        if (this.WallVenue.IndoorImage != null && this.WallVenue.IndoorImage.Id != null && this.WallVenue.IndoorImage.Id.length() > 0) {
+            //INFO: TryGet WallVenue Image
             AsyncTaskListener<byte[]> apiCallResultListener = new AsyncTaskListener<byte[]>() {
                 @Override public void onPreExecute() {
                     //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
@@ -174,7 +175,7 @@ public class VenueMenuActivity
                 }
             };
 
-            DownloadBlobModel model = new DownloadBlobModel(this.Venue.IndoorImage.Id, storageContainer);
+            DownloadBlobModel model = new DownloadBlobModel(this.WallVenue.IndoorImage.Id, storageContainer);
             new LoadAzureBlobAsyncTask(apiCallResultListener).execute(model);
         }
     }
@@ -182,10 +183,10 @@ public class VenueMenuActivity
     @Click(R.id.venue_lVenueTitle)
     void venueTitle_Click() {
         Intent intent = new Intent(VenueMenuActivity.this, DetailsVenueActivity_.class);
-        this.Venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-        this.Venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-        this.Venue.Location = null;
-        intent.putExtra("Venue", this.Venue);
+        this.WallVenue.OutdoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
+        this.WallVenue.IndoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
+        this.WallVenue.Location = null;
+        intent.putExtra("WallVenue", this.WallVenue);
         startActivity(intent);
         overridePendingTransition( R.transition.slide_in_right, R.transition.slide_out_right );
     }

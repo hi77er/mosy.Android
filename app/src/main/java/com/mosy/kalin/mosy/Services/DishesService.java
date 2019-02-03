@@ -6,24 +6,22 @@ import android.support.annotation.NonNull;
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IDishesRepository;
 import com.mosy.kalin.mosy.DTOs.Filter;
-import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.WallMenuListItem;
 import com.mosy.kalin.mosy.DTOs.MenuListItemCulture;
 import com.mosy.kalin.mosy.DTOs.MenuListItemImage;
 import com.mosy.kalin.mosy.Helpers.LocaleHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Models.BindingModels.GetItemPreferredCultureBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.SearchMenuListItemsBindingModel;
-import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
+import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.GetItemPreferredCultureBindingModel;
+import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.SearchMenuListItemsBindingModel;
+import com.mosy.kalin.mosy.Models.Responses.DishFiltersHttpResult;
 
 import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Body;
 
 @EBean
 public class DishesService {
@@ -31,7 +29,7 @@ public class DishesService {
     private AccountService accountService = new AccountService();
 
     public void loadDishes(Context applicationContext,
-                           AsyncTaskListener<ArrayList<MenuListItem>> apiCallResultListener,
+                           AsyncTaskListener<ArrayList<WallMenuListItem>> apiCallResultListener,
                            int maxResultsCount,
                            int totalItemsOffset,
                            double latitude,
@@ -60,14 +58,14 @@ public class DishesService {
                     IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
 
                     try {
-                        Call<ArrayList<MenuListItem>> callResult =  repository.loadDishes(authTokenHeader, model);
+                        Call<ArrayList<WallMenuListItem>> callResult =  repository.loadDishes(authTokenHeader, model);
                         apiCallResultListener.onPreExecute();
-                        callResult.enqueue(new Callback<ArrayList<MenuListItem>>() {
-                            @Override public void onResponse(@NonNull Call<ArrayList<MenuListItem>> call, @NonNull Response<ArrayList<MenuListItem>> response) {
-                                ArrayList<MenuListItem> dishes = response.body();
+                        callResult.enqueue(new Callback<ArrayList<WallMenuListItem>>() {
+                            @Override public void onResponse(@NonNull Call<ArrayList<WallMenuListItem>> call, @NonNull Response<ArrayList<WallMenuListItem>> response) {
+                                ArrayList<WallMenuListItem> dishes = response.body();
                                 apiCallResultListener.onPostExecute(dishes);
                             }
-                            @Override public void onFailure(@NonNull Call<ArrayList<MenuListItem>> call, @NonNull Throwable t) {
+                            @Override public void onFailure(@NonNull Call<ArrayList<WallMenuListItem>> call, @NonNull Throwable t) {
                                 call.cancel();
                             }
                         });
@@ -79,7 +77,7 @@ public class DishesService {
     }
 
     public void getAllFilters(Context applicationContext,
-                              AsyncTaskListener<DishFiltersResult> apiCallResultListener,
+                              AsyncTaskListener<DishFiltersHttpResult> apiCallResultListener,
                               boolean devMode)
     {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
@@ -88,14 +86,14 @@ public class DishesService {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
                     try {
-                        Call<DishFiltersResult> callFilters = repository.loadAllFilters(authTokenHeader, devMode);
+                        Call<DishFiltersHttpResult> callFilters = repository.loadAllFilters(authTokenHeader, devMode);
                         apiCallResultListener.onPreExecute();
-                        callFilters.enqueue(new Callback<DishFiltersResult>() {
-                            @Override public void onResponse(@NonNull Call<DishFiltersResult> call, @NonNull Response<DishFiltersResult> response) {
-                                DishFiltersResult result = response.body();
+                        callFilters.enqueue(new Callback<DishFiltersHttpResult>() {
+                            @Override public void onResponse(@NonNull Call<DishFiltersHttpResult> call, @NonNull Response<DishFiltersHttpResult> response) {
+                                DishFiltersHttpResult result = response.body();
                                 apiCallResultListener.onPostExecute(result);
                             }
-                            @Override public void onFailure(@NonNull Call<DishFiltersResult> call, @NonNull Throwable t) {
+                            @Override public void onFailure(@NonNull Call<DishFiltersHttpResult> call, @NonNull Throwable t) {
                                 call.cancel();
                             }
                         });

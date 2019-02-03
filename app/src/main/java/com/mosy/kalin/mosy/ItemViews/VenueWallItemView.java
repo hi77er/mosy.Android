@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.mosy.kalin.mosy.DTOs.Enums.ImageResolution;
 import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
-import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.DTOs.WallVenue;
 import com.mosy.kalin.mosy.DetailsVenueActivity_;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.BusinessHoursHelper;
@@ -35,7 +35,7 @@ public class VenueWallItemView
     private boolean IsUsingDefaultThumbnail;
 
     private Context baseContext;
-    private Venue Venue;
+    private WallVenue WallVenue;
 
     @ViewById(R.id.venueItem_ivInteriorThumbnail)
     ImageView interiorImageThumbnail;
@@ -56,17 +56,17 @@ public class VenueWallItemView
         this.baseContext = context;
     }
 
-    public void bind(Venue venue) {
+    public void bind(WallVenue wallVenue) {
         this.interiorImageThumbnail.setImageDrawable(null);
 
-        if (venue != null) {
-            this.Venue = venue;
+        if (wallVenue != null) {
+            this.WallVenue = wallVenue;
 
-            this.nameTextView.setText(venue.Name);
-            this.classTextView.setText(venue.Class);
+            this.nameTextView.setText(wallVenue.Name);
+            this.classTextView.setText(wallVenue.Class);
 
-            if (venue.IndoorImage != null && venue.IndoorImage.Bitmap != null) {
-                this.interiorImageThumbnail.setImageBitmap(venue.IndoorImage.Bitmap);
+            if (wallVenue.IndoorImage != null && wallVenue.IndoorImage.Bitmap != null) {
+                this.interiorImageThumbnail.setImageBitmap(wallVenue.IndoorImage.Bitmap);
                 IsUsingDefaultThumbnail = false;
             }
             else {
@@ -75,8 +75,8 @@ public class VenueWallItemView
                 IsUsingDefaultThumbnail = true;
             }
 
-//            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(venue.VenueBusinessHours);
-            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(venue.WorkingStatus);
+//            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(wallVenue.VenueBusinessHours);
+            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(wallVenue.WorkingStatus);
             this.workingStatusLabel.setVisibility(VISIBLE);
             switch (status){
                 case Open:
@@ -96,13 +96,13 @@ public class VenueWallItemView
                     break;
             }
 
-            if (venue.DistanceToCurrentDeviceLocation > 0)
+            if (wallVenue.DistanceToCurrentDeviceLocation > 0)
             {
-                String distance = LocationHelper.buildDistanceText(venue.DistanceToCurrentDeviceLocation);
+                String distance = LocationHelper.buildDistanceText(wallVenue.DistanceToCurrentDeviceLocation);
                 this.distanceFromDeviceTextView.setText(distance);
                 this.walkingMinutesTextView.setVisibility(View.VISIBLE);
 
-                String timeWalking = LocationHelper.buildMinutesWalkingText(venue.DistanceToCurrentDeviceLocation);
+                String timeWalking = LocationHelper.buildMinutesWalkingText(wallVenue.DistanceToCurrentDeviceLocation);
                 timeWalking = (timeWalking.length() > 0 ? timeWalking : StringHelper.empty());
 
                 if (!timeWalking.equals(StringHelper.empty())) {
@@ -119,9 +119,9 @@ public class VenueWallItemView
     public void InteriorThumbnailClick()
     {
         if (!IsUsingDefaultThumbnail &&
-                this.Venue != null &&
-                this.Venue.IndoorImage != null &&
-                StringHelper.isNotNullOrEmpty(this.Venue.IndoorImage.Id)){
+                this.WallVenue != null &&
+                this.WallVenue.IndoorImage != null &&
+                StringHelper.isNotNullOrEmpty(this.WallVenue.IndoorImage.Id)){
 
             final Dialog nagDialog = new Dialog(this.baseContext, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -145,7 +145,7 @@ public class VenueWallItemView
                 }
             };
 
-            new AzureBlobService().downloadVenueThumbnail(this.baseContext, this.Venue.IndoorImage.Id, ImageResolution.FormatOriginal, listener);
+            new AzureBlobService().downloadVenueThumbnail(this.baseContext, this.WallVenue.IndoorImage.Id, ImageResolution.FormatOriginal, listener);
         }
     }
 
@@ -153,11 +153,11 @@ public class VenueWallItemView
     public void MenuLinkClick()
     {
         Intent intent = new Intent(this.baseContext, VenueMenuActivity_.class);
-        this.Venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-        this.Venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-        this.Venue.Location = null;
-        this.Venue.VenueBusinessHours = null;
-        intent.putExtra("Venue", this.Venue);
+        this.WallVenue.OutdoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
+        this.WallVenue.IndoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
+        this.WallVenue.Location = null;
+        this.WallVenue.VenueBusinessHours = null;
+        intent.putExtra("WallVenue", this.WallVenue);
         this.baseContext.startActivity(intent);
     }
 
@@ -165,11 +165,11 @@ public class VenueWallItemView
     public void InfoLinkClick()
     {
         Intent intent = new Intent(this.baseContext, DetailsVenueActivity_.class);
-        this.Venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-        this.Venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-        this.Venue.Location = null;
-        this.Venue.VenueBusinessHours = null;
-        intent.putExtra("Venue", this.Venue);
+        this.WallVenue.OutdoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
+        this.WallVenue.IndoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
+        this.WallVenue.Location = null;
+        this.WallVenue.VenueBusinessHours = null;
+        intent.putExtra("WallVenue", this.WallVenue);
         this.baseContext.startActivity(intent);
     }
 

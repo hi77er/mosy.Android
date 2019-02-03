@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.mosy.kalin.mosy.Adapters.Base.RecyclerViewAdapterBase;
 import com.mosy.kalin.mosy.Adapters.Base.ViewWrapper;
 import com.mosy.kalin.mosy.DTOs.Base.WallItemBase;
-import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.WallMenuListItem;
 import com.mosy.kalin.mosy.ItemViews.Base.WallItemViewBase;
 import com.mosy.kalin.mosy.ItemViews.DishWallItemView;
 import com.mosy.kalin.mosy.ItemViews.DishWallItemView_;
@@ -17,7 +17,6 @@ import com.mosy.kalin.mosy.ItemViews.FiltersInfoWallItemView;
 import com.mosy.kalin.mosy.ItemViews.FiltersInfoWallItemView_;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.DishWallItem;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.FiltersInfoItem;
-import com.mosy.kalin.mosy.Models.Views.ItemModels.VenueWallItem;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;
@@ -73,8 +72,8 @@ public class WallDishesAdapter
         if (viewType == WallItemBase.ITEM_TYPE_DISH_TILE) {
             DishWallItemView view = (DishWallItemView)viewHolder.getView();
             DishWallItem wallItemBase = (DishWallItem) this.items.get(position);
-            MenuListItem menuListItem = wallItemBase.MenuListItem;
-            view.bind(menuListItem);
+            WallMenuListItem wallMenuListItem = wallItemBase.WallMenuListItem;
+            view.bind(wallMenuListItem);
         } else if (viewType == WallItemBase.ITEM_TYPE_FILTERS_INFO_HEADER) {
             FiltersInfoWallItemView view = (FiltersInfoWallItemView)viewHolder.getView();
             FiltersInfoItem wallItemBase = (FiltersInfoItem) this.items.get(position);
@@ -109,7 +108,7 @@ public class WallDishesAdapter
         for (WallItemBase item : this.items) {
             if (item.getType() == WallItemBase.ITEM_TYPE_DISH_TILE) {
                 DishWallItem casted = (DishWallItem)item;
-                if (menuListItemId.equals(casted.MenuListItem.Id))
+                if (menuListItemId.equals(casted.WallMenuListItem.Id))
                     return casted;
             }
         }
@@ -132,7 +131,7 @@ public class WallDishesAdapter
             WallItemBase item = this.items.get(this.items.size() - 1);
             if (item.getType() == WallItemBase.ITEM_TYPE_DISH_TILE) {
                 DishWallItem casted = (DishWallItem) item;
-                return (matchingFiltersIds.equals(casted.MenuListItem.MatchingFiltersIds) && mismatchingFiltersIds.equals(casted.MenuListItem.MismatchingFiltersIds));
+                return (matchingFiltersIds.equals(casted.WallMenuListItem.MatchingFiltersIds) && mismatchingFiltersIds.equals(casted.WallMenuListItem.MismatchingFiltersIds));
             } else {
                 throw new TypeNotPresentException("Currently working in Dishes context. This type was not expected", new Exception());
             }
@@ -140,10 +139,10 @@ public class WallDishesAdapter
         return false;
     }
 
-    public void addDishWallItem(MenuListItem menuListItem) {
+    public void addDishWallItem(WallMenuListItem wallMenuListItem) {
         if (this.items != null){
             DishWallItem dishWallItem = new DishWallItem();
-            dishWallItem.MenuListItem = menuListItem;
+            dishWallItem.WallMenuListItem = wallMenuListItem;
             this.items.add(dishWallItem);
             this.notifyDataSetChanged();
         }

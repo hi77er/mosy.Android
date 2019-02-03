@@ -13,7 +13,6 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.annimon.stream.Stream;
 import com.mosy.kalin.mosy.DTOs.Enums.FilterType;
@@ -23,15 +22,12 @@ import com.mosy.kalin.mosy.DTOs.Ingredient;
 import com.mosy.kalin.mosy.DTOs.MenuListItemCulture;
 import com.mosy.kalin.mosy.DTOs.MenuListItemDetailed;
 import com.mosy.kalin.mosy.DTOs.MenuListItemImage;
-import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.DTOs.WallVenue;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.DrawableHelper;
 import com.mosy.kalin.mosy.Helpers.MetricsHelper;
-import com.mosy.kalin.mosy.Helpers.NetworkHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
 import com.mosy.kalin.mosy.Services.AzureBlobService;
 import com.mosy.kalin.mosy.Services.DishesService;
 
@@ -67,7 +63,7 @@ public class DetailsItemActivity
     DishesService dishesService;
 
     @Extra
-    public Venue venue;
+    public WallVenue wallVenue;
     @Extra
     public MenuListItemDetailed item;
 
@@ -147,7 +143,7 @@ public class DetailsItemActivity
 
     @SuppressLint("SetTextI18n")
     protected void publishViews(){
-        this.viewsTextView.setText(this.item.SeenCount + " " + getString(R.string.activity_itemDetails_viewsTextView));
+        this.viewsTextView.setText(this.item.SeenCount + " " + getString(R.string.activity_itemdetails_viewstextview));
     }
 
     @Override
@@ -434,24 +430,24 @@ public class DetailsItemActivity
     @Click(R.id.details_item_btnShowVenue)
     public void showVenue_Clicked(){
         Intent intent = new Intent(DetailsItemActivity.this, DetailsVenueActivity_.class);
-        this.venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-        this.venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-        this.venue.Location = null;
-        this.venue.VenueBusinessHours = null;
-        intent.putExtra("Venue", this.venue);
+        this.wallVenue.OutdoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
+        this.wallVenue.IndoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
+        this.wallVenue.Location = null;
+        this.wallVenue.VenueBusinessHours = null;
+        intent.putExtra("WallVenue", this.wallVenue);
         this.baseContext.startActivity(intent);
     }
 
     @Click(R.id.details_item_btnShowMenu)
     public void showMenu_Clicked(){
         Intent intent = new Intent(DetailsItemActivity.this, VenueMenuActivity_.class);
-        this.venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-        this.venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-        this.venue.Location = null;
-        this.venue.VenueBusinessHours = null;
-        this.venue.VenueContacts = null;
+        this.wallVenue.OutdoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
+        this.wallVenue.IndoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
+        this.wallVenue.Location = null;
+        this.wallVenue.VenueBusinessHours = null;
+        this.wallVenue.VenueContacts = null;
         intent.putExtra("SelectedMenuListId", this.item.Id);
-        intent.putExtra("Venue", this.venue);
+        intent.putExtra("WallVenue", this.wallVenue);
         startActivity(intent);
     }
 

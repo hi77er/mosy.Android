@@ -8,12 +8,20 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.login.LoginResult;
 import com.mosy.kalin.mosy.Helpers.LocaleHelper;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Services.Connectivity.ConnectionStateMonitor;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
+import org.json.JSONException;
+
+import java.util.Arrays;
 
 import static android.content.pm.PackageManager.GET_META_DATA;
 

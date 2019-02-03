@@ -1,30 +1,42 @@
 package com.mosy.kalin.mosy.Services;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
-import com.mosy.kalin.mosy.DAL.Http.Results.RegisterResult;
-import com.mosy.kalin.mosy.DAL.Http.Results.TokenResult;
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
+import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.AddExternalLoginBindingModel;
+import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.RegisterExternalBindingModel;
+import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.RemoveLoginBindingModel;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.ExternalLoginResult;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.FacebookLoginResult;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.HttpResult;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.RegisterHttpResult;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.TokenHttpResult;
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IAccountRepository;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IUserRepository;
-import com.mosy.kalin.mosy.DTOs.HttpResponses.CheckEmailAvailableResponse;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.CheckEmailAvailableResult;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.UserInfoResult;
 import com.mosy.kalin.mosy.DTOs.User;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Models.BindingModels.CheckEmailAvailableBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.LoginBindingModel;
-import com.mosy.kalin.mosy.Models.BindingModels.RegisterBindingModel;
+import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.CheckEmailAvailableBindingModel;
+import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.LoginBindingModel;
+import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.RegisterBindingModel;
 import com.mosy.kalin.mosy.R;
 
 import org.androidannotations.annotations.EBean;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -35,108 +47,27 @@ import retrofit2.Response;
 @EBean
 public class AccountService {
 
-    public String getWebApiAuthTokenHeader(Context applicationContext){
-        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_webApi), Context.MODE_PRIVATE);
-        String token = mPreferences.getString(applicationContext.getString(R.string.pref_authToken_webApi), StringHelper.empty());
-        String type = mPreferences.getString(applicationContext.getString(R.string.pref_authTokenType_webApi), StringHelper.empty());
-        return type + " " + token;
+    private IAccountRepository accountRepository;
+
+    public AccountService(){
+        this.accountRepository = RetrofitAPIClientFactory.getClient().create(IAccountRepository.class);
     }
 
-    public String getUserAuthTokenHeader(Context applicationContext){
-        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_user), Context.MODE_PRIVATE);
-        String token = mPreferences.getString(applicationContext.getString(R.string.pref_authToken_user), StringHelper.empty());
-        String type = mPreferences.getString(applicationContext.getString(R.string.pref_authTokenType_user), StringHelper.empty());
-        return type + " " + token;
-    }
-
-    public void executeAssuredWebApiTokenValidOrRefreshed(Context applicationContext, Runnable preExecute, Runnable onSuccess, Runnable onInvalidHost) {
+    public void executeAssuredWebApiTokenValidOrRefreshed(Context applicationContext, Runnable preExecute, @NonNull Runnable onSuccess, Runnable onInvalidHost) {
         boolean tokenExistsAndIsValid = this.checkWebApiTokenValid(applicationContext);
 
         if (!tokenExistsAndIsValid) {
-            IAccountRepository accountRepo = RetrofitAPIClientFactory.getClient().create(IAccountRepository.class);
-            Call<TokenResult> call = accountRepo.tokenLogin(
-                    applicationContext.getString(R.string.webAPI_username),
-                    applicationContext.getString(R.string.webAPI_pass),
-                    applicationContext.getString(R.string.webAPI_grant_type));
-
-            if (preExecute != null) preExecute.run();
-
-            call.enqueue(new Callback<TokenResult>() {
-                @Override public void onResponse(Call<TokenResult> call, Response<TokenResult> response) {
-                    if (response.code() == 400){
-                        if (onInvalidHost != null)
-                            onInvalidHost.run();
-                    }
-                    else {
-                        TokenResult result = response.body();
-                        if (result == null) throw new NullPointerException("Must have Authentication Token response");
-
-                        if (!StringHelper.isNullOrEmpty(result.AccessToken) && !StringHelper.isNullOrEmpty(result.TokenType)){
-                            refreshWebApiAuthTokenSettings(applicationContext, result.AccessToken, result.TokenType, result.IssuedAt, result.ExpiresIn);
-
-                            if (onSuccess != null)
-                                onSuccess.run();
-                        }
-                    }
-                }
-                @Override public void onFailure(Call<TokenResult> call, Throwable t) {
-                    t.printStackTrace();
-                    executeAssuredWebApiTokenValidOrRefreshed(applicationContext, preExecute, onSuccess, onInvalidHost);
-                }
-            });
+            this.webApiLogin(applicationContext, preExecute, onSuccess, onInvalidHost);
         }
-        else if (onSuccess != null) {
+        else {
             onSuccess.run();
         }
     }
-
-    public void executeAssuredUserTokenValidOrRefreshed(Context applicationContext, LoginBindingModel userLoginModel, Runnable preExecute, Runnable onSuccess, Runnable onInvalidHost, Toast emailNotConfirmedToast) {
-        boolean tokenExistsAndIsValid = this.checkUserTokenValid(applicationContext);
-
-        if (!tokenExistsAndIsValid) {
-            IAccountRepository accountRepo = RetrofitAPIClientFactory.getClient().create(IAccountRepository.class);
-            Call<TokenResult> call = accountRepo.tokenLogin(userLoginModel.Email, userLoginModel.Password, "password");
-
-            if (preExecute != null)
-                preExecute.run();
-
-            call.enqueue(new Callback<TokenResult>() {
-                @Override public void onResponse(Call<TokenResult> call, Response<TokenResult> response) {
-                    if (response.code() == 400){
-                        try{
-                            if (response.errorBody() != null) {
-                                assert response.errorBody() != null;
-                                String errorBody = response.errorBody().string().toLowerCase();
-                                if (errorBody.contains("email is not confirmed") && emailNotConfirmedToast != null)
-                                    emailNotConfirmedToast.show();
-                                else {
-                                    if (onInvalidHost != null)
-                                        onInvalidHost.run();
-                                }
-                            }
-                        }
-                        catch (Exception ex){ }
-                    }
-                    else {
-                        TokenResult result = response.body();
-                        if (result == null) throw new NullPointerException("Must have Authentication Token response");
-
-                        if (!StringHelper.isNullOrEmpty(result.AccessToken) && !StringHelper.isNullOrEmpty(result.TokenType)){
-                            refreshUserAuthTokenSettings(applicationContext, result.AccessToken, result.TokenType, result.IssuedAt, result.ExpiresIn);
-
-                            if (onSuccess != null)
-                                onSuccess.run();
-                        }
-                    }
-                }
-                @Override public void onFailure(Call<TokenResult> call, Throwable t) {
-                    t.printStackTrace();
-                }
-            });
-        }
-        else if (onSuccess != null) {
-            onSuccess.run();
-        }
+    public void executeAssuredUserTokenValidOrRefreshed(Context applicationContext, Runnable onTokenValid, Runnable onUserTokenInvalidOrExpired) {
+        if (this.checkUserTokenValid(applicationContext))
+            onTokenValid.run();
+        else
+            onUserTokenInvalidOrExpired.run();
     }
 
     private boolean checkWebApiTokenValid(Context applicationContext) {
@@ -147,16 +78,14 @@ public class AccountService {
 
         return checkTokenValid(applicationContext, token, tokenType, expiresAt);
     }
-
     public boolean checkUserTokenValid(Context applicationContext) {
-        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_user), Context.MODE_PRIVATE);
+        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_webApi), Context.MODE_PRIVATE);
         String token = mPreferences.getString(applicationContext.getString(R.string.pref_authToken_user), StringHelper.empty());
         String tokenType = mPreferences.getString(applicationContext.getString(R.string.pref_authTokenType_user), StringHelper.empty());
         String expiresAt = mPreferences.getString(applicationContext.getString(R.string.pref_authTokenExpiresAt_user), StringHelper.empty());
 
         return checkTokenValid(applicationContext, token, tokenType, expiresAt);
     }
-
     private boolean checkTokenValid(Context applicationContext, String token, String tokenType, String expiresAt) {
         if (StringHelper.isNullOrEmpty(token) || StringHelper.isNullOrEmpty(tokenType) || StringHelper.isNullOrEmpty(expiresAt))
             return false;
@@ -171,29 +100,45 @@ public class AccountService {
         return false;
     }
 
-    private void refreshWebApiAuthTokenSettings(Context applicationContext, String token, String tokenType, String issuedAt, int expiresIn){
-           SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_webApi), Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = mPreferences.edit();
-            editor.putString(applicationContext.getString(R.string.pref_authToken_webApi), token);
-            editor.putString(applicationContext.getString(R.string.pref_authTokenType_webApi), tokenType);
-            editor.putInt(applicationContext.getString(R.string.pref_authTokenExpiresInSeconds_webApi), expiresIn);
-            //We calc expiresAt here to avoid tracking Server time zone difference.
-
-            try {
-                Date issuedAtDate = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US).parse(issuedAt);
-                Long expiresAtMilliseconds = issuedAtDate.getTime() + expiresIn * 1000;
-                Date expiresAtDate = new Date(expiresAtMilliseconds);
-                String expiresAt = expiresAtDate.toString();
-                editor.putString(applicationContext.getString(R.string.pref_authTokenExpiresAt_webApi), expiresAt);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            editor.apply();
+    public String getWebApiAuthTokenHeader(Context applicationContext){
+        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_webApi), Context.MODE_PRIVATE);
+        String token = mPreferences.getString(applicationContext.getString(R.string.pref_authToken_webApi), StringHelper.empty());
+        String type = mPreferences.getString(applicationContext.getString(R.string.pref_authTokenType_webApi), StringHelper.empty());
+        return type + " " + token;
+    }
+    public String getUserAuthTokenHeader(Context applicationContext){
+        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_webApi), Context.MODE_PRIVATE);
+        String token = mPreferences.getString(applicationContext.getString(R.string.pref_authToken_user), StringHelper.empty());
+        String type = mPreferences.getString(applicationContext.getString(R.string.pref_authTokenType_user), StringHelper.empty());
+        return type + " " + token;
+    }
+    private boolean isFacebookLoggedIn(){
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null && !accessToken.isExpired();
     }
 
+    private void refreshWebApiAuthTokenSettings(Context applicationContext, String token, String tokenType, String issuedAt, int expiresIn){
+        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_webApi), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(applicationContext.getString(R.string.pref_authToken_webApi), token);
+        editor.putString(applicationContext.getString(R.string.pref_authTokenType_webApi), tokenType);
+        editor.putInt(applicationContext.getString(R.string.pref_authTokenExpiresInSeconds_webApi), expiresIn);
+        //We calc expiresAt here to avoid tracking Server time zone difference.
+
+        try {
+            Date issuedAtDate = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US).parse(issuedAt);
+            Long expiresAtMilliseconds = issuedAtDate.getTime() + expiresIn * 1000;
+            Date expiresAtDate = new Date(expiresAtMilliseconds);
+            String expiresAt = expiresAtDate.toString();
+            editor.putString(applicationContext.getString(R.string.pref_authTokenExpiresAt_webApi), expiresAt);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        editor.apply();
+    }
     private void refreshUserAuthTokenSettings(Context applicationContext, String token, String tokenType, String issuedAt, int expiresIn){
-        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_user), Context.MODE_PRIVATE);
+        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_webApi), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString(applicationContext.getString(R.string.pref_authToken_user), token);
         editor.putString(applicationContext.getString(R.string.pref_authTokenType_user), tokenType);
@@ -213,44 +158,180 @@ public class AccountService {
         editor.apply();
     }
 
-    public void register(Context applicationContext,
-                         String Email,
-                         String Password,
-                         String ConfirmPassword,
-                         AsyncTaskListener<RegisterResult> apiCallResultListener,
-                         Runnable onInvalidHost)
-    {
+
+    private void webApiLogin(Context applicationContext, Runnable preExecute, @NonNull Runnable onSuccess, Runnable onInvalidHost) {
+        Call<TokenHttpResult> call = this.accountRepository.tokenLogin(
+                applicationContext.getString(R.string.webAPI_username),
+                applicationContext.getString(R.string.webAPI_pass),
+                applicationContext.getString(R.string.webAPI_grant_type));
+
+        if (preExecute != null)
+            preExecute.run();
+
+        call.enqueue(new Callback<TokenHttpResult>() {
+            @Override public void onResponse(Call<TokenHttpResult> call, Response<TokenHttpResult> response) {
+                if (response.code() == 400){
+                    if (onInvalidHost != null)
+                        onInvalidHost.run();
+                }
+                else {
+                    TokenHttpResult result = response.body();
+                    if (result == null) throw new NullPointerException("Must have Authentication Token response");
+
+                    if (!StringHelper.isNullOrEmpty(result.AccessToken) && !StringHelper.isNullOrEmpty(result.TokenType)){
+                        refreshWebApiAuthTokenSettings(applicationContext, result.AccessToken, result.TokenType, result.IssuedAt, result.ExpiresIn);
+
+                        onSuccess.run();
+                    }
+                }
+            }
+            @Override public void onFailure(Call<TokenHttpResult> call, Throwable t) {
+                t.printStackTrace();
+                executeAssuredWebApiTokenValidOrRefreshed(applicationContext, preExecute, onSuccess, onInvalidHost);
+            }
+        });
+    }
+
+    public void userLogin(Context applicationContext, LoginBindingModel userLoginModel,
+                          @NonNull Runnable preExecute,
+                          @NonNull Runnable onSuccess,
+                          @NonNull Runnable onWrongUserOrPass,
+                          @NonNull Runnable onEmailNotConfirmed,
+                          @NonNull Runnable onFail,
+                          @NonNull Runnable onInvalidHost) {
+        try {
+            preExecute.run();
+            Call<TokenHttpResult> call = this.accountRepository.tokenLogin(userLoginModel.Email, userLoginModel.Password, "password");
+
+            call.enqueue(new Callback<TokenHttpResult>() {
+                @Override public void onFailure(Call<TokenHttpResult> call, Throwable t) {
+                    t.printStackTrace();
+                }
+                @Override public void onResponse(Call<TokenHttpResult> call, Response<TokenHttpResult> response) {
+                    try {
+                        if (response.code() == 400){
+                                if (response.errorBody() != null) {
+                                    String errorBody = response.errorBody().string().toLowerCase();
+
+                                    if (errorBody.contains("email is not confirmed"))
+                                        onEmailNotConfirmed.run();
+                                    else if(errorBody.contains("user name or password is incorrect"))
+                                        onWrongUserOrPass.run();
+                                    else
+                                        onInvalidHost.run();
+                                }
+                        }
+                        else {
+                            TokenHttpResult result = response.body();
+                            if (result == null) onFail.run();
+
+                            if (!StringHelper.isNullOrEmpty(result.AccessToken) && !StringHelper.isNullOrEmpty(result.TokenType)){
+                                refreshUserAuthTokenSettings(applicationContext, result.AccessToken, result.TokenType, result.IssuedAt, result.ExpiresIn);
+
+                                onSuccess.run();
+                            }
+                            onFail.run();
+                        }
+                    }
+                    catch (Exception ex){
+                        ex.printStackTrace();
+                        onFail.run();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void facebookLogin(Context applicationContext, String facebookAccessToken, String password,
+                              @NonNull Runnable onPreExecute,
+                              @NonNull Runnable onSuccess,
+                              @NonNull Runnable onInvalidHost,
+                              @NonNull Runnable onEmailAlreadyExists,
+                              @NonNull Runnable onFacebookAccountNotFound,
+                              @NonNull Runnable onFail) {
+        try {
+            onPreExecute.run();
+            Call<FacebookLoginResult> callResult =  this.accountRepository.facebookLogin(facebookAccessToken, password);
+
+            callResult.enqueue(new Callback<FacebookLoginResult>() {
+                @Override public void onFailure(@NonNull Call<FacebookLoginResult> call, @NonNull Throwable t) {
+                    call.cancel();
+                }
+                @Override public void onResponse(@NonNull Call<FacebookLoginResult> call, @NonNull Response<FacebookLoginResult> response) {
+                    try {
+                        if (response.code() == 400){
+                            if (response.errorBody() != null) {
+                                assert response.errorBody() != null;
+                                String errorBody = response.errorBody().string().toLowerCase();
+
+                                onInvalidHost.run();
+                            }
+                        }
+                        else {
+                            FacebookLoginResult result = response.body();
+                            if (result != null) {
+                                if (StringHelper.isNotNullOrEmpty(result.ResultMessage))
+                                {
+                                    if (result.ResultMessage.toLowerCase().contains("email already exists"))
+                                        onEmailAlreadyExists.run();
+                                    if (result.ResultMessage.toLowerCase().contains("facebook account not fount"))
+                                        onFacebookAccountNotFound.run();
+                                }
+                                else if(result.AccessToken != null &&
+                                        !StringHelper.isNullOrEmpty(result.AccessToken.AccessToken) &&
+                                        !StringHelper.isNullOrEmpty(result.AccessToken.TokenType)) {
+
+                                    refreshUserAuthTokenSettings(applicationContext, result.AccessToken.AccessToken, result.AccessToken.TokenType, result.AccessToken.IssuedAt, result.AccessToken.ExpiresIn);
+                                    onSuccess.run();
+                                }
+                            }
+                            else
+                                onFail.run();
+                        }
+                    }
+                    catch (Exception ex){ ex.printStackTrace(); }
+                }
+            });
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    public void register(Context applicationContext, String Email, String Password, String ConfirmPassword, AsyncTaskListener<RegisterHttpResult> apiCallResultListener, Runnable onInvalidHost) {
         this.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
                 () -> {
+                    apiCallResultListener.onPreExecute();
+
                     String authToken = this.getWebApiAuthTokenHeader(applicationContext);
 
-                    RegisterBindingModel model = new RegisterBindingModel(Email, Password, ConfirmPassword);
+                    RegisterBindingModel model = new RegisterBindingModel(Email, Password, ConfirmPassword, true);
                     IAccountRepository repository = RetrofitAPIClientFactory.getClient().create(IAccountRepository.class);
-                    Call<RegisterResult> callRegResult = repository.register(authToken, model);
+                    Call<RegisterHttpResult> callRegResult = repository.register(authToken, model);
 
-                    callRegResult.enqueue(new Callback<RegisterResult>() {
-                        @Override
-                        public void onResponse(Call<RegisterResult> call, Response<RegisterResult> response) {
+                    callRegResult.enqueue(new Callback<RegisterHttpResult>() {
+                        @Override public void onFailure(Call<RegisterHttpResult> call, Throwable t) {
+                            call.cancel();
+                        }
+                        @Override public void onResponse(Call<RegisterHttpResult> call, Response<RegisterHttpResult> response) {
                             if(response.code() == 400)
                                 if(onInvalidHost != null)
                                     onInvalidHost.run();
-                            RegisterResult result = response.body();
-                            if(result != null && result.isSuccessful() && apiCallResultListener != null)
+                            RegisterHttpResult result = response.body();
+                            if(apiCallResultListener != null)
                                 apiCallResultListener.onPostExecute(result);
-                        }
-
-                        @Override
-                        public void onFailure(Call<RegisterResult> call, Throwable t) {
-                            call.cancel();
                         }
                     });
                 },
                 onInvalidHost);
     }
 
-    public void logoutUser(Context applicationContext) {
-        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_user), Context.MODE_PRIVATE);
+    public void localLogoutUser(Context applicationContext) {
+        //First log out from Facebook
+        LoginManager.getInstance().logOut();
+
+        //Then delete all access token information for the user
+        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_webApi), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPreferences.edit();
 
         editor.putString(applicationContext.getString(R.string.pref_authToken_user), StringHelper.empty());
@@ -260,69 +341,151 @@ public class AccountService {
         editor.apply();
     }
 
-    public void checkEmailAvailable (Context applicationContext,
-                                     String email,
-                                     Runnable onInvalidHost,
-                                     AsyncTaskListener<CheckEmailAvailableResponse> apiCallResultListener) {
 
+
+    public void getExternalLogins(Context applicationContext, AsyncTaskListener<ArrayList<ExternalLoginResult>> apiCallResultListener, String returnUrl, boolean generateState) {
+        try {
+            Call<ArrayList<ExternalLoginResult>> callResult =  this.accountRepository.getExternalLogins(returnUrl, generateState);
+            apiCallResultListener.onPreExecute();
+            callResult.enqueue(new Callback<ArrayList<ExternalLoginResult>>() {
+                @Override public void onFailure(@NonNull Call<ArrayList<ExternalLoginResult>> call, @NonNull Throwable t) {
+                    call.cancel();
+                }
+                @Override public void onResponse(@NonNull Call<ArrayList<ExternalLoginResult>> call, @NonNull Response<ArrayList<ExternalLoginResult>> response) {
+                    ArrayList<ExternalLoginResult> result = response.body();
+                    apiCallResultListener.onPostExecute(result);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void externalLogin(Context applicationContext, AsyncTaskListener<HttpResult> apiCallResultListener, String provider, String error) {
+        try {
+            Call<Void> callResult =  this.accountRepository.externalLogin(provider, error);
+            apiCallResultListener.onPreExecute();
+            callResult.enqueue(new Callback<Void>() {
+                @Override public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    call.cancel();
+                }
+                @Override public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    HttpResult result = new HttpResult(response.isSuccessful());
+                    apiCallResultListener.onPostExecute(result);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void getUserInfo(Context applicationContext, AsyncTaskListener<UserInfoResult> apiCallResultListener) {
+        try {
+            String authTokenHeader = this.getUserAuthTokenHeader(applicationContext);
+
+            Call<UserInfoResult> callResult =  this.accountRepository.getUserInfo(authTokenHeader);
+
+            apiCallResultListener.onPreExecute();
+            callResult.enqueue(new Callback<UserInfoResult>() {
+                @Override public void onFailure(@NonNull Call<UserInfoResult> call, @NonNull Throwable t) {
+                    call.cancel();
+                }
+                @Override public void onResponse(@NonNull Call<UserInfoResult> call, @NonNull Response<UserInfoResult> response) {
+                    UserInfoResult result = response.body();
+                    apiCallResultListener.onPostExecute(result);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void registerExternal(Context applicationContext, AsyncTaskListener<HttpResult> apiCallResultListener, String email) {
+        try {
+            String authTokenHeader = this.getUserAuthTokenHeader(applicationContext);
+
+            RegisterExternalBindingModel model = new RegisterExternalBindingModel(email);
+            Call<Void> callResult =  this.accountRepository.registerExternal(authTokenHeader, model);
+
+            apiCallResultListener.onPreExecute();
+            callResult.enqueue(new Callback<Void>() {
+                @Override public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    call.cancel();
+                }
+                @Override public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    HttpResult result = new HttpResult(response.isSuccessful());
+                    apiCallResultListener.onPostExecute(result);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void addExternalLogin(Context applicationContext, AsyncTaskListener<HttpResult> apiCallResultListener) {
+        try {
+            String authTokenHeader = this.getUserAuthTokenHeader(applicationContext);
+
+            AddExternalLoginBindingModel model = new AddExternalLoginBindingModel(authTokenHeader);
+            Call<Void> callResult =  this.accountRepository.addExternalLogin(model);
+
+            apiCallResultListener.onPreExecute();
+            callResult.enqueue(new Callback<Void>() {
+                @Override public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    call.cancel();
+                }
+                @Override public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    HttpResult result = new HttpResult(response.isSuccessful());
+                    apiCallResultListener.onPostExecute(result);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void removeExternalLogin(Context applicationContext, AsyncTaskListener<HttpResult> apiCallResultListener, String loginProvider, String providerKey) {
+        try {
+            RemoveLoginBindingModel model = new RemoveLoginBindingModel(loginProvider, providerKey);
+            Call<Void> callResult =  this.accountRepository.removeExternalLogin(model);
+
+            apiCallResultListener.onPreExecute();
+            callResult.enqueue(new Callback<Void>() {
+                @Override public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    call.cancel();
+                }
+                @Override public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    HttpResult result = new HttpResult(response.isSuccessful());
+                    apiCallResultListener.onPostExecute(result);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void checkEmailAvailable (Context applicationContext, String email, AsyncTaskListener<CheckEmailAvailableResult> apiCallResultListener, Runnable onInvalidHost) {
         this.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 apiCallResultListener::onPreExecute,
                 () -> {
+                    apiCallResultListener.onPreExecute();
                     String authToken = this.getWebApiAuthTokenHeader(applicationContext);
 
                     CheckEmailAvailableBindingModel model = new CheckEmailAvailableBindingModel(email);
                     IAccountRepository repository = RetrofitAPIClientFactory.getClient().create(IAccountRepository.class);
-                    Call<CheckEmailAvailableResponse> callRegResult = repository.checkEmailAvailable(authToken, model);
+                    Call<CheckEmailAvailableResult> callRegResult = repository.checkEmailAvailable(authToken, model);
 
-                    callRegResult.enqueue(new Callback<CheckEmailAvailableResponse>() {
+                    callRegResult.enqueue(new Callback<CheckEmailAvailableResult>() {
                         @Override
-                        public void onResponse(Call<CheckEmailAvailableResponse> call, Response<CheckEmailAvailableResponse> response) {
+                        public void onResponse(Call<CheckEmailAvailableResult> call, Response<CheckEmailAvailableResult> response) {
                             if(response.code() == 400)
                                 if(onInvalidHost != null)
                                     onInvalidHost.run();
-                            CheckEmailAvailableResponse result = response.body();
-                            if(apiCallResultListener != null)
-                                apiCallResultListener.onPostExecute(result);
-                        }
 
-                        @Override
-                        public void onFailure(Call<CheckEmailAvailableResponse> call, Throwable t) {
+                            CheckEmailAvailableResult result = response.body();
+                            apiCallResultListener.onPostExecute(result);
+                        }
+                        @Override public void onFailure(Call<CheckEmailAvailableResult> call, Throwable t) {
                             call.cancel();
                         }
                     });
                 },
                 onInvalidHost);
     }
-
-    public void getUserProfile(Context applicationContext,
-                           AsyncTaskListener<User> apiCallResultListener)
-    {
-        Toast emailNotConfirmedToast = Toast.makeText(applicationContext, "Email not confirmed", Toast.LENGTH_LONG);
-        this.executeAssuredUserTokenValidOrRefreshed(applicationContext, null,
-                apiCallResultListener::onPreExecute,
-                () -> {
-                    String authTokenHeader = this.getUserAuthTokenHeader(applicationContext);
-                    IUserRepository repository = RetrofitAPIClientFactory.getClient().create(IUserRepository.class);
-                    try {
-                        Call<User> call = repository.getUserProfile(authTokenHeader);
-                        apiCallResultListener.onPreExecute();
-                        call.enqueue(new Callback<User>() {
-                            @Override public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
-                                User result = response.body();
-                                apiCallResultListener.onPostExecute(result);
-                            }
-                            @Override public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                                call.cancel();
-                            }
-                        });
-                    }
-                    catch (Exception e){
-                        e.printStackTrace();
-                    }
-                },
-                null,
-                emailNotConfirmedToast);
-    }
-
 
 }

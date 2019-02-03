@@ -5,15 +5,15 @@ import android.support.annotation.NonNull;
 
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IVenuesRepository;
-import com.mosy.kalin.mosy.DTOs.HttpResponses.PublicMenuResponse;
-import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.PublicMenuResult;
+import com.mosy.kalin.mosy.DTOs.WallVenue;
 import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
 import com.mosy.kalin.mosy.DTOs.VenueContacts;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.VenueLocation;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Models.BindingModels.SearchVenuesBindingModel;
-import com.mosy.kalin.mosy.Models.Responses.VenueFiltersResult;
+import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.SearchVenuesBindingModel;
+import com.mosy.kalin.mosy.Models.Responses.VenueFiltersHttpResult;
 
 import org.androidannotations.annotations.EBean;
 
@@ -33,7 +33,7 @@ public class VenuesService {
     private AccountService accountService = new AccountService();
 
     public void getById(Context applicationContext,
-                        AsyncTaskListener<Venue> apiCallResultListener,
+                        AsyncTaskListener<WallVenue> apiCallResultListener,
                         Runnable onInvalidHost,
                         String venueId)
     {
@@ -44,14 +44,14 @@ public class VenuesService {
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
                     try {
-                        Call<Venue> callResult =  repository.getById(authTokenHeader, venueId);
+                        Call<WallVenue> callResult =  repository.getById(authTokenHeader, venueId);
                         apiCallResultListener.onPreExecute();
-                        callResult.enqueue(new Callback<Venue>() {
-                            @Override public void onResponse(@NonNull Call<Venue> call, @NonNull Response<Venue> response) {
-                                Venue venue = response.body();
-                                apiCallResultListener.onPostExecute(venue);
+                        callResult.enqueue(new Callback<WallVenue>() {
+                            @Override public void onResponse(@NonNull Call<WallVenue> call, @NonNull Response<WallVenue> response) {
+                                WallVenue wallVenue = response.body();
+                                apiCallResultListener.onPostExecute(wallVenue);
                             }
-                            @Override public void onFailure(@NonNull Call<Venue> call, @NonNull Throwable t) {
+                            @Override public void onFailure(@NonNull Call<WallVenue> call, @NonNull Throwable t) {
                                 call.cancel();
                             }
                         });
@@ -63,7 +63,7 @@ public class VenuesService {
     }
 
     public void getVenues(Context applicationContext,
-                          AsyncTaskListener<ArrayList<Venue>> apiCallResultListener,
+                          AsyncTaskListener<ArrayList<WallVenue>> apiCallResultListener,
                           Runnable onInvalidHost,
                           int maxResultsCount,
                           int totalItemsOffset,
@@ -91,14 +91,14 @@ public class VenuesService {
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
 
                     try {
-                        Call<ArrayList<Venue>> callResult =  repository.loadVenues(authTokenHeader, model);
+                        Call<ArrayList<WallVenue>> callResult =  repository.loadVenues(authTokenHeader, model);
                         apiCallResultListener.onPreExecute();
-                        callResult.enqueue(new Callback<ArrayList<Venue>>() {
-                            @Override public void onResponse(@NonNull Call<ArrayList<Venue>> call, @NonNull Response<ArrayList<Venue>> response) {
-                                ArrayList<Venue> venues = response.body();
-                                 apiCallResultListener.onPostExecute(venues);
+                        callResult.enqueue(new Callback<ArrayList<WallVenue>>() {
+                            @Override public void onResponse(@NonNull Call<ArrayList<WallVenue>> call, @NonNull Response<ArrayList<WallVenue>> response) {
+                                ArrayList<WallVenue> wallVenues = response.body();
+                                 apiCallResultListener.onPostExecute(wallVenues);
                             }
-                            @Override public void onFailure(@NonNull Call<ArrayList<Venue>> call, @NonNull Throwable t) {
+                            @Override public void onFailure(@NonNull Call<ArrayList<WallVenue>> call, @NonNull Throwable t) {
                                 call.cancel();
                             }
                         });
@@ -233,7 +233,7 @@ public class VenuesService {
     }
 
     public void getMenu(Context applicationContext,
-                        AsyncTaskListener<PublicMenuResponse> apiCallResultListener,
+                        AsyncTaskListener<PublicMenuResult> apiCallResultListener,
                         Runnable onInvalidHost,
                         String venueId)
     {
@@ -245,14 +245,14 @@ public class VenuesService {
                     try {
                         String localDateTimeOffset = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(Calendar.getInstance().getTime());
 
-                        Call<PublicMenuResponse> callMenu = repository.getMenu(authToken, venueId, localDateTimeOffset);
+                        Call<PublicMenuResult> callMenu = repository.getMenu(authToken, venueId, localDateTimeOffset);
                         apiCallResultListener.onPreExecute();
-                        callMenu.enqueue(new Callback<PublicMenuResponse>() {
-                            @Override public void onResponse(@NonNull Call<PublicMenuResponse> call, @NonNull Response<PublicMenuResponse> response) {
-                                PublicMenuResponse result = response.body();
+                        callMenu.enqueue(new Callback<PublicMenuResult>() {
+                            @Override public void onResponse(@NonNull Call<PublicMenuResult> call, @NonNull Response<PublicMenuResult> response) {
+                                PublicMenuResult result = response.body();
                                 apiCallResultListener.onPostExecute(result);
                             }
-                            @Override public void onFailure(@NonNull Call<PublicMenuResponse> call, @NonNull Throwable t) {
+                            @Override public void onFailure(@NonNull Call<PublicMenuResult> call, @NonNull Throwable t) {
                                 call.cancel();
                             }
                         });
@@ -265,7 +265,7 @@ public class VenuesService {
     }
 
     public void getFilters(Context applicationContext,
-                           AsyncTaskListener<VenueFiltersResult> apiCallResultListener,
+                           AsyncTaskListener<VenueFiltersHttpResult> apiCallResultListener,
                            boolean devMode)
     {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
@@ -274,14 +274,14 @@ public class VenuesService {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
                     IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
                     try {
-                        Call<VenueFiltersResult> callFilters = repository.getFilters(authTokenHeader, devMode);
+                        Call<VenueFiltersHttpResult> callFilters = repository.getFilters(authTokenHeader, devMode);
                         apiCallResultListener.onPreExecute();
-                        callFilters.enqueue(new Callback<VenueFiltersResult>() {
-                            @Override public void onResponse(@NonNull Call<VenueFiltersResult> call, @NonNull Response<VenueFiltersResult> response) {
-                                VenueFiltersResult result = response.body();
+                        callFilters.enqueue(new Callback<VenueFiltersHttpResult>() {
+                            @Override public void onResponse(@NonNull Call<VenueFiltersHttpResult> call, @NonNull Response<VenueFiltersHttpResult> response) {
+                                VenueFiltersHttpResult result = response.body();
                                 apiCallResultListener.onPostExecute(result);
                             }
-                            @Override public void onFailure(@NonNull Call<VenueFiltersResult> call, @NonNull Throwable t) {
+                            @Override public void onFailure(@NonNull Call<VenueFiltersHttpResult> call, @NonNull Throwable t) {
                                 call.cancel();
                             }
                         });

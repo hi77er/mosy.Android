@@ -7,21 +7,21 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
-    <!-- <uses-permission android:name="android.permission.WAKE_LOCK" /> -->
     <application
         android:name=".App"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Treatspark"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
 
         <activity
             android:name=".LandingActivity_"
-            android:label="@string/manifest_landingActivityTitle"
+            android:label="Treatspark"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,6 +38,7 @@
             android:name=".RegisterActivity_"
             android:label="Register"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".WallActivity_"
             android:label="@string/manifest_venuesActivityTitle"
@@ -54,9 +55,11 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
         <activity
             android:name=".UserProfileActivity_"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".VenueMenuActivity_"
             android:theme="@style/AppTheme.NoActionBar">
@@ -70,17 +73,31 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".OperatorTablesAccountsVenuesActivity_"
+            android:label="@string/activity_tableaccountsvenues_title" />
+        <activity
+            android:name=".OperatorTablesAccountsActivity_"
+            android:label="@string/activity_tableaccounts_title" />
+        <activity
+            android:name=".OperatorTableAccountOrdersActivity_"
+            android:label="@string/activity_tableaccountsorders_title" />
+
         <activity
             android:name=".DetailsVenueActivity_"
             android:label="@string/manifest_venueDetailsActivityTitle"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".DetailsItemActivity_"
             android:label="@string/manifest_itemDetailsActivityTitle"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".VenuesFiltersActivity_"
             android:theme="@style/Theme.AppCompat.PopUp" />
+
         <activity
             android:name=".DishesFiltersActivity_"
             android:theme="@style/Theme.AppCompat.PopUp" />
@@ -91,7 +108,25 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="Treatspark" />
+
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+
+        <service android:name=".Services.SignalR.SignalRService_" />
     </application>
 
 </manifest>

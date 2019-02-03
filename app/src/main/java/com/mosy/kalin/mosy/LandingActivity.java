@@ -1,11 +1,14 @@
 package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
-import android.text.format.Formatter;
+import android.os.Bundle;
+import android.os.IBinder;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,29 +18,23 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
-import com.mosy.kalin.mosy.Helpers.NetworkHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
-import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.Views.SpinnerLocale;
 import com.mosy.kalin.mosy.Helpers.LocaleHelper;
-import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Services.Location.LocationResolver;
-import com.mosy.kalin.mosy.Services.SecurityService;
+import com.mosy.kalin.mosy.Services.SignalR.SignalRService;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_landing)
 public class LandingActivity
         extends BaseActivity
-
 {
     int logoClicksCount = 0;
     boolean afterViewsFinished = false;
@@ -60,18 +57,21 @@ public class LandingActivity
     @ViewById(R.id.landing_btnLoginSignUp)
     Button btnLogin;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+    }
+
     @AfterViews
     public void afterViews(){
         if (ConnectivityHelper.isConnected(applicationContext)) {
-            ensureHasAuthenticationToken();
+            this.ensureHasAuthenticationToken();
             networkLost = false;
         }
         else {
-            showInvalidHostLayout();
+            this.showInvalidHostLayout();
             networkLost = true;
         }
-
-        showProfileButton(this.isUserAuthenticated);
 
         ArrayList<SpinnerLocale> spinnerLocalesList = new ArrayList<>();
         for (String supportedCultureId : LocaleHelper.SUPPORTED_LOCALES.keySet()) {
@@ -87,6 +87,7 @@ public class LandingActivity
     @Override
     public void onStart() {
         super.onStart();
+
         this.activityStopped = false;
     }
 
@@ -108,10 +109,11 @@ public class LandingActivity
 
     @Override
     public void onStop() {
-        super.onStop();
         this.connectionStateMonitor.onAvailable = null;
         this.connectionStateMonitor.onLost = null;
         this.activityStopped = true;
+
+        super.onStop();
     }
 
     @Override
@@ -130,7 +132,6 @@ public class LandingActivity
             this::showLoading,
             this::showButtonsLayout,
             this::showInvalidHostLayout);
-
     }
 
     private void setupLanguagesSpinner(ArrayList<SpinnerLocale> localesList) {
@@ -171,19 +172,29 @@ public class LandingActivity
     }
 
     private void showLoading() {
-        this.buttonsLayout.setVisibility(View.GONE);
+        this.centralProgressLayout.setVisibility(View.VISIBLE);
         this.invalidHostLayout.setVisibility(View.GONE);
+        this.buttonsLayout.setVisibility(View.GONE);
+
         this.btnDishes.setEnabled(false);
         this.btnVenues.setEnabled(false);
-        this.centralProgressLayout.setVisibility(View.VISIBLE);
+
+        this.btnProfile.setVisibility(View.GONE);
+        this.btnLogin.setVisibility(View.GONE);
     }
 
     private void showButtonsLayout() {
-        this.buttonsLayout.setVisibility(View.VISIBLE);
+        this.centralProgressLayout.setVisibility(View.GONE);
         this.invalidHostLayout.setVisibility(View.GONE);
+
+        this.buttonsLayout.setVisibility(View.VISIBLE);
+
         this.btnDishes.setEnabled(true);
         this.btnVenues.setEnabled(true);
-        this.centralProgressLayout.setVisibility(View.GONE);
+
+        this.btnProfile.setVisibility(isUserAuthenticated ? View.VISIBLE : View.GONE);
+        this.btnLogin.setVisibility(isUserAuthenticated ? View.GONE : View.VISIBLE);
+
         //TODO: Delete before deploying to production!
 //        Toast.makeText(applicationContext, "WebApi authToken refreshed!", Toast.LENGTH_LONG).show();
     }
@@ -199,8 +210,7 @@ public class LandingActivity
     }
 
     private void showProfileButton(boolean isUserAuthenticated) {
-        this.btnProfile.setVisibility(isUserAuthenticated ? View.VISIBLE : View.GONE);
-        this.btnLogin.setVisibility(isUserAuthenticated ? View.GONE : View.VISIBLE);
+
     }
 
     @Click(R.id.landing_ivLogo)

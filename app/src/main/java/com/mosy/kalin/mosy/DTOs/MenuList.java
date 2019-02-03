@@ -1,7 +1,7 @@
 package com.mosy.kalin.mosy.DTOs;
 
 import com.google.gson.annotations.SerializedName;
-import com.mosy.kalin.mosy.DAL.Http.Results.ResultBase;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.HttpResult;
 
 import java.util.ArrayList;
 
@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by kkras on 8/10/2017.
  */
 
-public class MenuList extends ResultBase {
+public class MenuList extends HttpResult {
 
     @SerializedName("Id")
     public String Id;
@@ -28,7 +28,7 @@ public class MenuList extends ResultBase {
 
     //Collections
     @SerializedName("Requestables")
-    public ArrayList<MenuListItem> MenuListItems;
+    public ArrayList<WallMenuListItem> wallMenuListItems;
 
 
 }

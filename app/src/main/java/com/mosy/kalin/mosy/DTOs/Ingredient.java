@@ -4,14 +4,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.mosy.kalin.mosy.DAL.Http.Results.ResultBase;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.HttpResult;
 
 /**
  * Created by kkras on 8/22/2017.
  */
 
 public class Ingredient
-        extends ResultBase
+        extends HttpResult
         implements Parcelable {
 
     @SerializedName("Id")

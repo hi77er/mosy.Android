@@ -4,13 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.mosy.kalin.mosy.DAL.Http.Results.ResultBase;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.HttpResult;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class MenuListItemCulture
-        extends ResultBase
+        extends HttpResult
         implements Parcelable, Serializable {
 
     @SerializedName("Id")

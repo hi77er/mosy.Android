@@ -7,6 +7,23 @@
     android:orientation="vertical"
     android:padding="10dp">
 
+    <!--<LinearLayout-->
+        <!--android:id="@+id/login_llInitialLoadingProgress"-->
+        <!--android:layout_below="@+id/login_etPassword"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center"-->
+        <!--android:visibility="gone"-->
+        <!--android:layout_marginTop="50dp" >-->
+
+        <!--<ProgressBar-->
+            <!--android:id="@+id/pbHeaderProgress"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:indeterminate="true" >-->
+        <!--</ProgressBar>-->
+    <!--</LinearLayout>-->
+
     <LinearLayout
         android:id="@+id/venue_lVenueTitle"
         android:orientation="horizontal"
@@ -24,26 +41,32 @@
             android:src="@drawable/ic_account_24"
             android:tint="@color/colorPrimary" />
 
-        <RelativeLayout
-            android:id="@+id/userprofile_llUsername"
+        <LinearLayout
+            android:id="@+id/userProfile_llUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp">
 
             <TextView
-                android:id="@+id/userprofile_name"
+                android:id="@+id/userProfile_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/userProfile_email"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/softer" />
+        </LinearLayout>
 
     </LinearLayout>
-
 
     <LinearLayout
         android:orientation="vertical"
@@ -53,20 +76,38 @@
 
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
+        android:orientation="vertical"
         android:layout_width="match_parent">
 
+        <Button
+            android:id="@+id/btnManageTablesAccountsMonitor"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/activity_userprofile_go_to_table_account_monitors_btn"
+            android:background="@drawable/background_transparent_click_oval"
+            android:textColor="@color/colorPrimary" />
+
+        <Button
+            android:id="@+id/btnLoginViaFacebook"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/activity_userprofile_connect_with_facebook"
+            android:background="@drawable/background_transparent_click_oval"
+            android:textColor="@color/colorPrimary" />
 
         <Button
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/activity_userprofile_logoutBtn"
-            android:background="@drawable/background_primary_very_light"
-            android:textColor="@color/colorPrimary"
-            android:layout_alignParentBottom="true" />
-
-    </RelativeLayout>
+            android:background="@drawable/background_transparent_click_oval"
+            android:textColor="@color/colorPrimary" />
+    </LinearLayout>
 </LinearLayout>

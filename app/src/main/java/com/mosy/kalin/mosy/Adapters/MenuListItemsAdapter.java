@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 
-import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.WallMenuListItem;
 import com.mosy.kalin.mosy.R;
 import com.mosy.kalin.mosy.ItemViews.MenuListItemDetailsView;
 import com.mosy.kalin.mosy.ItemViews.MenuListItemDetailsView_;
@@ -27,19 +27,24 @@ import java.util.HashMap;
 public class MenuListItemsAdapter
         implements ExpandableListAdapter {
 
-    ArrayList<MenuListItem> menuListItems;
-    public void setMenuListItems(ArrayList<MenuListItem> menuListItems){
-        this.menuListItems = menuListItems;
-        this.setDetails(this.menuListItems);
+    ArrayList<WallMenuListItem> wallMenuListItems;
+    public void setWallMenuListItems(ArrayList<WallMenuListItem> wallMenuListItems){
+        this.wallMenuListItems = wallMenuListItems;
+        this.setDetails(this.wallMenuListItems);
     }
     private LruCache<String, Bitmap> mMemoryCache;
 
 
-    HashMap<String, MenuListItem> Details;
-    public void setDetails(ArrayList<MenuListItem> menuListItems){
+    HashMap<String, WallMenuListItem> Details;
+    public void setDetails(ArrayList<WallMenuListItem> wallMenuListItems){
         this.Details = new HashMap<>();
-        for (MenuListItem req: menuListItems)
+        for (WallMenuListItem req: wallMenuListItems)
             this.Details.put(req.Name, req);
+    }
+
+    private boolean venueHasOrdersManagementSubscription;
+    public void setVenueHasOrdersManagementSubscription(boolean value){
+        this.venueHasOrdersManagementSubscription = value;
     }
 
     @RootContext
@@ -47,7 +52,7 @@ public class MenuListItemsAdapter
 
     @AfterInject
     void initAdapter() {
-        if (this.menuListItems == null) this.menuListItems = new ArrayList<>();
+        if (this.wallMenuListItems == null) this.wallMenuListItems = new ArrayList<>();
 
         // final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         // final int cacheSize = maxMemory / 8; // Use 1/8th of the available memory for this memory cache.
@@ -66,7 +71,7 @@ public class MenuListItemsAdapter
 
     @Override
     public Object getChild(int listPosition, int expandedListPosition) {
-        Object child = this.menuListItems.get(listPosition);
+        Object child = this.wallMenuListItems.get(listPosition);
         return child;
     }
 
@@ -83,22 +88,22 @@ public class MenuListItemsAdapter
         else
             menuListItemDetailsView = (MenuListItemDetailsView) convertView;
 
-        MenuListItem menuListItem = this.menuListItems.get(listPosition);
-        menuListItemDetailsView.bind(menuListItem, mMemoryCache);
+        WallMenuListItem wallMenuListItem = this.wallMenuListItems.get(listPosition);
+        menuListItemDetailsView.bind(wallMenuListItem, mMemoryCache, venueHasOrdersManagementSubscription);
 
         return menuListItemDetailsView;
     }
 
     @Override
     public int getChildrenCount(int i) {
-        if (this.menuListItems.size() < 1)
+        if (this.wallMenuListItems.size() < 1)
             return 0;
         return 1;
     }
 
     @Override
     public Object getGroup(int listPosition) {
-        return this.menuListItems.get(listPosition).Name;
+        return this.wallMenuListItems.get(listPosition).Name;
     }
 
     @Override
@@ -113,7 +118,7 @@ public class MenuListItemsAdapter
 
     @Override
     public int getGroupCount() {
-        return this.menuListItems.size();
+        return this.wallMenuListItems.size();
     }
 
     @Override
@@ -129,9 +134,9 @@ public class MenuListItemsAdapter
         else
             menuListItemView = (MenuListItemView) convertView;
 
-        MenuListItem menuListItem = this.menuListItems.get(listPosition);
+        WallMenuListItem wallMenuListItem = this.wallMenuListItems.get(listPosition);
 
-        menuListItemView.bind(menuListItem);
+        menuListItemView.bind(wallMenuListItem);
 
         return menuListItemView;
     }
