@@ -2,6 +2,7 @@ package com.mosy.kalin.mosy;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -37,6 +38,7 @@ public abstract class BaseActivity
     protected boolean isDevelopersModeActivated = false;
 
     protected boolean isUserAuthenticated = false;
+    protected String username = StringHelper.empty();
 
     protected Context applicationContext;
     protected Context baseContext;
@@ -64,6 +66,7 @@ public abstract class BaseActivity
 
         this.accountService = new AccountService();
         isUserAuthenticated = this.accountService.checkUserTokenValid(this.baseContext);
+        username = this.accountService.getUsername(this.baseContext);
     }
 
     @Override
@@ -109,4 +112,11 @@ public abstract class BaseActivity
         super.onDestroy();
     }
 
+    public void goToLoginActivity() {
+        Intent intent = new Intent(BaseActivity.this, LoginActivity_.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
+        startActivity(intent);
+        overridePendingTransition( R.transition.slide_in_right, R.transition.slide_out_right );
+    }
 }

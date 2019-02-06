@@ -14,15 +14,17 @@ public class TableAccount
     public String Id;
     @SerializedName("TableName")
     public String TableName;
-    @SerializedName("HasOperatorApprovement")
-    public boolean HasOperatorApprovement;
     @SerializedName("Status")
     public TableAccountStatus Status;
 
-//    @SerializedName("OpenerUsername")
-//    public String OpenerUsername;
-//
-    public ArrayList<Order> Orders;
+    @SerializedName("OpenerUsername")
+    public String OpenerUsername;
+    @SerializedName("AssignedOperatorUsername")
+    public String AssignedOperatorUsername;
 
+    @SerializedName("FBOTable")
+    public Table Table;
+    @SerializedName("Orders")
+    public ArrayList<Order> Orders;
 
 }

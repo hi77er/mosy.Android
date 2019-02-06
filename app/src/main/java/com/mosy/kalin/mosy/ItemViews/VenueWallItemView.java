@@ -35,7 +35,7 @@ public class VenueWallItemView
     private boolean IsUsingDefaultThumbnail;
 
     private Context baseContext;
-    private WallVenue WallVenue;
+    private WallVenue wallVenue;
 
     @ViewById(R.id.venueItem_ivInteriorThumbnail)
     ImageView interiorImageThumbnail;
@@ -60,7 +60,7 @@ public class VenueWallItemView
         this.interiorImageThumbnail.setImageDrawable(null);
 
         if (wallVenue != null) {
-            this.WallVenue = wallVenue;
+            this.wallVenue = wallVenue;
 
             this.nameTextView.setText(wallVenue.Name);
             this.classTextView.setText(wallVenue.Class);
@@ -119,9 +119,9 @@ public class VenueWallItemView
     public void InteriorThumbnailClick()
     {
         if (!IsUsingDefaultThumbnail &&
-                this.WallVenue != null &&
-                this.WallVenue.IndoorImage != null &&
-                StringHelper.isNotNullOrEmpty(this.WallVenue.IndoorImage.Id)){
+                this.wallVenue != null &&
+                this.wallVenue.IndoorImage != null &&
+                StringHelper.isNotNullOrEmpty(this.wallVenue.IndoorImage.Id)){
 
             final Dialog nagDialog = new Dialog(this.baseContext, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -145,7 +145,7 @@ public class VenueWallItemView
                 }
             };
 
-            new AzureBlobService().downloadVenueThumbnail(this.baseContext, this.WallVenue.IndoorImage.Id, ImageResolution.FormatOriginal, listener);
+            new AzureBlobService().downloadVenueThumbnail(this.baseContext, this.wallVenue.IndoorImage.Id, ImageResolution.FormatOriginal, listener);
         }
     }
 
@@ -153,11 +153,11 @@ public class VenueWallItemView
     public void MenuLinkClick()
     {
         Intent intent = new Intent(this.baseContext, VenueMenuActivity_.class);
-        this.WallVenue.OutdoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
-        this.WallVenue.IndoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
-        this.WallVenue.Location = null;
-        this.WallVenue.VenueBusinessHours = null;
-        intent.putExtra("WallVenue", this.WallVenue);
+        this.wallVenue.OutdoorImage = null; // Don't need these one in the wallVenue page. If needed should implement Serializable or Parcelable
+        this.wallVenue.IndoorImage = null; // Don't need these one in the wallVenue page. If needed should implement Serializable or Parcelable
+        this.wallVenue.Location = null;
+        this.wallVenue.VenueBusinessHours = null;
+        intent.putExtra("wallVenue", this.wallVenue);
         this.baseContext.startActivity(intent);
     }
 
@@ -165,11 +165,11 @@ public class VenueWallItemView
     public void InfoLinkClick()
     {
         Intent intent = new Intent(this.baseContext, DetailsVenueActivity_.class);
-        this.WallVenue.OutdoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
-        this.WallVenue.IndoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
-        this.WallVenue.Location = null;
-        this.WallVenue.VenueBusinessHours = null;
-        intent.putExtra("WallVenue", this.WallVenue);
+        this.wallVenue.OutdoorImage = null; // Don't need these one in the wallVenue page. If needed should implement Serializable or Parcelable
+        this.wallVenue.IndoorImage = null; // Don't need these one in the wallVenue page. If needed should implement Serializable or Parcelable
+        this.wallVenue.Location = null;
+        this.wallVenue.VenueBusinessHours = null;
+        intent.putExtra("wallVenue", this.wallVenue);
         this.baseContext.startActivity(intent);
     }
 

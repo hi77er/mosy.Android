@@ -12,14 +12,17 @@ import android.widget.Toast;
 
 import com.mosy.kalin.mosy.DTOs.Enums.TableAccountStatus;
 import com.mosy.kalin.mosy.DTOs.OrderMenuItem;
+import com.mosy.kalin.mosy.DTOs.SignalR.SignalRBindingModels.CreateTableAccountBindingModel;
 import com.mosy.kalin.mosy.DTOs.SignalR.SignalRBindingModels.TableAccountStatusBindingModel;
 import com.mosy.kalin.mosy.DTOs.SignalR.SignalRResults.TableAccountStatusResult;
 import com.mosy.kalin.mosy.DTOs.TableAccount;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.UiThread;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import microsoft.aspnet.signalr.client.Platform;
@@ -49,14 +52,24 @@ public class SignalRService extends IntentService {
     private Handler mHandler; // to display Toast message
     private final IBinder mBinder = new LocalBinder(); // Binder given to clients
 
-    private AsyncTaskListener<OrderMenuItem> onOrderItemStatusChangedTask;
-    public void setOnOrderItemStatusChanged(AsyncTaskListener<OrderMenuItem> task){
-        this.onOrderItemStatusChangedTask = task;
+    private AsyncTaskListener<OrderMenuItem> onOrderItemStatusChangedOperatorTask;
+    public void setOnOrderItemStatusOperatorChanged(AsyncTaskListener<OrderMenuItem> task){
+        this.onOrderItemStatusChangedOperatorTask = task;
     }
 
-    private AsyncTaskListener<TableAccountStatusResult> onTableAccountStatusChangedTask;
-    public void setOnTableAccountStatusChanged(AsyncTaskListener<TableAccountStatusResult> task){
-        this.onTableAccountStatusChangedTask = task;
+    private AsyncTaskListener<OrderMenuItem> onOrderItemStatusChangedClientTask;
+    public void setOnOrderItemStatusClientChanged(AsyncTaskListener<OrderMenuItem> task){
+        this.onOrderItemStatusChangedClientTask = task;
+    }
+
+    private AsyncTaskListener<TableAccountStatusResult> onTAStatusChangedOperatorTask;
+    public void setOnTAStatusChangedOperator(AsyncTaskListener<TableAccountStatusResult> task){
+        this.onTAStatusChangedOperatorTask = task;
+    }
+
+    private AsyncTaskListener<TableAccountStatusResult> onTAStatusChangedClientTask;
+    public void setOnTAStatusChangedClient(AsyncTaskListener<TableAccountStatusResult> task){
+        this.onTAStatusChangedClientTask = task;
     }
 
     public SignalRService() {
@@ -138,20 +151,47 @@ public class SignalRService extends IntentService {
 
     public void setEventListeners(String taOperatorUsername){
 
-        String updatedOrderItemStatusReceiverMethodName = "TAOperatorHubProxy-" + taOperatorUsername + "-OrderUpdatedStatusReceiverMethod";
-        mOrdersHubProxy.on(
-                updatedOrderItemStatusReceiverMethodName,
-                orderItem -> onOrderItemStatusChangedTask.onPostExecute(orderItem),
-                OrderMenuItem.class);
-
-        String updatedTableAccountStatusReceiverMethodName = "TAOperatorHubProxy-" + taOperatorUsername + "-TAUpdatedStatusReceiverMethod";
+        // OPERATOR
+        String updatedTAStatusOperatorReceiverMethodName = "TAOperatorHubProxy-" + taOperatorUsername + "-TAUpdatedStatusReceiverMethod";
         mTableAccountsHubProxy.on(
-                updatedTableAccountStatusReceiverMethodName,
-                result -> onTableAccountStatusChangedTask.onPostExecute(result),
+                updatedTAStatusOperatorReceiverMethodName,
+                result -> onTAStatusChangedOperatorTask.onPostExecute(result),
                 TableAccountStatusResult.class);
 
+        String updatedTAStatusClientReceiverMethodName = "TAClientHubProxy-" + taOperatorUsername + "-TAUpdatedStatusReceiverMethod";
+        mTableAccountsHubProxy.on(
+                updatedTAStatusClientReceiverMethodName,
+                result -> onTAStatusChangedClientTask.onPostExecute(result),
+                TableAccountStatusResult.class);
+
+
+
+        // CLIENT
+        String updatedOrderItemStatusOperatorReceiverMethodName = "TAOperatorHubProxy-" + taOperatorUsername + "-OrderUpdatedStatusReceiverMethod";
+        mOrdersHubProxy.on(
+                updatedOrderItemStatusOperatorReceiverMethodName,
+                orderItem -> onOrderItemStatusChangedOperatorTask.onPostExecute(orderItem),
+                OrderMenuItem.class);
+
+        String updatedOrderItemStatusClientReceiverMethodName = "TAClientHubProxy-" + taOperatorUsername + "-OrderUpdatedStatusReceiverMethod";
+        mOrdersHubProxy.on(
+                updatedOrderItemStatusClientReceiverMethodName,
+                orderItem -> onOrderItemStatusChangedClientTask.onPostExecute(orderItem),
+                OrderMenuItem.class);
     }
 
+    public void createTableAccount(String openerUsername, String tableId, ArrayList<String> menuItemIds){
+        this.createTableAccount(openerUsername, tableId, menuItemIds, StringHelper.empty());
+    }
+
+    public void createTableAccount(String openerUsername, String tableId, ArrayList<String> menuItemIds, String assignedOperatorUsername){
+        CreateTableAccountBindingModel model = new CreateTableAccountBindingModel();
+        model.OpenerUsername = openerUsername;
+        model.FBOTableId = tableId;
+        model.RequestableIds = menuItemIds;
+        model.AssignedOperatorUsername = assignedOperatorUsername;
+        mTableAccountsHubProxy.invoke("CreateTableAccountRequest", model);
+    }
 
     public void updateTableAccountStatus(String tableAccountId, TableAccountStatus newStatus){
         TableAccountStatusBindingModel model = new TableAccountStatusBindingModel();
@@ -160,8 +200,8 @@ public class SignalRService extends IntentService {
         mTableAccountsHubProxy.invoke("UpdateTableAccountStatus", model);
     }
 
-    public void updateOrderRequestablesStatusAfterAccountApproval(String tableAccountId){
-        mOrdersHubProxy.invoke("UpdateOrderRequestablesStatusAfterAccountApproval", tableAccountId);
+    public void updateOrderRequestablesStatusAfterAccountStatusChanged(String tableAccountId){
+        mOrdersHubProxy.invoke("UpdateOrderRequestablesStatusAfterAccountStatusChanged", tableAccountId);
     }
 
     public void updateOrderRequestablesStatus(String orderRequestableId){

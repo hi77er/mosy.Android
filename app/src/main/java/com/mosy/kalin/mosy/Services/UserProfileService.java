@@ -39,7 +39,7 @@ public class UserProfileService {
                         apiCallResultListener.onPreExecute();
                         call.enqueue(new Callback<User>() {
                             @Override public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
-                                if (response.raw().message().toLowerCase().contains("unauthorized")){
+                                if (response.code() == 401){ // unauthorized
                                     onUserTokenInvalidOrExpired.run();
                                 }
                                 else{

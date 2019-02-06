@@ -36,8 +36,6 @@ public class OperatorTablesAccountsVenuesActivity
     private boolean managedVenuesLoadingStillInAction = false;
 
     @Extra
-    public String username;
-    @Extra
     public ArrayList<Venue> tableAccountVenues;
 
     @Bean
@@ -47,9 +45,9 @@ public class OperatorTablesAccountsVenuesActivity
 
     @ViewById(R.id.llInitialLoadingProgress)
     LinearLayout progressLayout;
-    @ViewById(R.id.venuesMonitors_lVenuesSwipeContainer)
+    @ViewById(R.id.operatorVenuesMonitors_lVenuesSwipeContainer)
     SwipeRefreshLayout venuesLayout;
-    @ViewById(R.id.venuesMonitors_lvTableAccountsVenues)
+    @ViewById(R.id.operatorVenuesMonitors_lvTableAccountsVenues)
     RecyclerView tableAccountsVenuesView;
 
     @Override
@@ -68,7 +66,6 @@ public class OperatorTablesAccountsVenuesActivity
 
                 Intent intent = new Intent(OperatorTablesAccountsVenuesActivity.this, OperatorTablesAccountsActivity_.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                intent.putExtra("username", username);
                 intent.putExtra("venue", itemClicked.Venue);
                 startActivity(intent);
             });
@@ -76,7 +73,7 @@ public class OperatorTablesAccountsVenuesActivity
             this.tableAccountsVenuesView.setAdapter(operatorTableAccountsVenuesAdapter);
             this.tableAccountsVenuesView.setLayoutManager(new GridLayoutManager(this.baseContext, 1));
             DividerItemDecoration itemDecorator = new DividerItemDecoration(this.applicationContext, DividerItemDecoration.VERTICAL);
-            itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(this.applicationContext, R.drawable.wall_divider)));
+            itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(this.applicationContext, R.drawable.wall_divider_primary)));
             this.tableAccountsVenuesView.addItemDecoration(itemDecorator);
 //            this.tableAccountsVenuesView.addOnScrollListener(tableAccountsVenuesScrollListener);
 

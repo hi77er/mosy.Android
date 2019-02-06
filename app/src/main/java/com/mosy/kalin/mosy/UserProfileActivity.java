@@ -207,7 +207,6 @@ public class UserProfileActivity
     private void goToTableAccountVenues(ArrayList<Venue> venues) {
         Intent intent = new Intent(UserProfileActivity.this, OperatorTablesAccountsVenuesActivity_.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        intent.putExtra("username", this.user.Username);
         intent.putExtra("tableAccountVenues", venues);
         startActivity(intent);
     }
@@ -215,7 +214,6 @@ public class UserProfileActivity
     private void goToTableAccountsMonitor(Venue venue) {
         Intent intent = new Intent(UserProfileActivity.this, OperatorTablesAccountsActivity_.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        intent.putExtra("username", this.user.Username);
         intent.putExtra("venue", venue);
         startActivity(intent);
     }

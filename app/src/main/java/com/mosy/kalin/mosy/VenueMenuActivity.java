@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -18,6 +19,10 @@ import android.widget.TextView;
 import com.mosy.kalin.mosy.Adapters.MenuPagerAdapter;
 import com.mosy.kalin.mosy.DTOs.Http.HttpResults.PublicMenuResult;
 import com.mosy.kalin.mosy.DTOs.MenuList;
+import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.Table;
+import com.mosy.kalin.mosy.DTOs.TableAccount;
+import com.mosy.kalin.mosy.DTOs.WallMenuListItem;
 import com.mosy.kalin.mosy.DTOs.WallVenue;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
@@ -26,7 +31,9 @@ import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.Models.Views.SpinnerLocale;
+import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
+import com.mosy.kalin.mosy.Services.TableAccountsService;
 import com.mosy.kalin.mosy.Services.VenuesService;
 
 import org.androidannotations.annotations.AfterViews;
@@ -38,6 +45,10 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
+import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_venue_menu)
 public class VenueMenuActivity
@@ -47,11 +58,22 @@ public class VenueMenuActivity
 
     @Bean
     VenuesService venueService;
+    @Bean
+    AccountService accountService;
+    @Bean
+    TableAccountsService tableAccountsService;
+
 
     @Extra
-    WallVenue WallVenue;
+    Table selectedTable;
     @Extra
-    String SelectedMenuListId; //if the page is navigated via Dishes ListView, this should have value
+    WallVenue wallVenue;
+    @Extra
+    String selectedMenuListId; //if the page is navigated via Dishes ListView or ClientTableAccountOrders, this should have value.
+    @Extra
+    TableAccount tableAccount; //being created the first time ClientTableAccountOrders activity is opened.
+    @Extra
+    public ArrayList<String> newlySelectedMenuItemIds; // needs to stay public - accessed from menu item details
 
     @ViewById(R.id.llInitialLoadingProgress)
     LinearLayout CentralProgress;
@@ -61,12 +83,21 @@ public class VenueMenuActivity
     TextView NameTextView;
     @ViewById(R.id.venue_tvClass)
     TextView ClassTextView;
+    @ViewById(R.id.venueMenu_tvNewlySelectedItemsText)
+    TextView tvNewlySelectedItemsText;
+    @ViewById(R.id.venueMenu_tvTableName)
+    TextView tvTableName;
+
     @ViewById(R.id.venue_ivIndoor)
     ImageView IndoorImageView;
+    @ViewById(R.id.venueMenu_btnOpenAccount)
+    Button buttonOpenAccount;
     @ViewById(R.id.venue_vpMenu)
     ViewPager MenuViewPager;
     @ViewById(R.id.venue_llNoMenu)
     RelativeLayout NoMenuLayout;
+    @ViewById(R.id.venueMenu_llTableAndSelectedItems)
+    RelativeLayout llTableAndSelectedItems;
 
     @ViewById(R.id.venueMenu_spLanguage)
     Spinner LanguagesSpinner;
@@ -80,16 +111,60 @@ public class VenueMenuActivity
     @AfterViews
     void afterViews() {
         try {
-            this.NameTextView.setText(this.WallVenue.Name);
-            this.ClassTextView.setText(this.WallVenue.Class);
-            this.MenuViewPager.setVisibility(View.GONE);
-            this.NoMenuLayout.setVisibility(View.VISIBLE);
+            this.NameTextView.setText(this.wallVenue.Name);
+            this.ClassTextView.setText(this.wallVenue.Class);
+            this.MenuViewPager.setVisibility(GONE);
+            this.NoMenuLayout.setVisibility(VISIBLE);
 
-            loadIndoorImageMeta();
             loadMenu();
+
+            if (this.newlySelectedMenuItemIds == null){
+                this.newlySelectedMenuItemIds = new ArrayList<>();
+            }
+
+            this.llTableAndSelectedItems.setVisibility(
+                    this.wallVenue.HasOrdersManagementSubscription &&
+                            (this.selectedTable != null || (this.newlySelectedMenuItemIds != null && this.newlySelectedMenuItemIds.size() > 0))? VISIBLE : GONE);
+
+            if (this.selectedTable != null){
+                this.tvTableName.setText(this.selectedTable.name);
+            }
+
+            this.reevaluateOrderLabelsVisibility();
+
+            if (this.wallVenue.HasOrdersManagementSubscription) {
+                this.buttonOpenAccount.setVisibility(VISIBLE);
+                this.IndoorImageView.setVisibility(GONE);
+
+
+                this.getExistingTableAccount();
+            }
+            else {
+                this.buttonOpenAccount.setVisibility(GONE);
+                this.IndoorImageView.setVisibility(VISIBLE);
+                loadIndoorImageMeta();
+            }
+
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void getExistingTableAccount() {
+        AsyncTaskListener<TableAccount> apiCallResultListener = new AsyncTaskListener<TableAccount>() {
+            @Override public void onPreExecute() {
+
+            }
+            @Override public void onPostExecute(TableAccount result) {
+                tableAccount = result;
+                if (tableAccount != null){
+                    selectedTable = tableAccount.Table;
+                    tvTableName.setText(selectedTable.name);
+                }
+                reevaluateOrderLabelsVisibility();
+            }
+        };
+        this.tableAccountsService.getTableAccount(this.applicationContext, apiCallResultListener, null, null, this.wallVenue.Id, super.username);
     }
 
     private void loadIndoorImageMeta() {
@@ -98,25 +173,25 @@ public class VenueMenuActivity
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
             }
             @Override public void onPostExecute(VenueImage result) {
-                WallVenue.IndoorImage = result;
+                wallVenue.IndoorImage = result;
                 populateIndoorImageThumbnail();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
-        this.venueService.getImageMeta(this.applicationContext, apiCallResultListener, null, this.WallVenue.Id, false);
+        this.venueService.getImageMeta(this.applicationContext, apiCallResultListener, null, this.wallVenue.Id, false);
     }
 
     private void loadMenu(){
         AsyncTaskListener<PublicMenuResult> apiCallResultListener = new AsyncTaskListener<PublicMenuResult>() {
             @Override public void onPreExecute() {
-                CentralProgress.setVisibility(View.VISIBLE);
+                CentralProgress.setVisibility(VISIBLE);
             }
 
             @Override public void onPostExecute(PublicMenuResult result) {
                 PublicMenuResult publicMenu = result;
                 if (publicMenu != null && publicMenu.MenuLists != null && publicMenu.MenuLists.size() > 0) {
-                    MenuViewPager.setVisibility(View.VISIBLE);
-                    NoMenuLayout.setVisibility(View.GONE);
+                    MenuViewPager.setVisibility(VISIBLE);
+                    NoMenuLayout.setVisibility(GONE);
 
                     if (publicMenu.MenuCultures != null && publicMenu.MenuCultures.size() > 1)
                     {
@@ -135,31 +210,31 @@ public class VenueMenuActivity
                         }
                         if (spinnerLocalesList.size() > 1) {
                             setupLanguagesSpinner(spinnerLocalesList);
-                            MenuToolboxLayout.setVisibility(View.VISIBLE);
+                            MenuToolboxLayout.setVisibility(VISIBLE);
                         }
                     }
 
-                    MenuPagerAdapter adapter = new MenuPagerAdapter(getSupportFragmentManager(), publicMenu.MenuLists, SelectedMenuListId);
-                    adapter.setVenueHasOrdersManagementSubscription(WallVenue.HasOrdersManagementSubscription);
+                    MenuPagerAdapter adapter = new MenuPagerAdapter(getSupportFragmentManager(), publicMenu.MenuLists, selectedMenuListId);
+                    adapter.setVenueHasOrdersManagementSubscription(wallVenue.HasOrdersManagementSubscription);
                     MenuViewPager.setAdapter(adapter);
 
-                    if (SelectedMenuListId != null && !SelectedMenuListId.equals(StringHelper.empty())) {
+                    if (selectedMenuListId != null && !selectedMenuListId.equals(StringHelper.empty())) {
                         int selectedMenuListIndex = 0;
                         for (MenuList list : publicMenu.MenuLists) {
-                            if (SelectedMenuListId.equals(list.Id))
+                            if (selectedMenuListId.equals(list.Id))
                                 selectedMenuListIndex = publicMenu.MenuLists.indexOf(list);
                         }
                         MenuViewPager.setCurrentItem(selectedMenuListIndex, false);
                     }
                 }
-                CentralProgress.setVisibility(View.GONE);
+                CentralProgress.setVisibility(GONE);
             }
         };
-        this.venueService.getMenu(this.applicationContext, apiCallResultListener, null, this.WallVenue.Id);
+        this.venueService.getMenu(this.applicationContext, apiCallResultListener, null, this.wallVenue.Id);
     }
 
     private void populateIndoorImageThumbnail() {
-        if (this.WallVenue.IndoorImage != null && this.WallVenue.IndoorImage.Id != null && this.WallVenue.IndoorImage.Id.length() > 0) {
+        if (this.wallVenue.IndoorImage != null && this.wallVenue.IndoorImage.Id != null && this.wallVenue.IndoorImage.Id.length() > 0) {
             //INFO: TryGet WallVenue Image
             AsyncTaskListener<byte[]> apiCallResultListener = new AsyncTaskListener<byte[]>() {
                 @Override public void onPreExecute() {
@@ -175,20 +250,9 @@ public class VenueMenuActivity
                 }
             };
 
-            DownloadBlobModel model = new DownloadBlobModel(this.WallVenue.IndoorImage.Id, storageContainer);
+            DownloadBlobModel model = new DownloadBlobModel(this.wallVenue.IndoorImage.Id, storageContainer);
             new LoadAzureBlobAsyncTask(apiCallResultListener).execute(model);
         }
-    }
-
-    @Click(R.id.venue_lVenueTitle)
-    void venueTitle_Click() {
-        Intent intent = new Intent(VenueMenuActivity.this, DetailsVenueActivity_.class);
-        this.WallVenue.OutdoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
-        this.WallVenue.IndoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
-        this.WallVenue.Location = null;
-        intent.putExtra("WallVenue", this.WallVenue);
-        startActivity(intent);
-        overridePendingTransition( R.transition.slide_in_right, R.transition.slide_out_right );
     }
 
     private void setupLanguagesSpinner(ArrayList<SpinnerLocale> localesList) {
@@ -228,4 +292,101 @@ public class VenueMenuActivity
         return label;
     }
 
+    public void addToNewlySelectedMenuItems(String itemToAddId){
+        this.newlySelectedMenuItemIds.add(itemToAddId);
+        this.reevaluateOrderLabelsVisibility();
+    }
+
+    public void removeFromNewlySelectedMenuItems(String itemToRemoveId){
+        boolean exists = false;
+        int indexOfItemToRemove = 0;
+
+        for (int i = 0; i < this.newlySelectedMenuItemIds.size(); i++) {
+            if (this.newlySelectedMenuItemIds.get(i).equals(itemToRemoveId)){
+                exists = true;
+                indexOfItemToRemove = i;
+                break;
+            }
+        }
+
+        if (exists){
+            this.newlySelectedMenuItemIds.remove(indexOfItemToRemove);
+        }
+
+        this.reevaluateOrderLabelsVisibility();
+    }
+
+    private void reevaluateOrderLabelsVisibility(){
+        if (this.newlySelectedMenuItemIds != null) {
+            String value = String.valueOf(this.newlySelectedMenuItemIds.size()) + " item" + (this.newlySelectedMenuItemIds.size() > 1 ? "s " : " ") + "selected";
+            this.tvNewlySelectedItemsText.setText(value);
+            this.tvNewlySelectedItemsText.setVisibility(this.newlySelectedMenuItemIds.size() > 0 ? VISIBLE : INVISIBLE);
+        }
+
+        this.llTableAndSelectedItems.setVisibility(
+                this.wallVenue.HasOrdersManagementSubscription &&
+                        (this.selectedTable != null || (this.newlySelectedMenuItemIds != null && this.newlySelectedMenuItemIds.size() > 0))? VISIBLE : GONE);
+
+        this.buttonOpenAccount.setEnabled(this.wallVenue.HasOrdersManagementSubscription);
+
+        this.tvTableName.setVisibility(selectedTable != null ? VISIBLE : GONE);
+
+        String btnOpenAccountText = this.selectedTable == null ?
+                "Select a table" :
+                (this.newlySelectedMenuItemIds != null && this.newlySelectedMenuItemIds.size() > 0 ?
+                        "Send Order" :
+                        "Select Items");
+        this.buttonOpenAccount.setText(btnOpenAccountText);
+
+    }
+
+    @Click(R.id.venue_lVenueTitle)
+    void venueTitle_Click() {
+        Intent intent = new Intent(VenueMenuActivity.this, DetailsVenueActivity_.class);
+        this.wallVenue.OutdoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
+        this.wallVenue.IndoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
+        this.wallVenue.Location = null;
+        intent.putExtra("wallVenue", this.wallVenue);
+        startActivity(intent);
+        overridePendingTransition( R.transition.slide_in_right, R.transition.slide_out_right );
+    }
+
+    @Click(R.id.venueMenu_btnOpenAccount)
+    void openAccount_Click() {
+        if (this.tableAccount == null && this.selectedTable == null){
+            Intent intent = new Intent(VenueMenuActivity.this, VenueTablesActivity_.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
+            intent.putExtra("venueId", this.wallVenue.Id);
+            intent.putExtra("selectedTable", this.selectedTable);
+            intent.putExtra("wallVenue", this.wallVenue);
+            intent.putExtra("selectedMenuListId", this.selectedMenuListId);
+            intent.putExtra("tableAccount", this.tableAccount);
+            intent.putExtra("newlySelectedMenuItemIds", this.newlySelectedMenuItemIds);
+
+            startActivity(intent);
+        }
+        else { // && this.selectedTable != null
+            accountService.executeAssuredUserTokenValidOrRefreshed(
+                    this.baseContext,
+                    () -> {
+                        Intent intent = new Intent(VenueMenuActivity.this, ClientTableAccountOrdersActivity_.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        this.wallVenue.OutdoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
+                        this.wallVenue.IndoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
+                        this.wallVenue.Location = null;
+                        this.wallVenue.VenueBusinessHours = null;
+                        this.wallVenue.VenueContacts = null;
+                        this.wallVenue.Filters = null;
+                        intent.putExtra("selectedTable", this.selectedTable);
+                        intent.putExtra("tableAccount", this.tableAccount);
+                        intent.putExtra("wallVenue", this.wallVenue);
+                        intent.putExtra("selectedMenuListId", this.selectedMenuListId);
+                        intent.putExtra("newlySelectedMenuItemIds", this.newlySelectedMenuItemIds);
+
+                        startActivity(intent);
+                    },
+                    this::goToLoginActivity);
+        }
+    }
 }

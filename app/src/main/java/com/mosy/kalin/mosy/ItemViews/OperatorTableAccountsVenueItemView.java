@@ -20,9 +20,9 @@ public class OperatorTableAccountsVenueItemView
     private Context baseContext;
     private Venue venue;
 
-    @ViewById(R.id.tableAccountsVenueItem_tvName)
+    @ViewById(R.id.operatorTableAccountsVenueItem_tvName)
     TextView nameTextView;
-    @ViewById(R.id.tableAccountsVenueItem_tvClass)
+    @ViewById(R.id.operatorTableAccountsVenueItem_tvClass)
     TextView classTextView;
 
     public OperatorTableAccountsVenueItemView(Context context) {

@@ -313,9 +313,16 @@
     <string name="activity_userprofile_logoutBtn">Sign out</string>
 
     <!-- Activities Table Accounts -->
-    <string name="activity_tableaccountsvenues_title">Your venues</string>
-    <string name="activity_tableaccounts_title">Accounts</string>
-    <string name="activity_tableaccountsorders_title">Orders</string>
+    <string name="activity_operatorTableAccountsVenues_title">Your venues</string>
+    <string name="activity_operatorTableAccounts_title">Accounts</string>
+    <string name="activity_operatorTableAccountsOrders_title">Orders</string>
+    <string name="pref_user_username">prefUserUsername</string>
+    <string name="pref_user_firstName">prefUserFirstName</string>
+    <string name="pref_user_lastName">prefUserLastName</string>
+    <string name="pref_user_roles">prefUserRoles</string>
+    <string name="activity_clientTableAccountsOrders_title">Table Account</string>
+    <string name="activity_venueTables_title">Select Table</string>
+    <string name="activity_venuesTables_title">Select Table</string>
 
 
 </resources>

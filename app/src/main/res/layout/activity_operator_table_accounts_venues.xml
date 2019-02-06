@@ -25,7 +25,7 @@
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:id="@+id/venuesMonitors_llSwipeToRefresh"
+        android:id="@+id/operatorVenuesMonitors_llSwipeToRefresh"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -50,7 +50,7 @@
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:id="@+id/venuesMonitors_lVenuesSwipeContainer"
+        android:id="@+id/operatorVenuesMonitors_lVenuesSwipeContainer"
         android:visibility="gone"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
@@ -58,7 +58,7 @@
         android:layout_gravity="fill_vertical">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/venuesMonitors_lvTableAccountsVenues"
+            android:id="@+id/operatorVenuesMonitors_lvTableAccountsVenues"
             android:layout_width="match_parent"
             android:layout_height="0dip"
             android:layout_weight="2"

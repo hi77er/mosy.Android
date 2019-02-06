@@ -19,10 +19,15 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.mosy.kalin.mosy.DTOs.User;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.LoginBindingModel;
+import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
+import com.mosy.kalin.mosy.Services.AccountService;
+import com.mosy.kalin.mosy.Services.UserProfileService;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -37,6 +42,9 @@ public class LoginActivity
         extends BaseActivity {
 
     private CallbackManager callbackManager;
+
+    @Bean
+    UserProfileService userProfileService;
 
     @Extra
     boolean confirmEmailNeeded;
@@ -159,6 +167,19 @@ public class LoginActivity
     }
     private void onAuthenticationSucceeded() {
         this.onFinishLogin(null);
+
+        AsyncTaskListener<User> apiCallListener = new AsyncTaskListener<User>() {
+            @Override public void onPreExecute() {
+
+            }
+            @Override public void onPostExecute(User user) {
+                if (user != null) {
+                    accountService.addUserDataToSharedPreferences(applicationContext, user);
+                }
+            }
+        };
+
+        this.userProfileService.getUserProfile(this.applicationContext, apiCallListener, this::onFail);
 
         Toast.makeText(this, "Login successful.", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(LoginActivity.this, LandingActivity_.class);

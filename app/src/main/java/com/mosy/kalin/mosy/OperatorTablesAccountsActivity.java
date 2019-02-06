@@ -51,8 +51,6 @@ public class OperatorTablesAccountsActivity
     public ArrayList<TableAccount> tableAccounts;
 
     @Extra
-    public String username;
-    @Extra
     public Venue venue;
 
     @Bean
@@ -62,11 +60,11 @@ public class OperatorTablesAccountsActivity
 
     @ViewById(R.id.llInitialLoadingProgress)
     LinearLayout progressLayout;
-    @ViewById(R.id.tableAccounts_llEmptyMessageLayout)
+    @ViewById(R.id.operatorTableAccounts_llEmptyMessageLayout)
     LinearLayout emptyLayout;
-    @ViewById(R.id.tableAccounts_lTableAccountsSwipeContainer)
+    @ViewById(R.id.operatorTableAccounts_lTableAccountsSwipeContainer)
     SwipeRefreshLayout tableAccountsLayout;
-    @ViewById(R.id.tableAccounts_lvTableAccounts)
+    @ViewById(R.id.operatorTableAccounts_lvTableAccounts)
     RecyclerView tableAccountsView;
 
     SignalRService mSignalRService;
@@ -92,16 +90,15 @@ public class OperatorTablesAccountsActivity
             // However, if this call were something that might hang, then this request should
             // occur in a separate thread to avoid slowing down the activity performance.
             // mSignalRService.pingOrdersHub("ping Test123"); // testing the connection
+            mSignalRService.setEventListeners(super.username);
 
-            mSignalRService.setEventListeners(username);
-
-            mSignalRService.setOnTableAccountStatusChanged(new AsyncTaskListener<TableAccountStatusResult>() {
+            mSignalRService.setOnTAStatusChangedOperator(new AsyncTaskListener<TableAccountStatusResult>() {
                 @Override public void onPreExecute() { }
                 @Override public void onPostExecute(TableAccountStatusResult result) {
                     if (operatorTableAccountsAdapter != null){
                         operatorTableAccountsAdapter.changeItemStatus(result.TableAccountId, result.Status);
 
-                        mSignalRService.updateOrderRequestablesStatusAfterAccountApproval(result.TableAccountId);
+                        mSignalRService.updateOrderRequestablesStatusAfterAccountStatusChanged(result.TableAccountId);
 
                         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && v != null) {
@@ -138,7 +135,6 @@ public class OperatorTablesAccountsActivity
                 if (itemClicked.tableAccount.Status != TableAccountStatus.AwaitingOperatorApprovement){
                     Intent intent = new Intent(OperatorTablesAccountsActivity.this, OperatorTableAccountOrdersActivity_.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    intent.putExtra("username", username);
                     intent.putExtra("venue", venue);
                     intent.putExtra("tableAccount", itemClicked.tableAccount);
                     startActivity(intent);
@@ -148,7 +144,7 @@ public class OperatorTablesAccountsActivity
             this.tableAccountsView.setAdapter(operatorTableAccountsAdapter);
             this.tableAccountsView.setLayoutManager(new GridLayoutManager(this.baseContext, 1));
             DividerItemDecoration itemDecorator = new DividerItemDecoration(this.applicationContext, DividerItemDecoration.VERTICAL);
-            itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(this.applicationContext, R.drawable.wall_divider)));
+            itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(this.applicationContext, R.drawable.wall_divider_primary)));
             this.tableAccountsView.addItemDecoration(itemDecorator);
 //            this.tableAccountsVenuesView.addOnScrollListener(tableAccountsVenuesScrollListener);
 

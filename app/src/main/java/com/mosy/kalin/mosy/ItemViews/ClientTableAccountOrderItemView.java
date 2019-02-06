@@ -15,25 +15,25 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
-@EViewGroup(R.layout.activity_item_operator_table_account_orders)
-public class OperatorTableAccountOrderItemView
+@EViewGroup(R.layout.activity_item_client_table_account_orders)
+public class ClientTableAccountOrderItemView
         extends WallItemViewBase {
 
     private Context baseContext;
     private SignalRService signalRService;
     private OrderMenuItem orderMenuItem;
 
-    @ViewById(R.id.operatorTableAccountMenuItem_tvName)
+    @ViewById(R.id.clientTableAccountMenuItem_tvName)
     TextView nameTextView;
-    @ViewById(R.id.operatorTableAccountMenuItem_tvStatus)
+    @ViewById(R.id.clientTableAccountMenuItem_tvStatus)
     TextView statusTextView;
 
-    @ViewById(R.id.operatorTableAccountMenuItem_llMarkDeliveredLoading)
-    LinearLayout markDeliveredProgressLayout;
-    @ViewById(R.id.operatorTableAccountMenuItem_btnMarkDelivered)
-    Button markDeliveredButton;
+//    @ViewById(R.id.clientTableAccountMenuItem_btnPlusOneItem)
+//    Button buttonPlusOneItem;
+//    @ViewById(R.id.clientTableAccountMenuItem_btnMinusOneItem)
+//    Button buttonMinusOneItem;
 
-    public OperatorTableAccountOrderItemView(Context context) {
+    public ClientTableAccountOrderItemView(Context context) {
         super(context);
         this.baseContext = context;
     }
@@ -43,16 +43,18 @@ public class OperatorTableAccountOrderItemView
             this.signalRService = signalRService;
             this.orderMenuItem = orderMenuItem;
 
-            this.nameTextView.setText(orderMenuItem.MenuListItem.Name);
+            String itemName = (orderMenuItem.MenuListItem != null && StringHelper.isNotNullOrEmpty(orderMenuItem.MenuListItem.Name))
+                    ? orderMenuItem.MenuListItem.Name
+                    : orderMenuItem.ItemName;
+            this.nameTextView.setText(itemName);
 
             if (orderMenuItem.Status != null) {
-                String statusDisplayText = StringHelper.empty();
                 switch (orderMenuItem.Status) {
                     case New:
-                        updateItemStatus("New", R.color.colorRed, GONE);
+                        updateItemStatus("New", R.color.colorRed, VISIBLE);
                         break;
                     case AwaitingAccountApproval:
-                        updateItemStatus("Awaiting account approval", R.color.colorRed, GONE);
+                        updateItemStatus("Awaiting account approval", R.color.colorRed, VISIBLE);
                         break;
                     case Received:
                         updateItemStatus("Received", R.color.colorPrimaryApricot, GONE);
@@ -61,7 +63,7 @@ public class OperatorTableAccountOrderItemView
                         updateItemStatus("Being prepared...", R.color.colorSecondaryAmber, GONE);
                         break;
                     case ReadyForDelivery:
-                        updateItemStatus("Ready to pick", R.color.colorTertiaryLight, VISIBLE);
+                        updateItemStatus("Being delivered...", R.color.colorTertiaryLight, GONE);
                         break;
                     case Delivered:
                         updateItemStatus("Delivered", R.color.colorGreen, GONE);
@@ -71,18 +73,20 @@ public class OperatorTableAccountOrderItemView
         }
     }
 
-    private void updateItemStatus(String statusDisplayText, int colorId, int buttonVisibility) {
+    private void updateItemStatus(String statusDisplayText, int colorId, int buttonsVisibility) {
         this.statusTextView.setText(statusDisplayText);
         this.statusTextView.setTextColor(getResources().getColor(colorId));
-        this.markDeliveredButton.setVisibility(buttonVisibility);
-        this.markDeliveredProgressLayout.setVisibility(GONE);
+//        this.buttonPlusOneItem.setVisibility(buttonsVisibility);
+//        this.buttonMinusOneItem.setVisibility(buttonsVisibility);
     }
-
-    @Click(R.id.operatorTableAccountMenuItem_btnMarkDelivered)
-    public void markOrderItemDelivered(){
-        this.markDeliveredButton.setVisibility(GONE);
-        this.markDeliveredProgressLayout.setVisibility(VISIBLE);
-        this.signalRService.updateOrderRequestablesStatus(orderMenuItem.Id);
-    }
-
+//
+//    @Click(R.id.clientTableAccountMenuItem_btnPlusOneItem)
+//    public void removeItem(){
+//
+//    }
+//
+//    @Click(R.id.clientTableAccountMenuItem_btnMinusOneItem)
+//    public void addOneMoreItem(){
+//
+//    }
 }

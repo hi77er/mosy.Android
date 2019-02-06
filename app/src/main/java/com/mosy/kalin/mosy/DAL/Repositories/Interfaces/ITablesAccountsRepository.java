@@ -2,7 +2,10 @@ package com.mosy.kalin.mosy.DAL.Repositories.Interfaces;
 
 import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.GetAccountsForVenueBindingModel;
 import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.GetOrdersBindingModel;
+import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.GetTableAccountBindingModel;
+import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.GetTablesBindingModel;
 import com.mosy.kalin.mosy.DTOs.Order;
+import com.mosy.kalin.mosy.DTOs.Table;
 import com.mosy.kalin.mosy.DTOs.TableAccount;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.DTOs.WallVenue;
@@ -24,6 +27,12 @@ public interface ITablesAccountsRepository {
 
     @POST("tablesaccounts/orders")
     Call<ArrayList<Order>> getOrders(@Header("Authorization") String authorization, @Body GetOrdersBindingModel model);
+
+    @POST("tablesaccounts/tables")
+    Call<ArrayList<Table>> getTables(@Header("Authorization") String authorization, @Body GetTablesBindingModel model);
+
+    @POST("tablesaccounts/byusername")
+    Call<TableAccount> getTableAccount(@Header("Authorization") String authorization, @Body GetTableAccountBindingModel model);
 
 
 }

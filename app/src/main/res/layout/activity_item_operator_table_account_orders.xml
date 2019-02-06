@@ -15,7 +15,7 @@
         android:gravity="center">
 
         <TextView
-            android:id="@+id/tableAccountMenuItem_tvName"
+            android:id="@+id/operatorTableAccountMenuItem_tvName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="17sp"
@@ -23,7 +23,7 @@
             android:textColor="@color/soft"  />
 
         <TextView
-            android:id="@+id/tableAccountMenuItem_tvStatus"
+            android:id="@+id/operatorTableAccountMenuItem_tvStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="14sp"
@@ -39,7 +39,7 @@
         android:gravity="center">
 
         <LinearLayout
-            android:id="@+id/tableAccountMenuItem_llMarkDeliveredLoading"
+            android:id="@+id/operatorTableAccountMenuItem_llMarkDeliveredLoading"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:gravity="center"
@@ -55,7 +55,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/tableAccountMenuItem_btnMarkDelivered"
+            android:id="@+id/operatorTableAccountMenuItem_btnMarkDelivered"
             android:layout_height="match_parent"
             android:layout_width="80dp"
             android:visibility="gone"

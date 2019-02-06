@@ -8,7 +8,7 @@
     android:background="@color/colorWhite">
 
     <TextView
-        android:id="@+id/tableAccountsVenueItem_tvName"
+        android:id="@+id/operatorTableAccountsVenueItem_tvName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="17sp"
@@ -16,7 +16,7 @@
         android:textColor="@color/soft"  />
 
     <TextView
-        android:id="@+id/tableAccountsVenueItem_tvClass"
+        android:id="@+id/operatorTableAccountsVenueItem_tvClass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
@@ -24,7 +24,7 @@
         android:textColor="@color/softer" />
 
     <TextView
-        android:id="@+id/tableAccountsVenueItem_tvManage"
+        android:id="@+id/operatorTableAccountsVenueItem_tvManage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"

@@ -25,15 +25,15 @@ public class OperatorTableAccountItemView
     private TableAccount tableAccount;
 
 
-    @ViewById(R.id.tableAccountItem_tvTableName)
+    @ViewById(R.id.operatorTableAccountItem_tvTableName)
     TextView tableNameTextView;
-    @ViewById(R.id.tableAccountItem_tvStatus)
+    @ViewById(R.id.operatorTableAccountItem_tvStatus)
     TextView statusTextView;
 
 
-    @ViewById(R.id.tableAccountItem_llMarkApprovedLoading)
+    @ViewById(R.id.operatorTableAccountItem_llMarkApprovedLoading)
     LinearLayout markApprovedProgressLayout;
-    @ViewById(R.id.tableAccountItem_btnMarkApproved)
+    @ViewById(R.id.clientTableAccountItem_btnMarkApproved)
     Button markApprovedButton;
 
     public OperatorTableAccountItemView(Context context) {
@@ -75,7 +75,7 @@ public class OperatorTableAccountItemView
         this.markApprovedProgressLayout.setVisibility(GONE);
     }
 
-    @Click(R.id.tableAccountItem_btnMarkApproved)
+    @Click(R.id.clientTableAccountItem_btnMarkApproved)
     public void approveTableAccount(){
         this.markApprovedButton.setVisibility(GONE);
         this.markApprovedProgressLayout.setVisibility(VISIBLE);

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mosy.kalin.mosy.ClientTableAccountOrdersActivity_;
 import com.mosy.kalin.mosy.DTOs.Enums.FilterType;
 import com.mosy.kalin.mosy.DTOs.Enums.FilteredType;
 import com.mosy.kalin.mosy.DTOs.Enums.ImageResolution;
@@ -28,6 +29,8 @@ import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.R;
 import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
 import com.mosy.kalin.mosy.Services.AzureBlobService;
+import com.mosy.kalin.mosy.VenueMenuActivity;
+import com.mosy.kalin.mosy.VenueMenuActivity_;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
@@ -48,18 +51,24 @@ public class MenuListItemDetailsView
     private ArrayList<Filter> DishTypes;
     private Context context;
 
+    public WallMenuListItem menuListItem;
+
     @ViewById(R.id.menuListItemDetails_ivMainImage)
     ImageView imageThumbnail;
     @ViewById(R.id.menuListItemDetails_tvQuantityLabel)
     TextView quantityLabel;
     @ViewById(R.id.menuListItemDetails_tvIngredients)
     TextView ingredients;
-    @ViewById(R.id.menuListItemDetails_btnAllergens)
-    ImageButton allergensButton;
+
     @ViewById(R.id.menuListItemDetails_btnAddItemToAccount)
     Button btnAddItemToAccount;
+    @ViewById(R.id.menuListItemDetails_btnRemoveItemFromAccount)
+    Button btnRemoveItemFromAccount;
+    @ViewById(R.id.menuListItemDetails_btnAllergens)
+    ImageButton btnOpenAllergensModal;
 
     boolean venueHasOrdersManagementSubscription = false;
+    boolean itemExistsInNewlySelectedItems = false;
 
     public MenuListItemDetailsView(Context context) {
         super(context);
@@ -68,10 +77,15 @@ public class MenuListItemDetailsView
 
     ///Add more controls here
 
-    public void bind(WallMenuListItem wallMenuListItem, LruCache<String, Bitmap> cache, boolean venueHasOrdersManagementSubscription) {
+    public void bind(WallMenuListItem wallMenuListItem,
+                     LruCache<String, Bitmap> cache,
+                     boolean venueHasOrdersManagementSubscription) {
+        this.menuListItem = wallMenuListItem;
         this.inMemoryCache = cache;
         this.venueHasOrdersManagementSubscription = venueHasOrdersManagementSubscription;
+
         this.btnAddItemToAccount.setVisibility(this.venueHasOrdersManagementSubscription ? VISIBLE : INVISIBLE);
+        this.btnRemoveItemFromAccount.setVisibility(this.venueHasOrdersManagementSubscription && itemExistsInNewlySelectedItems ? VISIBLE : INVISIBLE);
 
         MenuListItemCulture selectedCulture = MenuListItemHelper.getMenuListItemCulture(getContext(), wallMenuListItem);
 
@@ -79,7 +93,7 @@ public class MenuListItemDetailsView
                 .of(wallMenuListItem.Filters)
                 .filter(filter -> filter.FilteredType == FilteredType.Dishes && filter.FilterType == FilterType.DishAllergens)
                 .toList());
-        this.allergensButton.setVisibility(this.Allergens.size() > 0 ? VISIBLE : INVISIBLE);
+        this.btnOpenAllergensModal.setVisibility(this.Allergens.size() > 0 ? VISIBLE : INVISIBLE);
 
         this.DishTypes = new ArrayList<>(com.annimon.stream.Stream
                 .of(wallMenuListItem.Filters)
@@ -205,8 +219,18 @@ public class MenuListItemDetailsView
         }
     }
 
+    private void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) == null) {
+            inMemoryCache.put(key, bitmap);
+        }
+    }
+
+    private Bitmap getBitmapFromMemCache(String key) {
+        return inMemoryCache.get(key);
+    }
+
     @Click(R.id.menuListItemDetails_ivMainImage)
-    public void ItemImageClick()
+    public void itemImageClick()
     {
         if (!IsUsingDefaultImageThumbnail && StringHelper.isNotNullOrEmpty(this.ImageId)){
 
@@ -239,7 +263,7 @@ public class MenuListItemDetailsView
     }
 
     @Click(R.id.menuListItemDetails_btnAllergens)
-    public void allergensButtonClick()
+    public void btnOpenAllergensModalClick()
     {
         if (this.Allergens != null && this.Allergens.size() > 0)
         {
@@ -257,14 +281,33 @@ public class MenuListItemDetailsView
         }
     }
 
-    private void addBitmapToMemoryCache(String key, Bitmap bitmap) {
-        if (getBitmapFromMemCache(key) == null) {
-            inMemoryCache.put(key, bitmap);
+    @Click(R.id.menuListItemDetails_btnAddItemToAccount)
+    public void addToAccountClick()
+    {
+        ((VenueMenuActivity_) context).addToNewlySelectedMenuItems(this.menuListItem.Id);
+        this.reevaluateDropButtonVisibility();
+    }
+
+    @Click(R.id.menuListItemDetails_btnRemoveItemFromAccount)
+    public void removeFromAccountClick()
+    {
+        ((VenueMenuActivity) context).removeFromNewlySelectedMenuItems(this.menuListItem.Id);
+        this.reevaluateDropButtonVisibility();
+    }
+
+    public void reevaluateDropButtonVisibility(){
+        ArrayList<String> newlySelectedMenuItemIds = ((VenueMenuActivity) context).newlySelectedMenuItemIds;
+
+        boolean exists = false;
+
+        for (int i = 0; i < newlySelectedMenuItemIds.size(); i++) {
+            if (newlySelectedMenuItemIds.get(i).equals(this.menuListItem.Id)){
+                exists = true;
+                break;
+            }
         }
-    }
 
-    private Bitmap getBitmapFromMemCache(String key) {
-        return inMemoryCache.get(key);
+        this.itemExistsInNewlySelectedItems = exists;
+        this.btnRemoveItemFromAccount.setVisibility(this.venueHasOrdersManagementSubscription && exists ? VISIBLE : INVISIBLE);
     }
-
 }

@@ -14,6 +14,8 @@ public class OrderMenuItem extends HttpResult {
     public String RequestableId;
     @SerializedName("Status")
     public OrderMenuItemStatus Status;
+    @SerializedName("RequestableName")
+    public String ItemName;
     @SerializedName("DateCreated")
     public String DateCreated;
     @SerializedName("DateBeingProcessed")

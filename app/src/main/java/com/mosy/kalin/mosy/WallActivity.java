@@ -316,7 +316,7 @@ public class WallActivity
             this.venuesWall.setLayoutManager(new GridLayoutManager(this.baseContext, 1));
 
             DividerItemDecoration itemDecorator = new DividerItemDecoration(this.applicationContext, DividerItemDecoration.VERTICAL);
-            itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(this.applicationContext, R.drawable.wall_divider)));
+            itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(this.applicationContext, R.drawable.wall_divider_primary)));
             this.venuesWall.addItemDecoration(itemDecorator);
 
 
@@ -461,7 +461,7 @@ public class WallActivity
             this.dishesWall.setAdapter(wallDishesAdapter);
             this.dishesWall.setLayoutManager(new GridLayoutManager(this.baseContext, 1));
             DividerItemDecoration itemDecorator = new DividerItemDecoration(this.applicationContext, DividerItemDecoration.VERTICAL);
-            itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(this.applicationContext, R.drawable.wall_divider)));
+            itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(this.applicationContext, R.drawable.wall_divider_primary)));
             this.dishesWall.addItemDecoration(itemDecorator);
             this.dishesWall.addOnScrollListener(dishesScrollListener);
 //            this.dishesWall.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll for ListView

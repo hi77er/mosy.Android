@@ -21,6 +21,7 @@ import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IAccountRepository;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IUserRepository;
 import com.mosy.kalin.mosy.DTOs.Http.HttpResults.CheckEmailAvailableResult;
 import com.mosy.kalin.mosy.DTOs.Http.HttpResults.UserInfoResult;
+import com.mosy.kalin.mosy.DTOs.Role;
 import com.mosy.kalin.mosy.DTOs.User;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
@@ -158,6 +159,28 @@ public class AccountService {
         editor.apply();
     }
 
+    public void addUserDataToSharedPreferences(Context applicationContext, User userData){
+        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_user), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(applicationContext.getString(R.string.pref_user_username), userData.Username);
+        editor.putString(applicationContext.getString(R.string.pref_user_firstName), userData.FirstName);
+        editor.putString(applicationContext.getString(R.string.pref_user_lastName), userData.LastName);
+
+        StringBuilder rolesString = new StringBuilder(StringHelper.empty());
+        for (Role role : userData.Roles) {
+            rolesString.append(role.Name);
+        }
+        editor.putString(applicationContext.getString(R.string.pref_user_roles), rolesString.toString());
+
+        editor.apply();
+    }
+
+    public String getUsername(Context applicationContext){
+        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_user), Context.MODE_PRIVATE);
+        String username = mPreferences.getString(applicationContext.getString(R.string.pref_user_username), StringHelper.empty());
+
+        return username;
+    }
 
     private void webApiLogin(Context applicationContext, Runnable preExecute, @NonNull Runnable onSuccess, Runnable onInvalidHost) {
         Call<TokenHttpResult> call = this.accountRepository.tokenLogin(
@@ -337,7 +360,16 @@ public class AccountService {
         editor.putString(applicationContext.getString(R.string.pref_authToken_user), StringHelper.empty());
         editor.putString(applicationContext.getString(R.string.pref_authTokenType_user), StringHelper.empty());
         editor.putInt(applicationContext.getString(R.string.pref_authTokenExpiresInSeconds_user), 0);
+        editor.apply();
 
+
+        mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_user), Context.MODE_PRIVATE);
+        editor = mPreferences.edit();
+
+        editor.putString(applicationContext.getString(R.string.pref_user_username), StringHelper.empty());
+        editor.putString(applicationContext.getString(R.string.pref_user_firstName), StringHelper.empty());
+        editor.putString(applicationContext.getString(R.string.pref_user_lastName), StringHelper.empty());
+        editor.putString(applicationContext.getString(R.string.pref_user_roles), StringHelper.empty());
         editor.apply();
     }
 

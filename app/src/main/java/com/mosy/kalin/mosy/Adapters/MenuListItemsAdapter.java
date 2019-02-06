@@ -36,9 +36,9 @@ public class MenuListItemsAdapter
 
 
     HashMap<String, WallMenuListItem> Details;
-    public void setDetails(ArrayList<WallMenuListItem> wallMenuListItems){
+    public void setDetails(ArrayList<WallMenuListItem> value){
         this.Details = new HashMap<>();
-        for (WallMenuListItem req: wallMenuListItems)
+        for (WallMenuListItem req: value)
             this.Details.put(req.Name, req);
     }
 

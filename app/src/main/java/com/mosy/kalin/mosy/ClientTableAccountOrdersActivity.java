@@ -16,14 +16,20 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import com.mosy.kalin.mosy.Adapters.OperatorTableAccountOrdersAdapter;
+import com.mosy.kalin.mosy.Adapters.ClientTableAccountOrdersAdapter;
 import com.mosy.kalin.mosy.DTOs.Order;
 import com.mosy.kalin.mosy.DTOs.OrderMenuItem;
+import com.mosy.kalin.mosy.DTOs.SignalR.SignalRResults.TableAccountStatusResult;
+import com.mosy.kalin.mosy.DTOs.Table;
 import com.mosy.kalin.mosy.DTOs.TableAccount;
-import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.DTOs.WallVenue;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
+import com.mosy.kalin.mosy.Models.Views.ItemModels.ClientTableAccountItem;
+import com.mosy.kalin.mosy.Models.Views.ItemModels.OperatorTableAccountOrderItem;
 import com.mosy.kalin.mosy.Services.SignalR.SignalRService;
 import com.mosy.kalin.mosy.Services.SignalR.SignalRService_;
 import com.mosy.kalin.mosy.Services.TableAccountsService;
@@ -38,34 +44,46 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 
-@EActivity(R.layout.activity_operator_table_account_orders)
-public class OperatorTableAccountOrdersActivity
+@EActivity(R.layout.activity_client_table_account_orders)
+public class ClientTableAccountOrdersActivity
         extends BaseActivity {
 
     private boolean afterViewsFinished = false;
     private boolean networkLost = false;
     private boolean tableAccountsLoadingStillInAction = false;
 
+
     public ArrayList<Order> orders;
 
     @Extra
-    public Venue venue;
-    @Extra
     public TableAccount tableAccount;
+    @Extra
+    public ArrayList<String> newlySelectedMenuItemIds;
+    @Extra
+    WallVenue wallVenue;
+    @Extra
+    String selectedMenuListId;
+    @Extra
+    Table selectedTable;
 
     @Bean
     TableAccountsService tableAccountsService;
     @Bean
-    OperatorTableAccountOrdersAdapter operatorTableAccountOrdersAdapter;
+    ClientTableAccountOrdersAdapter clientTableAccountOrdersAdapter;
+
+    @ViewById(R.id.clientTableAccountOrders_tvAccountStatus)
+    TextView accountStatus;
 
     @ViewById(R.id.llInitialLoadingProgress)
     LinearLayout progressLayout;
-    @ViewById(R.id.tableAccountOrders_llEmptyMessageLayout)
+    @ViewById(R.id.clientTableAccountOrders_llEmptyMessageLayout)
     LinearLayout emptyLayout;
-    @ViewById(R.id.tableAccountOrders_lOrdersSwipeContainer)
+    @ViewById(R.id.clientTableAccountOrders_lOrdersSwipeContainer)
     SwipeRefreshLayout tableAccountOrdersLayout;
-    @ViewById(R.id.operatorTableAccountOrders_lvOrders)
+    @ViewById(R.id.clientTableAccountOrders_lvOrders)
     RecyclerView ordersView;
+    @ViewById(R.id.clientTableAccountOrders_tvAccountStatus)
+    TextView tvAccountStatus;
 
     SignalRService mSignalRService;
     /** Defines callbacks for service binding, passed to bindService() */
@@ -93,25 +111,60 @@ public class OperatorTableAccountOrdersActivity
 
             mSignalRService.setEventListeners(super.username);
 
-            mSignalRService.setOnOrderItemStatusOperatorChanged(new AsyncTaskListener<OrderMenuItem>() {
+            mSignalRService.setOnTAStatusChangedClient(new AsyncTaskListener<TableAccountStatusResult>() {
                 @Override public void onPreExecute() { }
-                @Override public void onPostExecute(OrderMenuItem orderMenuItem) {
-                    if (operatorTableAccountOrdersAdapter != null){
-                        operatorTableAccountOrdersAdapter.changeItemStatus(orderMenuItem.Id, orderMenuItem.Status);
+                @Override public void onPostExecute(TableAccountStatusResult result) {
+                    tableAccount = new TableAccount();
+                    tableAccount.Id = result.TableAccountId;
+                    tableAccount.Status = result.Status;
 
-                        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                        // Vibrate for 500 milliseconds
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && v != null) {
-                            v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
-                        } else if (v != null){
-                            //deprecated in API 26
-                            v.vibrate(500);
-                        }
+                    tvAccountStatus.setText(result.Status.name());
+
+                    mSignalRService.updateOrderRequestablesStatusAfterAccountStatusChanged(result.TableAccountId);
+
+                    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && v != null) {
+                        v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+                    } else if (v != null){ // Vibrate for 500 milliseconds
+                        v.vibrate(500); //deprecated in API 26
                     }
                 }
             });
 
-            operatorTableAccountOrdersAdapter.setSignalRService(mSignalRService);
+            mSignalRService.setOnOrderItemStatusClientChanged(new AsyncTaskListener<OrderMenuItem>() {
+                @Override public void onPreExecute() { }
+                @Override public void onPostExecute(OrderMenuItem orderMenuItem) {
+                    if (clientTableAccountOrdersAdapter != null){
+                        ClientTableAccountItem item = clientTableAccountOrdersAdapter.getItemById(orderMenuItem.Id);
+
+                        ClientTableAccountOrdersActivity.this.runOnUiThread(
+                                () -> {
+                                    if (item != null)
+                                        clientTableAccountOrdersAdapter.changeItemStatus(orderMenuItem.Id, orderMenuItem.Status);
+                                    else
+                                        clientTableAccountOrdersAdapter.addTableAccountItem(orderMenuItem);
+                                }
+                        );
+                    }
+                }
+            });
+
+            clientTableAccountOrdersAdapter.setSignalRService(mSignalRService);
+            clientTableAccountOrdersAdapter.clearItems();
+
+            if (this.mSignalRService != null &&
+                    this.tableAccount == null &&
+                    this.selectedTable != null &&
+                    StringHelper.isNotNullOrEmpty(super.username)){
+
+                this.mSignalRService.createTableAccount(super.username, this.selectedTable.id, this.newlySelectedMenuItemIds);
+            } else if (this.mSignalRService != null &&
+                    this.tableAccount != null &&
+                    this.selectedTable != null &&
+                    StringHelper.isNotNullOrEmpty(super.username)){
+
+                //this.mSignalRService.createOrder(super.username, this.tableAccount.Id, this.newlySelectedMenuItemIds);
+            }
         }
     }
 
@@ -131,30 +184,33 @@ public class OperatorTableAccountOrdersActivity
             networkLost = false;
 
 //            RecyclerViewItemsClickSupport.addTo(this.ordersView).setOnItemClickListener((recyclerView, position, v) -> {
-//                OperatorTableAccountItem itemClicked = (OperatorTableAccountItem)operatorTableAccountOrdersAdapter.getItemAt(position);
-//
-//                Intent intent = new Intent(OperatorTablesAccountsActivity.this, OperatorTableAccountOrdersActivity_.class);
-//                intent.putExtra("tableAccount", itemClicked.tableAccount);
-//                startActivity(intent);
+//                ClientTableAccountItem itemClicked = (ClientTableAccountItem)clientTableAccountOrdersAdapter.getItemAt(position);
+
 //            });
 
-            this.ordersView.setAdapter(operatorTableAccountOrdersAdapter);
+            this.ordersView.setAdapter(clientTableAccountOrdersAdapter);
             this.ordersView.setLayoutManager(new GridLayoutManager(this.baseContext, 1));
             DividerItemDecoration itemDecorator = new DividerItemDecoration(this.applicationContext, DividerItemDecoration.VERTICAL);
             itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(this.applicationContext, R.drawable.wall_divider_primary)));
             this.ordersView.addItemDecoration(itemDecorator);
-//            this.tableAccountsVenuesView.addOnScrollListener(tableAccountsVenuesScrollListener);
+//          this.ordersView.addOnScrollListener(tableAccountsVenuesScrollListener);
 
-            this.operatorTableAccountOrdersAdapter.setSwipeRefreshLayout(tableAccountOrdersLayout);
-            this.operatorTableAccountOrdersAdapter.swipeContainer.setOnRefreshListener(() -> {
+            this.clientTableAccountOrdersAdapter.setSwipeRefreshLayout(tableAccountOrdersLayout);
+            this.clientTableAccountOrdersAdapter.swipeContainer.setOnRefreshListener(() -> {
                 if (!tableAccountsLoadingStillInAction && ConnectivityHelper.isConnected(applicationContext)) {
                     //INFO: REFRESH INITIAL LOAD
-                    reloadTableAccountOrders();
+                    if (tableAccount != null)
+                        reloadTableAccountOrders();
                 }
                 tableAccountOrdersLayout.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
             });
 
-            this.reloadTableAccountOrders();
+            if (this.tableAccount != null  &&
+                this.selectedTable != null &&
+                StringHelper.isNotNullOrEmpty(super.username)) {
+
+                this.reloadTableAccountOrders();
+            }
         }
         else {
             networkLost = true;
@@ -204,10 +260,13 @@ public class OperatorTableAccountOrdersActivity
     public void onBackPressed() {
         super.onBackPressed();
 
-        Intent intent = new Intent(OperatorTableAccountOrdersActivity.this, OperatorTablesAccountsActivity_.class);
+        Intent intent = new Intent(ClientTableAccountOrdersActivity.this, VenueMenuActivity_.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
-        intent.putExtra("venue", this.venue);
+        intent.putExtra("tableAccount", this.tableAccount);
+        intent.putExtra("wallVenue", this.wallVenue);
+        intent.putExtra("selectedTable", this.selectedTable);
+        intent.putExtra("selectedMenuListId", this.selectedMenuListId);
 
         startActivity(intent);
     }
@@ -241,14 +300,15 @@ public class OperatorTableAccountOrdersActivity
     }
 
     private void reloadTableAccountOrders() {
-        operatorTableAccountOrdersAdapter.clearItems();
-
         if (this.tableAccount != null){
+            clientTableAccountOrdersAdapter.clearItems();
+
             AsyncTaskListener<ArrayList<Order>> apiCallResultListener = new AsyncTaskListener<ArrayList<Order>>() {
                 @Override public void onPreExecute() {
                     tableAccountOrdersLayout.setVisibility(View.GONE);
                     emptyLayout.setVisibility(View.GONE);
                     progressLayout.setVisibility(View.VISIBLE);
+                    tableAccountsLoadingStillInAction = true;
                 }
                 @Override public void onPostExecute(ArrayList<Order> results) {
                     progressLayout.setVisibility(View.GONE);
@@ -260,7 +320,7 @@ public class OperatorTableAccountOrdersActivity
 
                         for (Order order : results) {
                             for (OrderMenuItem item : order.orderMenuItems) {
-                                operatorTableAccountOrdersAdapter.addTableAccountItem(item);
+                                clientTableAccountOrdersAdapter.addTableAccountItem(item);
                             }
                         }
 
@@ -271,9 +331,6 @@ public class OperatorTableAccountOrdersActivity
             this.tableAccountsService.getOrders(this.applicationContext, apiCallResultListener, this::onNetworkLost, tableAccount.Id);
         }
     }
-
-
-
 
 
 

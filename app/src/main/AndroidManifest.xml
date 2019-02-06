@@ -73,16 +73,22 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".VenueTablesActivity_"
+            android:theme="@style/Theme.AppCompat.PopUp" />
+        <activity
+            android:name=".ClientTableAccountOrdersActivity_"
+            android:label="@string/activity_clientTableAccountsOrders_title" />
 
         <activity
             android:name=".OperatorTablesAccountsVenuesActivity_"
-            android:label="@string/activity_tableaccountsvenues_title" />
+            android:label="@string/activity_operatorTableAccountsVenues_title" />
         <activity
             android:name=".OperatorTablesAccountsActivity_"
-            android:label="@string/activity_tableaccounts_title" />
+            android:label="@string/activity_operatorTableAccounts_title" />
         <activity
             android:name=".OperatorTableAccountOrdersActivity_"
-            android:label="@string/activity_tableaccountsorders_title" />
+            android:label="@string/activity_operatorTableAccountsOrders_title" />
 
         <activity
             android:name=".DetailsVenueActivity_"
