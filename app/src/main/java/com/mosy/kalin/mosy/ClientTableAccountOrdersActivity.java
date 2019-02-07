@@ -155,15 +155,19 @@ public class ClientTableAccountOrdersActivity
             if (this.mSignalRService != null &&
                     this.tableAccount == null &&
                     this.selectedTable != null &&
-                    StringHelper.isNotNullOrEmpty(super.username)){
+                    StringHelper.isNotNullOrEmpty(super.username) &&
+                    this.newlySelectedMenuItemIds != null &&
+                    this.newlySelectedMenuItemIds.size() > 0){
 
                 this.mSignalRService.createTableAccount(super.username, this.selectedTable.id, this.newlySelectedMenuItemIds);
             } else if (this.mSignalRService != null &&
                     this.tableAccount != null &&
                     this.selectedTable != null &&
-                    StringHelper.isNotNullOrEmpty(super.username)){
+                    StringHelper.isNotNullOrEmpty(super.username) &&
+                    this.newlySelectedMenuItemIds != null &&
+                    this.newlySelectedMenuItemIds.size() > 0){
 
-                //this.mSignalRService.createOrder(super.username, this.tableAccount.Id, this.newlySelectedMenuItemIds);
+                this.mSignalRService.createOrder(super.username, this.tableAccount.Id, this.newlySelectedMenuItemIds);
             }
         }
     }
@@ -209,6 +213,7 @@ public class ClientTableAccountOrdersActivity
                 this.selectedTable != null &&
                 StringHelper.isNotNullOrEmpty(super.username)) {
 
+                this.tvAccountStatus.setText(this.tableAccount.Status.toString());
                 this.reloadTableAccountOrders();
             }
         }
@@ -267,6 +272,7 @@ public class ClientTableAccountOrdersActivity
         intent.putExtra("wallVenue", this.wallVenue);
         intent.putExtra("selectedTable", this.selectedTable);
         intent.putExtra("selectedMenuListId", this.selectedMenuListId);
+        intent.putExtra("newlySelectedMenuItemIds", new ArrayList<>());
 
         startActivity(intent);
     }
@@ -320,7 +326,9 @@ public class ClientTableAccountOrdersActivity
 
                         for (Order order : results) {
                             for (OrderMenuItem item : order.orderMenuItems) {
-                                clientTableAccountOrdersAdapter.addTableAccountItem(item);
+                                ClientTableAccountOrdersActivity.this.runOnUiThread(
+                                        () -> clientTableAccountOrdersAdapter.addTableAccountItem(item)
+                                );
                             }
                         }
 

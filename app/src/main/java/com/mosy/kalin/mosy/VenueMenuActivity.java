@@ -122,32 +122,26 @@ public class VenueMenuActivity
                 this.newlySelectedMenuItemIds = new ArrayList<>();
             }
 
-            this.llTableAndSelectedItems.setVisibility(
-                    this.wallVenue.HasOrdersManagementSubscription &&
-                            (this.selectedTable != null || (this.newlySelectedMenuItemIds != null && this.newlySelectedMenuItemIds.size() > 0))? VISIBLE : GONE);
-
-            if (this.selectedTable != null){
-                this.tvTableName.setText(this.selectedTable.name);
-            }
-
             this.reevaluateOrderLabelsVisibility();
 
             if (this.wallVenue.HasOrdersManagementSubscription) {
-                this.buttonOpenAccount.setVisibility(VISIBLE);
-                this.IndoorImageView.setVisibility(GONE);
-
-
                 this.getExistingTableAccount();
             }
             else {
-                this.buttonOpenAccount.setVisibility(GONE);
-                this.IndoorImageView.setVisibility(VISIBLE);
-                loadIndoorImageMeta();
+                this.loadIndoorImageMeta();
             }
-
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        //now getIntent() should always return the last received intent
+
+        this.reevaluateOrderLabelsVisibility();
     }
 
     private void getExistingTableAccount() {
@@ -323,19 +317,21 @@ public class VenueMenuActivity
             this.tvNewlySelectedItemsText.setVisibility(this.newlySelectedMenuItemIds.size() > 0 ? VISIBLE : INVISIBLE);
         }
 
+        if (this.selectedTable != null){
+            this.tvTableName.setText(this.selectedTable.name);
+        }
+
         this.llTableAndSelectedItems.setVisibility(
                 this.wallVenue.HasOrdersManagementSubscription &&
                         (this.selectedTable != null || (this.newlySelectedMenuItemIds != null && this.newlySelectedMenuItemIds.size() > 0))? VISIBLE : GONE);
 
+        this.IndoorImageView.setVisibility(this.wallVenue.HasOrdersManagementSubscription ? GONE : VISIBLE);
+        this.buttonOpenAccount.setVisibility(this.wallVenue.HasOrdersManagementSubscription ? VISIBLE : GONE);
         this.buttonOpenAccount.setEnabled(this.wallVenue.HasOrdersManagementSubscription);
 
         this.tvTableName.setVisibility(selectedTable != null ? VISIBLE : GONE);
 
-        String btnOpenAccountText = this.selectedTable == null ?
-                "Select a table" :
-                (this.newlySelectedMenuItemIds != null && this.newlySelectedMenuItemIds.size() > 0 ?
-                        "Send Order" :
-                        "Select Items");
+        String btnOpenAccountText = this.selectedTable == null ? "Select a table" : "Send Order (Open Account)";
         this.buttonOpenAccount.setText(btnOpenAccountText);
 
     }

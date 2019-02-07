@@ -309,7 +309,7 @@
 
     <!-- Activity User Profile -->
     <string name="activity_userprofile_connect_with_facebook">Connect Facebook account</string>
-    <string name="activity_userprofile_go_to_table_account_monitors_btn">Manage Table Accounts Monitors</string>
+    <string name="activity_landing_work_btn">Work</string>
     <string name="activity_userprofile_logoutBtn">Sign out</string>
 
     <!-- Activities Table Accounts -->

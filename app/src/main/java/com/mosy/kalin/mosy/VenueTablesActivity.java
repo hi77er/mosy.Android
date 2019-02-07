@@ -47,6 +47,7 @@ public class VenueTablesActivity
 
     boolean reloadAfterFinish = true;
     ArrayList<Table> venueTables;
+    Table lastSelectedTable;
 
     @Bean
     TableAccountsService tableAccountsService;
@@ -89,6 +90,8 @@ public class VenueTablesActivity
 
     @AfterViews
     public void afterViews(){
+        this.lastSelectedTable = selectedTable;
+
         RecyclerViewItemsClickSupport.addTo(this.tablesView).setOnItemClickListener((recyclerView, position, v) -> {
             TableItem itemClicked = (TableItem)venueTablesAdapter.getItemAt(position);
             if (this.selectedTable != null && this.selectedTable.id.equals(itemClicked.table.id))
@@ -146,16 +149,17 @@ public class VenueTablesActivity
     protected void onDestroy(){
         super.onDestroy();
 
-        Intent intent = new Intent(VenueTablesActivity.this, VenueMenuActivity_.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        if (this.selectedTable != null && reloadAfterFinish) {
+            Intent intent = new Intent(VenueTablesActivity.this, VenueMenuActivity_.class);
 
-        intent.putExtra("selectedTable", this.selectedTable);
-        intent.putExtra("wallVenue", this.wallVenue);
-        intent.putExtra("selectedMenuListId", this.selectedMenuListId);
-        intent.putExtra("tableAccount", this.tableAccount);
-        intent.putExtra("newlySelectedMenuItemIds", this.newlySelectedMenuItemIds);
+            intent.putExtra("selectedTable", this.selectedTable);
+            intent.putExtra("wallVenue", this.wallVenue);
+            intent.putExtra("selectedMenuListId", this.selectedMenuListId);
+            intent.putExtra("tableAccount", this.tableAccount);
+            intent.putExtra("newlySelectedMenuItemIds", this.newlySelectedMenuItemIds);
 
-        startActivity(intent);
+            startActivity(intent);
+        }
     }
 
     private void reloadTables() {

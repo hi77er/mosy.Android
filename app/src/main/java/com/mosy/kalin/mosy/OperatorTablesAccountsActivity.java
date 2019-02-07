@@ -208,7 +208,7 @@ public class OperatorTablesAccountsActivity
     public void onBackPressed() {
         super.onBackPressed();
 
-        Intent intent = new Intent(OperatorTablesAccountsActivity.this, UserProfileActivity_.class);
+        Intent intent = new Intent(OperatorTablesAccountsActivity.this, LandingActivity_.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
         startActivity(intent);

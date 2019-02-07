@@ -35,6 +35,7 @@ import org.androidannotations.annotations.EBean;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -166,9 +167,13 @@ public class AccountService {
         editor.putString(applicationContext.getString(R.string.pref_user_firstName), userData.FirstName);
         editor.putString(applicationContext.getString(R.string.pref_user_lastName), userData.LastName);
 
+
         StringBuilder rolesString = new StringBuilder(StringHelper.empty());
         for (Role role : userData.Roles) {
-            rolesString.append(role.Name);
+            String roleName = role.Name;
+            if (userData.Roles.iterator().hasNext())
+                roleName += ",";
+            rolesString.append(roleName);
         }
         editor.putString(applicationContext.getString(R.string.pref_user_roles), rolesString.toString());
 
@@ -180,6 +185,13 @@ public class AccountService {
         String username = mPreferences.getString(applicationContext.getString(R.string.pref_user_username), StringHelper.empty());
 
         return username;
+    }
+
+    public ArrayList<String> getUserRoles(Context applicationContext){
+        SharedPreferences mPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.pref_collectionName_user), Context.MODE_PRIVATE);
+        String userRoles = mPreferences.getString(applicationContext.getString(R.string.pref_user_roles), StringHelper.empty());
+
+        return new ArrayList<>(Arrays.asList(userRoles.split(",")));
     }
 
     private void webApiLogin(Context applicationContext, Runnable preExecute, @NonNull Runnable onSuccess, Runnable onInvalidHost) {

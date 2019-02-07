@@ -2,12 +2,15 @@
   <dictionary name="kkras">
     <words>
       <w>approvement</w>
+      <w>disheswall</w>
       <w>forvenue</w>
       <w>instagram</w>
       <w>signalr</w>
       <w>tablesaccounts</w>
       <w>treatspark</w>
       <w>userprofile</w>
+      <w>venuedetails</w>
+      <w>venueswall</w>
     </words>
   </dictionary>
 </component>

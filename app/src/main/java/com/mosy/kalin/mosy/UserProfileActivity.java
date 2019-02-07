@@ -41,8 +41,6 @@ public class UserProfileActivity
     UserProfileService userProfileService;
     @Bean
     AzureBlobService azureBlobService;
-    @Bean
-    TableAccountsService tableAccountsService;
 
     @ViewById(R.id.userProfile_name)
     TextView tvName;
@@ -55,8 +53,6 @@ public class UserProfileActivity
     Button btnLogout;
     @ViewById(R.id.btnLoginViaFacebook)
     Button btnLoginViaFacebook;
-    @ViewById(R.id.btnManageTablesAccountsMonitor)
-    Button btnManageTablesAccountsMonitor;
 
 
     @AfterViews
@@ -85,7 +81,6 @@ public class UserProfileActivity
                     publishUserInfo();
                     publishUserImageThumbnail();
                     publishFacebookBtn();
-                    publishManageTableAccountsBtn();
                     onInfoLoaded();
                 } else {
                     Toast.makeText(applicationContext, "Something went wrong!", Toast.LENGTH_LONG).show();
@@ -119,25 +114,6 @@ public class UserProfileActivity
 
         this.btnLoginViaFacebook.setText(labelBtnLoginViaFacebook);
         this.btnLoginViaFacebook.setVisibility(View.VISIBLE);
-    }
-
-    private void publishManageTableAccountsBtn() {
-        boolean isTableAccountOperator = false;
-
-        if (user != null
-                && user.Roles != null
-                && user.Roles.size() > 0){
-
-            for (Role role : user.Roles) {
-                if (role.Name.toLowerCase().equals("tableaccountoperator")){
-                    isTableAccountOperator = true;
-                    break;
-                }
-            }
-
-            if (isTableAccountOperator)
-                this.btnManageTablesAccountsMonitor.setVisibility(View.VISIBLE);
-        }
     }
 
     private void publishUserImageThumbnail() {
@@ -182,39 +158,6 @@ public class UserProfileActivity
 
     private void navigateToLogin() {
         Intent intent = new Intent(UserProfileActivity.this, LoginActivity_.class);
-        startActivity(intent);
-    }
-
-    private void loadManagedVenues() {
-        AsyncTaskListener<ArrayList<Venue>> apiCallResultListener = new AsyncTaskListener<ArrayList<Venue>>() {
-            @Override public void onPreExecute() {
-                btnManageTablesAccountsMonitor.setVisibility(View.GONE);
-            }
-            @Override public void onPostExecute(ArrayList<Venue> results) {
-                if (results != null && results.size() > 0) {
-                    if (results.size() == 1)
-                        goToTableAccountsMonitor(results.get(0));
-                    else
-                        goToTableAccountVenues(results);
-
-                    btnManageTablesAccountsMonitor.setVisibility(View.VISIBLE);
-                }
-            }
-        };
-        this.tableAccountsService.getTableAccountVenues(this.applicationContext, apiCallResultListener, this::onNetworkLost);
-    }
-
-    private void goToTableAccountVenues(ArrayList<Venue> venues) {
-        Intent intent = new Intent(UserProfileActivity.this, OperatorTablesAccountsVenuesActivity_.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        intent.putExtra("tableAccountVenues", venues);
-        startActivity(intent);
-    }
-
-    private void goToTableAccountsMonitor(Venue venue) {
-        Intent intent = new Intent(UserProfileActivity.this, OperatorTablesAccountsActivity_.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        intent.putExtra("venue", venue);
         startActivity(intent);
     }
 
@@ -265,10 +208,6 @@ public class UserProfileActivity
         startActivity(i);
     }
 
-    @Click(R.id.btnManageTablesAccountsMonitor)
-    public void goToTableAccountsManagementActivity() {
-        loadManagedVenues();
-    }
 
 }
 

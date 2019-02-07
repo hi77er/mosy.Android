@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.mosy.kalin.mosy.DTOs.Enums.TableAccountStatus;
 import com.mosy.kalin.mosy.DTOs.OrderMenuItem;
+import com.mosy.kalin.mosy.DTOs.SignalR.SignalRBindingModels.CreateOrderBindingModel;
 import com.mosy.kalin.mosy.DTOs.SignalR.SignalRBindingModels.CreateTableAccountBindingModel;
 import com.mosy.kalin.mosy.DTOs.SignalR.SignalRBindingModels.TableAccountStatusBindingModel;
 import com.mosy.kalin.mosy.DTOs.SignalR.SignalRResults.TableAccountStatusResult;
@@ -151,7 +152,7 @@ public class SignalRService extends IntentService {
 
     public void setEventListeners(String taOperatorUsername){
 
-        // OPERATOR
+        // OPERATOR !
         String updatedTAStatusOperatorReceiverMethodName = "TAOperatorHubProxy-" + taOperatorUsername + "-TAUpdatedStatusReceiverMethod";
         mTableAccountsHubProxy.on(
                 updatedTAStatusOperatorReceiverMethodName,
@@ -166,7 +167,7 @@ public class SignalRService extends IntentService {
 
 
 
-        // CLIENT
+        // CLIENT !
         String updatedOrderItemStatusOperatorReceiverMethodName = "TAOperatorHubProxy-" + taOperatorUsername + "-OrderUpdatedStatusReceiverMethod";
         mOrdersHubProxy.on(
                 updatedOrderItemStatusOperatorReceiverMethodName,
@@ -178,6 +179,14 @@ public class SignalRService extends IntentService {
                 updatedOrderItemStatusClientReceiverMethodName,
                 orderItem -> onOrderItemStatusChangedClientTask.onPostExecute(orderItem),
                 OrderMenuItem.class);
+    }
+
+    public void createOrder(String creatorUsername, String tableAccountId, ArrayList<String> menuItemIds){
+        CreateOrderBindingModel model = new CreateOrderBindingModel();
+        model.CreatorUsername = creatorUsername;
+        model.TableAccountId = tableAccountId;
+        model.RequestableIds = menuItemIds;
+        mOrdersHubProxy.invoke("CreateOrderRequest", model);
     }
 
     public void createTableAccount(String openerUsername, String tableId, ArrayList<String> menuItemIds){

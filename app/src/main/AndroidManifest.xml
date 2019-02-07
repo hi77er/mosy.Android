@@ -62,7 +62,9 @@
 
         <activity
             android:name=".VenueMenuActivity_"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:alwaysRetainTaskState="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <data
                     android:host="google.com"

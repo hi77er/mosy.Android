@@ -175,16 +175,20 @@ public class LoginActivity
             @Override public void onPostExecute(User user) {
                 if (user != null) {
                     accountService.addUserDataToSharedPreferences(applicationContext, user);
+
+                    Toast.makeText(applicationContext, "Login successful.", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginActivity.this, LandingActivity_.class);
+                    startActivity(intent);
+                } else {
+                    LoginManager.getInstance().logOut();
+                    onFinishLogin("Something went wrong.");
                 }
             }
         };
 
         this.userProfileService.getUserProfile(this.applicationContext, apiCallListener, this::onFail);
-
-        Toast.makeText(this, "Login successful.", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(LoginActivity.this, LandingActivity_.class);
-        startActivity(intent);
     }
+
     private void onWrongUserOrPass() {
         this.onFinishLogin("Wrong username or password.");
     }
