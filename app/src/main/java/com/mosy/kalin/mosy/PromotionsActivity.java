@@ -31,13 +31,13 @@ public class PromotionsActivity extends BaseActivity {
     private LocationResolver mLocationResolver;
     private Location lastKnownLocation;
 
-    @ViewById(resName = "llInitialLoadingProgress")
+    @ViewById(R.id.llInitialLoadingProgress)
     LinearLayout centralProgress;
-    @ViewById(resName = "promotions_lPromotionsSwipeContainer")
+    @ViewById(R.id.promotions_lPromotionsSwipeContainer)
     SwipeRefreshLayout promotionsSwipeContainer;
-    @ViewById(resName = "promotions_rvPromotions")
+    @ViewById(R.id.promotions_rvPromotions)
     RecyclerView promotionsRecyclerView;
-    @ViewById(resName = "promotions_llInvalidHost")
+    @ViewById(R.id.promotions_llInvalidHost)
     LinearLayout invalidHostLayout;
 
 
@@ -62,6 +62,7 @@ public class PromotionsActivity extends BaseActivity {
     private void loadData() {
         this.invalidHostLayout.setVisibility(View.GONE);
 
+        //
         this.mLocationResolver = new LocationResolver(this);
         this.mLocationResolver.onStart();
         refreshLastKnownLocation();

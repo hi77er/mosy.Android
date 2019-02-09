@@ -323,6 +323,7 @@
     <string name="activity_clientTableAccountsOrders_title">Table Account</string>
     <string name="activity_venueTables_title">Select Table</string>
     <string name="activity_venuesTables_title">Select Table</string>
+    <string name="activity_landing_promotionsBtn">Promotions</string>
 
 
 </resources>

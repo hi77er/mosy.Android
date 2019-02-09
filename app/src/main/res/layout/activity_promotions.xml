@@ -37,7 +37,7 @@
             android:id="@+id/ivSwipeToRefresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/swipe_down"
+            android:src="@drawable/ic_gesture_swipe_down_24"
             android:indeterminate="true" />
 
         <TextView

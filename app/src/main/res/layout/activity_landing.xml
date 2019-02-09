@@ -72,10 +72,12 @@
             android:layout_marginStart="7dp"
             android:paddingTop="8dp"
             android:paddingBottom="10dp"
-            android:drawableTop="@drawable/venue_default_thumbnail_100x100"
+            android:drawableTop="@drawable/ic_food_variant_72"
+            android:drawableTint="@color/colorPrimary"
             android:text="@string/activity_landing_promotionsBtn"
-            android:textSize="20sp"
-            android:background="@drawable/button_landing_dishes"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:background="@drawable/background_transparent_click_oval"
             android:textColor="@color/colorPrimary"
             android:stateListAnimator="@null"/>
 
