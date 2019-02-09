@@ -1,27 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:padding="10dp"
-        android:background="@color/colorPrimarySalmon">
+        android:background="@color/colorTableAccountActions"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:id="@+id/clientTableAccountItem_llActions"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/clientTableAccountOrders_btnAttention"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:visibility="invisible"
+                android:background="@drawable/button_venue_item_menu"
+                android:text="Call"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"/>
+
+            <ImageView
+                android:id="@+id/clientTableAccountOrders_ivAssignedOperator"
+                android:visibility="invisible"
+                android:layout_height="35dp"
+                android:layout_width="35dp"
+                android:src="@drawable/ic_account_24"
+                android:tint="@color/colorPrimary"
+                android:layout_gravity="center_vertical" />
+
+            <Button
+                android:id="@+id/clientTableAccountOrders_btnBill"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="5dp"
+                android:visibility="invisible"
+                android:background="@drawable/button_venue_item_menu"
+                android:text="Bill"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"/>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/clientTableAccountOrders_tvAccountStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:layout_marginTop="3dp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="@color/colorWhite"
             android:text="Awaiting approvement"
-            android:layout_gravity="bottom" />
+            android:gravity="center_horizontal" />
     </LinearLayout>
 
     <android.support.design.widget.CoordinatorLayout
@@ -29,7 +72,7 @@
         android:layout_width="match_parent"
         android:background="@color/colorWhite"
         android:layout_height="0dp"
-        android:layout_weight="9">
+        android:layout_weight="13">
 
         <LinearLayout
             android:id="@+id/llInitialLoadingProgress"

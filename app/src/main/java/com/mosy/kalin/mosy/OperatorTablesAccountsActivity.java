@@ -92,13 +92,16 @@ public class OperatorTablesAccountsActivity
             // mSignalRService.pingOrdersHub("ping Test123"); // testing the connection
             mSignalRService.setEventListeners(super.username);
 
+            //called when the STATUS of AN ACCOUNT is changed
             mSignalRService.setOnTAStatusChangedOperator(new AsyncTaskListener<TableAccountStatusResult>() {
                 @Override public void onPreExecute() { }
                 @Override public void onPostExecute(TableAccountStatusResult result) {
                     if (operatorTableAccountsAdapter != null){
                         operatorTableAccountsAdapter.changeItemStatus(result.TableAccountId, result.Status);
 
-                        mSignalRService.updateOrderRequestablesStatusAfterAccountStatusChanged(result.TableAccountId);
+                        if (result.NeedsItemsStatusUpdate) {
+                            mSignalRService.updateOrderRequestablesStatusAfterAccountStatusChanged(result.TableAccountId);
+                        }
 
                         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && v != null) {
@@ -109,6 +112,18 @@ public class OperatorTablesAccountsActivity
                     }
                 }
             });
+
+            //called when THE STATUS of ITEM FROM AN ACCOUNT is changed
+            mSignalRService.setOnTAOrderItemStatusChanged(new AsyncTaskListener<TableAccountStatusResult>() {
+                @Override public void onPreExecute() { }
+                @Override public void onPostExecute(TableAccountStatusResult result) {
+                    if (operatorTableAccountsAdapter != null){
+                        operatorTableAccountsAdapter.changeItemStatus(result.TableAccountId, result.Status);
+
+                    }
+                }
+            });
+            operatorTableAccountsAdapter.setUsername(super.username);
             operatorTableAccountsAdapter.setSignalRService(mSignalRService);
         }
     }
@@ -131,6 +146,7 @@ public class OperatorTablesAccountsActivity
 
             RecyclerViewItemsClickSupport.addTo(this.tableAccountsView).setOnItemClickListener((recyclerView, position, v) -> {
                 OperatorTableAccountItem itemClicked = (OperatorTableAccountItem) operatorTableAccountsAdapter.getItemAt(position);
+                this.operatorTableAccountsAdapter.changeItemStatus(itemClicked.tableAccount.Id, itemClicked.tableAccount.Status);
 
                 if (itemClicked.tableAccount.Status != TableAccountStatus.AwaitingOperatorApprovement){
                     Intent intent = new Intent(OperatorTablesAccountsActivity.this, OperatorTableAccountOrdersActivity_.class);
@@ -185,6 +201,16 @@ public class OperatorTablesAccountsActivity
 
     @Override
     protected void onNewIntent(Intent intent){
+        if (ConnectivityHelper.isConnected(applicationContext)) {
+            networkLost = false;
+
+            loadTablesAccounts();
+        }
+        else {
+            networkLost = true;
+            showNoInternetLayout();
+        }
+
         super.onNewIntent(intent);
     }
 
@@ -242,6 +268,8 @@ public class OperatorTablesAccountsActivity
     }
 
     private void loadTablesAccounts() {
+        operatorTableAccountsAdapter.clearItems();
+
         if (this.venue != null){
             AsyncTaskListener<ArrayList<TableAccount>> apiCallResultListener = new AsyncTaskListener<ArrayList<TableAccount>>() {
                 @Override public void onPreExecute() {

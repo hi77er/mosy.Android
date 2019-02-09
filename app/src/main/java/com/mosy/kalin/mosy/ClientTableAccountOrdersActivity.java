@@ -14,11 +14,15 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mosy.kalin.mosy.Adapters.ClientTableAccountOrdersAdapter;
+import com.mosy.kalin.mosy.DTOs.Enums.TableAccountStatus;
 import com.mosy.kalin.mosy.DTOs.Order;
 import com.mosy.kalin.mosy.DTOs.OrderMenuItem;
 import com.mosy.kalin.mosy.DTOs.SignalR.SignalRResults.TableAccountStatusResult;
@@ -29,19 +33,23 @@ import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.ClientTableAccountItem;
-import com.mosy.kalin.mosy.Models.Views.ItemModels.OperatorTableAccountOrderItem;
 import com.mosy.kalin.mosy.Services.SignalR.SignalRService;
 import com.mosy.kalin.mosy.Services.SignalR.SignalRService_;
 import com.mosy.kalin.mosy.Services.TableAccountsService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 import java.util.Objects;
+
+import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 
 
 @EActivity(R.layout.activity_client_table_account_orders)
@@ -82,6 +90,17 @@ public class ClientTableAccountOrdersActivity
     SwipeRefreshLayout tableAccountOrdersLayout;
     @ViewById(R.id.clientTableAccountOrders_lvOrders)
     RecyclerView ordersView;
+
+
+    @ViewById(R.id.clientTableAccountItem_llActions)
+    LinearLayout layoutActions;
+    @ViewById(R.id.clientTableAccountOrders_btnAttention)
+    Button buttonCall;
+    @ViewById(R.id.clientTableAccountOrders_btnBill)
+    Button buttonBill;
+    @ViewById(R.id.clientTableAccountOrders_ivAssignedOperator)
+    ImageView ivAssignedOperator;
+
     @ViewById(R.id.clientTableAccountOrders_tvAccountStatus)
     TextView tvAccountStatus;
 
@@ -117,10 +136,12 @@ public class ClientTableAccountOrdersActivity
                     tableAccount = new TableAccount();
                     tableAccount.Id = result.TableAccountId;
                     tableAccount.Status = result.Status;
+                    tableAccount.AssignedOperatorUsername = result.AssignedOperatorUsername;
 
-                    tvAccountStatus.setText(result.Status.name());
+                    setupActionLayout(tableAccount);
 
-                    mSignalRService.updateOrderRequestablesStatusAfterAccountStatusChanged(result.TableAccountId);
+                    if (result.NeedsItemsStatusUpdate)
+                        mSignalRService.updateOrderRequestablesStatusAfterAccountStatusChanged(result.TableAccountId);
 
                     Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && v != null) {
@@ -203,8 +224,10 @@ public class ClientTableAccountOrdersActivity
             this.clientTableAccountOrdersAdapter.swipeContainer.setOnRefreshListener(() -> {
                 if (!tableAccountsLoadingStillInAction && ConnectivityHelper.isConnected(applicationContext)) {
                     //INFO: REFRESH INITIAL LOAD
-                    if (tableAccount != null)
+                    if (tableAccount != null){
                         reloadTableAccountOrders();
+                        setupActionLayout(tableAccount);
+                    }
                 }
                 tableAccountOrdersLayout.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
             });
@@ -213,7 +236,7 @@ public class ClientTableAccountOrdersActivity
                 this.selectedTable != null &&
                 StringHelper.isNotNullOrEmpty(super.username)) {
 
-                this.tvAccountStatus.setText(this.tableAccount.Status.toString());
+                setupActionLayout(tableAccount);
                 this.reloadTableAccountOrders();
             }
         }
@@ -305,21 +328,58 @@ public class ClientTableAccountOrdersActivity
 
     }
 
+    private void setupActionLayout(TableAccount tableAccount) {
+        switch (tableAccount.Status){
+            case New:
+                publishActionLayout("New account.", R.color.colorRed, false, false, false, StringHelper.isNotNullOrEmpty(tableAccount.AssignedOperatorUsername));
+                break;
+            case AwaitingOperatorApprovement:
+                publishActionLayout("Awaiting approvement..", R.color.colorPrimaryApricot, false, false, false, StringHelper.isNotNullOrEmpty(tableAccount.AssignedOperatorUsername));
+                break;
+            case Idle:
+                publishActionLayout("Everything is OK.", R.color.colorPrimary, true, true, true, StringHelper.isNotNullOrEmpty(tableAccount.AssignedOperatorUsername));
+                break;
+            case OrderReadyForDelivery:
+                publishActionLayout("Order just got ready.", R.color.colorPrimary, true, true, true, StringHelper.isNotNullOrEmpty(tableAccount.AssignedOperatorUsername));
+                break;
+            case NeedAttention:
+                publishActionLayout("Waiter called.", R.color.colorSecondaryAmber, true, false, true, StringHelper.isNotNullOrEmpty(tableAccount.AssignedOperatorUsername));
+                break;
+            case AskingToPay:
+                publishActionLayout("Bill called.", R.color.colorSecondaryAmber, true, true, false, StringHelper.isNotNullOrEmpty(tableAccount.AssignedOperatorUsername));
+                break;
+            case Closed:
+                publishActionLayout("Closed.", R.color.soft, false, false, true, StringHelper.isNotNullOrEmpty(tableAccount.AssignedOperatorUsername));
+                break;
+        }
+    }
+
+    public void publishActionLayout(String statusText, int statusColorResourceId, boolean actionVisible, boolean callWaiterVisible, boolean callBillVisible, boolean hasAssignedOperator){
+        this.tvAccountStatus.setVisibility(VISIBLE);
+        this.tvAccountStatus.setText(statusText);
+        this.tvAccountStatus.setTextColor(getResources().getColor(statusColorResourceId));
+
+        this.layoutActions.setVisibility(actionVisible ? VISIBLE : INVISIBLE);
+        this.buttonCall.setVisibility(callWaiterVisible ? VISIBLE : INVISIBLE);
+        this.buttonBill.setVisibility(callBillVisible ? VISIBLE : INVISIBLE);
+        this.ivAssignedOperator.setVisibility(hasAssignedOperator ? VISIBLE : INVISIBLE);
+    }
+
     private void reloadTableAccountOrders() {
         if (this.tableAccount != null){
             clientTableAccountOrdersAdapter.clearItems();
 
             AsyncTaskListener<ArrayList<Order>> apiCallResultListener = new AsyncTaskListener<ArrayList<Order>>() {
                 @Override public void onPreExecute() {
-                    tableAccountOrdersLayout.setVisibility(View.GONE);
-                    emptyLayout.setVisibility(View.GONE);
-                    progressLayout.setVisibility(View.VISIBLE);
+                    tableAccountOrdersLayout.setVisibility(GONE);
+                    emptyLayout.setVisibility(GONE);
+                    progressLayout.setVisibility(VISIBLE);
                     tableAccountsLoadingStillInAction = true;
                 }
                 @Override public void onPostExecute(ArrayList<Order> results) {
-                    progressLayout.setVisibility(View.GONE);
-                    emptyLayout.setVisibility(View.VISIBLE);
-                    tableAccountOrdersLayout.setVisibility(View.VISIBLE);
+                    progressLayout.setVisibility(GONE);
+                    emptyLayout.setVisibility(VISIBLE);
+                    tableAccountOrdersLayout.setVisibility(VISIBLE);
 
                     if (results != null && results.size() > 0) {
                         orders = results;
@@ -332,16 +392,29 @@ public class ClientTableAccountOrdersActivity
                             }
                         }
 
-                        tableAccountsLoadingStillInAction = false;
                     }
+
+                    tableAccountsLoadingStillInAction = false;
                 }
             };
             this.tableAccountsService.getOrders(this.applicationContext, apiCallResultListener, this::onNetworkLost, tableAccount.Id);
         }
     }
 
+    @Click(R.id.clientTableAccountOrders_ivAssignedOperator)
+    public void ivAssignedOperator_Clicked(){
+        Toast.makeText(this.applicationContext, "Account has assigned waiter!", Toast.LENGTH_LONG).show();
+    }
 
+    @Click(R.id.clientTableAccountOrders_btnAttention)
+    public void btnAttention_Clicked(){
+        Toast.makeText(this.applicationContext, "Your waiter was called!", Toast.LENGTH_LONG).show();
+        mSignalRService.updateTableAccountStatus(tableAccount.Id, TableAccountStatus.NeedAttention, StringHelper.empty());
+    }
 
-
-
+    @Click(R.id.clientTableAccountOrders_btnBill)
+    public void btnBill_Clicked(){
+        mSignalRService.updateTableAccountStatus(tableAccount.Id, TableAccountStatus.AskingToPay, StringHelper.empty());
+        Toast.makeText(this.applicationContext, "Bill was called!", Toast.LENGTH_LONG).show();
+    }
 }

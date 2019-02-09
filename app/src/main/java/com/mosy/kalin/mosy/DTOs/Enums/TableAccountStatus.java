@@ -14,7 +14,16 @@ public enum TableAccountStatus {
     Idle(3),
 
     @SerializedName("4")
-    Closed(4);
+    OrderReadyForDelivery(4),
+
+    @SerializedName("5")
+    NeedAttention(5),
+
+    @SerializedName("6")
+    AskingToPay(6),
+
+    @SerializedName("7")
+    Closed(7);
 
     private final int value;
     public int getValue() {

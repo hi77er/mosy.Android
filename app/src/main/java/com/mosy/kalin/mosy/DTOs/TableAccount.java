@@ -27,4 +27,8 @@ public class TableAccount
     @SerializedName("Orders")
     public ArrayList<Order> Orders;
 
+
+    //Custom props
+    public boolean HasOrderItemStatusChanged;
+
 }

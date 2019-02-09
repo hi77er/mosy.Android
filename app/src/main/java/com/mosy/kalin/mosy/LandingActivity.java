@@ -134,9 +134,9 @@ public class LandingActivity
 
     private void ensureHasAuthenticationToken() {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
-            this::showLoading,
-            this::showButtonsLayout,
-            this::showInvalidHostLayout);
+                this::showLoading,
+                this::showButtonsLayout,
+                this::showInvalidHostLayout);
     }
 
     private void setupLanguagesSpinner(ArrayList<SpinnerLocale> localesList) {
@@ -201,7 +201,8 @@ public class LandingActivity
         this.btnProfile.setVisibility(isUserAuthenticated ? View.VISIBLE : View.GONE);
         this.btnLogin.setVisibility(isUserAuthenticated ? View.GONE : View.VISIBLE);
 
-        publishManageTableAccountsBtn();
+        if (isUserAuthenticated) publishManageTableAccountsBtn();
+
         //TODO: Delete before deploying to production!
 //        Toast.makeText(applicationContext, "WebApi authToken refreshed!", Toast.LENGTH_LONG).show();
     }
@@ -250,7 +251,7 @@ public class LandingActivity
             }
 
             if (isTableAccountOperator)
-                this.btnWork.setVisibility(View.VISIBLE);
+                this.btnWork.setVisibility(isUserAuthenticated ? View.VISIBLE : View.GONE);
         }
     }
 

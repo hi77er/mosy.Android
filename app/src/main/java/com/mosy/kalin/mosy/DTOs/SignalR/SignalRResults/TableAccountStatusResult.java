@@ -13,5 +13,9 @@ public class TableAccountStatusResult implements Serializable {
     @SerializedName("Status")
     public TableAccountStatus Status;
 
+    @SerializedName("AssignedOperatorUsername")
+    public String AssignedOperatorUsername;
 
+    @SerializedName("NeedsItemsStatusUpdate")
+    public boolean NeedsItemsStatusUpdate;
 }

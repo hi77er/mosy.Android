@@ -410,6 +410,7 @@ public class WallActivity
                         if (ArrayHelper.hasValidBitmapContent(bytes)) {
                             Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                             Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, 200, 200, false);
+
                             venueWallItem.WallVenue.IndoorImage.Bitmap = scaledBmp;
                             addBitmapToMemoryCache(venueWallItem.WallVenue.IndoorImage.Id, scaledBmp);
 

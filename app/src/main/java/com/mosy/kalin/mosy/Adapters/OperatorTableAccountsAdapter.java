@@ -43,8 +43,12 @@ public class OperatorTableAccountsAdapter
     }
 
     private SignalRService signalRService;
-    public void setSignalRService(SignalRService signalRService) {
-        this.signalRService = signalRService;
+    public void setSignalRService(SignalRService value) {
+        this.signalRService = value;
+    }
+    private String username;
+    public void setUsername(String value) {
+        this.username = value;
     }
 
     @RootContext
@@ -72,7 +76,7 @@ public class OperatorTableAccountsAdapter
         OperatorTableAccountItemView view = (OperatorTableAccountItemView)viewHolder.getView();
         OperatorTableAccountItem wallItemBase = (OperatorTableAccountItem) this.items.get(position);
         TableAccount tableAccount = wallItemBase.tableAccount;
-        view.bind(tableAccount, signalRService);
+        view.bind(tableAccount, signalRService, this.username);
     }
 
     @Override

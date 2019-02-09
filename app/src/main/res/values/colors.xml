@@ -40,6 +40,7 @@
     <color name="colorQuaternary">#3095f9</color>
     <color name="colorQuaternaryDark">#1f90ff</color>
 
+    <color name="colorTableAccountActions">#FCF0F0</color>
     <color name="colorMenuBackground">#ffebeb</color>
     <color name="colorMenuToolboxBackground">#ffe5e5</color>
     <color name="colorMenuTitle">#fc7878</color>

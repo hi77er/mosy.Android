@@ -13,5 +13,7 @@ public class TableAccountStatusBindingModel implements Serializable {
     @SerializedName("NewStatus")
     public TableAccountStatus NewStatus;
 
+    @SerializedName("UpdaterUsername")
+    public String UpdaterUsername;
 
 }
