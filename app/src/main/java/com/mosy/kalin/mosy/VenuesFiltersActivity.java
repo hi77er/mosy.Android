@@ -2,7 +2,6 @@ package com.mosy.kalin.mosy;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,7 +23,7 @@ import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Helpers.ListHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Models.Responses.VenueFiltersResult;
+import com.mosy.kalin.mosy.Models.Responses.VenueFiltersHttpResult;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.FilterItem;
 import com.mosy.kalin.mosy.Services.VenuesService;
 
@@ -247,12 +246,12 @@ public class VenuesFiltersActivity
 
     private void loadVenueFilters() {
 
-        AsyncTaskListener<VenueFiltersResult> listener = new AsyncTaskListener<VenueFiltersResult>() {
+        AsyncTaskListener<VenueFiltersHttpResult> listener = new AsyncTaskListener<VenueFiltersHttpResult>() {
             @Override public void onPreExecute() {
                 showFiltersLoadingLayout();
             }
 
-            @Override public void onPostExecute(VenueFiltersResult result) {
+            @Override public void onPostExecute(VenueFiltersHttpResult result) {
                 if (result != null) {
                     populateAlreadySelectedFilters(
                             result.VenueAccessibilityFilters,
@@ -275,7 +274,7 @@ public class VenuesFiltersActivity
             }
         };
 
-        this.venuesService.getFilters(this.applicationContext, listener);
+        this.venuesService.getFilters(this.applicationContext, listener, this.isDevelopersModeActivated);
     }
 
     private ArrayList<FilterItem> toFilterItems(ArrayList<Filter> filters) {
@@ -317,23 +316,27 @@ public class VenuesFiltersActivity
             ArrayList<Filter> venueCultureFilters) {
 
         Stream.of(PreselectedVenueAccessibilityFilterIds).forEach(filterId -> {
-            Filter matchingFilter = Stream.of(venueAccessibilityFilters).filter(filter -> filter.Id.equals(filterId)).single();
-            matchingFilter.IsChecked = true;
+            Filter matchingFilter = Stream.of(venueAccessibilityFilters).filter(filter -> filter.Id.equals(filterId)).findFirst().orElse(null);
+            //preselectedFilters might deffer depending on whether devMode enabled.
+            if (matchingFilter != null) matchingFilter.IsChecked = true;
         });
 
         Stream.of(PreselectedVenueAvailabilityFilterIds).forEach(filterId -> {
-            Filter matchingFilter = Stream.of(venueAvailabilityFilters).filter(filter -> filter.Id.equals(filterId)).single();
-            matchingFilter.IsChecked = true;
+            Filter matchingFilter = Stream.of(venueAvailabilityFilters).filter(filter -> filter.Id.equals(filterId)).findFirst().orElse(null);
+            //preselectedFilters might deffer depending on whether devMode enabled.
+            if (matchingFilter != null) matchingFilter.IsChecked = true;
         });
 
         Stream.of(PreselectedVenueAtmosphereFilterIds).forEach(filterId -> {
-            Filter matchingFilter = Stream.of(venueAtmosphereFilters).filter(filter -> filter.Id.equals(filterId)).single();
-            matchingFilter.IsChecked = true;
+            Filter matchingFilter = Stream.of(venueAtmosphereFilters).filter(filter -> filter.Id.equals(filterId)).findFirst().orElse(null);
+            //preselectedFilters might deffer depending on whether devMode enabled.
+            if (matchingFilter != null) matchingFilter.IsChecked = true;
         });
 
         Stream.of(PreselectedVenueCultureFilterIds).forEach(filterId -> {
-            Filter matchingFilter = Stream.of(venueCultureFilters).filter(filter -> filter.Id.equals(filterId)).single();
-            matchingFilter.IsChecked = true;
+            Filter matchingFilter = Stream.of(venueCultureFilters).filter(filter -> filter.Id.equals(filterId)).findFirst().orElse(null);
+            //preselectedFilters might deffer depending on whether devMode enabled.
+            if (matchingFilter != null) matchingFilter.IsChecked = true;
         });
 
     }

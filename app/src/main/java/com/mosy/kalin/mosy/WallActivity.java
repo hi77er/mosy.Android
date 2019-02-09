@@ -42,17 +42,17 @@ import com.mosy.kalin.mosy.CustomControls.Support.RecyclerViewItemsClickSupport;
 import com.mosy.kalin.mosy.DTOs.Base.WallItemBase;
 import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.DTOs.Enums.ImageResolution;
-import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.WallMenuListItem;
 import com.mosy.kalin.mosy.DTOs.MenuListItemDetailed;
-import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.DTOs.WallVenue;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Helpers.DrawableHelper;
 import com.mosy.kalin.mosy.Helpers.MetricsHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
-import com.mosy.kalin.mosy.Models.Responses.VenueFiltersResult;
+import com.mosy.kalin.mosy.Models.Responses.DishFiltersHttpResult;
+import com.mosy.kalin.mosy.Models.Responses.VenueFiltersHttpResult;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.VenueWallItem;
 import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Services.AzureBlobService;
@@ -95,8 +95,8 @@ public class WallActivity
     private LruCache<String, Bitmap> mMemoryCache;
     private LocationResolver mLocationResolver;
     private Location lastKnownLocation;
-    private DishFiltersResult dishFilters;
-    private VenueFiltersResult venueFilters;
+    private DishFiltersHttpResult dishFilters;
+    private VenueFiltersHttpResult venueFilters;
 
     @SystemService
     SearchManager searchManager;
@@ -258,11 +258,11 @@ public class WallActivity
     }
 
     private void loadVenueFilters(){
-        AsyncTaskListener<VenueFiltersResult> listener = new AsyncTaskListener<VenueFiltersResult>() {
+        AsyncTaskListener<VenueFiltersHttpResult> listener = new AsyncTaskListener<VenueFiltersHttpResult>() {
             @Override public void onPreExecute() {
                 centralProgress.setVisibility(View.VISIBLE);
             }
-            @Override public void onPostExecute(VenueFiltersResult filtersResult) {
+            @Override public void onPostExecute(VenueFiltersHttpResult filtersResult) {
                 if (filtersResult != null) {
                     venueFilters = filtersResult;
                     loadDishFilters();
@@ -270,15 +270,15 @@ public class WallActivity
             }
         };
 
-        this.venuesService.getFilters(this.applicationContext, listener);
+        this.venuesService.getFilters(this.applicationContext, listener, this.isDevelopersModeActivated);
     }
 
     private void loadDishFilters(){
-        AsyncTaskListener<DishFiltersResult> listener = new AsyncTaskListener<DishFiltersResult>() {
+        AsyncTaskListener<DishFiltersHttpResult> listener = new AsyncTaskListener<DishFiltersHttpResult>() {
             @Override public void onPreExecute() {
                 centralProgress.setVisibility(View.VISIBLE);
             }
-            @Override public void onPostExecute(DishFiltersResult filtersResult) {
+            @Override public void onPostExecute(DishFiltersHttpResult filtersResult) {
                 if (filtersResult != null) {
                     dishFilters = filtersResult;
                     if (!DishesSearchModeActivated) adaptVenueItems();
@@ -287,7 +287,7 @@ public class WallActivity
             }
         };
 
-        this.dishesService.getAllFilters(this.applicationContext, listener);
+        this.dishesService.getAllFilters(this.applicationContext, listener, this.isDevelopersModeActivated);
     }
 
     //INFO: Called in "afterViews"
@@ -316,7 +316,7 @@ public class WallActivity
             this.venuesWall.setLayoutManager(new GridLayoutManager(this.baseContext, 1));
 
             DividerItemDecoration itemDecorator = new DividerItemDecoration(this.applicationContext, DividerItemDecoration.VERTICAL);
-            itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(this.applicationContext, R.drawable.wall_divider)));
+            itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(this.applicationContext, R.drawable.wall_divider_primary)));
             this.venuesWall.addItemDecoration(itemDecorator);
 
 
@@ -353,16 +353,16 @@ public class WallActivity
                         ArrayList<String> selectedVenueCultureFilterIds){
         if (ConnectivityHelper.isConnected(applicationContext) && this.lastKnownLocation != null) {
 
-            AsyncTaskListener<ArrayList<Venue>> apiCallResultListener = new AsyncTaskListener<ArrayList<Venue>>() {
+            AsyncTaskListener<ArrayList<WallVenue>> apiCallResultListener = new AsyncTaskListener<ArrayList<WallVenue>>() {
                 @Override public void onPreExecute() {
                     centralProgress.setVisibility(View.VISIBLE);
                 }
-                @Override public void onPostExecute(ArrayList<Venue> results) {
+                @Override public void onPostExecute(ArrayList<WallVenue> results) {
                     centralProgress.setVisibility(View.GONE);
                     venuesWall.setVisibility(View.VISIBLE);
 
                     if (results != null && results.size() > 0) {
-                        for (Venue item : results) {
+                        for (WallVenue item : results) {
                             String matchingFiltersInfo = constructMatchingFiltersInfo(item.MatchingFiltersIds);
                             String mismatchingFiltersInfo = constructMismatchingFiltersInfo(item.MismatchingFiltersIds);
 
@@ -375,7 +375,7 @@ public class WallActivity
                             wallVenuesAdapter.addVenueWallItem(item);
 
                             VenueWallItem wallItem = wallVenuesAdapter.getItemByVenueId(item.Id);
-                            loadVenueItemOutdoorImage(wallItem);
+                            loadVenueItemInteriorImage(wallItem);
                         }
 
                         wallVenuesAdapter.APICallStillReturnsElements = results.size() >= itemsToLoadCountWhenScrolled;
@@ -394,29 +394,33 @@ public class WallActivity
         }
     }
 
-    private void loadVenueItemOutdoorImage(VenueWallItem venueWallItem) {
-        AsyncTaskListener<byte[]> outdoorImageResultListener = new AsyncTaskListener<byte[]>() {
-            @Override public void onPreExecute() {
-                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
-            }
-            @Override public void onPostExecute(byte[] bytes) {
-                if (ArrayHelper.hasValidBitmapContent(bytes)) {
-                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, 200, 200, false);
-                    venueWallItem.Venue.OutdoorImage.Bitmap = scaledBmp;
-                    addBitmapToMemoryCache(venueWallItem.Venue.OutdoorImage.Id, scaledBmp);
+    private void loadVenueItemInteriorImage(VenueWallItem venueWallItem) {
+        if (venueWallItem.WallVenue != null &&
+                venueWallItem.WallVenue.IndoorImage != null &&
+                StringHelper.isNotNullOrEmpty(venueWallItem.WallVenue.IndoorImage.Id)) {
 
-                    wallVenuesAdapter.onItemChanged(venueWallItem);
-                }
-                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
-            }
-        };
+            venueWallItem.WallVenue.IndoorImage.Bitmap = getBitmapFromMemCache(venueWallItem.WallVenue.IndoorImage.Id);
 
-        if (venueWallItem.Venue != null && venueWallItem.Venue.OutdoorImage != null) {
-            if (StringHelper.isNotNullOrEmpty(venueWallItem.Venue.OutdoorImage.Id)) {
-                venueWallItem.Venue.OutdoorImage.Bitmap = getBitmapFromMemCache(venueWallItem.Venue.OutdoorImage.Id);
-                if (venueWallItem.Venue.OutdoorImage.Bitmap == null)
-                    new AzureBlobService().downloadVenueThumbnail(venueWallItem.Venue.OutdoorImage.Id, ImageResolution.Format100x100, outdoorImageResultListener);
+            if (venueWallItem.WallVenue.IndoorImage.Bitmap == null){
+                AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
+                    @Override public void onPreExecute() {
+                        //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+                    }
+                    @Override public void onPostExecute(byte[] bytes) {
+                        if (ArrayHelper.hasValidBitmapContent(bytes)) {
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, 200, 200, false);
+
+                            venueWallItem.WallVenue.IndoorImage.Bitmap = scaledBmp;
+                            addBitmapToMemoryCache(venueWallItem.WallVenue.IndoorImage.Id, scaledBmp);
+
+                            wallVenuesAdapter.onItemChanged(venueWallItem);
+                        }
+                        //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+                    }
+                };
+
+                new AzureBlobService().downloadVenueThumbnail(this.baseContext, venueWallItem.WallVenue.IndoorImage.Id, ImageResolution.Format100x100, listener);
             }
         } //IN ALL 3 'ELSE'S DO NOTHING. The Item has already been set the default image
     }
@@ -458,7 +462,7 @@ public class WallActivity
             this.dishesWall.setAdapter(wallDishesAdapter);
             this.dishesWall.setLayoutManager(new GridLayoutManager(this.baseContext, 1));
             DividerItemDecoration itemDecorator = new DividerItemDecoration(this.applicationContext, DividerItemDecoration.VERTICAL);
-            itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(this.applicationContext, R.drawable.wall_divider)));
+            itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(this.applicationContext, R.drawable.wall_divider_primary)));
             this.dishesWall.addItemDecoration(itemDecorator);
             this.dishesWall.addOnScrollListener(dishesScrollListener);
 //            this.dishesWall.setFriction(ViewConfiguration.getScrollFriction() * 20); // slow down the scroll for ListView
@@ -467,18 +471,18 @@ public class WallActivity
                 WallItemBase itemClicked = wallDishesAdapter.getItemAt(position);
 
                 if (itemClicked.getType() == WallItemBase.ITEM_TYPE_DISH_TILE){
-                    MenuListItem castedItemClicked = ((DishWallItem)itemClicked).MenuListItem;
+                    WallMenuListItem castedItemClicked = ((DishWallItem)itemClicked).WallMenuListItem;
                     MenuListItemDetailed detailed = castedItemClicked.toDetailed();
 
                     Intent intent = new Intent(WallActivity.this, DetailsItemActivity_.class);
 
-                    AsyncTaskListener<Venue> apiCallResultListener = new AsyncTaskListener<Venue>() {
+                    AsyncTaskListener<WallVenue> apiCallResultListener = new AsyncTaskListener<WallVenue>() {
                         @Override public void onPreExecute() {
                             centralProgress.setVisibility(View.VISIBLE);
                         }
-                        @Override public void onPostExecute(Venue venue) {
-                            venue.OutdoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
-                            venue.IndoorImage = null; // Don't need these one in the Venue page. If needed should implement Serializable or Parcelable
+                        @Override public void onPostExecute(WallVenue venue) {
+                            venue.OutdoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
+                            venue.IndoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
                             venue.Location = null;
                             venue.VenueBusinessHours = null;
                             venue.VenueContacts = null;
@@ -490,7 +494,7 @@ public class WallActivity
                             detailed.VenueBusinessHours = null;
                             detailed.ImageThumbnail = null;
                             intent.putExtra("item", detailed);
-                            intent.putExtra("venue", venue);
+                            intent.putExtra("wallVenue", venue);
                             startActivity(intent);
                         }
                     };
@@ -529,18 +533,18 @@ public class WallActivity
 
         if (ConnectivityHelper.isConnected(applicationContext) &&
                 lastKnownLocation != null) {
-            AsyncTaskListener<ArrayList<MenuListItem>> apiCallResultListener = new AsyncTaskListener<ArrayList<MenuListItem>>() {
+            AsyncTaskListener<ArrayList<WallMenuListItem>> apiCallResultListener = new AsyncTaskListener<ArrayList<WallMenuListItem>>() {
                 @Override
                 public void onPreExecute() {
                     centralProgress.setVisibility(View.VISIBLE);
                 }
                 @Override
-                public void onPostExecute(ArrayList<MenuListItem> results) {
+                public void onPostExecute(ArrayList<WallMenuListItem> results) {
                     centralProgress.setVisibility(View.GONE);
                     dishesWall.setVisibility(View.VISIBLE);
 
                     if (results != null && results.size() > 0) {
-                        for (MenuListItem item : results) {
+                        for (WallMenuListItem item : results) {
                             String matchingFiltersInfo = constructMatchingFiltersInfo(item.MatchingFiltersIds);
                             String mismatchingFiltersInfo = constructMismatchingFiltersInfo(item.MismatchingFiltersIds);
 
@@ -575,31 +579,34 @@ public class WallActivity
         else {
             Toast.makeText(applicationContext, R.string.activity_wall_locationNotResolvedToast, Toast.LENGTH_LONG).show();
         }
+    }
 
-        }
+    private void loadMenuListItemImageThumbnail(DishWallItem dishWallItem) {
+        if (dishWallItem != null &&
+                dishWallItem.WallMenuListItem != null &&
+                dishWallItem.WallMenuListItem.ImageThumbnail != null &&
+                StringHelper.isNotNullOrEmpty(dishWallItem.WallMenuListItem.ImageThumbnail.Id)) {
 
-            private void loadMenuListItemImageThumbnail(DishWallItem dishWallItem) {
+            dishWallItem.WallMenuListItem.ImageThumbnail.Bitmap = getBitmapFromMemCache(dishWallItem.WallMenuListItem.ImageThumbnail.Id);
+
+            if (dishWallItem.WallMenuListItem.ImageThumbnail.Bitmap == null){
                 AsyncTaskListener<byte[]> mliImageResultListener = new AsyncTaskListener<byte[]>() {
                     @Override public void onPreExecute() {
                         //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
                     }
-            @Override public void onPostExecute(byte[] bytes) {
-                if (ArrayHelper.hasValidBitmapContent(bytes)){
-                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, 200, 200, false);
-                    dishWallItem.MenuListItem.ImageThumbnail.Bitmap = scaledBmp;
-                    addBitmapToMemoryCache(dishWallItem.MenuListItem.ImageThumbnail.Id, scaledBmp);
-                }
-                wallDishesAdapter.onItemChanged(dishWallItem);
-                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
-            }
-        };
+                    @Override public void onPostExecute(byte[] bytes) {
+                        if (ArrayHelper.hasValidBitmapContent(bytes)){
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, 200, 200, false);
+                            dishWallItem.WallMenuListItem.ImageThumbnail.Bitmap = scaledBmp;
+                            addBitmapToMemoryCache(dishWallItem.WallMenuListItem.ImageThumbnail.Id, scaledBmp);
+                        }
+                        wallDishesAdapter.onItemChanged(dishWallItem);
+                        //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
+                    }
+                };
 
-        if (dishWallItem != null && dishWallItem.MenuListItem != null && dishWallItem.MenuListItem.ImageThumbnail != null) {
-            if (StringHelper.isNotNullOrEmpty(dishWallItem.MenuListItem.ImageThumbnail.Id)) {
-                dishWallItem.MenuListItem.ImageThumbnail.Bitmap = getBitmapFromMemCache(dishWallItem.MenuListItem.ImageThumbnail.Id);
-                if (dishWallItem.MenuListItem.ImageThumbnail.Bitmap == null)
-                    new AzureBlobService().downloadMenuListItemThumbnail(dishWallItem.MenuListItem.ImageThumbnail.Id, ImageResolution.Format200x200, mliImageResultListener);
+                new AzureBlobService().downloadMenuListItemThumbnail(this.baseContext, dishWallItem.WallMenuListItem.ImageThumbnail.Id, ImageResolution.Format200x200, mliImageResultListener);
             }
         } //IN ALL 3 'ELSE'S DO NOTHING. The Item has already been set the default image
     }
@@ -648,16 +655,6 @@ public class WallActivity
         } catch (IllegalAccessException e) {
             Log.e("SearchView", e.getMessage(), e);
         }
-    }
-
-    @OptionsItem(R.id.action_venues)
-    void actionVenuesClicked(MenuItem item) {
-        this.navigateVenuesSearch();
-    }
-
-    @OptionsItem(R.id.action_dishes)
-    void actionDishesClicked(MenuItem item) {
-        this.navigateDishesSearch();
     }
 
     private boolean checkFiltersSelected(){
@@ -722,19 +719,6 @@ public class WallActivity
             intent.putExtra("PreselectedVenueCultureFilterIds", SelectedVenueCultureFilterIds);
             startActivity(intent);
         }
-    }
-
-    public void navigateVenuesSearch() {
-        Intent intent = new Intent(WallActivity.this, WallActivity_.class);
-        intent.putExtra("DishesSearchModeActivated", false);
-        startActivity(intent);
-    }
-
-    public void navigateDishesSearch() {
-        Intent intent = new Intent(WallActivity.this, WallActivity_.class);
-        intent.putExtra("DishesSearchModeActivated", true);
-
-        startActivity(intent);
     }
 
     void refreshLastKnownLocation() {
@@ -858,4 +842,35 @@ public class WallActivity
         return mMemoryCache.get(key);
     }
 
+    public void navigateVenuesSearch() {
+        Intent intent = new Intent(WallActivity.this, WallActivity_.class);
+        intent.putExtra("DishesSearchModeActivated", false);
+        startActivity(intent);
+    }
+
+    public void navigateDishesSearch() {
+        Intent intent = new Intent(WallActivity.this, WallActivity_.class);
+        intent.putExtra("DishesSearchModeActivated", true);
+        startActivity(intent);
+    }
+
+    public void navigateLanding() {
+        Intent intent = new Intent(WallActivity.this, LandingActivity_.class);
+        startActivity(intent);
+    }
+
+    @OptionsItem(R.id.action_venues)
+    void actionVenuesClicked(MenuItem item) {
+        this.navigateVenuesSearch();
+    }
+
+    @OptionsItem(R.id.action_dishes)
+    void actionDishesClicked(MenuItem item) {
+        this.navigateDishesSearch();
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.navigateLanding();
+    }
 }

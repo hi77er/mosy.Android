@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:padding="10dp"
+        android:background="@color/colorTableAccountActions"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:id="@+id/clientTableAccountItem_llActions"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/clientTableAccountOrders_btnAttention"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:visibility="invisible"
+                android:background="@drawable/button_venue_item_menu"
+                android:text="Call"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"/>
+
+            <ImageView
+                android:id="@+id/clientTableAccountOrders_ivAssignedOperator"
+                android:visibility="invisible"
+                android:layout_height="35dp"
+                android:layout_width="35dp"
+                android:src="@drawable/ic_account_24"
+                android:tint="@color/colorPrimary"
+                android:layout_gravity="center_vertical" />
+
+            <Button
+                android:id="@+id/clientTableAccountOrders_btnBill"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="5dp"
+                android:visibility="invisible"
+                android:background="@drawable/button_venue_item_menu"
+                android:text="Bill"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/clientTableAccountOrders_tvAccountStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite"
+            android:text="Awaiting approvement"
+            android:gravity="center_horizontal" />
+    </LinearLayout>
+
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:background="@color/colorWhite"
+        android:layout_height="0dp"
+        android:layout_weight="13">
+
+        <LinearLayout
+            android:id="@+id/llInitialLoadingProgress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <ProgressBar
+                android:id="@+id/pbHeaderProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true" >
+            </ProgressBar>
+        </LinearLayout>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:id="@+id/clientTableAccountOrders_llEmptyMessageLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/ivSwipeToRefresh"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:src="@drawable/ic_gesture_swipe_down_24"
+                android:tint="@color/colorPrimaryLight"
+                android:indeterminate="true" />
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/activity_wall_swipeDownToRefreshMessageTextView"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryLight" />
+        </LinearLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:id="@+id/clientTableAccountOrders_lOrdersSwipeContainer"
+            android:visibility="visible"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="fill_vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/clientTableAccountOrders_lvOrders"
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_weight="2"
+                android:focusableInTouchMode="false"
+                android:listSelector="@android:color/transparent"
+                android:cacheColorHint="#000000"
+                android:drawSelectorOnTop="false">
+
+            </android.support.v7.widget.RecyclerView>
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

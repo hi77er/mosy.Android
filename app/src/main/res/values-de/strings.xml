@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Foodoo</string>
+    <string name="app_name">Treatspark</string>
     <string name="activity_wall_swipeDownToRefreshMessageTextView">AKTUALISIEREN SIE DEN INHALT</string>
     <string name="activity_landing_languageBgSpinner">Bulgarisch</string>
     <string name="activity_landing_languageEnUSSpinner">Englisch</string>

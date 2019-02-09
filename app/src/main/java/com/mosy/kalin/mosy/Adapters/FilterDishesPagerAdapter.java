@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.ViewGroup;
 
+import com.mosy.kalin.mosy.CustomControls.DynamicHeightViewPager;
 import com.mosy.kalin.mosy.Fragments.FiltersPage_;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.FilterItem;
@@ -15,6 +17,8 @@ import java.util.ArrayList;
 
 public class FilterDishesPagerAdapter
         extends FragmentStatePagerAdapter {
+
+    private int mCurrentPosition = -1;
 
     public ArrayList<FilterItem> DishTypeFilterItems;
     public ArrayList<FilterItem> DishRegionFilterItems;
@@ -34,6 +38,20 @@ public class FilterDishesPagerAdapter
         this.DishRegionFilterItems = dishRegionFilterItems;
         this.DishMainIngredientFilterItems = dishMainIngredientFilterItems;
         this.DishAllergenFilterItems = dishAllergenFilterItems;
+    }
+
+    @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        super.setPrimaryItem(container, position, object);
+        if (position != mCurrentPosition) {
+            Fragment fragment = (Fragment) object;
+            FiltersPage_ filtersPage = (FiltersPage_) object;
+            DynamicHeightViewPager pager = (DynamicHeightViewPager) container;
+            if (fragment != null && fragment.getView() != null) {
+                mCurrentPosition = position;
+                pager.measureCurrentView(fragment.getView(), filtersPage.getItemsCount(), filtersPage.getExcessHeight());
+            }
+        }
     }
 
     @Override

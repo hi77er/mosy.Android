@@ -12,74 +12,73 @@
     tools:context=".RegisterActivity_">
 
     <TextView
+        android:id="@+id/tvAppName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal = "true"
+        android:textColor = "#740d26"
+        android:textSize = "35sp" />
+
+    <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/activity_register_titleTextView"
         android:textSize="35sp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:id="@+id/tvAppName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:layout_below="@+id/tvTitle"
-        android:layout_centerHorizontal = "true"
-        android:textColor = "#740d26"
-        android:textSize = "35sp" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tvAppName"
+        android:layout_marginBottom="80dp" />
 
     <EditText
         android:id = "@+id/etEmail"
-        android:layout_width = "wrap_content"
+        android:layout_below = "@+id/tvTitle"
+        android:layout_width = "match_parent"
         android:layout_height = "wrap_content"
-        android:hint = "@string/activity_register_emailEditText"
         android:focusable = "true"
-        android:textColorHighlight = "#ff7eff15"
-        android:textColorHint = "#ffff299f"
-        android:layout_marginTop = "46sp"
-        android:layout_below = "@+id/tvAppName"
-        android:layout_alignParentLeft = "true"
-        android:layout_alignParentStart = "true"
-        android:layout_alignParentRight = "true"
-        android:layout_alignParentEnd = "true"
+        android:hint = "@string/activity_register_emailEditText"
+        android:textColorHint = "@color/softer"
         android:inputType="textEmailAddress" />
 
     <EditText
         android:id="@+id/etPassword"
-        android:layout_width="wrap_content"
+        android:layout_below="@+id/etEmail"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:layout_below="@+id/etEmail"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/etEmail"
-        android:layout_alignEnd="@+id/etEmail"
-        android:textColorHint="#ffff299f"
-        android:hint="@string/activity_register_passwordEditText" />
+        android:hint="@string/activity_register_passwordEditText"
+        android:textColorHint="@color/softer" />
+
     <EditText
         android:id="@+id/etRepeatPassword"
-        android:layout_width="wrap_content"
+        android:layout_below="@+id/etPassword"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:layout_below="@+id/etPassword"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/etEmail"
-        android:layout_alignEnd="@+id/etEmail"
-        android:textColorHint="#ffff299f"
-        android:hint="Repeat password" />
+        android:hint="Repeat password"
+        android:textColorHint="@color/softer" />
+
+    <TextView
+        android:id="@+id/tvInfoMessage"
+        android:layout_below="@+id/etRepeatPassword"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:textColor="@color/colorPrimaryApricot"
+        android:gravity="center_horizontal" />
 
     <LinearLayout
         android:id="@+id/register_llInitialLoadingProgress"
-        android:layout_width="fill_parent"
+        android:layout_below="@+id/etRepeatPassword"
+        android:visibility="gone"
+        android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:layout_below="@+id/landing_lButtons"
-        android:gravity="center"
-        android:visibility="invisible">
+        android:layout_marginTop="50dp"
+        android:gravity="center">
 
         <ProgressBar
             android:id="@+id/pbHeaderProgress"
@@ -89,32 +88,22 @@
         </ProgressBar>
     </LinearLayout>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/landing_lButtons"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:orientation="vertical">
-
-    <Button
-        android:id="@+id/btnRegister"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/landing_lButtons"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/activity_register_registerBtn"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/background_primary_very_light"
-        android:textColor="@color/colorPrimary"
-        android:stateListAnimator="@null"/>
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btnCancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/activity_register_cancelBtn"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/background_primary_very_light"
-        android:textColor="@color/colorPrimary"
-        android:stateListAnimator="@null"/>
-</LinearLayout>
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_register_registerBtn"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/background_primary_very_light"
+            android:textColor="@color/colorPrimary"
+            android:stateListAnimator="@null"/>
+    </LinearLayout>
 </RelativeLayout>

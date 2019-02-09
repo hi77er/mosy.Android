@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.ViewGroup;
 
 import com.annimon.stream.Stream;
+import com.mosy.kalin.mosy.CustomControls.DynamicHeightViewPager;
 import com.mosy.kalin.mosy.Fragments.FiltersPage_;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.FilterItem;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 
 public class FilterVenuesPagerAdapter
         extends FragmentStatePagerAdapter {
+
+    private int mCurrentPosition = -1;
 
     public ArrayList<FilterItem> VenueAccessibilityFilterItems;
     public ArrayList<FilterItem> VenueAvailabilityFilterItems;
@@ -40,6 +44,20 @@ public class FilterVenuesPagerAdapter
 ////        this.VenueAvailabilityFilterItems = new ArrayList<>(Stream.of(venueAvailabilityFilterItems).sortBy(x -> x.OrderIndex).toList());
 ////        this.VenueAtmosphereFilterItems = new ArrayList<>(Stream.of(venueAtmosphereFilterItems).sortBy(x -> x.OrderIndex).toList());
 ////        this.VenueCultureFilterItems = new ArrayList<>(Stream.of(venueCultureFilterItems).sortBy(x -> x.OrderIndex).toList());
+    }
+
+    @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        super.setPrimaryItem(container, position, object);
+        if (position != mCurrentPosition) {
+            Fragment fragment = (Fragment) object;
+            FiltersPage_ filtersPage = (FiltersPage_) object;
+            DynamicHeightViewPager pager = (DynamicHeightViewPager) container;
+            if (fragment != null && fragment.getView() != null) {
+                mCurrentPosition = position;
+                pager.measureCurrentView(fragment.getView(), filtersPage.getItemsCount(), filtersPage.getExcessHeight());
+            }
+        }
     }
 
     @Override

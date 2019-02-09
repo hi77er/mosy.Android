@@ -6,12 +6,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.WallMenuListItem;
 import com.mosy.kalin.mosy.DTOs.MenuListItemCulture;
 import com.mosy.kalin.mosy.Helpers.MenuListItemHelper;
 import com.mosy.kalin.mosy.R;
 
-import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
@@ -32,16 +31,21 @@ public class MenuListItemView
         super(context);
     }
 
-    public void bind(MenuListItem menuListItem) {
-        if (menuListItem != null)
+    public void bind(WallMenuListItem wallMenuListItem) {
+        if (wallMenuListItem != null)
         {
-            MenuListItemCulture selectedCulture = MenuListItemHelper.getMenuListItemCulture(getContext(), menuListItem);
+            MenuListItemCulture selectedCulture = MenuListItemHelper.getMenuListItemCulture(getContext(), wallMenuListItem);
 
             this.name.setText(selectedCulture.MenuListItemName);
-            this.price.setText(menuListItem.PriceDisplayText);
+            this.price.setText(wallMenuListItem.PriceDisplayText);
             // if (isSelected)
             // this.setBackgroundColor(Color.WHITE);
         }
     }
+//
+//    @Click(R.id.menuListItem_llRow)
+//    public void itemClick() {
+//        String asdas = "";
+//    }
 
 }

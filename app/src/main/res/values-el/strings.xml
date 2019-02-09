@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Foodoo</string>
+    <string name="app_name">Treatspark</string>
     <string name="activity_wall_swipeDownToRefreshMessageTextView">ΑΝΑΓΝΩΡΙΖΕΤΕ ΤΟ ΠΕΡΙΕΧΟΜΕΝΟ</string>
     <string name="activity_landing_languageBgSpinner">Βουλγαρική</string>
     <string name="activity_landing_languageEnUSSpinner">Αγγλική</string>
@@ -50,11 +50,7 @@
     <string name="DishesFilterTypeBreakfastName">Πρωινό</string>
     <string name="DishesFilterTypeMainsName">Κύρια πιάτα</string>
     <string name="DishesFilterTypeDesertsName">Επιδόρπια</string>
-    <string name="DishesFilterRegionAsianName">Ασιάτικα</string>
-    <string name="DishesFilterRegionMiddleEasternName">Ανατολίτικα</string>
-    <string name="DishesFilterRegionEuropeanName">Ευρωπαϊκά</string>
     <string name="DishesFilterRegionAfricanName">Αφρικανικά</string>
-    <string name="DishesFilterRegionAmericanName">Αμερικανικά</string>
     <string name="DishesFilterMainIngredientFishAndSeafoodName"><![CDATA[Ψάρια & θαλασσινά]]></string>
     <string name="DishesFilterMainIngredientWhiteMeatName">Λευκό κρέας</string>
     <string name="DishesFilterMainIngredientVeganName">Βίγκαν</string>
@@ -95,5 +91,4 @@
     <string name="activity_venueDetails_getDirections">κατευθύνσεις</string>
     <string name="activity_landing_loginSignUpBtn">Συνδεθεί / Εγγραφείτε</string>
     <string name="activity_landing_profileBtn">Προφίλ</string>
-    <string name="DishesFilterTypeAlcoholicDrinksName">Αλκοολούχα ποτά</string>
 </resources>

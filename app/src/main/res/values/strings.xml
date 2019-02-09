@@ -7,6 +7,14 @@
     <!--Preferences-->
     //TODO: Move this to Preferences
     <string name="google_maps_key" translatable="false">"AIzaSyDkyNsNMAi8VoxWrLnI-8pp0W5P54r2Dvs"</string>
+
+    <string name="facebook_app_id" translatable="false">284067495425756</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb284067495425756</string>
+
+    <string name="webAPI_username" translatable="false">webapiadmin@mosy.com</string>
+    <string name="webAPI_pass" translatable="false">!23Qwe</string>
+    <string name="webAPI_grant_type" translatable="false">password</string>
+
     <string name="pref_walls_visited" translatable="false">"prefWallsVisited"</string>
     <string name="pref_authToken_webApi" translatable="false">"prefAuthTokenWebApi"</string>
     <string name="pref_authTokenType_webApi" translatable="false">"prefAuthTokenType"</string>
@@ -15,23 +23,40 @@
     <string name="pref_collectionName_developersMode" translatable="false">DevelopersModePreferences</string>
     <string name="pref_developersModeEnabled" translatable="false">DevelopersModeEnabled</string>
     <string name="pref_collectionName_webApi" translatable="false">"WebApiToken"</string>
-    <string name="pref_collectionName_user">UserToken</string>
-    <string name="pref_authToken_user">prefAuthTokenUser</string>
-    <string name="pref_authTokenType_user">prefAuthTokenType</string>
-    <string name="pref_authTokenExpiresAt_user">prefAuthTokenExpiresAt</string>
-    <string name="pref_authTokenExpiresInSeconds_user">prefAuthTokenExpiresInSeconds</string>
+    <string name="pref_collectionName_user" translatable="false">UserToken</string>
+    <string name="pref_authToken_user" translatable="false">prefAuthTokenUser</string>
+    <string name="pref_authTokenType_user" translatable="false">prefAuthTokenType</string>
+    <string name="pref_authTokenExpiresAt_user" translatable="false">prefAuthTokenExpiresAt</string>
+    <string name="pref_authTokenExpiresInSeconds_user" translatable="false">prefAuthTokenExpiresInSeconds</string>
 
     <!-- AndroidManifest -->
     <string name="app_name">"Treatspark"</string>
-    <string name="manifest_landingActivityTitle" translatable="false">"Treatspark"</string>
     <string name="manifest_venuesActivityTitle" translatable="false">"Venues"</string>
-    <string name="manifest_venueDetailsActivityTitle" translatable="false">"Venue Details"</string>
+    <string name="manifest_venueDetailsActivityTitle" translatable="false">"WallVenue Details"</string>
     <string name="manifest_itemDetailsActivityTitle" translatable="false">"Item Details"</string>
 
+    <!-- Links and Urls -->
+
+    <string name="link_social_facebook" translatable="false">https://www.facebook.com/treatspark/</string>
+    <string name="link_social_instagram" translatable="false">https://www.instagram.com/treatsparks</string>
+    <string name="link_social_twitter" translatable="false">https://www.twitter.com/treatspark</string>
+
+    <string name="azureBlobContainerPath_fboalbums_100x100" translatable="false">userimages\\fboalbums\\100x100</string>
+    <string name="azureBlobContainerPath_requestableAlbums_100x100" translatable="false">userimages\\requestablealbums\\100x100</string>
+    <string name="azureBlobContainerPath_profile_100x100" translatable="false">userimages\\profile\\100x100</string>
+    <string name="azureBlobContainerPath_fboAlbums_200x200" translatable="false">userimages\\fboalbums\\200x200</string>
+    <string name="azureBlobContainerPath_requestablesAlbums_200x200" translatable="false">userimages\\requestablealbums\\200x200</string>
+    <string name="azureBlobContainerPath_profile_200x200" translatable="false">userimages\\profile\\200x200</string>
+    <string name="azureBlobContainerPath_fboAlbums_300x300" translatable="false">userimages\\fboalbums\\300x300</string>
+    <string name="azureBlobContainerPath_requestablesAlbums_300x300" translatable="false">userimages\\requestablealbums\\300x300</string>
+    <string name="azureBlobContainerPath_profile_300x300" translatable="false">userimages\\profile\\300x300</string>
+    <string name="azureBlobContainerPath_profile_original" translatable="false">userimages\\profile\\original</string>
+    <string name="azureBlobContainerPath_requestablesAlbums_original" translatable="false">userimages\\requestablealbums\\original</string>
+    <string name="azureBlobContainerPath_fboAlbums_original" translatable="false">userimages\\fboalbums\\original</string>
+
     <!-- Activity Landing -->
-    <string name="activity_landing_promotionsBtn">Promotions</string>
-    <string name="activity_landing_venuesBtn"><![CDATA[VENUES \n & MENUS]]></string>
-    <string name="activity_landing_dishesBtn"><![CDATA[FIND DISHES \n & DRINKS]]></string>
+    <string name="activity_landing_venuesBtn"><![CDATA[VENUES & MENUS]]></string>
+    <string name="activity_landing_dishesBtn"><![CDATA[DISHES & DRINKS]]></string>
     <string name="activity_landing_languageBgSpinner">Bulgarian</string>
     <string name="activity_landing_languageEnUSSpinner">English</string>
     <string name="activity_landing_languageDeSpinner">German</string>
@@ -43,7 +68,7 @@
     <string name="activity_landing_loginSignUpBtn">Login / Signup</string>
 
     <!-- Activity Login -->
-    <string name="activity_login_titleTextView">"Login to"</string>
+    <string name="activity_login_titleTextView">"Login"</string>
     <string name="activity_login_emailEditText">"Enter Email"</string>
     <string name="activity_login_passwordEditText">"Password"</string>
     <string name="activity_login_cancelBtn">"Back"</string>
@@ -52,7 +77,7 @@
     <string name="activity_login_registerBtn">"Signup"</string>
 
     <!-- Activity Register -->
-    <string name="activity_register_titleTextView">"Register to"</string>
+    <string name="activity_register_titleTextView">"Create account"</string>
     <string name="activity_register_emailEditText">"Enter Email"</string>
     <string name="activity_register_passwordEditText">"Password"</string>
     <string name="activity_register_cancelBtn">"Back"</string>
@@ -64,7 +89,7 @@
     <string name="menu_btnNavigateToDishesText">"Dishes"</string>
 
     <!-- Activity Venues -->
-    <string name="activity_wall_searchVenuesHint">"Search venues …"</string>
+    <string name="activity_wall_searchVenuesHint">"Search wallVenues …"</string>
     <string name="activity_wall_searchDishesHint">"Search dishes …"</string>
     <string name="activity_wall_filtersSettingsTextView">"Filters Settings"</string>
     <string name="activity_wall_swipeDownToRefreshMessageTextView">SWIPE DOWN TO REFRESH</string>
@@ -72,7 +97,7 @@
     <string name="activity_wall_missingFiltersInfoLabel">missing:</string>
     <string name="activity_wall_noInternetTextView">No internet!</string>
 
-    <!-- Activity Venue Details -->
+    <!-- Activity WallVenue Details -->
     <string name="activity_venueDetails_mondayHoursTextView">"Mon"</string>
     <string name="activity_venueDetails_tuesdayHoursTextView">"Tue"</string>
     <string name="activity_venueDetails_wednesdayHoursTextView">"Wed"</string>
@@ -82,35 +107,35 @@
     <string name="activity_venueDetails_sundayHoursTextView">"Sun"</string>
     <string name="activity_venueDetails_getDirections">Directions</string>
 
-    <!-- Item MenuListItem -->
+    <!-- Item WallMenuListItem -->
     <string name="item_menuListItem_nameTextView">"Menu Item Name"</string>
     <string name="item_menuListItem_priceTextView">"Price"</string>
 
     <!-- Item Dish -->
     <string name="item_dish_nameTextView">"Dish Name"</string>
-    <string name="item_dish_venueNameTextView">"Venue Name"</string>
+    <string name="item_dish_venueNameTextView">"WallVenue Name"</string>
 
     <!-- Activity Venues Filters -->
-    <string name="activity_venuesFilters_title">"Filter venues"</string>
+    <string name="activity_venuesFilters_title">"Filter wallVenues"</string>
     <string name="activity_venuesFilters_goBtn">"Go"</string>
-    <string name="activity_venuesFilters_showClosedTextView">Only show open venues</string>
+    <string name="activity_venuesFilters_showClosedTextView">Only show open wallVenues</string>
     <string name="activity_venuesFilters_distanceMeasureTypeKilometers">km</string>
     <string name="activity_venuesFilters_distanceFilterTextView">Search distance:</string>
     <string name="activity_venuesFilters_distanceMeasureTypeMeters">m</string>
     <string name="activity_venuesFilters_accessibilityFiltersTitle">Accessibility</string>
     <string name="activity_venuesFilters_availabilityFiltersTitle">Availability</string>
     <string name="activity_venuesFilters_atmosphereFiltersTitle">Atmosphere</string>
-    <string name="activity_venuesFilters_cultureFiltersTitle">Culture</string>
+    <string name="activity_venuesFilters_cultureFiltersTitle">Ethnicity</string>
     <string name="VenuesFilterBadgeBikesParkingAvailableName">"Bike parking/locks"</string>
     <string name="VenuesFilterBadgeToysCornerName">"Toys corner"</string>
     <string name="VenuesFilterBabyFriendlyName">Baby friendly</string>
-    <string name="VenuesFilterBadgeNoSmokingName">"No Smoking"</string>
-    <string name="VenuesFilterBadgeParkingAvailableName">"Car Parking"</string>
-    <string name="VenuesFilterBadgePetFriendlyName">"Pet Friendly"</string>
-    <string name="VenuesFilterBadgeRomanticPlaceName">"Romantic Place"</string>
-    <string name="VenuesFilterBadgeWheelchairFriendlyName">"Wheelchair Friendly"</string>
-    <string name="VenuesFilterBadgeWiFiAvailableName">"Wi-Fi Available"</string>
-    <string name="VenuesFilterBadgeWorkingFriendlyName">"Working Friendly"</string>
+    <string name="VenuesFilterBadgeNoSmokingName">"No smoking"</string>
+    <string name="VenuesFilterBadgeParkingAvailableName">"Car parking"</string>
+    <string name="VenuesFilterBadgePetFriendlyName">"Pet friendly"</string>
+    <string name="VenuesFilterBadgeRomanticPlaceName">"Romantic place"</string>
+    <string name="VenuesFilterBadgeWheelchairFriendlyName">"Wheelchair friendly"</string>
+    <string name="VenuesFilterBadgeWiFiAvailableName">"Wi-Fi available"</string>
+    <string name="VenuesFilterBadgeWorkingFriendlyName">"Working friendly"</string>
     <string name="VenuesFilterArtName">Art</string>
     <string name="VenuesFilterCosyName">Cosy</string>
     <string name="VenuesFilterDancingName">Dancing</string>
@@ -170,30 +195,30 @@
     <string name="VenuesFilterPubGamesDescription">Pool/Billiard, dart, etc. are available.</string>
     <string name="VenuesFilterRooftopDescription">Rooftop available.</string>
     <string name="VenuesFilterSelfServiceDescription">Self-service.</string>
-    <string name="VenuesFilterSheeshaDescription">Sheesha available.</string>
-    <string name="VenuesFilterCultureBulgariaDescription">"This venue is particularly popular for people from Bulgaria."</string>
-    <string name="VenuesFilterCultureRussiaDescription">"This venue is particularly popular for people from Russia."</string>
-    <string name="VenuesFilterCultureGreeceDescription">This venue is particularly popular for people from Greece.</string>
-    <string name="VenuesFilterCultureSpainDescription">This venue is particularly popular for people from Spain.</string>
-    <string name="VenuesFilterCulturePortugalDescription">This venue is particularly popular for people from Portugal.</string>
-    <string name="VenuesFilterCultureGermanyDescription">This venue is particularly popular for people from Germany.</string>
-    <string name="VenuesFilterCultureCubaDescription">This venue is particularly popular for people from Cuba.</string>
-    <string name="VenuesFilterCultureAngolaDescription">This venue is particularly popular for people from Angola.</string>
-    <string name="VenuesFilterCultureTurkeyDescription">This venue is particularly popular for people from Turkey.</string>
-    <string name="VenuesFilterCultureBrazilDescription">This venue is particularly popular for people from Brazil.</string>
-    <string name="VenuesFilterCultureItalyDescription">This venue is particularly popular for people from Italy.</string>
-    <string name="VenuesFilterCultureColombiaDescription">This venue is particularly popular for people from Colombia.</string>
-    <string name="VenuesFilterCultureArgentinaDescription">This venue is particularly popular for people from Argentina.</string>
+    <string name="VenuesFilterSheeshaDescription">Hookah (shisha) available.</string>
+    <string name="VenuesFilterCultureBulgariaDescription">"This wallVenue is particularly popular for people from Bulgaria."</string>
+    <string name="VenuesFilterCultureRussiaDescription">"This wallVenue is particularly popular for people from Russia."</string>
+    <string name="VenuesFilterCultureGreeceDescription">This wallVenue is particularly popular for people from Greece.</string>
+    <string name="VenuesFilterCultureSpainDescription">This wallVenue is particularly popular for people from Spain.</string>
+    <string name="VenuesFilterCulturePortugalDescription">This wallVenue is particularly popular for people from Portugal.</string>
+    <string name="VenuesFilterCultureGermanyDescription">This wallVenue is particularly popular for people from Germany.</string>
+    <string name="VenuesFilterCultureCubaDescription">This wallVenue is particularly popular for people from Cuba.</string>
+    <string name="VenuesFilterCultureAngolaDescription">This wallVenue is particularly popular for people from Angola.</string>
+    <string name="VenuesFilterCultureTurkeyDescription">This wallVenue is particularly popular for people from Turkey.</string>
+    <string name="VenuesFilterCultureBrazilDescription">This wallVenue is particularly popular for people from Brazil.</string>
+    <string name="VenuesFilterCultureItalyDescription">This wallVenue is particularly popular for people from Italy.</string>
+    <string name="VenuesFilterCultureColombiaDescription">This wallVenue is particularly popular for people from Colombia.</string>
+    <string name="VenuesFilterCultureArgentinaDescription">This wallVenue is particularly popular for people from Argentina.</string>
     <string name="VenuesFilterCouchesDescription">Couches/Sofas are available.</string>
     <string name="VenuesFilterStandingDesksDescription">Availability of high tables to work while standing.</string>
 
     <!-- Activity Dishes Filters -->
     <string name="activity_dishesFilters_title">Filter dishes &amp; drinks</string>
-    <string name="activity_dishesFilters_showClosedTextView">"Only show open venues"</string>
+    <string name="activity_dishesFilters_showClosedTextView">"Only show open wallVenues"</string>
     <string name="activity_dishesFilters_goBtn">"Go"</string>
     <string name="activity_dishesFilters_typeFiltersTitle">Type</string>
     <string name="activity_dishesFilters_regionFiltersTitle">Region</string>
-    <string name="activity_dishesFilters_ingredientsFiltersTitle">Ingredients</string>
+    <string name="activity_dishesFilters_ingredientsFiltersTitle">Dietary</string>
     <string name="activity_dishesFilters_allergensFiltersTitle">Allergens</string>
     <string name="activity_dishesFilters_allergensFiltersNote">* Selecting allergens will hide dishes and drinks that contain them in your search results.</string>
     <string name="activity_dishesFilters_distanceFilterTextView">Distance:</string>
@@ -210,7 +235,7 @@
     <string name="DishesFilterTypeNonalcoholicDrinksName">Non-alcoholic drinks</string>
     <string name="DishesFilterTypeBreakfastName">"Breakfast"</string>
     <string name="DishesFilterTypeMainsName">"Mains"</string>
-    <string name="DishesFilterTypeDesertsName">"Deserts"</string>
+    <string name="DishesFilterTypeDesertsName">"Desserts"</string>
 
     <string name="DishesFilterRegionAfricanName">African</string>
     <string name="DishesFilterRegionBalkanName">Balkan</string>
@@ -268,14 +293,36 @@
     <string name="DishesFilterRegionSouthAsianDescription">E.g. Indonesian, Philippine, Thai, Vietnamese, etc.</string>
     <string name="DishesFilterMainIngredientWhiteMeatDescription">E.g. chicken, turkey, duck, etc.</string>
     <string name="DishesFilterMainIngredientRedMeatDescription">E.g. beef, Pork, Game, etc.</string>
-    <string name="activity_userprofile_logoutBtn">Sign out</string>
+
     <string name="activity_dishesFilters_showRecommendedTextView">Only show recommended items</string>
     <string name="activity_dishesFilters_resetFiltersBtn">Reset</string>
-    <string name="item_dish_workingStatusOpenedLabelTextView">OPENED</string>
+
+    <!-- Activity Dish Item -->
+    <string name="item_dish_workingStatusOpenedLabelTextView">OPEN</string>
     <string name="item_dish_workingStatusClosedLabelTextView">CLOSED</string>
     <string name="item_dish_workingStatus247LabelTextView">24/7</string>
     <string name="item_dish_recommendedLabelTextView">R+</string>
     <string name="item_dish_newLabelTextView">NEW</string>
+
+    <!-- Activity Dish Item Details -->
+    <string name="activity_itemdetails_viewstextview">Views</string>
+
+    <!-- Activity User Profile -->
+    <string name="activity_userprofile_connect_with_facebook">Connect Facebook account</string>
+    <string name="activity_landing_work_btn">Work</string>
+    <string name="activity_userprofile_logoutBtn">Sign out</string>
+
+    <!-- Activities Table Accounts -->
+    <string name="activity_operatorTableAccountsVenues_title">Your venues</string>
+    <string name="activity_operatorTableAccounts_title">Accounts</string>
+    <string name="activity_operatorTableAccountsOrders_title">Orders</string>
+    <string name="pref_user_username">prefUserUsername</string>
+    <string name="pref_user_firstName">prefUserFirstName</string>
+    <string name="pref_user_lastName">prefUserLastName</string>
+    <string name="pref_user_roles">prefUserRoles</string>
+    <string name="activity_clientTableAccountsOrders_title">Table Account</string>
+    <string name="activity_venueTables_title">Select Table</string>
+    <string name="activity_venuesTables_title">Select Table</string>
 
 
 </resources>

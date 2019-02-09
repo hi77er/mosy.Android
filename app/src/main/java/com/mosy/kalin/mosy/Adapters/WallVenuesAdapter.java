@@ -10,16 +10,12 @@ import android.view.ViewGroup;
 import com.mosy.kalin.mosy.Adapters.Base.RecyclerViewAdapterBase;
 import com.mosy.kalin.mosy.Adapters.Base.ViewWrapper;
 import com.mosy.kalin.mosy.DTOs.Base.WallItemBase;
-import com.mosy.kalin.mosy.DTOs.MenuListItem;
-import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.DTOs.WallVenue;
 import com.mosy.kalin.mosy.ItemViews.Base.WallItemViewBase;
-import com.mosy.kalin.mosy.ItemViews.DishWallItemView;
-import com.mosy.kalin.mosy.ItemViews.DishWallItemView_;
 import com.mosy.kalin.mosy.ItemViews.FiltersInfoWallItemView;
 import com.mosy.kalin.mosy.ItemViews.FiltersInfoWallItemView_;
 import com.mosy.kalin.mosy.ItemViews.VenueWallItemView;
 import com.mosy.kalin.mosy.ItemViews.VenueWallItemView_;
-import com.mosy.kalin.mosy.Models.Views.ItemModels.DishWallItem;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.FiltersInfoItem;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.VenueWallItem;
 
@@ -70,7 +66,7 @@ public class WallVenuesAdapter
         } else if (viewType == WallItemBase.ITEM_TYPE_FILTERS_INFO_HEADER) {
             return FiltersInfoWallItemView_.build(activity);
         } else {
-            throw new IllegalArgumentException("Adapter supports only Venue and FilterInfo based items.");
+            throw new IllegalArgumentException("Adapter supports only WallVenue and FilterInfo based items.");
         }
     }
 
@@ -80,14 +76,14 @@ public class WallVenuesAdapter
         if (viewType == WallItemBase.ITEM_TYPE_VENUE_TILE) {
             VenueWallItemView view = (VenueWallItemView)viewHolder.getView();
             VenueWallItem wallItemBase = (VenueWallItem) this.items.get(position);
-            Venue venue = wallItemBase.Venue;
-            view.bind(venue);
+            WallVenue wallVenue = wallItemBase.WallVenue;
+            view.bind(wallVenue);
         } else if (viewType == WallItemBase.ITEM_TYPE_FILTERS_INFO_HEADER) {
             FiltersInfoWallItemView view = (FiltersInfoWallItemView)viewHolder.getView();
             FiltersInfoItem wallItemBase = (FiltersInfoItem) this.items.get(position);
             view.bind(wallItemBase.MatchingFiltersInfo, wallItemBase.MismatchingFiltersInfo);
         } else {
-            throw new IllegalArgumentException("Adapter supports only Venue and FilterInfo based items.");
+            throw new IllegalArgumentException("Adapter supports only WallVenue and FilterInfo based items.");
         }
     }
 
@@ -108,7 +104,7 @@ public class WallVenuesAdapter
         for (WallItemBase item : this.items) {
             if (item.getType() == WallItemBase.ITEM_TYPE_VENUE_TILE) {
                 VenueWallItem casted = (VenueWallItem) item;
-                if (venueId.equals(casted.Venue.Id))
+                if (venueId.equals(casted.WallVenue.Id))
                     return casted;
             }
         }
@@ -131,18 +127,18 @@ public class WallVenuesAdapter
             WallItemBase item = this.items.get(this.items.size() - 1);
             if (item.getType() == WallItemBase.ITEM_TYPE_VENUE_TILE) {
                 VenueWallItem casted = (VenueWallItem) item;
-                return (matchingFiltersIds.equals(casted.Venue.MatchingFiltersIds) && mismatchingFiltersIds.equals(casted.Venue.MismatchingFiltersIds));
+                return (matchingFiltersIds.equals(casted.WallVenue.MatchingFiltersIds) && mismatchingFiltersIds.equals(casted.WallVenue.MismatchingFiltersIds));
             } else {
-                throw new TypeNotPresentException("Currently working in Venue context. This type was not expected", new Exception());
+                throw new TypeNotPresentException("Currently working in WallVenue context. This type was not expected", new Exception());
             }
         }
         return false;
     }
 
-    public void addVenueWallItem(Venue venue) {
+    public void addVenueWallItem(WallVenue wallVenue) {
         if (this.items != null){
             VenueWallItem venueWallItem = new VenueWallItem();
-            venueWallItem.Venue = venue;
+            venueWallItem.WallVenue = wallVenue;
             this.items.add(venueWallItem);
             this.notifyDataSetChanged();
         }

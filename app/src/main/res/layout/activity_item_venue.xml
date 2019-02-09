@@ -25,7 +25,7 @@
                 android:layout_gravity="start"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Venue Name"
+                android:text="WallVenue Name"
                 android:textSize="17sp"
                 android:textStyle="bold"
                 android:textColor="@color/soft"  />
@@ -53,7 +53,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:textAlignment="center"
-                android:background="@color/colorDarkRed"
                 android:textSize="9sp"
                 android:textStyle="bold"
                 android:textColor="@color/colorWhite" />
@@ -65,7 +64,7 @@
                 <!--android:layout_height="wrap_content"-->
                 <!--android:textAlignment="center"-->
                 <!--android:text="@string/item_dish_newLabelTextView"-->
-                <!--android:background="@color/colorGreen"-->
+                <!--android:background="@color/blue"-->
                 <!--android:textSize="9sp"-->
                 <!--android:textStyle="bold"-->
                 <!--android:textColor="@color/colorWhite" />-->
@@ -79,7 +78,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/venueItem_ivOutdoorThumbnail"
+            android:id="@+id/venueItem_ivInteriorThumbnail"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginEnd="5dp"
@@ -164,7 +163,7 @@
                     android:id="@+id/venueItem_btnInfo"
                     android:layout_height="match_parent"
                     android:layout_width="60dp"
-                    android:text="MORE INFO"
+                    android:text="VENUE INFO"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:background="@drawable/button_venue_item_menu"

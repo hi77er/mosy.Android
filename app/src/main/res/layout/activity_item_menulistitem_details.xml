@@ -17,7 +17,6 @@
 
         <ImageView
             android:id="@+id/menuListItemDetails_ivMainImage"
-            android:src="@drawable/eat_paprika_100x100"
             android:layout_width="80dp"
             android:layout_height="80dp" />
 
@@ -58,19 +57,50 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="end">
+        android:layout_marginTop="6dp">
+
+        <Button
+            android:id="@+id/menuListItemDetails_btnAddItemToAccount"
+            android:layout_height="26dp"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/button_venue_item_menu"
+            android:text="Add to order"
+            android:textSize="12sp"
+            android:textColor="@color/colorPrimary"
+            android:scaleType="fitCenter"
+            android:visibility="invisible"
+            android:layout_gravity="start" />
+
+        <Button
+            android:id="@+id/menuListItemDetails_btnRemoveItemFromAccount"
+            android:layout_height="26dp"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/button_venue_item_menu"
+            android:text="Drop item"
+            android:textSize="12sp"
+            android:textColor="@color/colorPrimary"
+            android:scaleType="fitCenter"
+            android:visibility="invisible"
+            android:layout_gravity="start" />
 
         <ImageButton
             android:id="@+id/menuListItemDetails_btnAllergens"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:padding="2dp"
             android:background="@drawable/button_venue_item_menu"
             android:src="@drawable/ic_barley_off_18"
             android:tint="@color/colorPrimary"
             android:scaleType="fitCenter"
-            android:visibility="gone" />
+            android:visibility="invisible"
+            android:layout_gravity="end" />
 
     </LinearLayout>
+
 
 </LinearLayout>

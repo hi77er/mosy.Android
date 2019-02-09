@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Фуду</string>
+    <string name="app_name">Treatspark</string>
     <string name="activity_wall_swipeDownToRefreshMessageTextView">ДРЪПНИ НАДОЛУ ЗА ДА ОПРЕСНИШ</string>
     <string name="activity_landing_venuesBtn"><![CDATA[ЗАВЕДЕНИЯ \n & МЕНЮТА]]></string>
     <string name="activity_landing_dishesBtn"><![CDATA[ЯСТИЯ \n & НАПИТКИ]]></string>
@@ -43,11 +43,7 @@
     <string name="DishesFilterTypeBreakfastName">Бърза закуска</string>
     <string name="DishesFilterTypeDesertsName">Десерти</string>
     <string name="DishesFilterTypeMainsName">Основни</string>
-    <string name="DishesFilterRegionAsianName">Азиатска кухня</string>
-    <string name="DishesFilterRegionEuropeanName">Европейска кухня</string>
-    <string name="DishesFilterRegionMiddleEasternName">Близкоизточна кухня</string>
     <string name="DishesFilterRegionAfricanName">Африканска кухня</string>
-    <string name="DishesFilterRegionAmericanName">Северна и Южна Америка</string>
     <string name="DishesFilterMainIngredientFishAndSeafoodName">Морска храна</string>
     <string name="DishesFilterMainIngredientWhiteMeatName">Бяло месо</string>
     <string name="DishesFilterMainIngredientVeganName">Веган</string>
@@ -134,7 +130,6 @@
     <string name="VenuesFilterBadgePetFriendlyName">Разрешено за домашни любимци</string>
     <string name="VenuesFilterBadgeParkingAvailableName">Aвтомобилен паркинг</string>
     <string name="VenuesFilterBadgeNoSmokingName">Пушенето забранено</string>
-    <string name="VenuesFilterBadgeFunPlaceName">Развлекателно място</string>
     <string name="VenuesFilterBadgeToysCornerName">Детски кът</string>
     <string name="VenuesFilterBadgeBikesParkingAvailableName">Паркинг за велосипеди</string>
     <string name="VenuesFilterBadgeWorkingFriendlyDescription">На разположение са контакти. Спокойна и креативна атмосфера.</string>
@@ -162,10 +157,7 @@
     <string name="VenuesFilterTraditionalName">Традиционно</string>
     <string name="VenuesFilterLiveSportsName">Спортове на живо</string>
     <string name="VenuesFilterPrivateName">Частни събития</string>
-    <string name="VenuesFilterNonStopName">Нон-стоп</string>
     <string name="VenuesFilterAllYouCanEatName">На корем</string>
-    <string name="VenuesFilterBuffetName">Бюфет</string>
-    <string name="VenuesFilterDartName">Дарц</string>
     <string name="VenuesFilterOutdoorSittingName">Сядане отвън</string>
     <string name="VenuesFilterPubGamesName">Билярд</string>
     <string name="VenuesFilterRooftopName">Покрив</string>
@@ -181,16 +173,12 @@
     <string name="VenuesFilterTraditionalDescription">Традиционно за държавата.</string>
     <string name="VenuesFilterLiveSportsDescription">Може да се наблюдава спорт на живо или по телевизията..</string>
     <string name="VenuesFilterPrivateDescription">Може да бъде наемано за частни събития.</string>
-    <string name="VenuesFilterNonStopDescription">Работи 24/7.</string>
     <string name="VenuesFilterAllYouCanEatDescription">Ядене и пиене на корем на фиксирана цена.</string>
-    <string name="VenuesFilterBuffetDescription">Бюфет (срещу фиксирана цена или количество).</string>
-    <string name="VenuesFilterDartDescription">Наличен е дарц.</string>
     <string name="VenuesFilterOutdoorSittingDescription">Сядане на чист въздух (ако атмосферните условия позволяват).</string>
     <string name="VenuesFilterPubGamesDescription">Билярд.</string>
     <string name="VenuesFilterRooftopDescription">Покрив.</string>
     <string name="VenuesFilterSelfServiceDescription">Заведението е на самообслужване.</string>
     <string name="VenuesFilterSheeshaDescription">Може да се поръча Наргиле.</string>
-    <string name="DishesFilterTypBurgersName">Бургери</string>
     <string name="DishesFilterTypeSandwichesAndWrapsName">Сандвичи</string>
     <string name="DishesFilterTypePizzaName">Пица</string>
     <string name="DishesFilterTypePastaName">Паста</string>
@@ -198,11 +186,9 @@
     <string name="DishesFilterTypeBuffetName">Бюфет</string>
     <string name="DishesFilterRegionBalkanName">Балканска кухня</string>
     <string name="DishesFilterRegionChineseName">Китайска кухня</string>
-    <string name="DishesFilterRegionIndianName">Индийска кухня</string>
     <string name="DishesFilterRegionItalianName">Италианска кухня</string>
     <string name="DishesFilterRegionJapaneseName">Японска кухня</string>
     <string name="DishesFilterRegionOtherEuropeanName">Друга европейска</string>
-    <string name="DishesFilterRegionOtherAsianName">Друга азиатска</string>
     <string name="DishesFilterRegionNorthAmericanName">Северно американска</string>
     <string name="DishesFilterRegionMediterraneanName">Средиземноморска</string>
     <string name="DishesFilterRegionMexicanAndCentralAmericanName">Мексиканска и централноамериканска</string>
@@ -222,8 +208,6 @@
     <string name="DishesFilterMainIngredientRedMeatDescription">Телешко, свинско, дивеч и т.н.</string>
     <string name="activity_landing_profileBtn">Профил</string>
     <string name="activity_landing_loginSignUpBtn">Вход / Регистрация</string>
-    <string name="DishesFilterTypeAlcoholicDrinksName">Алкохолни напитки</string>
-    <string name="DishesFilterTypeAlcoholicDrinksDescription">Вино, бира, коктейли и т.н.</string>
     <string name="DishesFilterTypeBurgersName">Бургери</string>
     <string name="DishesFilterRegionIndianAsianName">Индийска кухня</string>
 </resources>

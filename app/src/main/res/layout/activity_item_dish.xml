@@ -76,7 +76,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:textAlignment="center"
-                    android:background="@color/colorDarkRed"
                     android:textSize="9sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorWhite" />
@@ -88,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/item_dish_recommendedLabelTextView"
                     android:background="@color/colorSecondaryAmber"
-                    android:textSize="10sp"
+                    android:textSize="9sp"
                     android:textAlignment="center"
                     android:textStyle="bold"
                     android:textColor="@color/colorWhite" />
@@ -100,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:text="@string/item_dish_newLabelTextView"
-                    android:background="@color/colorGreen"
+                    android:background="@color/colorQuaternaryDark"
                     android:textSize="9sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorWhite" />

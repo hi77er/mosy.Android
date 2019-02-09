@@ -2,21 +2,16 @@ package com.mosy.kalin.mosy.ItemViews;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mosy.kalin.mosy.DTOs.Enums.FilterType;
-import com.mosy.kalin.mosy.DTOs.Enums.FilteredType;
+import com.mosy.kalin.mosy.DTOs.Enums.ImageResolution;
 import com.mosy.kalin.mosy.DTOs.Enums.WorkingStatus;
 import com.mosy.kalin.mosy.DTOs.Filter;
-import com.mosy.kalin.mosy.DTOs.MenuListItem;
+import com.mosy.kalin.mosy.DTOs.WallMenuListItem;
 import com.mosy.kalin.mosy.DTOs.MenuListItemCulture;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
 import com.mosy.kalin.mosy.Helpers.BusinessHoursHelper;
@@ -24,10 +19,9 @@ import com.mosy.kalin.mosy.Helpers.LocationHelper;
 import com.mosy.kalin.mosy.Helpers.MenuListItemHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Models.AzureModels.DownloadBlobModel;
 import com.mosy.kalin.mosy.R;
-import com.mosy.kalin.mosy.Services.AsyncTasks.LoadAzureBlobAsyncTask;
 import com.mosy.kalin.mosy.ItemViews.Base.WallItemViewBase;
+import com.mosy.kalin.mosy.Services.AzureBlobService;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
@@ -41,7 +35,7 @@ public class DishWallItemView
     private boolean IsUsingDefaultThumbnail;
 
     private Context baseContext;
-    private MenuListItem MenuListItem;
+    private WallMenuListItem WallMenuListItem;
 
 
     @ViewById(R.id.menuListItem_tvName)
@@ -72,19 +66,19 @@ public class DishWallItemView
         this.baseContext = context;
     }
 
-    public void bind(MenuListItem menuListItem) {
+    public void bind(WallMenuListItem wallMenuListItem) {
         this.imageThumbnail.setImageDrawable(null);
 
-        if (menuListItem != null) {
-            this.MenuListItem = menuListItem;
+        if (wallMenuListItem != null) {
+            this.WallMenuListItem = wallMenuListItem;
 
-            MenuListItemCulture selectedCulture = MenuListItemHelper.getMenuListItemCulture(this.baseContext, menuListItem);
+            MenuListItemCulture selectedCulture = MenuListItemHelper.getMenuListItemCulture(this.baseContext, wallMenuListItem);
 
             this.nameTextView.setText(selectedCulture.MenuListItemName);
-            this.venueNameTextView.setText(menuListItem.VenueName);
+            this.venueNameTextView.setText(wallMenuListItem.VenueName);
 
-            if (menuListItem.ImageThumbnail != null && menuListItem.ImageThumbnail.Bitmap != null) {
-                this.imageThumbnail.setImageBitmap(menuListItem.ImageThumbnail.Bitmap);
+            if (wallMenuListItem.ImageThumbnail != null && wallMenuListItem.ImageThumbnail.Bitmap != null) {
+                this.imageThumbnail.setImageBitmap(wallMenuListItem.ImageThumbnail.Bitmap);
                 IsUsingDefaultThumbnail = false;
             }
             else {
@@ -93,14 +87,14 @@ public class DishWallItemView
 
             this.distanceFromDeviceTextView.setVisibility(INVISIBLE);
             this.walkingTimeTextView.setVisibility(INVISIBLE);
-            if (menuListItem.DistanceToCurrentDeviceLocation > 0)
+            if (wallMenuListItem.DistanceToCurrentDeviceLocation > 0)
             {
-                String distance = LocationHelper.buildDistanceText(menuListItem.DistanceToCurrentDeviceLocation);
+                String distance = LocationHelper.buildDistanceText(wallMenuListItem.DistanceToCurrentDeviceLocation);
                 if (StringHelper.isNotNullOrEmpty(distance)){
                     this.distanceFromDeviceTextView.setText(distance);
                     this.distanceFromDeviceTextView.setVisibility(VISIBLE);
 
-                    String timeWalking = LocationHelper.buildMinutesWalkingText(menuListItem.DistanceToCurrentDeviceLocation);
+                    String timeWalking = LocationHelper.buildMinutesWalkingText(wallMenuListItem.DistanceToCurrentDeviceLocation);
                     if (StringHelper.isNotNullOrEmpty(timeWalking)) {
                         this.walkingTimeTextView.setText(timeWalking);
                         this.walkingTimeTextView.setVisibility(VISIBLE);
@@ -108,38 +102,41 @@ public class DishWallItemView
                 }
             }
 
-            if (menuListItem.PriceDisplayText != null) {
-                this.priceTagTextVIew.setText(menuListItem.PriceDisplayText);
+            if (wallMenuListItem.PriceDisplayText != null) {
+                this.priceTagTextVIew.setText(wallMenuListItem.PriceDisplayText);
                 this.priceTagTextVIew.setVisibility(VISIBLE);
             }
 
-//            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(menuListItem.VenueBusinessHours);
-            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(menuListItem.VenueWorkingStatus);
+//            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(wallMenuListItem.VenueBusinessHours);
+            WorkingStatus status = BusinessHoursHelper.getWorkingStatus(wallMenuListItem.VenueWorkingStatus);
             this.workingStatusLabel.setVisibility(VISIBLE);
             switch (status){
                 case Open:
                     this.workingStatusLabel.setText(getResources().getString(R.string.item_dish_workingStatusOpenedLabelTextView));
+                    this.workingStatusLabel.setBackgroundResource(R.color.colorTertiary);
                     break;
                 case Open247:
                     this.workingStatusLabel.setText(getResources().getString(R.string.item_dish_workingStatus247LabelTextView));
+                    this.workingStatusLabel.setBackgroundResource(R.color.colorTertiaryLight);
                     break;
                 case Closed:
                     this.workingStatusLabel.setText(getResources().getString(R.string.item_dish_workingStatusClosedLabelTextView));
+                    this.workingStatusLabel.setBackgroundResource(R.color.colorDarkRed);
                     break;
                 case Unknown:
                     this.workingStatusLabel.setVisibility(GONE);
                     break;
             }
-            this.recommendedLabel.setVisibility(menuListItem.IsRecommended ? VISIBLE : GONE);
-            this.newLabel.setVisibility(menuListItem.IsNew ? VISIBLE : GONE);
+            this.recommendedLabel.setVisibility(wallMenuListItem.IsRecommended ? VISIBLE : GONE);
+            this.newLabel.setVisibility(wallMenuListItem.IsNew ? VISIBLE : GONE);
         }
     }
 
     private void setDefaultImageThumbnail() {
         boolean isVector = false;
         int drawableId = R.drawable.eat_paprika_100x100;
-        if (this.MenuListItem != null && this.MenuListItem.Filters != null){
-            for (Filter filter : this.MenuListItem.Filters) {
+        if (this.WallMenuListItem != null && this.WallMenuListItem.Filters != null){
+            for (Filter filter : this.WallMenuListItem.Filters) {
                 switch (filter.Id.toUpperCase()) {
                     case "A9C13F74-219A-4FC5-8D81-0A60D7A1173B": // salads
                         drawableId = R.drawable.ic_salad_96;
@@ -200,7 +197,10 @@ public class DishWallItemView
     @Click(R.id.menuListItem_ivThumbnail)
     public void ImageClick()
     {
-        if (!this.IsUsingDefaultThumbnail && this.MenuListItem != null && this.MenuListItem.ImageThumbnail != null && StringHelper.isNotNullOrEmpty(this.MenuListItem.ImageThumbnail.Id)){
+        if (!this.IsUsingDefaultThumbnail &&
+                this.WallMenuListItem != null &&
+                this.WallMenuListItem.ImageThumbnail != null &&
+                StringHelper.isNotNullOrEmpty(this.WallMenuListItem.ImageThumbnail.Id)){
 
             final Dialog nagDialog = new Dialog(this.getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -222,8 +222,7 @@ public class DishWallItemView
                 }
             };
 
-            DownloadBlobModel model = new DownloadBlobModel(this.MenuListItem.ImageThumbnail.Id, originalBlobStorageContainerPath);
-            new LoadAzureBlobAsyncTask(listener).execute(model);
+            new AzureBlobService().downloadMenuListItemThumbnail(this.baseContext, this.WallMenuListItem.ImageThumbnail.Id, ImageResolution.FormatOriginal, listener);
         }
     }
 

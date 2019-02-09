@@ -6,21 +6,29 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mosy.kalin.mosy.DAL.Http.Results.RegisterResult;
-import com.mosy.kalin.mosy.DTOs.HttpResponses.CheckEmailAvailableResponse;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.RegisterHttpResult;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.CheckEmailAvailableResult;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.w3c.dom.Text;
 
 @EActivity(R.layout.activity_register)
 public class RegisterActivity
         extends BaseActivity {
+
+    private String email;
+
+    @Bean
+    AccountService accountService;
 
     @ViewById(R.id.etPassword)
     EditText etPassword;
@@ -28,68 +36,96 @@ public class RegisterActivity
     EditText etRepeatPassword;
     @ViewById(R.id.etEmail)
     EditText etEmail;
+
+    @ViewById(R.id.tvInfoMessage)
+    TextView infoMessage;
     @ViewById(R.id.register_llInitialLoadingProgress)
     LinearLayout centralProgress;
 
-    @Click(R.id.btnCancel)
-    public void goBack() {
+    @ViewById(R.id.btnRegister)
+    Button btnRegister;
+
+    private void onPreCheckEmailAvailable() {
+        centralProgress.setVisibility(View.VISIBLE);
+        btnRegister.setVisibility(View.GONE);
+        infoMessage.setVisibility(View.GONE);
+    }
+
+    private void onCheckEmailAvailableFinished(CheckEmailAvailableResult result, String email, String password) {
+        if (result.IsAvailable) {
+            AsyncTaskListener<RegisterHttpResult> listener = new AsyncTaskListener<RegisterHttpResult>() {
+                @Override public void onPreExecute() {
+                    // onPreCheckEmailAvailable still active here
+                }
+                @Override public void onPostExecute(final RegisterHttpResult result) {
+                    onRegistrationFinished(result);
+                }
+            };
+            new AccountService().register(applicationContext, email, password, password, listener, null);
+        }
+        else {
+            this.toggleInfoMessage("Email is being used");
+            centralProgress.setVisibility(View.GONE);
+            btnRegister.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void onRegistrationFinished(RegisterHttpResult result) {
+        centralProgress.setVisibility(View.GONE);
+
+        if (result.isSuccessful){
+            this.toggleInfoMessage(StringHelper.empty());
+            toLoginActivity();
+        }
+        else
+            this.toggleInfoMessage("Registration unsuccessful. Please try again.");
+    }
+
+    private void onInvalidHost() {
+        this.toggleInfoMessage("No internet.");
+    }
+
+    private void toLoginActivity()
+    {
         Intent intent = new Intent(RegisterActivity.this, LoginActivity_.class);
+        intent.putExtra("confirmEmailNeeded", true);
         startActivity(intent);
+    }
+
+    private void toggleInfoMessage(String infoMessage){
+        this.infoMessage.setVisibility(StringHelper.isNotNullOrEmpty(infoMessage) ? View.VISIBLE : View.GONE);
+        this.infoMessage.setText(StringHelper.isNotNullOrEmpty(infoMessage) ? infoMessage : StringHelper.empty());
     }
 
     @Click(R.id.btnRegister)
     public void Register() {
-        String email = etEmail.getText().toString().trim();
+        this.email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString();
         String repeatPassword = etPassword.getText().toString();
         Context applicationContext = getApplicationContext();
 
-        if (StringHelper.isNullOrWhitespace(email) || StringHelper.isNullOrWhitespace(password)) {
-            Toast.makeText(applicationContext, "Email and password are required.", Toast.LENGTH_LONG).show();
-        } else if (!StringHelper.isEmailAddress(email)) {
-            Toast.makeText(applicationContext, "Invalid Email address.", Toast.LENGTH_LONG).show();
-        } else if (!StringHelper.isMatch("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*(_|[^\\w])).{6,}$", password)) {
-            Toast.makeText(applicationContext,
-                    "Passwords must have at least one non letter and digit character. " +
-                            "Passwords must have at least one lowercase ('a'-'z'). " +
-                            "Passwords must have at least one uppercase ('A'-'Z').",
-                    Toast.LENGTH_LONG).show();
+        if (StringHelper.isNullOrWhitespace(email) || StringHelper.isNullOrWhitespace(password))
+            this.toggleInfoMessage("Email and password are required fields.");
+        else if (!StringHelper.isEmailAddress(email))
+            this.toggleInfoMessage("Invalid Email address.");
+        else if (!StringHelper.isMatch("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*(_|[^\\w])).{6,}$", password)) {
+            this.toggleInfoMessage("Passwords must have at least one non letter and digit character. " +
+                                   "Passwords must have at least one lowercase ('a'-'z'). " +
+                                   "Passwords must have at least one uppercase ('A'-'Z')." +
+                                   "Passwords must have at least one digit.");
         } else if (!password.equals(repeatPassword)) {
-            Toast.makeText(applicationContext,
-                    "Repeat password does not match Password",
-                    Toast.LENGTH_LONG).show();
+            this.toggleInfoMessage("Repeat password does not match Password");
         } else {
-            AsyncTaskListener<CheckEmailAvailableResponse> isEmailValidListener = new AsyncTaskListener<CheckEmailAvailableResponse>() {
+            AsyncTaskListener<CheckEmailAvailableResult> isEmailValidListener = new AsyncTaskListener<CheckEmailAvailableResult>() {
                 @Override public void onPreExecute() {
-                    centralProgress.setVisibility(View.VISIBLE);
+                    onPreCheckEmailAvailable();
                 }
-                @Override public void onPostExecute(CheckEmailAvailableResponse result) {
-                    if(result.IsAvailable) {
-                        AsyncTaskListener<RegisterResult> listener = new AsyncTaskListener<RegisterResult>() {
-                            @Override public void onPreExecute() {
-                                //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
-                            }
-                            @Override public void onPostExecute(final RegisterResult result) {
-                                publishRegisterResult(result);
-                            }
-                        };
-                        new AccountService().register(applicationContext, email, password, password, listener, null);
-                    }
-                    else {
-                        Toast.makeText(applicationContext,"Email is being used", Toast.LENGTH_LONG).show();
-                    }
-                    centralProgress.setVisibility(View.GONE);
+                @Override public void onPostExecute(CheckEmailAvailableResult result) {
+                    onCheckEmailAvailableFinished(result, email, password);
                 }
             };
-            new AccountService().checkEmailAvailable(applicationContext, email, null, isEmailValidListener);
+            this.accountService.checkEmailAvailable(applicationContext, email, isEmailValidListener, this::onInvalidHost);
         }
     }
 
-    private void publishRegisterResult(RegisterResult result) {
-        if (!result.isSuccessful()) {
-            Toast.makeText(applicationContext, "Register unsuccessful ... please try again.", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(applicationContext, "Successful. Confirm email and login.", Toast.LENGTH_SHORT).show();
-        }
-    }
 }

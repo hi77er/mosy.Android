@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Foodoo</string>
+    <string name="app_name">Treatspark</string>
     <string name="activity_wall_swipeDownToRefreshMessageTextView">ПОТЯНИТЕ ВНИЗ, ЧТОБЫ ОБНОВИТЬ СТРАНИЦУ</string>
     <string name="activity_landing_languageBgSpinner">Болгарский</string>
     <string name="activity_landing_languageEnUSSpinner">Английский</string>
@@ -51,12 +51,8 @@
     <string name="DishesFilterTypeBreakfastName">Завтрак</string>
     <string name="DishesFilterTypeMainsName">Основные блюда</string>
     <string name="DishesFilterTypeDesertsName">Десерты</string>
-    <string name="DishesFilterRegionAsianName">Азиатская кухня</string>
-    <string name="DishesFilterRegionMiddleEasternName">Восточная кухня</string>
-    <string name="DishesFilterRegionEuropeanName">Европейская кухня</string>
     <string name="DishesFilterRegionAfricanName">Африканская кухня</string>
     <string name="DishesFilterMainIngredientFishAndSeafoodName"><![CDATA[Рыба & морепродукты]]></string>
-    <string name="DishesFilterRegionAmericanName">Американская кухня</string>
     <string name="DishesFilterMainIngredientWhiteMeatName">Белое мясо</string>
     <string name="DishesFilterMainIngredientVeganName">Веган</string>
     <string name="DishesFilterMainIngredientGlutenFreeName">Без глютенa</string>
@@ -104,5 +100,4 @@
     <string name="activity_venueDetails_getDirections">Направления</string>
     <string name="activity_landing_profileBtn">Профиль</string>
     <string name="activity_landing_loginSignUpBtn">Войти / Зарегистрироваться</string>
-    <string name="DishesFilterTypeAlcoholicDrinksName">Алкогольные напитки</string>
 </resources>

@@ -2,18 +2,27 @@ package com.mosy.kalin.mosy;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.login.LoginResult;
 import com.mosy.kalin.mosy.Helpers.LocaleHelper;
+import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Services.Connectivity.ConnectionStateMonitor;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
+import org.json.JSONException;
+
+import java.util.Arrays;
 
 import static android.content.pm.PackageManager.GET_META_DATA;
 
@@ -29,6 +38,7 @@ public abstract class BaseActivity
     protected boolean isDevelopersModeActivated = false;
 
     protected boolean isUserAuthenticated = false;
+    protected String username = StringHelper.empty();
 
     protected Context applicationContext;
     protected Context baseContext;
@@ -56,6 +66,7 @@ public abstract class BaseActivity
 
         this.accountService = new AccountService();
         isUserAuthenticated = this.accountService.checkUserTokenValid(this.baseContext);
+        username = this.accountService.getUsername(this.baseContext);
     }
 
     @Override
@@ -101,4 +112,11 @@ public abstract class BaseActivity
         super.onDestroy();
     }
 
+    public void goToLoginActivity() {
+        Intent intent = new Intent(BaseActivity.this, LoginActivity_.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
+        startActivity(intent);
+        overridePendingTransition( R.transition.slide_in_right, R.transition.slide_out_right );
+    }
 }

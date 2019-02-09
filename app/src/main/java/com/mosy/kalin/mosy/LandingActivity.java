@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,12 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
+import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.Views.SpinnerLocale;
 import com.mosy.kalin.mosy.Helpers.LocaleHelper;
-import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Services.Location.LocationResolver;
+import com.mosy.kalin.mosy.Services.TableAccountsService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -26,23 +29,20 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_landing)
 public class LandingActivity
         extends BaseActivity
-
 {
     int logoClicksCount = 0;
     boolean afterViewsFinished = false;
     boolean networkLost = false;
 
-    @Bean
-    AccountService accountService;
 
-    @ViewById(R.id.landing_btnPromotions)
-    Button buttonPromotions;
+    @Bean
+    TableAccountsService tableAccountsService;
+
     @ViewById(R.id.landing_btnDishes)
     Button btnDishes;
     @ViewById(R.id.landing_btnVenues)
@@ -59,20 +59,24 @@ public class LandingActivity
     Button btnProfile;
     @ViewById(R.id.landing_btnLoginSignUp)
     Button btnLogin;
+    @ViewById(R.id.btnWork)
+    Button btnWork;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+    }
 
     @AfterViews
     public void afterViews(){
-
         if (ConnectivityHelper.isConnected(applicationContext)) {
-            ensureHasAuthenticationToken();
+            this.ensureHasAuthenticationToken();
             networkLost = false;
         }
         else {
-            showInvalidHostLayout();
+            this.showInvalidHostLayout();
             networkLost = true;
         }
-
-        showProfileButton(this.isUserAuthenticated);
 
         ArrayList<SpinnerLocale> spinnerLocalesList = new ArrayList<>();
         for (String supportedCultureId : LocaleHelper.SUPPORTED_LOCALES.keySet()) {
@@ -88,6 +92,7 @@ public class LandingActivity
     @Override
     public void onStart() {
         super.onStart();
+
         this.activityStopped = false;
     }
 
@@ -109,10 +114,11 @@ public class LandingActivity
 
     @Override
     public void onStop() {
-        super.onStop();
         this.connectionStateMonitor.onAvailable = null;
         this.connectionStateMonitor.onLost = null;
         this.activityStopped = true;
+
+        super.onStop();
     }
 
     @Override
@@ -128,10 +134,9 @@ public class LandingActivity
 
     private void ensureHasAuthenticationToken() {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
-            this::showLoading,
-            this::showButtonsLayout,
-            this::showInvalidHostLayout);
-
+                this::showLoading,
+                this::showButtonsLayout,
+                this::showInvalidHostLayout);
     }
 
     private void setupLanguagesSpinner(ArrayList<SpinnerLocale> localesList) {
@@ -172,21 +177,32 @@ public class LandingActivity
     }
 
     private void showLoading() {
-        this.buttonsLayout.setVisibility(View.GONE);
+        this.centralProgressLayout.setVisibility(View.VISIBLE);
         this.invalidHostLayout.setVisibility(View.GONE);
-        this.buttonPromotions.setEnabled(false);
+        this.buttonsLayout.setVisibility(View.GONE);
+
         this.btnDishes.setEnabled(false);
         this.btnVenues.setEnabled(false);
-        this.centralProgressLayout.setVisibility(View.VISIBLE);
+
+        this.btnProfile.setVisibility(View.GONE);
+        this.btnLogin.setVisibility(View.GONE);
+        this.btnWork.setVisibility(View.GONE);
     }
 
     private void showButtonsLayout() {
-        this.buttonsLayout.setVisibility(View.VISIBLE);
+        this.centralProgressLayout.setVisibility(View.GONE);
         this.invalidHostLayout.setVisibility(View.GONE);
-        this.buttonPromotions.setEnabled(true);
+
+        this.buttonsLayout.setVisibility(View.VISIBLE);
+
         this.btnDishes.setEnabled(true);
         this.btnVenues.setEnabled(true);
-        this.centralProgressLayout.setVisibility(View.GONE);
+
+        this.btnProfile.setVisibility(isUserAuthenticated ? View.VISIBLE : View.GONE);
+        this.btnLogin.setVisibility(isUserAuthenticated ? View.GONE : View.VISIBLE);
+
+        if (isUserAuthenticated) publishManageTableAccountsBtn();
+
         //TODO: Delete before deploying to production!
 //        Toast.makeText(applicationContext, "WebApi authToken refreshed!", Toast.LENGTH_LONG).show();
     }
@@ -201,9 +217,67 @@ public class LandingActivity
         Toast.makeText(applicationContext, "No internet!", Toast.LENGTH_LONG).show();
     }
 
-    private void showProfileButton(boolean isUserAuthenticated) {
-        this.btnProfile.setVisibility(isUserAuthenticated ? View.VISIBLE : View.GONE);
-        this.btnLogin.setVisibility(isUserAuthenticated ? View.GONE : View.VISIBLE);
+    private void loadManagedVenues() {
+        AsyncTaskListener<ArrayList<Venue>> apiCallResultListener = new AsyncTaskListener<ArrayList<Venue>>() {
+            @Override public void onPreExecute() {
+                showLoading();
+            }
+            @Override public void onPostExecute(ArrayList<Venue> results) {
+                if (results != null && results.size() > 0) {
+                    if (results.size() == 1)
+                        goToTableAccountsMonitor(results.get(0));
+                    else
+                        goToTableAccountVenues(results);
+
+                    showButtonsLayout();
+                }
+            }
+        };
+        this.tableAccountsService.getTableAccountVenues(this.applicationContext, apiCallResultListener, this::onNetworkLost);
+    }
+
+    private void publishManageTableAccountsBtn() {
+        boolean isTableAccountOperator = false;
+
+        ArrayList<String> userRoles = this.accountService.getUserRoles(this.applicationContext);
+
+        if (userRoles != null && userRoles.size() > 0){
+
+            for (String role : userRoles) {
+                if (role.toLowerCase().equals("tableaccountoperator")){
+                    isTableAccountOperator = true;
+                    break;
+                }
+            }
+
+            if (isTableAccountOperator)
+                this.btnWork.setVisibility(isUserAuthenticated ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private void navigateToWallActivity(boolean isDishMode) {
+        Intent intent = new Intent(LandingActivity.this, WallActivity_.class);
+        intent.putExtra("DishesSearchModeActivated", isDishMode); //else find dishesWall
+        startActivity(intent);
+    }
+
+    private void goToTableAccountVenues(ArrayList<Venue> venues) {
+        Intent intent = new Intent(LandingActivity.this, OperatorTablesAccountsVenuesActivity_.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.putExtra("tableAccountVenues", venues);
+        startActivity(intent);
+    }
+
+    private void goToTableAccountsMonitor(Venue venue) {
+        Intent intent = new Intent(LandingActivity.this, OperatorTablesAccountsActivity_.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.putExtra("venue", venue);
+        startActivity(intent);
+    }
+
+    @Click(R.id.btnWork)
+    public void goToTableAccountsManagementActivity() {
+        loadManagedVenues();
     }
 
     @Click(R.id.landing_ivLogo)
@@ -250,7 +324,7 @@ public class LandingActivity
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
-        intent.setData(Uri.parse("https://www.facebook.com/treatspark/"));
+        intent.setData(Uri.parse(getString(R.string.link_social_facebook)));
         startActivity(intent);
     }
 
@@ -259,7 +333,7 @@ public class LandingActivity
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
-        intent.setData(Uri.parse("http://www.instagram.com"));
+        intent.setData(Uri.parse(getString(R.string.link_social_instagram)));
         startActivity(intent);
     }
 
@@ -268,22 +342,15 @@ public class LandingActivity
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
-        intent.setData(Uri.parse("https://www.twitter.com/treatspark"));
+        intent.setData(Uri.parse(getString(R.string.link_social_twitter)));
         startActivity(intent);
     }
 
-
-
-
-    private void navigateToWallActivity(boolean isDishMode) {
-        Intent intent = new Intent(LandingActivity.this, WallActivity_.class);
-        intent.putExtra("DishesSearchModeActivated", isDishMode); //else find dishesWall
-        startActivity(intent);
-    }
-
-    @Click(resName = "landing_btnPromotions")
-    public void navigatePromotionsSearch(){
-        Intent intent = new Intent(LandingActivity.this,PromotionsActivity_.class);
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

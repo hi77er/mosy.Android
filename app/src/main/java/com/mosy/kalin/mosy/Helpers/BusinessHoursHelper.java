@@ -42,7 +42,7 @@ public class BusinessHoursHelper {
         long deviceTimeGMTMinutesOffset = TimeUnit.MINUTES.convert(deviceTimeGMTOffset, TimeUnit.MILLISECONDS);
 
         calendar.add(Calendar.MINUTE, -(int)deviceTimeGMTMinutesOffset); // convert calendar to GMT TimeZone
-        calendar.add(Calendar.MINUTE, -businessHours.TimeZoneMinutesOffset);  // convert calendar to venue TimeZone
+        calendar.add(Calendar.MINUTE, -businessHours.TimeZoneMinutesOffset);  // convert calendar to wallVenue TimeZone
 
         int day = calendar.get(Calendar.DAY_OF_WEEK);
         if (day == Calendar.SUNDAY)
@@ -90,7 +90,7 @@ public class BusinessHoursHelper {
         calendar.add(Calendar.MINUTE, -(int)deviceTimeGMTMinutesOffset); // convert calendar to GMT TimeZone
         /*DEBUGGING PURPOSE:*/ String gmtTimeText = calendar.getTime().toString();
 
-        calendar.add(Calendar.MINUTE, -bhMinutesOffset); // convert calendar to Venue TimeZone
+        calendar.add(Calendar.MINUTE, -bhMinutesOffset); // convert calendar to WallVenue TimeZone
         Date venueTime = calendar.getTime();
         /*DEBUGGING PURPOSE:*/ String venueTimeText = calendar.getTime().toString();
 

@@ -1,16 +1,12 @@
 package com.mosy.kalin.mosy.DTOs;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.google.gson.annotations.SerializedName;
-import com.mosy.kalin.mosy.DAL.Http.Results.ResultBase;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.HttpResult;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class MenuListItemDetailed
-        extends ResultBase
+        extends HttpResult
         implements Serializable {
 
     public String Id;
@@ -23,6 +19,7 @@ public class MenuListItemDetailed
     public String VenueWorkingStatus;
     public boolean IsRecommended;
     public boolean IsNew;
+    public int SeenCount;
     public MenuListItemImage ImageThumbnail;
     public double DistanceToCurrentDeviceLocation;
     public VenueBusinessHours VenueBusinessHours;
@@ -44,6 +41,7 @@ public class MenuListItemDetailed
             ,String venueWorkingStatus
             ,boolean isRecommended
             ,boolean isNew
+            ,int seenCount
             ,MenuListItemImage imageThumbnail
             ,double distanceToCurrentDeviceLocation
             ,VenueBusinessHours venueBusinessHours
@@ -64,6 +62,7 @@ public class MenuListItemDetailed
         this.VenueWorkingStatus = venueWorkingStatus;
         this.IsRecommended = isRecommended;
         this.IsNew  = isNew;
+        this.SeenCount  = seenCount;
         this.ImageThumbnail = imageThumbnail;
         this.DistanceToCurrentDeviceLocation = distanceToCurrentDeviceLocation;
         this.VenueBusinessHours = venueBusinessHours;

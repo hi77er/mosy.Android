@@ -23,7 +23,7 @@
             android:layout_marginBottom="10dp">
 
             <ImageView
-                android:id="@+id/details_venue_ivIndoorThumbnail"
+                android:id="@+id/details_venue_ivExteriorThumbnail"
                 android:layout_gravity="start"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
@@ -52,6 +52,14 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
                     android:textSize="19sp" />
+
+                <TextView android:id="@+id/details_item_tvViews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:textSize="10sp"
+                    android:textStyle="italic"
+                    android:textColor="@color/soft" />
 
                 <Button
                     android:id="@+id/details_venue_btnPhone"
@@ -119,15 +127,20 @@
             android:padding="10dp"
             android:layout_marginBottom="10dp">
 
-            <LinearLayout
-                android:id="@+id/details_venue_lFilters"
-                android:orientation="horizontal"
-                android:layout_gravity="start"
+            <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+                <LinearLayout
+                    android:id="@+id/details_venue_lFilters"
+                    android:orientation="horizontal"
+                    android:layout_gravity="start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
-            </LinearLayout>
+                </LinearLayout>
+            </HorizontalScrollView>
 
             <LinearLayout
                 android:id="@+id/details_venue_lFiltersProgress"
@@ -156,15 +169,21 @@
             android:padding="10dp"
             android:layout_marginBottom="10dp">
 
-            <LinearLayout
-                android:id="@+id/details_venue_lCultureFilters"
-                android:orientation="horizontal"
-                android:layout_gravity="start"
+            <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:layout_height="match_parent"
+                android:fillViewport="true">
 
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/details_venue_lCultureFilters"
+                    android:orientation="horizontal"
+                    android:layout_gravity="start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                </LinearLayout>
+            </HorizontalScrollView>
 
             <LinearLayout
                 android:id="@+id/details_venue_lCultureFiltersProgress"

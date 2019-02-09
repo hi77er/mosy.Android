@@ -22,7 +22,7 @@ import com.mosy.kalin.mosy.DTOs.Filter;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Helpers.ListHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Models.Responses.DishFiltersResult;
+import com.mosy.kalin.mosy.Models.Responses.DishFiltersHttpResult;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.FilterItem;
 import com.mosy.kalin.mosy.Services.DishesService;
 
@@ -263,12 +263,12 @@ public class DishesFiltersActivity
 
     private void loadMenuListItemFilters() {
 
-        AsyncTaskListener<DishFiltersResult> listener = new AsyncTaskListener<DishFiltersResult>() {
+        AsyncTaskListener<DishFiltersHttpResult> listener = new AsyncTaskListener<DishFiltersHttpResult>() {
             @Override public void onPreExecute() {
                 showFiltersLoadingLayout();
             }
 
-            @Override public void onPostExecute(DishFiltersResult result) {
+            @Override public void onPostExecute(DishFiltersHttpResult result) {
                 if (result != null) {
                     populateAlreadySelectedFilters(
                             result.DishTypeFilters,
@@ -295,7 +295,7 @@ public class DishesFiltersActivity
             }
         };
 
-        this.dishesService.getAllFilters(this.applicationContext, listener);
+        this.dishesService.getAllFilters(this.applicationContext, listener, this.isDevelopersModeActivated);
     }
 
     private ArrayList<FilterItem> toFilterItems(ArrayList<Filter> filters) {

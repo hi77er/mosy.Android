@@ -3,13 +3,13 @@ package com.mosy.kalin.mosy.DTOs;
 import android.graphics.Bitmap;
 
 import com.google.gson.annotations.SerializedName;
-import com.mosy.kalin.mosy.DAL.Http.Results.ResultBase;
+import com.mosy.kalin.mosy.DTOs.Http.HttpResults.HttpResult;
 
 import java.io.Serializable;
 
 
 public class MenuListItemImage
-        extends ResultBase
+        extends HttpResult
         implements Serializable {
 
     @SerializedName("Id")
