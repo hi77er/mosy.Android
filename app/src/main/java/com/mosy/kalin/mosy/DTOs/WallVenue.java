@@ -8,56 +8,56 @@ import java.util.ArrayList;
 public class WallVenue
         implements Serializable {
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public String Id;
 
-    @SerializedName("LocationId")
+    @SerializedName("locationId")
     public String LocationId;
 
-    @SerializedName("Name")
+    @SerializedName("name")
     public String Name;
 
-    @SerializedName("Class")
+    @SerializedName("class")
     public String Class;
 
-    @SerializedName("Description")
+    @SerializedName("description")
     public String Description;
 
-    @SerializedName("SeenCount")
+    @SerializedName("seenCount")
     public String SeenCount;
 
-    @SerializedName("FBOLocation")
+    @SerializedName("fboLocation")
     public VenueLocation Location;
 
-    @SerializedName("BusinessHours")
+    @SerializedName("businessHours")
     public VenueBusinessHours VenueBusinessHours;
 
-    @SerializedName("OutdoorImageMeta")
+    @SerializedName("outdoorImageMeta")
     public VenueImage OutdoorImage;
 
-    @SerializedName("IndoorImageMeta")
+    @SerializedName("indoorImageMeta")
     public VenueImage IndoorImage;
 
-    @SerializedName("WorkingStatus")
+    @SerializedName("workingStatus")
     public String WorkingStatus;
 
-    @SerializedName("DistanceToDevice")
+    @SerializedName("distanceToDevice")
     public double DistanceToCurrentDeviceLocation;
 
-    @SerializedName("HasOrdersManagementSubscription")
+    @SerializedName("hasOrdersManagementSubscription")
     public boolean HasOrdersManagementSubscription;
 
-    @SerializedName("FBOContacts")
+    @SerializedName("fboContacts")
     public VenueContacts VenueContacts;
 
 
-    @SerializedName("Filters")
+    @SerializedName("filters")
     public ArrayList<Filter> Filters;
 
-    @SerializedName("MatchingFiltersIds")
+    @SerializedName("matchingFiltersIds")
     public ArrayList<String> MatchingFiltersIds;
 
-    @SerializedName("MismatchingFiltersIds")
+    @SerializedName("mismatchingFiltersIds")
     public ArrayList<String> MismatchingFiltersIds;
 
 }

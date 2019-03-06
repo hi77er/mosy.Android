@@ -10,16 +10,16 @@ import com.mosy.kalin.mosy.DTOs.Http.HttpResults.HttpResult;
 public class VenueLocation
         extends HttpResult {
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public String Id;
 
-    @SerializedName("Longitude")
+    @SerializedName("longitude")
     public double Longitude;
 
-    @SerializedName("Latitude")
+    @SerializedName("latitude")
     public double Latitude;
 
-    @SerializedName("HorizontalAccuracyMeters")
+    @SerializedName("horizontalAccuracyMeters")
     public double HorizontalAccuracyMeters;
 
     public double DistanceToCurrentLocationMeters;

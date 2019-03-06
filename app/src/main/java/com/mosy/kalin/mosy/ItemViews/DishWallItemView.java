@@ -31,7 +31,6 @@ import org.androidannotations.annotations.ViewById;
 public class DishWallItemView
         extends WallItemViewBase {
 
-    private static final String originalBlobStorageContainerPath = "userimages\\requestablealbums\\original";
     private boolean IsUsingDefaultThumbnail;
 
     private Context baseContext;
@@ -77,7 +76,8 @@ public class DishWallItemView
             this.nameTextView.setText(selectedCulture.MenuListItemName);
             this.venueNameTextView.setText(wallMenuListItem.VenueName);
 
-            if (wallMenuListItem.ImageThumbnail != null && wallMenuListItem.ImageThumbnail.Bitmap != null) {
+            if (wallMenuListItem.ImageThumbnail != null
+                    && wallMenuListItem.ImageThumbnail.Bitmap != null) {
                 this.imageThumbnail.setImageBitmap(wallMenuListItem.ImageThumbnail.Bitmap);
                 IsUsingDefaultThumbnail = false;
             }
@@ -197,10 +197,9 @@ public class DishWallItemView
     @Click(R.id.menuListItem_ivThumbnail)
     public void ImageClick()
     {
-        if (!this.IsUsingDefaultThumbnail &&
-                this.WallMenuListItem != null &&
-                this.WallMenuListItem.ImageThumbnail != null &&
-                StringHelper.isNotNullOrEmpty(this.WallMenuListItem.ImageThumbnail.Id)){
+        if (!this.IsUsingDefaultThumbnail
+                && this.WallMenuListItem != null
+                && StringHelper.isNotNullOrEmpty(this.WallMenuListItem.ImageThumbnail.Id)){
 
             final Dialog nagDialog = new Dialog(this.getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

@@ -11,16 +11,16 @@ public class VenueFiltersHttpResult //INFO: Name coming from WebApi specifics
         extends HttpResult
         implements Serializable {
 
-    @SerializedName("VenueAccessibilityFilters")
+    @SerializedName("venueAccessibilityFilters")
     public ArrayList<Filter> VenueAccessibilityFilters;
 
-    @SerializedName("VenueAvailabilityFilters")
+    @SerializedName("venueAvailabilityFilters")
     public ArrayList<Filter> VenueAvailabilityFilters;
 
-    @SerializedName("VenueAtmosphereFilters")
+    @SerializedName("venueAtmosphereFilters")
     public ArrayList<Filter> VenueAtmosphereFilters;
 
-    @SerializedName("VenueCultureFilters")
+    @SerializedName("venueCultureFilters")
     public ArrayList<Filter> VenueCultureFilters;
 
 }

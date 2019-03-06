@@ -19,10 +19,8 @@ import android.widget.TextView;
 import com.mosy.kalin.mosy.Adapters.MenuPagerAdapter;
 import com.mosy.kalin.mosy.DTOs.Http.HttpResults.PublicMenuResult;
 import com.mosy.kalin.mosy.DTOs.MenuList;
-import com.mosy.kalin.mosy.DTOs.MenuListItem;
 import com.mosy.kalin.mosy.DTOs.Table;
 import com.mosy.kalin.mosy.DTOs.TableAccount;
-import com.mosy.kalin.mosy.DTOs.WallMenuListItem;
 import com.mosy.kalin.mosy.DTOs.WallVenue;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.Helpers.ArrayHelper;
@@ -153,7 +151,7 @@ public class VenueMenuActivity
                 tableAccount = result;
                 if (tableAccount != null){
                     selectedTable = tableAccount.Table;
-                    tvTableName.setText(selectedTable.name);
+                    tvTableName.setText(selectedTable.Name);
                 }
                 reevaluateOrderLabelsVisibility();
             }
@@ -318,7 +316,7 @@ public class VenueMenuActivity
         }
 
         if (this.selectedTable != null){
-            this.tvTableName.setText(this.selectedTable.name);
+            this.tvTableName.setText(this.selectedTable.Name);
         }
 
         this.llTableAndSelectedItems.setVisibility(
@@ -353,7 +351,7 @@ public class VenueMenuActivity
             Intent intent = new Intent(VenueMenuActivity.this, VenueTablesActivity_.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
-            intent.putExtra("venueId", this.wallVenue.Id);
+            intent.putExtra("VenueId", this.wallVenue.Id);
             intent.putExtra("selectedTable", this.selectedTable);
             intent.putExtra("wallVenue", this.wallVenue);
             intent.putExtra("selectedMenuListId", this.selectedMenuListId);

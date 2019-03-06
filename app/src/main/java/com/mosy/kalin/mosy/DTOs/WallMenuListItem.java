@@ -13,70 +13,73 @@ public class WallMenuListItem
         extends HttpResult
         implements Parcelable, Serializable {
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public String Id;
 
-    @SerializedName("BrochureId")
+    @SerializedName("brochureId")
     public String BrochureId;
 
-    @SerializedName("Name")
+    @SerializedName("name")
     public String Name;
 
-    @SerializedName("Summary")
+    @SerializedName("summary")
     public String Summary;
 
-    @SerializedName("PreparationEstimateSeconds")
+    @SerializedName("preparationEstimateSeconds")
     public int PreparationEstimateSeconds;
 
-    @SerializedName("FBOId")
+    @SerializedName("fboId")
     public String VenueId;
 
-    @SerializedName("FBOName")
+    @SerializedName("fboName")
     public String VenueName;
 
-    @SerializedName("WorkingStatus")
+    @SerializedName("workingStatus")
     public String VenueWorkingStatus;
 
-    @SerializedName("IsRecommended")
+    @SerializedName("isRecommended")
     public boolean IsRecommended;
 
-    @SerializedName("IsNew")
+    @SerializedName("isNew")
     public boolean IsNew;
 
-    @SerializedName("SeenCount")
+    @SerializedName("seenCount")
     public int SeenCount;
 
-    @SerializedName("RequestableImageMeta")
+    @SerializedName("requestableImagesMetas")
+    public ArrayList<MenuListItemImage> ImageThumbnails;
+
+    @SerializedName("requestableImageMeta")
     public MenuListItemImage ImageThumbnail;
 
-    @SerializedName("DistanceToDevice")
+    @SerializedName("distanceToDevice")
     public double DistanceToCurrentDeviceLocation;
 
-    @SerializedName("BusinessHours")
+    @SerializedName("businessHours")
     public VenueBusinessHours VenueBusinessHours;
 
-    @SerializedName("PriceDisplayText")
+    @SerializedName("priceDisplayText")
     public String PriceDisplayText;
 
-    @SerializedName("QuantityDisplayText")
+    @SerializedName("quantityDisplayText")
     public String QuantityDisplayText;
 
-    @SerializedName("DefaultMenuCulture")
+    @SerializedName("defaultMenuCulture")
     public String DefaultMenuCulture;
 
-    @SerializedName("Ingredients")
+    @SerializedName("ingredients")
     public ArrayList<Ingredient> Ingredients;
 
-    @SerializedName("Filters")
+    @SerializedName("filters")
     public ArrayList<Filter> Filters;
 
-    @SerializedName("MatchingFiltersIds")
+    @SerializedName("matchingFiltersIds")
     public ArrayList<String> MatchingFiltersIds;
 
-    @SerializedName("MismatchingFiltersIds")
+    @SerializedName("mismatchingFiltersIds")
     public ArrayList<String> MismatchingFiltersIds;
 
-    @SerializedName("RequestableCultures")
+    @SerializedName("requestableCultures")
     public ArrayList<MenuListItemCulture> MenuListItemCultures;
 
     @SuppressWarnings("unchecked")
@@ -145,7 +148,7 @@ public class WallMenuListItem
                 this.IsRecommended,
                 this.IsNew,
                 this.SeenCount,
-                this.ImageThumbnail,
+                this.ImageThumbnails,
                 this.DistanceToCurrentDeviceLocation,
                 this.VenueBusinessHours,
                 this.PriceDisplayText,

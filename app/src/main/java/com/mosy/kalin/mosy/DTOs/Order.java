@@ -8,22 +8,22 @@ import java.util.ArrayList;
 
 public class Order extends HttpResult {
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public String Id;
-    @SerializedName("TableAccountId")
+    @SerializedName("tableAccountId")
     public String TableAccountId;
-    @SerializedName("Status")
+    @SerializedName("status")
     public OrderStatus Status;
-    @SerializedName("Name")
+    @SerializedName("name")
     public String Name;
-    @SerializedName("DateCreated")
+    @SerializedName("dateCreated")
     public String DateCreated;
-    @SerializedName("DateReady")
+    @SerializedName("dateReady")
     public String DateReady;
-    @SerializedName("DateDelivered")
+    @SerializedName("dateDelivered")
     public String DateDelivered;
 
-    @SerializedName("OrderRequestables")
+    @SerializedName("orderRequestables")
     public ArrayList<OrderMenuItem> orderMenuItems;
 
 

@@ -115,7 +115,10 @@ public class MenuListItemDetailsView
             this.ingredients.setVisibility(VISIBLE);
         }
 
-        final String imageKey = wallMenuListItem.ImageThumbnail != null ? wallMenuListItem.ImageThumbnail.Id : "default";
+        final String imageKey = (wallMenuListItem.ImageThumbnails != null && !wallMenuListItem.ImageThumbnails.isEmpty())
+                ? wallMenuListItem.ImageThumbnail.Id
+                : "default";
+
         if (imageKey.equals("default")){
             this.setDefaultImageThumbnail();
         } else {

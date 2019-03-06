@@ -20,8 +20,8 @@ import retrofit2.http.Query;
 
 public interface IVenuesRepository {
 
-    @GET("fbo/id")
-    Call<WallVenue> getById(@Header("Authorization") String authorization, @Query("id") String venueId);
+    @GET("fbo/Id")
+    Call<WallVenue> getById(@Header("Authorization") String authorization, @Query("Id") String venueId);
 
     @GET("fbo/businesshours")
     Call<VenueBusinessHours> getBusinessHours(@Header("Authorization") String authorization, @Query("fboId") String venueId);

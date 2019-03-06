@@ -27,7 +27,7 @@ public class AzureBlobStorageIntegrationTests extends AzureIntegrationTest {
         // Create the blob client.
         CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
         // Get a reference to a container.
-        // The container name must be lower case
+        // The container Name must be lower case
         CloudBlobContainer container = blobClient.getContainerReference("userimages");
 
         assertNotNull("Didn't make it to get the Azure Blob Storage Container", container);

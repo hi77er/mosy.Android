@@ -11,23 +11,23 @@ import java.util.ArrayList;
 
 public class MenuList extends HttpResult {
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public String Id;
 
-    @SerializedName("FBOId")
+    @SerializedName("fboId")
     public String VenueId;
 
-    @SerializedName("Name")
+    @SerializedName("name")
     public String Name;
 
-    @SerializedName("Summary")
+    @SerializedName("summary")
     public String Summary;
 
-    @SerializedName("IsPublic")
+    @SerializedName("isPublic")
     public boolean IsPublic;
 
     //Collections
-    @SerializedName("Requestables")
+    @SerializedName("requestables")
     public ArrayList<WallMenuListItem> wallMenuListItems;
 
 

@@ -28,9 +28,9 @@ public class ClientTableAccountOrderItemView
     @ViewById(R.id.clientTableAccountMenuItem_tvStatus)
     TextView statusTextView;
 
-//    @ViewById(R.id.clientTableAccountMenuItem_btnPlusOneItem)
+//    @ViewById(R.Id.clientTableAccountMenuItem_btnPlusOneItem)
 //    Button buttonPlusOneItem;
-//    @ViewById(R.id.clientTableAccountMenuItem_btnMinusOneItem)
+//    @ViewById(R.Id.clientTableAccountMenuItem_btnMinusOneItem)
 //    Button buttonMinusOneItem;
 
     public ClientTableAccountOrderItemView(Context context) {
@@ -80,12 +80,12 @@ public class ClientTableAccountOrderItemView
 //        this.buttonMinusOneItem.setVisibility(buttonsVisibility);
     }
 //
-//    @Click(R.id.clientTableAccountMenuItem_btnPlusOneItem)
+//    @Click(R.Id.clientTableAccountMenuItem_btnPlusOneItem)
 //    public void removeItem(){
 //
 //    }
 //
-//    @Click(R.id.clientTableAccountMenuItem_btnMinusOneItem)
+//    @Click(R.Id.clientTableAccountMenuItem_btnMinusOneItem)
 //    public void addOneMoreItem(){
 //
 //    }

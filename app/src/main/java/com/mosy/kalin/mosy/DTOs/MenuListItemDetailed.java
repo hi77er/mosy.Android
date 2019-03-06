@@ -20,7 +20,7 @@ public class MenuListItemDetailed
     public boolean IsRecommended;
     public boolean IsNew;
     public int SeenCount;
-    public MenuListItemImage ImageThumbnail;
+    public ArrayList<MenuListItemImage> ImageThumbnails;
     public double DistanceToCurrentDeviceLocation;
     public VenueBusinessHours VenueBusinessHours;
     public String PriceDisplayText;
@@ -42,7 +42,7 @@ public class MenuListItemDetailed
             ,boolean isRecommended
             ,boolean isNew
             ,int seenCount
-            ,MenuListItemImage imageThumbnail
+            ,ArrayList<MenuListItemImage> imageThumbnails
             ,double distanceToCurrentDeviceLocation
             ,VenueBusinessHours venueBusinessHours
             ,String priceDisplayText
@@ -63,7 +63,7 @@ public class MenuListItemDetailed
         this.IsRecommended = isRecommended;
         this.IsNew  = isNew;
         this.SeenCount  = seenCount;
-        this.ImageThumbnail = imageThumbnail;
+        this.ImageThumbnails = imageThumbnails;
         this.DistanceToCurrentDeviceLocation = distanceToCurrentDeviceLocation;
         this.VenueBusinessHours = venueBusinessHours;
         this.PriceDisplayText = priceDisplayText;

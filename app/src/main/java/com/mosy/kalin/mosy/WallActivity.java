@@ -492,7 +492,7 @@ public class WallActivity
                             detailed.Filters = null;
                             detailed.Ingredients= null;
                             detailed.VenueBusinessHours = null;
-                            detailed.ImageThumbnail = null;
+                            detailed.ImageThumbnails = null;
                             intent.putExtra("item", detailed);
                             intent.putExtra("wallVenue", venue);
                             startActivity(intent);
@@ -598,10 +598,13 @@ public class WallActivity
                         if (ArrayHelper.hasValidBitmapContent(bytes)){
                             Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                             Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, 200, 200, false);
+
                             dishWallItem.WallMenuListItem.ImageThumbnail.Bitmap = scaledBmp;
                             addBitmapToMemoryCache(dishWallItem.WallMenuListItem.ImageThumbnail.Id, scaledBmp);
+
+                            wallDishesAdapter.onItemChanged(dishWallItem);
                         }
-                        wallDishesAdapter.onItemChanged(dishWallItem);
+//                        wallDishesAdapter.onItemChanged(dishWallItem);
                         //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
                     }
                 };

@@ -9,15 +9,15 @@ import java.util.ArrayList;
 public class Table
         implements Serializable {
 
-    @SerializedName("Id")
-    public String id;
-    @SerializedName("Name")
-    public String name;
-    @SerializedName("FBOId")
-    public String venueId;
-    @SerializedName("TableRegionId")
-    public String tableRegionId;
-    @SerializedName("DefaultSeatsCount")
-    public int defaultSeatsCount;
+    @SerializedName("id")
+    public String Id;
+    @SerializedName("name")
+    public String Name;
+    @SerializedName("fboId")
+    public String VenueId;
+    @SerializedName("tableRegionId")
+    public String TableRegionId;
+    @SerializedName("defaultSeatsCount")
+    public int DefaultSeatsCount;
 
 }

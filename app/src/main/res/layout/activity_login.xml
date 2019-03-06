@@ -89,18 +89,18 @@
             android:id="@+id/login_btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_primary_very_light"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/background_transparent_click_oval"
             android:textColor="@color/colorPrimary"
             android:text="@string/activity_login_loginBtn"
-            android:stateListAnimator="@null"
-            android:layout_marginBottom="5dp" />
+            android:stateListAnimator="@null"/>
 
         <Button
             android:id="@+id/login_btnForgotPassword"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/background_primary_very_light"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/background_transparent_click_oval"
             android:textColor="@color/colorPrimary"
             android:text="@string/activity_login_forgotPasswordBtn"
             android:stateListAnimator="@null" />
@@ -109,12 +109,12 @@
         <Button
             android:id="@+id/login_btnRegister"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/background_primary_very_light"
+            android:background="@drawable/background_transparent_click_oval"
             android:textColor="@color/colorPrimary"
             android:text="@string/activity_login_registerBtn"
-            android:stateListAnimator="@null"/>
+            android:stateListAnimator="@null" />
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/fbLogin_Btn"

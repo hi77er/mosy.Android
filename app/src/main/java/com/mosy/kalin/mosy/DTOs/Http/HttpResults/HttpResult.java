@@ -8,10 +8,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class HttpResult {
 
-    @SerializedName("IsSuccessful")
+    @SerializedName("isSuccessful")
     public boolean isSuccessful;
 
-    @SerializedName("ErrorMessage")
+    @SerializedName("errorMessage")
     public String errorMessage;
 
 

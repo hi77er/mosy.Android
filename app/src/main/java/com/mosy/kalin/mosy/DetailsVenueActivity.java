@@ -593,7 +593,7 @@ public class DetailsVenueActivity
     }
 
     //INFO: We use that when no Lite Mode is activated
-//    @Touch(R.id.venueDetails_ivMapTransparent)
+//    @Touch(R.Id.venueDetails_ivMapTransparent)
 //    boolean transparentImage_Touch(View v, MotionEvent event) {
 //        int action = event.getAction();
 //        switch (action) {

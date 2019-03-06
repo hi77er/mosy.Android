@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class FacebookLoginResult {
 
-    @SerializedName("ResultMessage")
+    @SerializedName("resultMessage")
     public String ResultMessage;
 
-    @SerializedName("AccessToken")
+    @SerializedName("accessToken")
     public TokenHttpResult AccessToken;
 
 }

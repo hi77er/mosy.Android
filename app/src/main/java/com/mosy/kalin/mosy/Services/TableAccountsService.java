@@ -13,6 +13,7 @@ import com.mosy.kalin.mosy.DTOs.Order;
 import com.mosy.kalin.mosy.DTOs.Table;
 import com.mosy.kalin.mosy.DTOs.TableAccount;
 import com.mosy.kalin.mosy.DTOs.Venue;
+import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 
 import org.androidannotations.annotations.EBean;
@@ -36,7 +37,7 @@ public class TableAccountsService {
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authTokenHeader = this.accountService.getUserAuthTokenHeader(applicationContext);
-                    ITablesAccountsRepository repository = RetrofitAPIClientFactory.getClient().create(ITablesAccountsRepository.class);
+                    ITablesAccountsRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(ITablesAccountsRepository.class);
 
                     try {
                         Call<ArrayList<Venue>> callResult =  repository.getTAOperatorVenues(authTokenHeader);
@@ -66,7 +67,7 @@ public class TableAccountsService {
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authTokenHeader = this.accountService.getUserAuthTokenHeader(applicationContext);
-                    ITablesAccountsRepository repository = RetrofitAPIClientFactory.getClient().create(ITablesAccountsRepository.class);
+                    ITablesAccountsRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(ITablesAccountsRepository.class);
 
                     try {
                         GetAccountsForVenueBindingModel model = new GetAccountsForVenueBindingModel(venueId);
@@ -97,7 +98,7 @@ public class TableAccountsService {
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authTokenHeader = this.accountService.getUserAuthTokenHeader(applicationContext);
-                    ITablesAccountsRepository repository = RetrofitAPIClientFactory.getClient().create(ITablesAccountsRepository.class);
+                    ITablesAccountsRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(ITablesAccountsRepository.class);
 
                     try {
                         GetOrdersBindingModel model = new GetOrdersBindingModel(tableAccountId);
@@ -129,7 +130,7 @@ public class TableAccountsService {
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authTokenHeader = this.accountService.getUserAuthTokenHeader(applicationContext);
-                    ITablesAccountsRepository repository = RetrofitAPIClientFactory.getClient().create(ITablesAccountsRepository.class);
+                    ITablesAccountsRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(ITablesAccountsRepository.class);
 
                     try {
                         GetTablesBindingModel model = new GetTablesBindingModel(venueId);
@@ -169,7 +170,7 @@ public class TableAccountsService {
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authTokenHeader = this.accountService.getUserAuthTokenHeader(applicationContext);
-                    ITablesAccountsRepository repository = RetrofitAPIClientFactory.getClient().create(ITablesAccountsRepository.class);
+                    ITablesAccountsRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(ITablesAccountsRepository.class);
 
                     try {
                         GetTableAccountBindingModel model = new GetTableAccountBindingModel(venueId, openerUsername);

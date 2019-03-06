@@ -8,22 +8,22 @@ import java.util.ArrayList;
 public class Venue
         implements Serializable {
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public String Id;
 
-    @SerializedName("LocationId")
+    @SerializedName("locationId")
     public String LocationId;
 
-    @SerializedName("Name")
+    @SerializedName("name")
     public String Name;
 
-    @SerializedName("Class")
+    @SerializedName("class")
     public String Class;
 
-    @SerializedName("Description")
+    @SerializedName("description")
     public String Description;
 
-    @SerializedName("SeenCount")
+    @SerializedName("seenCount")
     public String SeenCount;
 
 }

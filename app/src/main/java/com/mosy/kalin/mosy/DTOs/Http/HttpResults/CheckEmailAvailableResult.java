@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class CheckEmailAvailableResult
     implements Serializable {
 
-    @SerializedName("IsAvailable")
+    @SerializedName("isAvailable")
     public boolean IsAvailable;
 
 }

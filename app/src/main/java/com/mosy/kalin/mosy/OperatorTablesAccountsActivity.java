@@ -86,22 +86,19 @@ public class OperatorTablesAccountsActivity
     private void setBound(boolean value){
         this.mBound = value;
         if (value){
-            // Call a method from the SignalRService.
-            // However, if this call were something that might hang, then this request should
-            // occur in a separate thread to avoid slowing down the activity performance.
             // mSignalRService.pingOrdersHub("ping Test123"); // testing the connection
+
             mSignalRService.setEventListeners(super.username);
 
-            //called when the STATUS of AN ACCOUNT is changed
+                //called when the STATUS of AN ACCOUNT is changed
             mSignalRService.setOnTAStatusChangedOperator(new AsyncTaskListener<TableAccountStatusResult>() {
                 @Override public void onPreExecute() { }
                 @Override public void onPostExecute(TableAccountStatusResult result) {
                     if (operatorTableAccountsAdapter != null){
                         operatorTableAccountsAdapter.changeItemStatus(result.TableAccountId, result.Status);
 
-                        if (result.NeedsItemsStatusUpdate) {
+                        if (result.NeedsItemsStatusUpdate && result.Status == TableAccountStatus.Idle) //only after confirming the account
                             mSignalRService.updateOrderRequestablesStatusAfterAccountStatusChanged(result.TableAccountId);
-                        }
 
                         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && v != null) {

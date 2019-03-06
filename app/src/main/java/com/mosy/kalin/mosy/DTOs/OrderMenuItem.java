@@ -6,26 +6,26 @@ import com.mosy.kalin.mosy.DTOs.Http.HttpResults.HttpResult;
 
 public class OrderMenuItem extends HttpResult {
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public String Id;
-    @SerializedName("OrderId")
+    @SerializedName("orderId")
     public String OrderId;
-    @SerializedName("RequestableId")
+    @SerializedName("requestableId")
     public String RequestableId;
-    @SerializedName("Status")
+    @SerializedName("status")
     public OrderMenuItemStatus Status;
-    @SerializedName("RequestableName")
+    @SerializedName("requestableName")
     public String ItemName;
-    @SerializedName("DateCreated")
+    @SerializedName("dateCreated")
     public String DateCreated;
-    @SerializedName("DateBeingProcessed")
+    @SerializedName("dateBeingProcessed")
     public String DateBeingProcessed;
-    @SerializedName("DateDelivered")
+    @SerializedName("dateDelivered")
     public String DateDelivered;
-    @SerializedName("DateReady")
+    @SerializedName("dateReady")
     public String DateReady;
 
-    @SerializedName("Requestable")
+    @SerializedName("requestable")
     public MenuListItem MenuListItem;
 
 }

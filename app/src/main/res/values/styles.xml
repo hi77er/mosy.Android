@@ -59,11 +59,11 @@
     </style>
 
     <!-- Custom -->
-    <!--<style name="FacebookLoginButton">-->
-        <!--<item name="android:textSize">@dimen/smallTxtSize</item>-->
-        <!--<item name="android:background">@drawable/facebook_signin_btn</item>-->
-        <!--<item name="android:layout_marginTop">10dp</item>-->
-        <!--<item name="android:layout_marginBottom">10dp</item>-->
-        <!--<item name="android:layout_gravity">center_horizontal</item>-->
+    <!--<style Name="FacebookLoginButton">-->
+        <!--<item Name="android:textSize">@dimen/smallTxtSize</item>-->
+        <!--<item Name="android:background">@drawable/facebook_signin_btn</item>-->
+        <!--<item Name="android:layout_marginTop">10dp</item>-->
+        <!--<item Name="android:layout_marginBottom">10dp</item>-->
+        <!--<item Name="android:layout_gravity">center_horizontal</item>-->
     <!--</style>-->
 </resources>

@@ -7,13 +7,13 @@ import java.io.Serializable;
 public class UserExternalLogin
         implements Serializable {
 
-    @SerializedName("UserId")
+    @SerializedName("userId")
     public String UserId;
 
-    @SerializedName("LoginProvider")
+    @SerializedName("loginProvider")
     public String LoginProvider;
 
-    @SerializedName("ProviderKey")
+    @SerializedName("providerKey")
     public String ProviderKey;
 
 }

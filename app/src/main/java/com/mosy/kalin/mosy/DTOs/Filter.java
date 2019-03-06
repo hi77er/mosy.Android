@@ -9,31 +9,31 @@ import java.io.Serializable;
 public class Filter
         implements Serializable {
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public String Id;
 
-    @SerializedName("Name")
+    @SerializedName("name")
     public String Name;
 
-    @SerializedName("I18nResourceName")
+    @SerializedName("i18nResourceName")
     public String I18nResourceName;
 
-    @SerializedName("Description")
+    @SerializedName("description")
     public String Description;
 
-    @SerializedName("I18nResourceDescription")
+    @SerializedName("i18nResourceDescription")
     public String I18nResourceDescription;
 
-    @SerializedName("FilteredType")
+    @SerializedName("filteredType")
     public FilteredType FilteredType;
 
-    @SerializedName("FilterType")
+    @SerializedName("filterType")
     public FilterType FilterType;
 
-    @SerializedName("OrderIndex")
+    @SerializedName("orderIndex")
     public int OrderIndex;
 
-    @SerializedName("Icon")
+    @SerializedName("icon")
     public byte[] Icon;
 
     public boolean IsChecked;

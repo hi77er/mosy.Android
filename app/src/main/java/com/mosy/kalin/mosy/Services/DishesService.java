@@ -10,6 +10,7 @@ import com.mosy.kalin.mosy.DTOs.WallMenuListItem;
 import com.mosy.kalin.mosy.DTOs.MenuListItemCulture;
 import com.mosy.kalin.mosy.DTOs.MenuListItemImage;
 import com.mosy.kalin.mosy.Helpers.LocaleHelper;
+import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.GetItemPreferredCultureBindingModel;
 import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.SearchMenuListItemsBindingModel;
@@ -55,7 +56,7 @@ public class DishesService {
                             regionFilterIds, spectrumFilterIds, allergensFilterIds, showNotRecommendedDishes, showNotWorkingVenues,
                             localDateTimeOffset, searchedDistanceMeters, isDevModeActivated);
 
-                    IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
+                    IDishesRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IDishesRepository.class);
 
                     try {
                         Call<ArrayList<WallMenuListItem>> callResult =  repository.loadDishes(authTokenHeader, model);
@@ -84,7 +85,7 @@ public class DishesService {
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
-                    IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
+                    IDishesRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IDishesRepository.class);
                     try {
                         Call<DishFiltersHttpResult> callFilters = repository.loadAllFilters(authTokenHeader, devMode);
                         apiCallResultListener.onPreExecute();
@@ -113,7 +114,7 @@ public class DishesService {
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
-                    IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
+                    IDishesRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IDishesRepository.class);
                     try {
                         Call<ArrayList<Filter>> callFilters = repository.loadFilters(authTokenHeader, itemId);
                         apiCallResultListener.onPreExecute();
@@ -144,7 +145,7 @@ public class DishesService {
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
-                    IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
+                    IDishesRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IDishesRepository.class);
                     try {
                         Call<MenuListItemImage> callImage = repository.getImageMeta(authToken, itemId);
                         apiCallResultListener.onPreExecute();
@@ -173,7 +174,7 @@ public class DishesService {
                     ArrayList<String> preferredLocales = LocaleHelper.getPreferredLanguages(applicationContext);
                     GetItemPreferredCultureBindingModel model = new GetItemPreferredCultureBindingModel(itemId, preferredLocales);
 
-                    IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
+                    IDishesRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IDishesRepository.class);
                     try {
                         Call<MenuListItemCulture> callImage = repository.getItemPreferredCulture(authToken, model);
                         apiCallResultListener.onPreExecute();
@@ -199,7 +200,7 @@ public class DishesService {
                 null,
                 () -> {
                     String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
-                    IDishesRepository repository = RetrofitAPIClientFactory.getClient().create(IDishesRepository.class);
+                    IDishesRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IDishesRepository.class);
                     try {
                         Call<Void> call = repository.checkAddView(authToken, itemId);
                         call.enqueue(new Callback<Void>() {

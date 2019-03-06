@@ -225,7 +225,10 @@ public class DetailsItemActivity
 
             @Override
             public void onPostExecute(MenuListItemImage result) {
-                item.ImageThumbnail = result;
+                if (item.ImageThumbnails == null)
+                    item.ImageThumbnails = new ArrayList<>();
+
+                item.ImageThumbnails.add(result);
                 publishIndoorImageThumbnail();
                 //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
@@ -359,8 +362,9 @@ public class DetailsItemActivity
 
     private void publishIndoorImageThumbnail() {
         if (this.item != null &&
-                this.item.ImageThumbnail != null &&
-                StringHelper.isNotNullOrEmpty(this.item.ImageThumbnail.Id)) {
+                this.item.ImageThumbnails != null &&
+                !this.item.ImageThumbnails.isEmpty() &&
+                StringHelper.isNotNullOrEmpty(this.item.ImageThumbnails.get(0).Id)) {
 
             AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
                 @Override public void onPreExecute() {
@@ -377,14 +381,16 @@ public class DetailsItemActivity
                 }
             };
 
-            new AzureBlobService().downloadMenuListItemThumbnail(this.baseContext, this.item.ImageThumbnail.Id, ImageResolution.Format200x200, listener);
+            new AzureBlobService().downloadMenuListItemThumbnail(this.baseContext, this.item.ImageThumbnails.get(0).Id, ImageResolution.Format200x200, listener);
         }
     }
 
     private boolean hasValidIndoorImageMetadata() {
-        return this.item.ImageThumbnail!= null
-                && this.item.ImageThumbnail.Id != null
-                && this.item.ImageThumbnail.Id.length() > 0;
+        return this.item.ImageThumbnails != null
+                && !this.item.ImageThumbnails.isEmpty()
+                && this.item.ImageThumbnails.get(0)!= null
+                && this.item.ImageThumbnails.get(0).Id != null
+                && this.item.ImageThumbnails.get(0).Id.length() > 0;
     }
 
     private void showFiltersLoading() {
@@ -394,12 +400,13 @@ public class DetailsItemActivity
 
     @Click(R.id.details_item_ivThumbnail)
     public void ImageClick() {
-        if (!isUsingDefaultThumbnail &&
-                hasValidIndoorImageMetadata() &&
-                !isUsingDefaultThumbnail && hasValidIndoorImageMetadata() &&
-                this.item != null &&
-                this.item.ImageThumbnail != null &&
-                StringHelper.isNotNullOrEmpty(this.item.ImageThumbnail.Id)) {
+        if (!isUsingDefaultThumbnail
+                && hasValidIndoorImageMetadata()
+                && !isUsingDefaultThumbnail && hasValidIndoorImageMetadata()
+                && this.item != null
+                && this.item.ImageThumbnails != null
+                && !this.item.ImageThumbnails.isEmpty()
+                && StringHelper.isNotNullOrEmpty(this.item.ImageThumbnails.get(0).Id)) {
 
             final Dialog nagDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -423,7 +430,7 @@ public class DetailsItemActivity
                 }
             };
 
-            new AzureBlobService().downloadMenuListItemThumbnail(this.baseContext, this.item.ImageThumbnail.Id, ImageResolution.FormatOriginal, listener);
+            new AzureBlobService().downloadMenuListItemThumbnail(this.baseContext, this.item.ImageThumbnails.get(0).Id, ImageResolution.FormatOriginal, listener);
         }
     }
 
@@ -434,7 +441,8 @@ public class DetailsItemActivity
         this.wallVenue.IndoorImage = null; // Don't need these one in the WallVenue page. If needed should implement Serializable or Parcelable
         this.wallVenue.Location = null;
         this.wallVenue.VenueBusinessHours = null;
-        intent.putExtra("WallVenue", this.wallVenue);
+        this.wallVenue.VenueContacts = null;
+        intent.putExtra("wallVenue", this.wallVenue);
         this.baseContext.startActivity(intent);
     }
 
@@ -447,13 +455,13 @@ public class DetailsItemActivity
         this.wallVenue.VenueBusinessHours = null;
         this.wallVenue.VenueContacts = null;
         intent.putExtra("SelectedMenuListId", this.item.Id);
-        intent.putExtra("WallVenue", this.wallVenue);
+        intent.putExtra("wallVenue", this.wallVenue);
         startActivity(intent);
     }
 
     @Click(R.id.details_item_btnShare)
     public void share_Clicked(){
-        String baseItemUrl = "https://www.treatspark.com/MenuItem/Index?id=";
+        String baseItemUrl = "https://www.treatspark.com/MenuItem/Index?Id=";
         String fullItemUrl = baseItemUrl + this.item.Id;
 
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);

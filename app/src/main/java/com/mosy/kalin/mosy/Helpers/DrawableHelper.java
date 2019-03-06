@@ -878,7 +878,7 @@ public class DrawableHelper {
 
     public static void changeTint(Drawable drawable, int colorResourceId, boolean mutate){
         if (drawable != null) {
-            // If we don't mutate the drawable, then all drawable's with this id will have a color
+            // If we don't mutate the drawable, then all drawable's with this Id will have a color
             // filter applied to it.
             if (mutate)
                 drawable.mutate();

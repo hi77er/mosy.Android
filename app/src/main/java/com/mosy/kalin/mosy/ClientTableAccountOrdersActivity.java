@@ -17,7 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -119,6 +118,17 @@ public class ClientTableAccountOrdersActivity
         }
     };
 
+//    private boolean isMyServiceRunning(Class<?> serviceClass) {
+//        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+//        assert manager != null;
+//        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+//            if (serviceClass.getName().equals(service.service.getClassName())) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
     private boolean mBound = false;
     private void setBound(boolean value){
         this.mBound = value;
@@ -140,7 +150,7 @@ public class ClientTableAccountOrdersActivity
 
                     setupActionLayout(tableAccount);
 
-                    if (result.NeedsItemsStatusUpdate)
+                    if (result.NeedsItemsStatusUpdate && result.Status == TableAccountStatus.AwaitingOperatorApprovement) //only after creating the account
                         mSignalRService.updateOrderRequestablesStatusAfterAccountStatusChanged(result.TableAccountId);
 
                     Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -180,7 +190,7 @@ public class ClientTableAccountOrdersActivity
                     this.newlySelectedMenuItemIds != null &&
                     this.newlySelectedMenuItemIds.size() > 0){
 
-                this.mSignalRService.createTableAccount(super.username, this.selectedTable.id, this.newlySelectedMenuItemIds);
+                this.mSignalRService.createTableAccount(super.username, this.selectedTable.Id, this.newlySelectedMenuItemIds);
             } else if (this.mSignalRService != null &&
                     this.tableAccount != null &&
                     this.selectedTable != null &&
@@ -195,9 +205,8 @@ public class ClientTableAccountOrdersActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
-        if (!mBound) {
+        if (!mBound)
             this.bindService(SignalRService_.intent(this).get(), mConnection, Context.BIND_AUTO_CREATE);
-        }
 
         super.onCreate(savedInstanceState);
     }
@@ -258,9 +267,8 @@ public class ClientTableAccountOrdersActivity
     protected void onResume(){
         super.onResume();
 
-        if (!mBound) {
+        if (!mBound)
             this.bindService(SignalRService_.intent(this).get(), mConnection, Context.BIND_AUTO_CREATE);
-        }
     }
 
     @Override
@@ -354,14 +362,14 @@ public class ClientTableAccountOrdersActivity
         }
     }
 
-    public void publishActionLayout(String statusText, int statusColorResourceId, boolean actionVisible, boolean callWaiterVisible, boolean callBillVisible, boolean hasAssignedOperator){
+    public void publishActionLayout(String statusText, int statusColorResourceId, boolean actionVisible, boolean callWaiterEnabled, boolean callBillEnabled, boolean hasAssignedOperator){
         this.tvAccountStatus.setVisibility(VISIBLE);
         this.tvAccountStatus.setText(statusText);
         this.tvAccountStatus.setTextColor(getResources().getColor(statusColorResourceId));
 
         this.layoutActions.setVisibility(actionVisible ? VISIBLE : INVISIBLE);
-        this.buttonCall.setVisibility(callWaiterVisible ? VISIBLE : INVISIBLE);
-        this.buttonBill.setVisibility(callBillVisible ? VISIBLE : INVISIBLE);
+        this.buttonCall.setEnabled(callWaiterEnabled);
+        this.buttonBill.setEnabled(callBillEnabled);
         this.ivAssignedOperator.setVisibility(hasAssignedOperator ? VISIBLE : INVISIBLE);
     }
 

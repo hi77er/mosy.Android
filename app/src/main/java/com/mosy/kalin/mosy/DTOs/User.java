@@ -7,22 +7,22 @@ import java.util.ArrayList;
 public class User
         implements Serializable {
 
-    @SerializedName("Username")
+    @SerializedName("username")
     public String Username;
 
-    @SerializedName("FirstName")
+    @SerializedName("firstName")
     public String FirstName;
 
-    @SerializedName("LastName")
+    @SerializedName("lastName")
     public String LastName;
 
-    @SerializedName("ProfileImage")
+    @SerializedName("profileImage")
     public UserImage ProfileImage;
 
-    @SerializedName("UserLogins")
+    @SerializedName("userLogins")
     public ArrayList<UserExternalLogin> ExternalLogins;
 
-    @SerializedName("Roles")
+    @SerializedName("roles")
     public ArrayList<Role> Roles;
 
 }

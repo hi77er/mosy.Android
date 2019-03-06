@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.ISecurityRepository;
+import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 
 import org.androidannotations.annotations.EBean;
@@ -24,7 +25,7 @@ public class SecurityService {
                 () -> {
                     String authToken = accountService.getWebApiAuthTokenHeader(applicationContext);
 
-                    ISecurityRepository repository = RetrofitAPIClientFactory.getClient().create(ISecurityRepository.class);
+                    ISecurityRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(ISecurityRepository.class);
                     Call<String> callRegResult = repository.ping(authToken);
 
                     callRegResult.enqueue(new Callback<String>() {

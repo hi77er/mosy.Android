@@ -12,55 +12,55 @@ import java.util.Date;
 public class VenueBusinessHours
         extends HttpResult {
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public String Id;
 
-    @SerializedName("IsMondayDayOff")
+    @SerializedName("isMondayDayOff")
     public boolean IsMondayDayOff;
-    @SerializedName("IsTuesdayDayOff")
+    @SerializedName("isTuesdayDayOff")
     public boolean IsTuesdayDayOff;
-    @SerializedName("IsWednesdayDayOff")
+    @SerializedName("isWednesdayDayOff")
     public boolean IsWednesdayDayOff;
-    @SerializedName("IsThursdayDayOff")
+    @SerializedName("isThursdayDayOff")
     public boolean IsThursdayDayOff;
-    @SerializedName("IsFridayDayOff")
+    @SerializedName("isFridayDayOff")
     public boolean IsFridayDayOff;
-    @SerializedName("IsSaturdayDayOff")
+    @SerializedName("isSaturdayDayOff")
     public boolean IsSaturdayDayOff;
-    @SerializedName("IsSundayDayOff")
+    @SerializedName("iSundayDayOff")
     public boolean IsSundayDayOff;
 
-    @SerializedName("TimeZoneMinutesOffset")
+    @SerializedName("timeZoneMinutesOffset")
     public int TimeZoneMinutesOffset;
 
-    @SerializedName("MondayFrom")
+    @SerializedName("mondayFrom")
     public Date MondayFrom;
-    @SerializedName("TuesdayFrom")
+    @SerializedName("tuesdayFrom")
     public Date TuesdayFrom;
-    @SerializedName("ThursdayFrom")
+    @SerializedName("thursdayFrom")
     public Date ThursdayFrom;
-    @SerializedName("WednesdayFrom")
+    @SerializedName("wednesdayFrom")
     public Date WednesdayFrom;
-    @SerializedName("FridayFrom")
+    @SerializedName("fridayFrom")
     public Date FridayFrom;
-    @SerializedName("SaturdayFrom")
+    @SerializedName("saturdayFrom")
     public Date SaturdayFrom ;
-    @SerializedName("SundayFrom")
+    @SerializedName("sundayFrom")
     public Date SundayFrom;
 
-    @SerializedName("MondayTo")
+    @SerializedName("mondayTo")
     public Date MondayTo;
-    @SerializedName("TuesdayTo")
+    @SerializedName("tuesdayTo")
     public Date TuesdayTo;
-    @SerializedName("WednesdayTo")
+    @SerializedName("wednesdayTo")
     public Date WednesdayTo;
-    @SerializedName("ThursdayTo")
+    @SerializedName("thursdayTo")
     public Date ThursdayTo;
-    @SerializedName("FridayTo")
+    @SerializedName("fridayTo")
     public Date FridayTo;
-    @SerializedName("SaturdayTo")
+    @SerializedName("saturdayTo")
     public Date SaturdayTo;
-    @SerializedName("SundayTo")
+    @SerializedName("sundayTo")
     public Date SundayTo;
 
 

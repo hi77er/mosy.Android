@@ -13,22 +13,22 @@ public class MenuListItemCulture
         extends HttpResult
         implements Parcelable, Serializable {
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public String Id;
 
-    @SerializedName("RequestableId")
+    @SerializedName("requestableId")
     public String MenuListItemId;
 
-    @SerializedName("Culture")
+    @SerializedName("culture")
     public String Culture;
 
-    @SerializedName("RequestableName")
+    @SerializedName("requestableName")
     public String MenuListItemName;
 
-    @SerializedName("RequestableDescription")
+    @SerializedName("requestableDescription")
     public String MenuListItemDescription;
 
-    @SerializedName("Ingredients")
+    @SerializedName("ingredients")
     public ArrayList<Ingredient> Ingredients;
 
     @SuppressWarnings("unchecked")

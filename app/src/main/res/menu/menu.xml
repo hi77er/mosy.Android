@@ -7,13 +7,13 @@
 
     <!--<item-->
         <!--android:orderInCategory="0"-->
-        <!--android:id="@+id/action_app_name"-->
+        <!--android:Id="@+Id/action_app_name"-->
         <!--app:actionLayout="@layout/action_bar_logo"-->
         <!--android:title="@string/app_name"-->
         <!--app:showAsAction="ifRoom" />-->
 
     <!--<item-->
-        <!--android:id="@+id/action_share"-->
+        <!--android:Id="@+Id/action_share"-->
         <!--android:title="Share"-->
         <!--app:showAsAction="ifRoom" />-->
     <!--app:actionProviderClass="android.widget.ShareActionProvider"-->

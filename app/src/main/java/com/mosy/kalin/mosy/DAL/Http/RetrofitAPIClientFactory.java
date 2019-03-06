@@ -20,7 +20,7 @@ public class RetrofitAPIClientFactory {
 
         private static Retrofit retrofit = null;
 
-        public static Retrofit getClient() {
+        public static Retrofit getClient(String baseUrl) {
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             OkHttpClient client = new OkHttpClient
@@ -37,7 +37,7 @@ public class RetrofitAPIClientFactory {
             Gson gson = builder.create();
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl(ServiceEndpointFactory.apiEndpoint)
+                    .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(client)
                     .build();

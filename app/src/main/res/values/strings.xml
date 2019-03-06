@@ -17,9 +17,9 @@
 
     <string name="pref_walls_visited" translatable="false">"prefWallsVisited"</string>
     <string name="pref_authToken_webApi" translatable="false">"prefAuthTokenWebApi"</string>
-    <string name="pref_authTokenType_webApi" translatable="false">"prefAuthTokenType"</string>
-    <string name="pref_authTokenExpiresInSeconds_webApi" translatable="false">"prefAuthTokenExpiresInSeconds"</string>
-    <string name="pref_authTokenExpiresAt_webApi" translatable="false">"prefAuthTokenExpiresAt"</string>
+    <string name="pref_authTokenType_webApi" translatable="false">"prefAuthTokenTypeWebApi"</string>
+    <string name="pref_authTokenExpiresInSeconds_webApi" translatable="false">"prefAuthTokenWebApiExpiresInSeconds"</string>
+    <string name="pref_authTokenExpiresAt_webApi" translatable="false">"prefAuthTokenWebApiExpiresAt"</string>
     <string name="pref_collectionName_developersMode" translatable="false">DevelopersModePreferences</string>
     <string name="pref_developersModeEnabled" translatable="false">DevelopersModeEnabled</string>
     <string name="pref_collectionName_webApi" translatable="false">"WebApiToken"</string>
@@ -32,7 +32,7 @@
     <!-- AndroidManifest -->
     <string name="app_name">"Treatspark"</string>
     <string name="manifest_venuesActivityTitle" translatable="false">"Venues"</string>
-    <string name="manifest_venueDetailsActivityTitle" translatable="false">"WallVenue Details"</string>
+    <string name="manifest_venueDetailsActivityTitle" translatable="false">"Venue Details"</string>
     <string name="manifest_itemDetailsActivityTitle" translatable="false">"Item Details"</string>
 
     <!-- Links and Urls -->
@@ -89,7 +89,7 @@
     <string name="menu_btnNavigateToDishesText">"Dishes"</string>
 
     <!-- Activity Venues -->
-    <string name="activity_wall_searchVenuesHint">"Search wallVenues …"</string>
+    <string name="activity_wall_searchVenuesHint">"Search venues …"</string>
     <string name="activity_wall_searchDishesHint">"Search dishes …"</string>
     <string name="activity_wall_filtersSettingsTextView">"Filters Settings"</string>
     <string name="activity_wall_swipeDownToRefreshMessageTextView">SWIPE DOWN TO REFRESH</string>
@@ -113,12 +113,12 @@
 
     <!-- Item Dish -->
     <string name="item_dish_nameTextView">"Dish Name"</string>
-    <string name="item_dish_venueNameTextView">"WallVenue Name"</string>
+    <string name="item_dish_venueNameTextView">"Venue Name"</string>
 
     <!-- Activity Venues Filters -->
-    <string name="activity_venuesFilters_title">"Filter wallVenues"</string>
+    <string name="activity_venuesFilters_title">"Filter Venues"</string>
     <string name="activity_venuesFilters_goBtn">"Go"</string>
-    <string name="activity_venuesFilters_showClosedTextView">Only show open wallVenues</string>
+    <string name="activity_venuesFilters_showClosedTextView">Only show open Venues</string>
     <string name="activity_venuesFilters_distanceMeasureTypeKilometers">km</string>
     <string name="activity_venuesFilters_distanceFilterTextView">Search distance:</string>
     <string name="activity_venuesFilters_distanceMeasureTypeMeters">m</string>
@@ -196,28 +196,28 @@
     <string name="VenuesFilterRooftopDescription">Rooftop available.</string>
     <string name="VenuesFilterSelfServiceDescription">Self-service.</string>
     <string name="VenuesFilterSheeshaDescription">Hookah (shisha) available.</string>
-    <string name="VenuesFilterCultureBulgariaDescription">"This wallVenue is particularly popular for people from Bulgaria."</string>
-    <string name="VenuesFilterCultureRussiaDescription">"This wallVenue is particularly popular for people from Russia."</string>
-    <string name="VenuesFilterCultureGreeceDescription">This wallVenue is particularly popular for people from Greece.</string>
-    <string name="VenuesFilterCultureSpainDescription">This wallVenue is particularly popular for people from Spain.</string>
-    <string name="VenuesFilterCulturePortugalDescription">This wallVenue is particularly popular for people from Portugal.</string>
-    <string name="VenuesFilterCultureGermanyDescription">This wallVenue is particularly popular for people from Germany.</string>
-    <string name="VenuesFilterCultureCubaDescription">This wallVenue is particularly popular for people from Cuba.</string>
-    <string name="VenuesFilterCultureAngolaDescription">This wallVenue is particularly popular for people from Angola.</string>
-    <string name="VenuesFilterCultureTurkeyDescription">This wallVenue is particularly popular for people from Turkey.</string>
-    <string name="VenuesFilterCultureBrazilDescription">This wallVenue is particularly popular for people from Brazil.</string>
-    <string name="VenuesFilterCultureItalyDescription">This wallVenue is particularly popular for people from Italy.</string>
-    <string name="VenuesFilterCultureColombiaDescription">This wallVenue is particularly popular for people from Colombia.</string>
-    <string name="VenuesFilterCultureArgentinaDescription">This wallVenue is particularly popular for people from Argentina.</string>
+    <string name="VenuesFilterCultureBulgariaDescription">"This venue is particularly popular for people from Bulgaria."</string>
+    <string name="VenuesFilterCultureRussiaDescription">"This venue is particularly popular for people from Russia."</string>
+    <string name="VenuesFilterCultureGreeceDescription">This venue is particularly popular for people from Greece.</string>
+    <string name="VenuesFilterCultureSpainDescription">This venue is particularly popular for people from Spain.</string>
+    <string name="VenuesFilterCulturePortugalDescription">This venue is particularly popular for people from Portugal.</string>
+    <string name="VenuesFilterCultureGermanyDescription">This venue is particularly popular for people from Germany.</string>
+    <string name="VenuesFilterCultureCubaDescription">This venue is particularly popular for people from Cuba.</string>
+    <string name="VenuesFilterCultureAngolaDescription">This venue is particularly popular for people from Angola.</string>
+    <string name="VenuesFilterCultureTurkeyDescription">This venue is particularly popular for people from Turkey.</string>
+    <string name="VenuesFilterCultureBrazilDescription">This venue is particularly popular for people from Brazil.</string>
+    <string name="VenuesFilterCultureItalyDescription">This venue is particularly popular for people from Italy.</string>
+    <string name="VenuesFilterCultureColombiaDescription">This venue is particularly popular for people from Colombia.</string>
+    <string name="VenuesFilterCultureArgentinaDescription">This venue is particularly popular for people from Argentina.</string>
     <string name="VenuesFilterCouchesDescription">Couches/Sofas are available.</string>
     <string name="VenuesFilterStandingDesksDescription">Availability of high tables to work while standing.</string>
 
     <!-- Activity Dishes Filters -->
     <string name="activity_dishesFilters_title">Filter dishes &amp; drinks</string>
-    <string name="activity_dishesFilters_showClosedTextView">"Only show open wallVenues"</string>
+    <string name="activity_dishesFilters_showClosedTextView">"Only show open venues"</string>
     <string name="activity_dishesFilters_goBtn">"Go"</string>
     <string name="activity_dishesFilters_typeFiltersTitle">Type</string>
-    <string name="activity_dishesFilters_regionFiltersTitle">Region</string>
+    <string name="activity_dishesFilters_regionFiltersTitle">Cuisine</string>
     <string name="activity_dishesFilters_ingredientsFiltersTitle">Dietary</string>
     <string name="activity_dishesFilters_allergensFiltersTitle">Allergens</string>
     <string name="activity_dishesFilters_allergensFiltersNote">* Selecting allergens will hide dishes and drinks that contain them in your search results.</string>

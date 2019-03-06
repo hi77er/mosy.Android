@@ -13,39 +13,39 @@ public class MenuListItem
         extends HttpResult
         implements Serializable {
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public String Id;
-    @SerializedName("BrochureId")
+    @SerializedName("brochureId")
     public String BrochureId;
-    @SerializedName("Name")
+    @SerializedName("name")
     public String Name;
-    @SerializedName("Summary")
+    @SerializedName("summary")
     public String Summary;
-    @SerializedName("Price")
+    @SerializedName("price")
     public double Price;
-    @SerializedName("PriceDisplayText")
+    @SerializedName("priceDisplayText")
     public String PriceDisplayText;
-    @SerializedName("CurrencyCode")
+    @SerializedName("currencyCode")
     public int CurrencyCode;
-    @SerializedName("Quantity")
+    @SerializedName("quantity")
     public double Quantity;
-    @SerializedName("QuantityDisplayText")
+    @SerializedName("quantityDisplayText")
     public String QuantityDisplayText;
-    @SerializedName("UnitsOfMeasureType")
+    @SerializedName("unitsOfMeasureType")
     public int UnitsOfMeasureType;
-    @SerializedName("IsPromoted")
+    @SerializedName("isPromoted")
     public boolean IsPromoted;
-    @SerializedName("IsPublic")
+    @SerializedName("isPublic")
     public boolean IsPublic;
-    @SerializedName("SeenCount")
+    @SerializedName("seenCount")
     public int SeenCount;
-    @SerializedName("PreparationEstimateSeconds")
+    @SerializedName("preparationEstimateSeconds")
     public int PreparationEstimateSeconds;
 
-    @SerializedName("DefaultMenuCulture")
+    @SerializedName("defaultMenuCulture")
     public String DefaultMenuCulture;
 
-    @SerializedName("RequestableCultures")
+    @SerializedName("requestableCultures")
     public ArrayList<MenuListItemCulture> MenuListItemCultures;
 
 }

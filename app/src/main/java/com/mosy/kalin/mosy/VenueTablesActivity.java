@@ -94,7 +94,7 @@ public class VenueTablesActivity
 
         RecyclerViewItemsClickSupport.addTo(this.tablesView).setOnItemClickListener((recyclerView, position, v) -> {
             TableItem itemClicked = (TableItem)venueTablesAdapter.getItemAt(position);
-            if (this.selectedTable != null && this.selectedTable.id.equals(itemClicked.table.id))
+            if (this.selectedTable != null && this.selectedTable.Id.equals(itemClicked.table.Id))
                 this.reloadAfterFinish = false;
 
             this.selectedTable = itemClicked.table;

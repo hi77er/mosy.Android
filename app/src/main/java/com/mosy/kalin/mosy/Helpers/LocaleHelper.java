@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class LocaleHelper {
 
-    public static final Map<String, Integer> SUPPORTED_LOCALES; // locale id - resource id
+    public static final Map<String, Integer> SUPPORTED_LOCALES; // locale Id - resource Id
     static
     {
         SUPPORTED_LOCALES = new HashMap<>();

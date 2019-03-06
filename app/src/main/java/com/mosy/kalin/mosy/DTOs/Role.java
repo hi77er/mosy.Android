@@ -8,10 +8,10 @@ import java.util.ArrayList;
 public class Role
         implements Serializable {
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public String Id;
 
-    @SerializedName("Name")
+    @SerializedName("name")
     public String Name;
 
 }

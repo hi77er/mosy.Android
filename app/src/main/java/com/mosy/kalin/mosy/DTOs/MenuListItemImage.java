@@ -12,22 +12,22 @@ public class MenuListItemImage
         extends HttpResult
         implements Serializable {
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public String Id;
 
-    @SerializedName("RequestableId")
+    @SerializedName("requestableId")
     public String DishId;
 
-    @SerializedName("DisplayName")
+    @SerializedName("displayName")
     public String DisplayName;
 
-    @SerializedName("ContentType")
+    @SerializedName("contentType")
     public String ContentType;
 
-    @SerializedName("Description")
+    @SerializedName("description")
     public String Description;
 
-    @SerializedName("IsOutdoors")
+    @SerializedName("isOutdoors")
     public boolean IsOutdoors;
 
     public Bitmap Bitmap;

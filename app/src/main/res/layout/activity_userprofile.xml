@@ -8,8 +8,8 @@
     android:padding="10dp">
 
     <!--<LinearLayout-->
-        <!--android:id="@+id/login_llInitialLoadingProgress"-->
-        <!--android:layout_below="@+id/login_etPassword"-->
+        <!--android:Id="@+Id/login_llInitialLoadingProgress"-->
+        <!--android:layout_below="@+Id/login_etPassword"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:gravity="center"-->
@@ -17,7 +17,7 @@
         <!--android:layout_marginTop="50dp" >-->
 
         <!--<ProgressBar-->
-            <!--android:id="@+id/pbHeaderProgress"-->
+            <!--android:Id="@+Id/pbHeaderProgress"-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
             <!--android:indeterminate="true" >-->

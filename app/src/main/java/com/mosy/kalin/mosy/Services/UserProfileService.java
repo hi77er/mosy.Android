@@ -2,12 +2,12 @@ package com.mosy.kalin.mosy.Services;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
 import com.mosy.kalin.mosy.DAL.Http.RetrofitAPIClientFactory;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IAccountRepository;
 import com.mosy.kalin.mosy.DAL.Repositories.Interfaces.IUserRepository;
 import com.mosy.kalin.mosy.DTOs.User;
+import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 
 import org.androidannotations.annotations.EBean;
@@ -25,7 +25,7 @@ public class UserProfileService {
     private AccountService accountService;
 
     public UserProfileService(){
-        this.accountRepository = RetrofitAPIClientFactory.getClient().create(IAccountRepository.class);
+        this.accountRepository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IAccountRepository.class);
         this.accountService = new AccountService();
     }
 
@@ -33,7 +33,7 @@ public class UserProfileService {
         this.accountService.executeAssuredUserTokenValidOrRefreshed(applicationContext,
                 () -> {
                     String authTokenHeader = this.accountService.getUserAuthTokenHeader(applicationContext);
-                    IUserRepository repository = RetrofitAPIClientFactory.getClient().create(IUserRepository.class);
+                    IUserRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IUserRepository.class);
                     try {
                         Call<User> call = repository.getUserProfile(authTokenHeader);
                         apiCallResultListener.onPreExecute();
@@ -42,7 +42,7 @@ public class UserProfileService {
                                 if (response.code() == 401){ // unauthorized
                                     onUserTokenInvalidOrExpired.run();
                                 }
-                                else{
+                                else {
                                     User result = response.body();
                                     apiCallResultListener.onPostExecute(result);
                                 }

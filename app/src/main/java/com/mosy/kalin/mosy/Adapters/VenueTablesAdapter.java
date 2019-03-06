@@ -84,7 +84,7 @@ public class VenueTablesAdapter
     public TableItem getItemById(String tableId) {
         for (WallItemBase item : this.items) {
             TableItem casted = (TableItem) item;
-            if (tableId.equals(casted.table.id))
+            if (tableId.equals(casted.table.Id))
                 return casted;
         }
         return null;

@@ -11,6 +11,7 @@ import com.mosy.kalin.mosy.DTOs.VenueBusinessHours;
 import com.mosy.kalin.mosy.DTOs.VenueContacts;
 import com.mosy.kalin.mosy.DTOs.VenueImage;
 import com.mosy.kalin.mosy.DTOs.VenueLocation;
+import com.mosy.kalin.mosy.Helpers.ServiceEndpointFactory;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.SearchVenuesBindingModel;
 import com.mosy.kalin.mosy.Models.Responses.VenueFiltersHttpResult;
@@ -41,7 +42,7 @@ public class VenuesService {
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
-                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IVenuesRepository.class);
 
                     try {
                         Call<WallVenue> callResult =  repository.getById(authTokenHeader, venueId);
@@ -88,7 +89,7 @@ public class VenuesService {
                             latitude, longitude, query, venueAccessibilityFilterIds, venueAvailabilityFilterIds, venueAtmosphereFilterIds, venueCultureFilterIds,
                             showNotWorkingVenues, localDateTimeOffset, distanceFilterValue, isDevModeActivated);
 
-                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IVenuesRepository.class);
 
                     try {
                         Call<ArrayList<WallVenue>> callResult =  repository.loadVenues(authTokenHeader, model);
@@ -118,7 +119,7 @@ public class VenuesService {
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
-                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IVenuesRepository.class);
 
                     try {
                         Call<VenueContacts> call = repository.getContacts(authToken, venueId);
@@ -149,7 +150,7 @@ public class VenuesService {
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
-                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IVenuesRepository.class);
 
                     try {
                         Call<VenueBusinessHours> callResult =  repository.getBusinessHours(authToken, venueId);
@@ -179,7 +180,7 @@ public class VenuesService {
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
-                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IVenuesRepository.class);
 
                     try {
                         Call<VenueLocation> callLocation = repository.getLocation(authToken, venueId);
@@ -211,7 +212,7 @@ public class VenuesService {
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
-                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IVenuesRepository.class);
                     try {
                         Call<VenueImage> callImage = repository.getImageMeta(authToken, venueId, isExterior);
                         apiCallResultListener.onPreExecute();
@@ -241,7 +242,7 @@ public class VenuesService {
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
-                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IVenuesRepository.class);
                     try {
                         String localDateTimeOffset = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(Calendar.getInstance().getTime());
 
@@ -272,7 +273,7 @@ public class VenuesService {
                 apiCallResultListener::onPreExecute,
                 () -> {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
-                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IVenuesRepository.class);
                     try {
                         Call<VenueFiltersHttpResult> callFilters = repository.getFilters(authTokenHeader, devMode);
                         apiCallResultListener.onPreExecute();
@@ -298,7 +299,7 @@ public class VenuesService {
                 null,
                 () -> {
                     String authToken = this.accountService.getWebApiAuthTokenHeader(applicationContext);
-                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient().create(IVenuesRepository.class);
+                    IVenuesRepository repository = RetrofitAPIClientFactory.getClient(ServiceEndpointFactory.apiEndpoint).create(IVenuesRepository.class);
                     try {
                         Call<Void> call = repository.checkAddView(authToken, itemId);
                         call.enqueue(new Callback<Void>() {

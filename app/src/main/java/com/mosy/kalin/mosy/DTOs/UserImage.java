@@ -12,19 +12,19 @@ import com.mosy.kalin.mosy.DTOs.Http.HttpResults.HttpResult;
 public class UserImage
         extends HttpResult {
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public String Id;
 
-    @SerializedName("DisplayName")
+    @SerializedName("displayName")
     public String DisplayName;
 
-    @SerializedName("ContentType")
+    @SerializedName("contentType")
     public String ContentType;
 
-    @SerializedName("Description")
+    @SerializedName("description")
     public String Description;
 
-    @SerializedName("Bytes")
+    @SerializedName("bytes")
     public byte[] Bytes;
 
     public Bitmap Bitmap;

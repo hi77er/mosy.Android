@@ -11,16 +11,16 @@ public class DishFiltersHttpResult //INFO: Name coming from WebApi specifics
         extends HttpResult
         implements Serializable {
 
-    @SerializedName("DishTypeFilters")
+    @SerializedName("dishTypeFilters")
     public ArrayList<Filter> DishTypeFilters;
 
-    @SerializedName("DishRegionFilters")
+    @SerializedName("dishRegionFilters")
     public ArrayList<Filter> DishRegionFilters;
 
-    @SerializedName("DishMainIngredientFilters")
+    @SerializedName("dishMainIngredientFilters")
     public ArrayList<Filter> DishMainIngredientFilters;
 
-    @SerializedName("DishAllergenFilters")
+    @SerializedName("dishAllergenFilters")
     public ArrayList<Filter> DishAllergenFilters;
 
 }

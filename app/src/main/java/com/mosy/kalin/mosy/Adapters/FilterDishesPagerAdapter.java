@@ -65,10 +65,10 @@ public class FilterDishesPagerAdapter
                 filterItems = this.DishTypeFilterItems;
                 break;
             case 1:
-                filterItems = this.DishRegionFilterItems;
+                filterItems = this.DishMainIngredientFilterItems;
                 break;
             case 2:
-                filterItems = this.DishMainIngredientFilterItems;
+                filterItems = this.DishRegionFilterItems;
                 break;
             case 3:
                 filterItems = this.DishAllergenFilterItems;
@@ -92,9 +92,9 @@ public class FilterDishesPagerAdapter
         if (position == 0)
             return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_typeFiltersTitle);
         if (position == 1)
-            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_regionFiltersTitle);
-        if (position == 2)
             return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_ingredientsFiltersTitle);
+        if (position == 2)
+            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_regionFiltersTitle);
         if (position == 3)
             return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_allergensFiltersTitle);
         return null;

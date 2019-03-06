@@ -67,7 +67,7 @@ public class NetworkHelper {
     }
 
     /**
-     * Returns MAC address of the given interface name.
+     * Returns MAC address of the given interface Name.
      * @param interfaceName eth0, wlan0 or NULL=use first interface
      * @return  mac address or empty string
      */

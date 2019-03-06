@@ -14,13 +14,13 @@ public class MenuListItemIngredient
         extends HttpResult
         implements Parcelable {
 
-    @SerializedName("IngredientId")
+    @SerializedName("ingredientId")
     public String IngredientId;
 
-    @SerializedName("RequestableId")
+    @SerializedName("requestableId")
     public String RequestableId;
 
-    @SerializedName("Removable")
+    @SerializedName("removable")
     public boolean Removable;
 
 

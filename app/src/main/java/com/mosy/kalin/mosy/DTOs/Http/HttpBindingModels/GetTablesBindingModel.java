@@ -2,7 +2,7 @@ package com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels;
 
 public class GetTablesBindingModel {
 
-    public String FBOId; //venueId
+    public String FBOId; //VenueId
 
     public GetTablesBindingModel() { }
 

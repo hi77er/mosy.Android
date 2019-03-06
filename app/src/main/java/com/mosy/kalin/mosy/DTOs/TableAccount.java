@@ -10,21 +10,21 @@ import java.util.ArrayList;
 public class TableAccount
         implements Serializable {
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public String Id;
-    @SerializedName("TableName")
+    @SerializedName("tableName")
     public String TableName;
-    @SerializedName("Status")
+    @SerializedName("status")
     public TableAccountStatus Status;
 
-    @SerializedName("OpenerUsername")
+    @SerializedName("openerUsername")
     public String OpenerUsername;
-    @SerializedName("AssignedOperatorUsername")
+    @SerializedName("assignedOperatorUsername")
     public String AssignedOperatorUsername;
 
-    @SerializedName("FBOTable")
+    @SerializedName("fboTable")
     public Table Table;
-    @SerializedName("Orders")
+    @SerializedName("orders")
     public ArrayList<Order> Orders;
 
 

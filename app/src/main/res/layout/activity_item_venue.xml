@@ -58,7 +58,7 @@
                 android:textColor="@color/colorWhite" />
 
             <!--<TextView-->
-                <!--android:id="@+id/venueItem_tvNewLabel"-->
+                <!--android:Id="@+Id/venueItem_tvNewLabel"-->
                 <!--android:layout_gravity="start"-->
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="wrap_content"-->

@@ -61,7 +61,7 @@
                 android:orientation="vertical">
 
                 <!--<TextView-->
-                    <!--android:id="@+id/menuListItem_tvWorkingStatus"-->
+                    <!--android:Id="@+Id/menuListItem_tvWorkingStatus"-->
                     <!--android:layout_width="0dp"-->
                     <!--android:layout_weight="1"-->
                     <!--android:layout_height="match_parent"-->
@@ -127,7 +127,7 @@
                 android:layout_height="57dp">
 
                 <!--<TextView-->
-                    <!--android:id="@+id/menuListItem_tvRatingTag"-->
+                    <!--android:Id="@+Id/menuListItem_tvRatingTag"-->
                     <!--android:layout_width="0dp"-->
                     <!--android:layout_weight="2"-->
                     <!--android:layout_height="match_parent"-->

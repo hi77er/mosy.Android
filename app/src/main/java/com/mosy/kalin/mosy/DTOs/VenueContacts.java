@@ -5,28 +5,28 @@ import com.mosy.kalin.mosy.DTOs.Http.HttpResults.HttpResult;
 
 public class VenueContacts extends HttpResult {
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public String Id;
 
-    @SerializedName("Address")
+    @SerializedName("address")
     public String Address;
 
-    @SerializedName("Phone")
+    @SerializedName("phone")
     public String Phone;
 
-    @SerializedName("Facebook")
+    @SerializedName("facebook")
     public String FacebookUrl;
 
-    @SerializedName("Forsquare")
+    @SerializedName("forsquare")
     public String Foursquare;
 
-    @SerializedName("Email")
+    @SerializedName("email")
     public String Email;
 
-    @SerializedName("Instagram")
+    @SerializedName("instagram")
     public String Instagram;
 
-    @SerializedName("WebPage")
+    @SerializedName("webPage")
     public String WebPage;
 
 

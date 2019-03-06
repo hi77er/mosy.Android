@@ -52,7 +52,7 @@ public class FiltersInfoWallItemView
         this.mismatchingFiltersInfo.setVisibility(GONE);
     }
 
-//    @Click(resName = "id of element to handled it´s click")
+//    @Click(resName = "Id of element to handled it´s click")
 //    public void click()
 //    {
 //    }

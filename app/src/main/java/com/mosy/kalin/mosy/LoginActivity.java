@@ -106,7 +106,7 @@ public class LoginActivity
 //                          LastNameSocial = object.optString("last_name");
 //                          GenderSocial = object.optString("gender");
 //                          String emailSocial = object.optString("email", "");
-//                          id = object.optString("id");
+//                          Id = object.optString("Id");
 
                             accountService.facebookLogin(
                                     applicationContext,
@@ -120,8 +120,8 @@ public class LoginActivity
                                     LoginActivity.this::onFail);
                         });
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,email,gender,birthday");
-//                parameters.putString("fields", "id,name,email,birthday,gender,first_name,last_name,picture,education,work");
+                parameters.putString("fields", "Id,Name,email");
+//                parameters.putString("fields", "Id,Name,email,birthday,gender,first_name,last_name,picture,education,work");
                 request.setParameters(parameters);
                 request.executeAsync();
             }

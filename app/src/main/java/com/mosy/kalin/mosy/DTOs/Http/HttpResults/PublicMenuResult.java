@@ -8,11 +8,11 @@ import java.util.ArrayList;
 
 public class PublicMenuResult implements Serializable {
 
-    @SerializedName("MenuCultures")
+    @SerializedName("menuCultures")
     public ArrayList<String> MenuCultures;
 
     //Collections
-    @SerializedName("Brochures")
+    @SerializedName("brochures")
     public ArrayList<MenuList> MenuLists;
 
 }

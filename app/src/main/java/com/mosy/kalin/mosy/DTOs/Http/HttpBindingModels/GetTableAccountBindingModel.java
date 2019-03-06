@@ -4,7 +4,7 @@ import com.mosy.kalin.mosy.Helpers.StringHelper;
 
 public class GetTableAccountBindingModel {
 
-    public String FBOId; //venueId
+    public String FBOId; //VenueId
     public String OpenerUsername;
 
     public GetTableAccountBindingModel() { }

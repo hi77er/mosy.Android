@@ -43,7 +43,7 @@ public class MenuListItemView
         }
     }
 //
-//    @Click(R.id.menuListItem_llRow)
+//    @Click(R.Id.menuListItem_llRow)
 //    public void itemClick() {
 //        String asdas = "";
 //    }
