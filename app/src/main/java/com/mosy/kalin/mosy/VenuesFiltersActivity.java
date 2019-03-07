@@ -239,6 +239,7 @@ public class VenuesFiltersActivity
                 intent.putExtra("SelectedVenueAvailabilityFilterIds", selectedVenueAvailabilityFilterIds);
                 intent.putExtra("SelectedVenueAtmosphereFilterIds", selectedVenueAtmosphereFilterIds);
                 intent.putExtra("SelectedVenueCultureFilterIds", selectedVenueCultureFilterIds);
+                intent.putExtra("NavigatedFromFilters", true);
                 startActivity(intent);
             }
         } // In both "else"s do nothing. Simply close this activity without passing any values or initiating a "start" of the Wall activity.

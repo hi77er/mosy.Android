@@ -362,9 +362,10 @@ public class DetailsItemActivity
 
     private void publishIndoorImageThumbnail() {
         if (this.item != null &&
-                this.item.ImageThumbnails != null &&
-                !this.item.ImageThumbnails.isEmpty() &&
-                StringHelper.isNotNullOrEmpty(this.item.ImageThumbnails.get(0).Id)) {
+            this.item.ImageThumbnails != null &&
+           !this.item.ImageThumbnails.isEmpty() &&
+            this.item.ImageThumbnails.get(0) != null &&
+            StringHelper.isNotNullOrEmpty(this.item.ImageThumbnails.get(0).Id)) {
 
             AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
                 @Override public void onPreExecute() {

@@ -142,6 +142,8 @@ public class WallActivity
     static ArrayList<String> SelectedDishMainIngredientFilterIds;
     @Extra
     static ArrayList<String> SelectedDishAllergenFilterIds;
+    @Extra
+    static boolean NavigatedFromFilters = false;
 
     @ViewById(R.id.llInitialLoadingProgress)
     LinearLayout centralProgress;
@@ -167,7 +169,7 @@ public class WallActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        incrementActivityUsagesCount();
+        this.incrementActivityUsagesCount();
         timeStarted = System.currentTimeMillis();
     }
 
@@ -184,28 +186,42 @@ public class WallActivity
             }
         };
 
-        if (ConnectivityHelper.isConnected(applicationContext)) {
-            networkLost = false;
-            loadData();
-        }
-        else {
-            networkLost = true;
-            showInvalidHostLayout(); // For any case.. But should never happen because landing activity doesn't show links to this activity if no internet.
-        }
-
-
-        afterViewsFinished = true;
-
         if (checkFiltersSelected()){
             this.filtersButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorSecondaryAmber)));
             this.filtersButton.setImageResource(R.drawable.ic_filter_24);
             this.filtersButton.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite)));
         }
         else{
-            this.filtersButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTertiaryLight)));
+            this.filtersButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimarySalmon)));
             this.filtersButton.setImageResource(R.drawable.ic_filter_remove_outline_24);
             this.filtersButton.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite)));
         }
+
+          //INFO: Use this code to test initial usage popups!
+//        SharedPreferences mPreferences = this.getSharedPreferences(getString(R.string.pref_walls_visited), Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = mPreferences.edit();
+//        editor.putInt(getString(R.string.pref_walls_visited), 0);
+//        editor.apply();
+
+        if (ConnectivityHelper.isConnected(applicationContext)) {
+
+            networkLost = false;
+            int activityUsagesCount = this.getActivityUsagesCount();
+
+            this.loadData();
+
+            if (activityUsagesCount <= 3 && !NavigatedFromFilters)
+                this.openFilters();
+
+            if (activityUsagesCount <= 7)
+                this.showFiltersPopupLabel();
+        }
+        else {
+            networkLost = true;
+            showInvalidHostLayout(); // For any case.. But should never happen because landing activity doesn't show links to this activity if no internet.
+        }
+
+        this.afterViewsFinished = true;
     }
 
     @Override
@@ -251,10 +267,6 @@ public class WallActivity
         this.loadVenueFilters();
 
         this.filtersButton.setOnClickListener(v -> openFilters());
-
-        int activityUsagesCount = getActivityUsagesCount();
-        if (activityUsagesCount <= 15)
-            showFiltersPopupLabel();
     }
 
     private void loadVenueFilters(){

@@ -256,6 +256,7 @@ public class DishesFiltersActivity
                 intent.putExtra("SelectedDishRegionFilterIds", selectedDishRegionFilterIds);
                 intent.putExtra("SelectedDishMainIngredientFilterIds", selectedDishMainIngredientFilterIds);
                 intent.putExtra("SelectedDishAllergenFilterIds", selectedDishAllergenFilterIds);
+                intent.putExtra("NavigatedFromFilters", true);
                 startActivity(intent);
             }
         }// In both "else"s do nothing. Simply close this activity without passing any values or initiating a "start" of the Wall activity.
