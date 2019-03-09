@@ -159,6 +159,8 @@ public class WallActivity
     SwipeRefreshLayout venuesSwipeContainer;
     @ViewById(R.id.venues_lDishesSwipeContainer)
     SwipeRefreshLayout dishesSwipeContainer;
+    @ViewById(R.id.venues_llSwipeToRefresh)
+    LinearLayout llSwipeToRefresh;
 
     @ViewById(R.id.venues_ibFilters)
     FloatingActionButton filtersButton;

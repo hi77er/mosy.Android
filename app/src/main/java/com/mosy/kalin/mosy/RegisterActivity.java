@@ -64,6 +64,7 @@ public class RegisterActivity
             new AccountService().register(applicationContext, email, password, password, listener, null);
         }
         else {
+            this.setInfoMessageColor(R.color.colorPrimaryApricot);
             this.toggleInfoMessage("Email is being used");
             centralProgress.setVisibility(View.GONE);
             btnRegister.setVisibility(View.VISIBLE);
@@ -77,11 +78,15 @@ public class RegisterActivity
             this.toggleInfoMessage(StringHelper.empty());
             toLoginActivity();
         }
-        else
+        else{
+            this.setInfoMessageColor(R.color.colorPrimaryApricot);
             this.toggleInfoMessage("Registration unsuccessful. Please try again.");
+        }
+
     }
 
     private void onInvalidHost() {
+        this.setInfoMessageColor(R.color.colorPrimaryApricot);
         this.toggleInfoMessage("No internet.");
     }
 
@@ -92,6 +97,9 @@ public class RegisterActivity
         startActivity(intent);
     }
 
+    private void setInfoMessageColor(int colorResId){
+        this.infoMessage.setTextColor(getResources().getColor(colorResId));
+    }
     private void toggleInfoMessage(String infoMessage){
         this.infoMessage.setVisibility(StringHelper.isNotNullOrEmpty(infoMessage) ? View.VISIBLE : View.GONE);
         this.infoMessage.setText(StringHelper.isNotNullOrEmpty(infoMessage) ? infoMessage : StringHelper.empty());
@@ -104,16 +112,22 @@ public class RegisterActivity
         String repeatPassword = etPassword.getText().toString();
         Context applicationContext = getApplicationContext();
 
-        if (StringHelper.isNullOrWhitespace(email) || StringHelper.isNullOrWhitespace(password))
+        if (StringHelper.isNullOrWhitespace(email) || StringHelper.isNullOrWhitespace(password)){
+            this.setInfoMessageColor(R.color.colorPrimaryApricot);
             this.toggleInfoMessage("Email and password are required fields.");
-        else if (!StringHelper.isEmailAddress(email))
+        }
+        else if (!StringHelper.isEmailAddress(email)){
+            this.setInfoMessageColor(R.color.colorPrimaryApricot);
             this.toggleInfoMessage("Invalid Email address.");
+        }
         else if (!StringHelper.isMatch("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*(_|[^\\w])).{6,}$", password)) {
+            this.setInfoMessageColor(R.color.colorPrimaryApricot);
             this.toggleInfoMessage("Passwords must have at least one non letter and digit character. " +
                                    "Passwords must have at least one lowercase ('a'-'z'). " +
                                    "Passwords must have at least one uppercase ('A'-'Z')." +
                                    "Passwords must have at least one digit.");
         } else if (!password.equals(repeatPassword)) {
+            this.setInfoMessageColor(R.color.colorPrimaryApricot);
             this.toggleInfoMessage("Repeat password does not match Password");
         } else {
             AsyncTaskListener<CheckEmailAvailableResult> isEmailValidListener = new AsyncTaskListener<CheckEmailAvailableResult>() {

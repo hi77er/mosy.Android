@@ -15,7 +15,6 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -23,7 +22,6 @@ import com.mosy.kalin.mosy.DTOs.User;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.DTOs.Http.HttpBindingModels.LoginBindingModel;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Services.UserProfileService;
 
 import org.androidannotations.annotations.AfterViews;
@@ -32,7 +30,6 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -78,6 +75,7 @@ public class LoginActivity
     @AfterViews
     public void afterViews(){
         if (confirmEmailNeeded){
+            this.infoMessageTextView.setTextColor(getResources().getColor(R.color.colorTertiary));
             this.onFinishLogin("Confirm your email and come back to Login.");
             Toast.makeText(applicationContext, "Registration successful", Toast.LENGTH_SHORT).show();
         }
@@ -136,6 +134,8 @@ public class LoginActivity
 
     @Click(R.id.login_btnLogin)
     public void Login() {
+        this.infoMessageTextView.setVisibility(View.GONE);
+
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString();
         Context applicationContext = getApplicationContext();
@@ -174,6 +174,8 @@ public class LoginActivity
             }
             @Override public void onPostExecute(User user) {
                 if (user != null) {
+                    infoMessageTextView.setTextColor(getResources().getColor(R.color.colorTertiary));
+                    onFinishLogin("Login successful.");
                     accountService.addUserDataToSharedPreferences(applicationContext, user);
 
                     Toast.makeText(applicationContext, "Login successful.", Toast.LENGTH_SHORT).show();
@@ -181,6 +183,7 @@ public class LoginActivity
                     startActivity(intent);
                 } else {
                     LoginManager.getInstance().logOut();
+                    infoMessageTextView.setTextColor(getResources().getColor(R.color.colorPrimaryApricot));
                     onFinishLogin("Something went wrong.");
                 }
             }
@@ -190,25 +193,31 @@ public class LoginActivity
     }
 
     private void onWrongUserOrPass() {
+        this.infoMessageTextView.setTextColor(getResources().getColor(R.color.colorPrimaryApricot));
         this.onFinishLogin("Wrong username or password.");
     }
     private void onEmailNotConfirmed() {
+        this.infoMessageTextView.setTextColor(getResources().getColor(R.color.colorPrimaryApricot));
         this.onFinishLogin("Email not confirmed.");
     }
     private void onFacebookAccountNotFound() {
         LoginManager.getInstance().logOut();
+        this.infoMessageTextView.setTextColor(getResources().getColor(R.color.colorPrimaryApricot));
         this.onFinishLogin("No such Facebook user was found.");
     }
     private void onEmailAlreadyExists() {
         LoginManager.getInstance().logOut();
+        this.infoMessageTextView.setTextColor(getResources().getColor(R.color.colorPrimaryApricot));
         this.onFinishLogin("There is already a local account associated to the email of this Facebook account. You can login and then associate this Facebook profile to it in 'My profile' section.");
     }
     private void onInvalidHostMessage() {
         LoginManager.getInstance().logOut();
+        this.infoMessageTextView.setTextColor(getResources().getColor(R.color.colorPrimaryApricot));
         this.onFinishLogin("No internet.");
     }
     private void onFail() {
         LoginManager.getInstance().logOut();
+        this.infoMessageTextView.setTextColor(getResources().getColor(R.color.colorPrimaryApricot));
         this.onFinishLogin("Something went wrong.");
     }
 
