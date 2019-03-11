@@ -115,7 +115,7 @@ public class MenuListItemDetailsView
             this.ingredients.setVisibility(VISIBLE);
         }
 
-        final String imageKey = (wallMenuListItem.ImageThumbnails != null && !wallMenuListItem.ImageThumbnails.isEmpty())
+        final String imageKey = (wallMenuListItem.ImageThumbnail != null)
                 ? wallMenuListItem.ImageThumbnail.Id
                 : "default";
 

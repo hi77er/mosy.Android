@@ -30,14 +30,6 @@ public class ServiceEndpointFactory implements IServiceEndpointFactory {
 //    public static final String apiEndpoint = "http://192.168.1.4:44394/api/"; // When debugging on actual Device
 //    public static final String apiTokenEndpoint = "http://192.168.1.4:44394/token"; // When debugging on actual Device
 
-    // PUBLIC endpoints
-    public static final String webAppTokenEndpoint = "https://mosy.azurewebsites.net/token";
-    public static final String webAppEndpoint = "https://mosy.azurewebsites.net";
-
-    //INFO: Deprecated!
-    //public static final String apiEndpoint = "https://mosyws.azurewebsites.net/api/";
-    //public static final String apiTokenEndpoint = "https://mosyws.azurewebsites.net/token";
-
     public static final String apiEndpoint = "https://wsmosy.azurewebsites.net/api/";
     public static final String apiTokenEndpoint = "https://wsmosy.azurewebsites.net/token";
 

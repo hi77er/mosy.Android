@@ -164,7 +164,6 @@ public class DetailsItemActivity
                 itemCulture = result;
                 publishItemCulture();
                 hideMainProgress();
-                //INFO: HERE IF NECESSARY: progress.setVisibility(View.GONE);
             }
         };
         this.dishesService.getItemPreferredCulture(this.applicationContext, apiCallResultListener, null, this.item.Id);
