@@ -27,7 +27,7 @@ public class VenueBusinessHours
     public boolean IsFridayDayOff;
     @SerializedName("isSaturdayDayOff")
     public boolean IsSaturdayDayOff;
-    @SerializedName("iSundayDayOff")
+    @SerializedName("isSundayDayOff")
     public boolean IsSundayDayOff;
 
     @SerializedName("timeZoneMinutesOffset")

@@ -56,6 +56,9 @@ import org.androidannotations.annotations.ViewById;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_details_venue)
 public class DetailsVenueActivity
@@ -645,13 +648,22 @@ public class DetailsVenueActivity
 
             AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
                 @Override public void onPreExecute() {
-                    //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+                    ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
+                    ivPreview.setVisibility(GONE);
+                    LinearLayout progressLayout = nagDialog.findViewById(R.id.llInitialLoadingProgress);
+                    progressLayout.setVisibility(VISIBLE);
                 }
                 @Override public void onPostExecute(byte[] bytes) {
                     if (ArrayHelper.hasValidBitmapContent(bytes)) {
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                        LinearLayout progressLayout = nagDialog.findViewById(R.id.llInitialLoadingProgress);
+                        progressLayout.setVisibility(GONE);
+
                         ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
                         ivPreview.setImageBitmap(bmp);
+                        ivPreview.setVisibility(VISIBLE);
+
                         nagDialog.show();
                     } else
                         throw new NullPointerException("Image not found");

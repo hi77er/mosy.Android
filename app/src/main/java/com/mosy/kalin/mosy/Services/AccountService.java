@@ -48,7 +48,7 @@ public class AccountService {
                 .create(IAccountRepository.class);
     }
 
-    public void executeAssuredWebApiTokenValidOrRefreshed(Context applicationContext, Runnable preExecute, @NonNull Runnable onSuccess, Runnable onInvalidHost) {
+    public void executeAssuredWebApiTokenValidOrRefreshed(Context applicationContext, Runnable preExecute, @NonNull Runnable onSuccess, Runnable onInvalidHost) throws NullPointerException {
         boolean tokenExistsAndIsValid = this.checkWebApiTokenValid(applicationContext);
 
         if (!tokenExistsAndIsValid) {
@@ -187,7 +187,7 @@ public class AccountService {
         return new ArrayList<>(Arrays.asList(userRoles.split(",")));
     }
 
-    private void webApiLogin(Context applicationContext, Runnable preExecute, @NonNull Runnable onSuccess, Runnable onInvalidHost) {
+    private void webApiLogin(Context applicationContext, Runnable preExecute, @NonNull Runnable onSuccess, Runnable onInvalidHost) throws NullPointerException {
         LoginBindingModel model = new LoginBindingModel(applicationContext.getString(R.string.webAPI_username), applicationContext.getString(R.string.webAPI_pass));
         Call<AuthorizationTokensResource> call = this.webApiTokenRepository.tokenLogin(model);
 
@@ -202,12 +202,13 @@ public class AccountService {
                 }
                 else {
                     AuthorizationTokensResource result = response.body();
-                    if (result == null) throw new NullPointerException("Must have Authentication Token response");
-
-                    if (result.AccessToken != null && !StringHelper.isNullOrEmpty(result.AccessToken.AccessToken) && !StringHelper.isNullOrEmpty(result.AccessToken.TokenType)){
+                    if (result != null && result.AccessToken != null && !StringHelper.isNullOrEmpty(result.AccessToken.AccessToken) && !StringHelper.isNullOrEmpty(result.AccessToken.TokenType)) {
                         refreshWebApiAuthTokenSettings(applicationContext, result.AccessToken.AccessToken, result.AccessToken.TokenType, String.valueOf(result.AccessToken.Issued), result.AccessToken.ExpiresIn);
-
                         onSuccess.run();
+                    }
+                    else
+                    {
+                        throw new NullPointerException("Must have Authentication Token response");
                     }
                 }
             }

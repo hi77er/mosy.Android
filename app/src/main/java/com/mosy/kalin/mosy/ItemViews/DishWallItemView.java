@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mosy.kalin.mosy.DTOs.Enums.ImageResolution;
@@ -205,17 +206,26 @@ public class DishWallItemView
             nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             nagDialog.setCancelable(true);
             nagDialog.setContentView(R.layout.image_preview_dialog);
-            nagDialog.show();
 
             AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
                 @Override public void onPreExecute() {
-//                    progressBar.setVisibility(View.VISIBLE);
+                    ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
+                    ivPreview.setVisibility(GONE);
+                    LinearLayout progressLayout = nagDialog.findViewById(R.id.llInitialLoadingProgress);
+                    progressLayout.setVisibility(VISIBLE);
                 }
                 @Override public void onPostExecute(byte[] bytes) {
                     if (ArrayHelper.hasValidBitmapContent(bytes)){
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                        LinearLayout progressLayout = nagDialog.findViewById(R.id.llInitialLoadingProgress);
+                        progressLayout.setVisibility(GONE);
+
                         ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
                         ivPreview.setImageBitmap(bmp);
+                        ivPreview.setVisibility(VISIBLE);
+
+                        nagDialog.show();
                     } else
                         throw new NullPointerException("Image not found");
                 }

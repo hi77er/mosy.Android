@@ -92,7 +92,7 @@
 
             <TextView
                 android:id="@+id/filters_dishes_tvRecommendedLabel"
-                android:layout_width="35dp"
+                android:layout_width="45dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_gravity="center_vertical"

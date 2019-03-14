@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,9 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 @EActivity(R.layout.activity_userprofile)
 public class UserProfileActivity
@@ -98,11 +102,11 @@ public class UserProfileActivity
         if (!StringHelper.isNullOrWhitespace(usernameText)) {
             tvName.setText(usernameText);
             tvEmail.setText(String.format("(%s)", emailText));
-            tvEmail.setVisibility(View.VISIBLE);
+            tvEmail.setVisibility(VISIBLE);
         }
         else {
             tvName.setText(emailText);
-            tvEmail.setVisibility(View.GONE);
+            tvEmail.setVisibility(GONE);
         }
     }
 
@@ -113,7 +117,7 @@ public class UserProfileActivity
         }
 
         this.btnLoginViaFacebook.setText(labelBtnLoginViaFacebook);
-        this.btnLoginViaFacebook.setVisibility(View.VISIBLE);
+        this.btnLoginViaFacebook.setVisibility(VISIBLE);
     }
 
     private void publishUserImageThumbnail() {
@@ -144,11 +148,11 @@ public class UserProfileActivity
     }
 
     private void onPreInfoLoading() {
-        this.btnLogout.setVisibility(View.GONE);
+        this.btnLogout.setVisibility(GONE);
     }
 
     private void onInfoLoaded() {
-        this.btnLogout.setVisibility(isUserAuthenticated ? View.VISIBLE : View.GONE);
+        this.btnLogout.setVisibility(isUserAuthenticated ? VISIBLE : GONE);
     }
 
     private void navigateToWall() {
@@ -181,13 +185,22 @@ public class UserProfileActivity
 
             AsyncTaskListener<byte[]> listener = new AsyncTaskListener<byte[]>() {
                 @Override public void onPreExecute() {
-                    //INFO: HERE IF NECESSARY: progress.setVisibility(View.VISIBLE);
+                    ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
+                    ivPreview.setVisibility(GONE);
+                    LinearLayout progressLayout = nagDialog.findViewById(R.id.llInitialLoadingProgress);
+                    progressLayout.setVisibility(VISIBLE);
                 }
                 @Override public void onPostExecute(byte[] bytes) {
                     if (ArrayHelper.hasValidBitmapContent(bytes)) {
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                        LinearLayout progressLayout = nagDialog.findViewById(R.id.llInitialLoadingProgress);
+                        progressLayout.setVisibility(GONE);
+
                         ImageView ivPreview = nagDialog.findViewById(R.id.imagePreviewDialog_ivPreview);
                         ivPreview.setImageBitmap(bmp);
+                        ivPreview.setVisibility(VISIBLE);
+
                         nagDialog.show();
                     } else
                         throw new NullPointerException("Image not found");

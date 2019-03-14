@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -49,10 +50,16 @@ public class LandingActivity
     Button btnVenues;
     @ViewById(R.id.landing_lButtons)
     LinearLayout buttonsLayout;
+    @ViewById(R.id.landing_llBottomBtns)
+    LinearLayout bottomButtonsLayout;
+
+
     @ViewById(R.id.landing_llInitialLoadingProgress)
     LinearLayout centralProgressLayout;
-    @ViewById(R.id.landing_llInvalidHost)
-    LinearLayout invalidHostLayout;
+    @ViewById(R.id.landing_rlInvalidHost)
+    RelativeLayout invalidHostLayout;
+    @ViewById(R.id.landing_rlTemporarilyDown)
+    RelativeLayout temporarilyDownLayout;
     @ViewById(R.id.landing_spLanguage)
     Spinner languagesSpinner;
     @ViewById(R.id.landing_btnUserProfile)
@@ -70,7 +77,14 @@ public class LandingActivity
     @AfterViews
     public void afterViews(){
         if (ConnectivityHelper.isConnected(applicationContext)) {
-            this.ensureHasAuthenticationToken();
+            try {
+                this.ensureHasAuthenticationToken();
+            }
+            catch (NullPointerException ex){
+                this.showTemporarilyDownLayout();
+            }
+            this.showInvalidHostLayout();
+
             networkLost = false;
         }
         else {
@@ -132,7 +146,7 @@ public class LandingActivity
         super.onResume();
     }
 
-    private void ensureHasAuthenticationToken() {
+    private void ensureHasAuthenticationToken() throws NullPointerException {
         this.accountService.executeAssuredWebApiTokenValidOrRefreshed(applicationContext,
                 this::showLoading,
                 this::showButtonsLayout,
@@ -180,6 +194,7 @@ public class LandingActivity
         this.centralProgressLayout.setVisibility(View.VISIBLE);
         this.invalidHostLayout.setVisibility(View.GONE);
         this.buttonsLayout.setVisibility(View.GONE);
+        this.bottomButtonsLayout.setVisibility(View.GONE);
 
         this.btnDishes.setEnabled(false);
         this.btnVenues.setEnabled(false);
@@ -194,6 +209,7 @@ public class LandingActivity
         this.invalidHostLayout.setVisibility(View.GONE);
 
         this.buttonsLayout.setVisibility(View.VISIBLE);
+        this.bottomButtonsLayout.setVisibility(View.VISIBLE);
 
         this.btnDishes.setEnabled(true);
         this.btnVenues.setEnabled(true);
@@ -208,13 +224,19 @@ public class LandingActivity
     }
 
     private void showInvalidHostLayout() {
+        this.bottomButtonsLayout.setVisibility(View.GONE);
         this.buttonsLayout.setVisibility(View.GONE);
         this.invalidHostLayout.setVisibility(View.VISIBLE);
         this.centralProgressLayout.setVisibility(View.GONE);
         if (!this.activityStopped)
             new LocationResolver(this).showWifiSettingsDialog(applicationContext);
-        //TODO: Delete before deploying to production!
-        Toast.makeText(applicationContext, "No internet!", Toast.LENGTH_LONG).show();
+    }
+
+    private void showTemporarilyDownLayout() {
+        this.bottomButtonsLayout.setVisibility(View.GONE);
+        this.buttonsLayout.setVisibility(View.GONE);
+        this.temporarilyDownLayout.setVisibility(View.VISIBLE);
+        this.centralProgressLayout.setVisibility(View.GONE);
     }
 
     private void loadManagedVenues() {

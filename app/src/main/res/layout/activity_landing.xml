@@ -81,22 +81,53 @@
         </ProgressBar>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/landing_llInvalidHost"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+    <RelativeLayout
+        android:id="@+id/landing_rlInvalidHost"
         android:layout_below="@+id/landing_lButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:gravity="center"
-        android:visibility="invisible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/landing_tvInvalidHost"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimary"
-            android:text="@string/activity_landing_noInternetMessageTextView">
-        </TextView>
-    </LinearLayout>
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/activity_landing_noInternetMessageTextView" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/landing_rlTemporarilyDown"
+        android:layout_below="@+id/landing_lButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/landing_tvTemporarilyDown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/activity_landing_temporarilyDownMessageTextView" />
+    </RelativeLayout>
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/landing_llTemporarilyDown"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/landing_lButtons"-->
+        <!--android:orientation="vertical"-->
+        <!--android:gravity="center"-->
+        <!--android:visibility="gone">-->
+
+    <!--</LinearLayout>-->
 
     <LinearLayout
         android:id="@+id/landing_llBottomBtns"
