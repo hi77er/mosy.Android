@@ -83,7 +83,6 @@ public class LandingActivity
             catch (NullPointerException ex){
                 this.showTemporarilyDownLayout();
             }
-            this.showInvalidHostLayout();
 
             networkLost = false;
         }
