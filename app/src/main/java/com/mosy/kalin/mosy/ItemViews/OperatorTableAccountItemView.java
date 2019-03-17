@@ -1,7 +1,6 @@
 package com.mosy.kalin.mosy.ItemViews;
 
 import android.content.Context;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -10,7 +9,7 @@ import com.mosy.kalin.mosy.DTOs.Enums.TableAccountStatus;
 import com.mosy.kalin.mosy.DTOs.TableAccount;
 import com.mosy.kalin.mosy.ItemViews.Base.WallItemViewBase;
 import com.mosy.kalin.mosy.R;
-import com.mosy.kalin.mosy.Services.SignalR.SignalRService;
+import com.mosy.kalin.mosy.Services.SignalR.VenueHostSignalR;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
@@ -21,7 +20,7 @@ public class OperatorTableAccountItemView
         extends WallItemViewBase {
 
     private Context baseContext;
-    private SignalRService signalRService;
+    private VenueHostSignalR signalRService;
     private TableAccount tableAccount;
     private String username;
 
@@ -42,7 +41,7 @@ public class OperatorTableAccountItemView
         this.baseContext = context;
     }
 
-    public void bind(TableAccount tableAccount, SignalRService signalRService, String username) {
+    public void bind(TableAccount tableAccount, VenueHostSignalR signalRService, String username) {
         if (tableAccount != null) {
             this.signalRService = signalRService;
             this.tableAccount = tableAccount;

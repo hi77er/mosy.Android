@@ -20,12 +20,15 @@ import android.widget.LinearLayout;
 import com.mosy.kalin.mosy.Adapters.OperatorTableAccountOrdersAdapter;
 import com.mosy.kalin.mosy.DTOs.Order;
 import com.mosy.kalin.mosy.DTOs.OrderMenuItem;
+import com.mosy.kalin.mosy.DTOs.SignalR.SignalRResults.OrderItemStatusChangedResult;
 import com.mosy.kalin.mosy.DTOs.TableAccount;
 import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
-import com.mosy.kalin.mosy.Services.SignalR.SignalRService;
-import com.mosy.kalin.mosy.Services.SignalR.SignalRService_;
+import com.mosy.kalin.mosy.Services.SignalR.AccountOpenerSignalR_;
+import com.mosy.kalin.mosy.Services.SignalR.AccountOperatorSignalR;
+import com.mosy.kalin.mosy.Services.SignalR.AccountOperatorSignalR_;
+import com.mosy.kalin.mosy.Services.SignalR.VenueHostSignalR_;
 import com.mosy.kalin.mosy.Services.TableAccountsService;
 
 import org.androidannotations.annotations.AfterViews;
@@ -67,13 +70,15 @@ public class OperatorTableAccountOrdersActivity
     @ViewById(R.id.operatorTableAccountOrders_lvOrders)
     RecyclerView ordersView;
 
-    SignalRService mSignalRService;
+    AccountOperatorSignalR mSignalRService;
     /** Defines callbacks for service binding, passed to bindService() */
     private final ServiceConnection mConnection = new ServiceConnection() {
         @Override public void onServiceConnected(ComponentName className, IBinder service) {
-            // We've bound to SignalRService, cast the IBinder and get SignalRService instance
-            SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
+            // We've bound to AccountOpenerSignalR, cast the IBinder and get AccountOpenerSignalR instance
+            AccountOperatorSignalR.LocalBinder binder = (AccountOperatorSignalR.LocalBinder) service;
             mSignalRService = binder.getService();
+
+            setupSignalRService();
             setBound(true);
         }
 
@@ -82,45 +87,42 @@ public class OperatorTableAccountOrdersActivity
         }
     };
 
+    private void setupSignalRService() {
+        mSignalRService.setEventListeners(venue.Id);
+
+        mSignalRService.setOnOrderItemStatusOperatorChanged(new AsyncTaskListener<OrderItemStatusChangedResult>() {
+            @Override public void onPreExecute() { }
+            @Override public void onPostExecute(OrderItemStatusChangedResult itemStatusChangedResult) {
+                if (operatorTableAccountOrdersAdapter != null){
+                    operatorTableAccountOrdersAdapter.changeItemStatus(itemStatusChangedResult.Id, itemStatusChangedResult.Status);
+
+                    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    // Vibrate for 500 milliseconds
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && v != null) {
+                        v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+                    } else if (v != null){
+                        //deprecated in API 26
+                        v.vibrate(500);
+                    }
+                }
+            }
+        });
+
+        operatorTableAccountOrdersAdapter.setSignalRService(mSignalRService);
+    }
+
     private boolean mBound = false;
     private void setBound(boolean value){
         this.mBound = value;
-        if (value){
-            // Call a method from the SignalRService.
-            // However, if this call were something that might hang, then this request should
-            // occur in a separate thread to avoid slowing down the activity performance.
-            // mSignalRService.pingOrdersHub("ping Test123"); // testing the connection
-
-            mSignalRService.setEventListeners(super.username);
-
-            mSignalRService.setOnOrderItemStatusOperatorChanged(new AsyncTaskListener<OrderMenuItem>() {
-                @Override public void onPreExecute() { }
-                @Override public void onPostExecute(OrderMenuItem orderMenuItem) {
-                    if (operatorTableAccountOrdersAdapter != null){
-                        operatorTableAccountOrdersAdapter.changeItemStatus(orderMenuItem.Id, orderMenuItem.Status);
-
-                        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                        // Vibrate for 500 milliseconds
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && v != null) {
-                            v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
-                        } else if (v != null){
-                            //deprecated in API 26
-                            v.vibrate(500);
-                        }
-                    }
-                }
-            });
-
-            operatorTableAccountOrdersAdapter.setSignalRService(mSignalRService);
-        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         if (!mBound) {
-            this.bindService(SignalRService_.intent(this).get(), mConnection, Context.BIND_AUTO_CREATE);
+            Intent intent = AccountOperatorSignalR_.intent(this).get();
+            this.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            //this.startService(intent);
         }
-
         super.onCreate(savedInstanceState);
     }
 
@@ -173,10 +175,6 @@ public class OperatorTableAccountOrdersActivity
     @Override
     protected void onResume(){
         super.onResume();
-
-        if (!mBound) {
-            this.bindService(SignalRService_.intent(this).get(), mConnection, Context.BIND_AUTO_CREATE);
-        }
     }
 
     @Override
@@ -229,8 +227,8 @@ public class OperatorTableAccountOrdersActivity
     @Override
     protected void onDestroy(){
         super.onDestroy();
-
         if (mBound) {
+            stopService(AccountOperatorSignalR_.intent(this).get());
             unbindService(mConnection);
             mBound = false;
         }

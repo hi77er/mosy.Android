@@ -49,6 +49,7 @@ public class TableAccountsService {
                             }
                             @Override public void onFailure(@NonNull Call<ArrayList<Venue>> call, @NonNull Throwable t) {
                                 call.cancel();
+                                t.printStackTrace();
                             }
                         });
                     } catch (Exception e) {
@@ -80,6 +81,7 @@ public class TableAccountsService {
                             }
                             @Override public void onFailure(@NonNull Call<ArrayList<TableAccount>> call, @NonNull Throwable t) {
                                 call.cancel();
+                                t.printStackTrace();
                             }
                         });
                     } catch (Exception e) {
@@ -111,6 +113,7 @@ public class TableAccountsService {
                             }
                             @Override public void onFailure(@NonNull Call<ArrayList<Order>> call, @NonNull Throwable t) {
                                 call.cancel();
+                                t.printStackTrace();
                             }
                         });
                     } catch (Exception e) {
@@ -149,6 +152,7 @@ public class TableAccountsService {
                             }
                             @Override public void onFailure(@NonNull Call<ArrayList<Table>> call, @NonNull Throwable t) {
                                 call.cancel();
+                                t.printStackTrace();
                             }
                         });
                     } catch (Exception e) {
@@ -189,6 +193,7 @@ public class TableAccountsService {
                             }
                             @Override public void onFailure(@NonNull Call<TableAccount> call, @NonNull Throwable t) {
                                 call.cancel();
+                                t.printStackTrace();
                             }
                         });
                     } catch (Exception e) {

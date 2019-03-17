@@ -82,6 +82,7 @@ public class WallMenuListItem
     @SerializedName("requestableCultures")
     public ArrayList<MenuListItemCulture> MenuListItemCultures;
 
+
     @SuppressWarnings("unchecked")
     protected WallMenuListItem(Parcel in) {
         String[] data = new String[8];

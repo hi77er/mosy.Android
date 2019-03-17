@@ -9,7 +9,7 @@ import com.mosy.kalin.mosy.DTOs.OrderMenuItem;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.ItemViews.Base.WallItemViewBase;
 import com.mosy.kalin.mosy.R;
-import com.mosy.kalin.mosy.Services.SignalR.SignalRService;
+import com.mosy.kalin.mosy.Services.SignalR.AccountOperatorSignalR;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
@@ -20,7 +20,7 @@ public class OperatorTableAccountOrderItemView
         extends WallItemViewBase {
 
     private Context baseContext;
-    private SignalRService signalRService;
+    private AccountOperatorSignalR signalRService;
     private OrderMenuItem orderMenuItem;
 
     @ViewById(R.id.operatorTableAccountMenuItem_tvName)
@@ -38,7 +38,7 @@ public class OperatorTableAccountOrderItemView
         this.baseContext = context;
     }
 
-    public void bind(OrderMenuItem orderMenuItem, SignalRService signalRService) {
+    public void bind(OrderMenuItem orderMenuItem, AccountOperatorSignalR signalRService) {
         if (orderMenuItem != null) {
             this.signalRService = signalRService;
             this.orderMenuItem = orderMenuItem;

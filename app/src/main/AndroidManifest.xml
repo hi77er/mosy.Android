@@ -134,7 +134,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".Services.SignalR.SignalRService_" />
+        <service android:name=".Services.SignalR.VenueHostSignalR_" />
+        <service android:name=".Services.SignalR.AccountOperatorSignalR_" />
+        <service android:name=".Services.SignalR.AccountOpenerSignalR_" />
     </application>
 
 </manifest>

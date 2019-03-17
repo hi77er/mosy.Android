@@ -8,6 +8,10 @@ import java.util.ArrayList;
 
 public class PublicMenuResult implements Serializable {
 
+
+    @SerializedName("defaultMenuCulture")
+    public String DefaultMenuCulture;
+
     @SerializedName("menuCultures")
     public ArrayList<String> MenuCultures;
 

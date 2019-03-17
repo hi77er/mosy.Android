@@ -20,6 +20,9 @@ public class Ingredient
     @SerializedName("name")
     public String Name;
 
+    public Ingredient(){
+
+    }
 
     protected Ingredient(Parcel in) {
         String[] data = new String[4];

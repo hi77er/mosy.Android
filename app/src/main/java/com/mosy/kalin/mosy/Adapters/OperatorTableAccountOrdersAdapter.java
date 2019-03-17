@@ -16,7 +16,7 @@ import com.mosy.kalin.mosy.ItemViews.Base.WallItemViewBase;
 import com.mosy.kalin.mosy.ItemViews.OperatorTableAccountOrderItemView;
 import com.mosy.kalin.mosy.ItemViews.OperatorTableAccountOrderItemView_;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.OperatorTableAccountOrderItem;
-import com.mosy.kalin.mosy.Services.SignalR.SignalRService;
+import com.mosy.kalin.mosy.Services.SignalR.AccountOperatorSignalR;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;
@@ -30,8 +30,8 @@ public class OperatorTableAccountOrdersAdapter
 
     public SwipeRefreshLayout swipeContainer;
 
-    private SignalRService signalRService;
-    public void setSignalRService(SignalRService signalRService) {
+    private AccountOperatorSignalR signalRService;
+    public void setSignalRService(AccountOperatorSignalR signalRService) {
         this.signalRService = signalRService;
     }
 

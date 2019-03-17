@@ -1,17 +1,14 @@
 package com.mosy.kalin.mosy.ItemViews;
 
 import android.content.Context;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mosy.kalin.mosy.DTOs.OrderMenuItem;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.ItemViews.Base.WallItemViewBase;
 import com.mosy.kalin.mosy.R;
-import com.mosy.kalin.mosy.Services.SignalR.SignalRService;
+import com.mosy.kalin.mosy.Services.SignalR.AccountOpenerSignalR;
 
-import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
@@ -20,7 +17,7 @@ public class ClientTableAccountOrderItemView
         extends WallItemViewBase {
 
     private Context baseContext;
-    private SignalRService signalRService;
+    private AccountOpenerSignalR signalRService;
     private OrderMenuItem orderMenuItem;
 
     @ViewById(R.id.clientTableAccountMenuItem_tvName)
@@ -38,7 +35,7 @@ public class ClientTableAccountOrderItemView
         this.baseContext = context;
     }
 
-    public void bind(OrderMenuItem orderMenuItem, SignalRService signalRService) {
+    public void bind(OrderMenuItem orderMenuItem, AccountOpenerSignalR signalRService) {
         if (orderMenuItem != null) {
             this.signalRService = signalRService;
             this.orderMenuItem = orderMenuItem;

@@ -24,6 +24,7 @@ import com.mosy.kalin.mosy.Adapters.ClientTableAccountOrdersAdapter;
 import com.mosy.kalin.mosy.DTOs.Enums.TableAccountStatus;
 import com.mosy.kalin.mosy.DTOs.Order;
 import com.mosy.kalin.mosy.DTOs.OrderMenuItem;
+import com.mosy.kalin.mosy.DTOs.SignalR.SignalRResults.OrderItemStatusChangedResult;
 import com.mosy.kalin.mosy.DTOs.SignalR.SignalRResults.TableAccountStatusResult;
 import com.mosy.kalin.mosy.DTOs.Table;
 import com.mosy.kalin.mosy.DTOs.TableAccount;
@@ -32,8 +33,8 @@ import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.ClientTableAccountItem;
-import com.mosy.kalin.mosy.Services.SignalR.SignalRService;
-import com.mosy.kalin.mosy.Services.SignalR.SignalRService_;
+import com.mosy.kalin.mosy.Services.SignalR.AccountOpenerSignalR;
+import com.mosy.kalin.mosy.Services.SignalR.AccountOpenerSignalR_;
 import com.mosy.kalin.mosy.Services.TableAccountsService;
 
 import org.androidannotations.annotations.AfterViews;
@@ -103,13 +104,15 @@ public class ClientTableAccountOrdersActivity
     @ViewById(R.id.clientTableAccountOrders_tvAccountStatus)
     TextView tvAccountStatus;
 
-    SignalRService mSignalRService;
+    AccountOpenerSignalR mSignalRService;
     /** Defines callbacks for service binding, passed to bindService() */
     private final ServiceConnection mConnection = new ServiceConnection() {
         @Override public void onServiceConnected(ComponentName className, IBinder service) {
-            // We've bound to SignalRService, cast the IBinder and get SignalRService instance
-            SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
+            // We've bound to AccountOpenerSignalR, cast the IBinder and get AccountOpenerSignalR instance
+            AccountOpenerSignalR.LocalBinder binder = (AccountOpenerSignalR.LocalBinder) service;
             mSignalRService = binder.getService();
+
+            setupSignalRService();
             setBound(true);
         }
 
@@ -117,6 +120,74 @@ public class ClientTableAccountOrdersActivity
             mBound = false;
         }
     };
+
+    private void setupSignalRService() {
+        mSignalRService.setEventListeners(tableAccount.Id);
+
+        mSignalRService.setOnTAStatusChangedClient(new AsyncTaskListener<TableAccountStatusResult>() {
+            @Override public void onPreExecute() { }
+            @Override public void onPostExecute(TableAccountStatusResult result) {
+                tableAccount = new TableAccount();
+                tableAccount.Id = result.TableAccountId;
+                tableAccount.Status = result.Status;
+                tableAccount.AssignedOperatorUsername = result.AssignedOperatorUsername;
+
+                setupActionLayout(tableAccount);
+
+                if (result.NeedsItemsStatusUpdate && result.Status == TableAccountStatus.AwaitingOperatorApprovement) //only after creating the account
+                    mSignalRService.updateOrderRequestablesStatusAfterAccountStatusChanged(result.TableAccountId);
+
+                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && v != null) {
+                    v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else if (v != null){ // Vibrate for 500 milliseconds
+                    v.vibrate(500); //deprecated in API 26
+                }
+            }
+        });
+
+        mSignalRService.setOnOrderItemStatusClientChanged(new AsyncTaskListener<OrderItemStatusChangedResult>() {
+            @Override public void onPreExecute() { }
+            @Override public void onPostExecute(OrderItemStatusChangedResult orderItemStatusChangedResult) {
+                if (clientTableAccountOrdersAdapter != null){
+                    ClientTableAccountItem item = clientTableAccountOrdersAdapter.getItemById(orderItemStatusChangedResult.Id);
+
+                    ClientTableAccountOrdersActivity.this.runOnUiThread(
+                            () -> {
+                                if (item != null)
+                                    clientTableAccountOrdersAdapter.changeItemStatus(orderItemStatusChangedResult.Id, orderItemStatusChangedResult.Status);
+                                else
+                                {
+                                    OrderMenuItem itemToAdd = orderItemStatusChangedResult.toOrderMenuItem();
+                                    clientTableAccountOrdersAdapter.addTableAccountItem(itemToAdd);
+                                }
+                            }
+                    );
+                }
+            }
+        });
+
+        clientTableAccountOrdersAdapter.setSignalRService(mSignalRService);
+        clientTableAccountOrdersAdapter.clearItems();
+
+        if (this.mSignalRService != null &&
+                this.tableAccount == null &&
+                this.selectedTable != null &&
+                StringHelper.isNotNullOrEmpty(super.username) &&
+                this.newlySelectedMenuItemIds != null &&
+                this.newlySelectedMenuItemIds.size() > 0){
+
+            this.mSignalRService.createTableAccount(super.username, this.selectedTable.Id, this.newlySelectedMenuItemIds);
+        } else if (this.mSignalRService != null &&
+                this.tableAccount != null &&
+                this.selectedTable != null &&
+                StringHelper.isNotNullOrEmpty(super.username) &&
+                this.newlySelectedMenuItemIds != null &&
+                this.newlySelectedMenuItemIds.size() > 0){
+
+            this.mSignalRService.createOrder(super.username, this.tableAccount.Id, this.newlySelectedMenuItemIds);
+        }
+    }
 
 //    private boolean isMyServiceRunning(Class<?> serviceClass) {
 //        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -132,82 +203,15 @@ public class ClientTableAccountOrdersActivity
     private boolean mBound = false;
     private void setBound(boolean value){
         this.mBound = value;
-        if (value){
-            // Call a method from the SignalRService.
-            // However, if this call were something that might hang, then this request should
-            // occur in a separate thread to avoid slowing down the activity performance.
-            // mSignalRService.pingOrdersHub("ping Test123"); // testing the connection
-
-            mSignalRService.setEventListeners(super.username);
-
-            mSignalRService.setOnTAStatusChangedClient(new AsyncTaskListener<TableAccountStatusResult>() {
-                @Override public void onPreExecute() { }
-                @Override public void onPostExecute(TableAccountStatusResult result) {
-                    tableAccount = new TableAccount();
-                    tableAccount.Id = result.TableAccountId;
-                    tableAccount.Status = result.Status;
-                    tableAccount.AssignedOperatorUsername = result.AssignedOperatorUsername;
-
-                    setupActionLayout(tableAccount);
-
-                    if (result.NeedsItemsStatusUpdate && result.Status == TableAccountStatus.AwaitingOperatorApprovement) //only after creating the account
-                        mSignalRService.updateOrderRequestablesStatusAfterAccountStatusChanged(result.TableAccountId);
-
-                    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && v != null) {
-                        v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
-                    } else if (v != null){ // Vibrate for 500 milliseconds
-                        v.vibrate(500); //deprecated in API 26
-                    }
-                }
-            });
-
-            mSignalRService.setOnOrderItemStatusClientChanged(new AsyncTaskListener<OrderMenuItem>() {
-                @Override public void onPreExecute() { }
-                @Override public void onPostExecute(OrderMenuItem orderMenuItem) {
-                    if (clientTableAccountOrdersAdapter != null){
-                        ClientTableAccountItem item = clientTableAccountOrdersAdapter.getItemById(orderMenuItem.Id);
-
-                        ClientTableAccountOrdersActivity.this.runOnUiThread(
-                                () -> {
-                                    if (item != null)
-                                        clientTableAccountOrdersAdapter.changeItemStatus(orderMenuItem.Id, orderMenuItem.Status);
-                                    else
-                                        clientTableAccountOrdersAdapter.addTableAccountItem(orderMenuItem);
-                                }
-                        );
-                    }
-                }
-            });
-
-            clientTableAccountOrdersAdapter.setSignalRService(mSignalRService);
-            clientTableAccountOrdersAdapter.clearItems();
-
-            if (this.mSignalRService != null &&
-                    this.tableAccount == null &&
-                    this.selectedTable != null &&
-                    StringHelper.isNotNullOrEmpty(super.username) &&
-                    this.newlySelectedMenuItemIds != null &&
-                    this.newlySelectedMenuItemIds.size() > 0){
-
-                this.mSignalRService.createTableAccount(super.username, this.selectedTable.Id, this.newlySelectedMenuItemIds);
-            } else if (this.mSignalRService != null &&
-                    this.tableAccount != null &&
-                    this.selectedTable != null &&
-                    StringHelper.isNotNullOrEmpty(super.username) &&
-                    this.newlySelectedMenuItemIds != null &&
-                    this.newlySelectedMenuItemIds.size() > 0){
-
-                this.mSignalRService.createOrder(super.username, this.tableAccount.Id, this.newlySelectedMenuItemIds);
-            }
-        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
-        if (!mBound)
-            this.bindService(SignalRService_.intent(this).get(), mConnection, Context.BIND_AUTO_CREATE);
-
+        if (!mBound){
+            Intent intent = AccountOpenerSignalR_.intent(this).get();
+            this.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            //this.startService(intent);
+        }
         super.onCreate(savedInstanceState);
     }
 
@@ -262,13 +266,9 @@ public class ClientTableAccountOrdersActivity
         super.onStart();
     }
 
-
     @Override
     protected void onResume(){
         super.onResume();
-
-        if (!mBound)
-            this.bindService(SignalRService_.intent(this).get(), mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -310,7 +310,6 @@ public class ClientTableAccountOrdersActivity
 
     @Override
     protected void onPause() {
-
         super.onPause();
     }
 
@@ -325,8 +324,8 @@ public class ClientTableAccountOrdersActivity
     @Override
     protected void onDestroy(){
         super.onDestroy();
-
         if (mBound) {
+            stopService(AccountOpenerSignalR_.intent(this).get());
             unbindService(mConnection);
             mBound = false;
         }

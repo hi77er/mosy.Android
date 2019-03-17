@@ -11,7 +11,7 @@ public class OrderMenuItem extends HttpResult {
     @SerializedName("orderId")
     public String OrderId;
     @SerializedName("requestableId")
-    public String RequestableId;
+    public String ItemId;
     @SerializedName("status")
     public OrderMenuItemStatus Status;
     @SerializedName("requestableName")

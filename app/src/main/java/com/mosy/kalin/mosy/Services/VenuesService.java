@@ -54,6 +54,7 @@ public class VenuesService {
                             }
                             @Override public void onFailure(@NonNull Call<WallVenue> call, @NonNull Throwable t) {
                                 call.cancel();
+                                t.printStackTrace();
                             }
                         });
                     } catch (Exception e) {
@@ -101,6 +102,7 @@ public class VenuesService {
                             }
                             @Override public void onFailure(@NonNull Call<ArrayList<WallVenue>> call, @NonNull Throwable t) {
                                 call.cancel();
+                                t.printStackTrace();
                             }
                         });
                     } catch (Exception e) {
@@ -131,6 +133,7 @@ public class VenuesService {
                             }
                             @Override public void onFailure(@NonNull Call<VenueContacts> call, @NonNull Throwable t) {
                                 call.cancel();
+                                t.printStackTrace();
                             }
                         });
                     }
@@ -162,6 +165,7 @@ public class VenuesService {
                             }
                             @Override public void onFailure(@NonNull Call<VenueBusinessHours> call, @NonNull Throwable t) {
                                 call.cancel();
+                                t.printStackTrace();
                             }
                         });
                     } catch (Exception e) {
@@ -192,6 +196,7 @@ public class VenuesService {
                             }
                             @Override public void onFailure(@NonNull Call<VenueLocation> call, @NonNull Throwable t) {
                                 call.cancel();
+                                t.printStackTrace();
                             }
                         });
                     }
@@ -223,6 +228,7 @@ public class VenuesService {
                             }
                             @Override public void onFailure(@NonNull Call<VenueImage> call, @NonNull Throwable t) {
                                 call.cancel();
+                                t.printStackTrace();
                             }
                         });
                     }
@@ -255,6 +261,7 @@ public class VenuesService {
                             }
                             @Override public void onFailure(@NonNull Call<PublicMenuResult> call, @NonNull Throwable t) {
                                 call.cancel();
+                                t.printStackTrace();
                             }
                         });
                     }
@@ -284,6 +291,7 @@ public class VenuesService {
                             }
                             @Override public void onFailure(@NonNull Call<VenueFiltersHttpResult> call, @NonNull Throwable t) {
                                 call.cancel();
+                                t.printStackTrace();
                             }
                         });
                     }
@@ -306,7 +314,10 @@ public class VenuesService {
                             @Override public void onResponse(Call<Void> call, Response<Void> response) {
 
                             }
-                            @Override public void onFailure(Call<Void> call, Throwable t) { }
+                            @Override public void onFailure(Call<Void> call, Throwable t) {
+                                call.cancel();
+                                t.printStackTrace();
+                            }
                         });
                     }
                     catch (Exception e){

@@ -15,6 +15,7 @@ import com.mosy.kalin.mosy.DTOs.OrderMenuItem;
 import com.mosy.kalin.mosy.DTOs.SignalR.SignalRBindingModels.CreateOrderBindingModel;
 import com.mosy.kalin.mosy.DTOs.SignalR.SignalRBindingModels.CreateTableAccountBindingModel;
 import com.mosy.kalin.mosy.DTOs.SignalR.SignalRBindingModels.TableAccountStatusBindingModel;
+import com.mosy.kalin.mosy.DTOs.SignalR.SignalRResults.OrderItemStatusChangedResult;
 import com.mosy.kalin.mosy.DTOs.SignalR.SignalRResults.TableAccountStatusResult;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
@@ -31,10 +32,10 @@ import microsoft.aspnet.signalr.client.Platform;
 import microsoft.aspnet.signalr.client.http.android.AndroidPlatformComponent;
 
 @EService
-public class SignalRService extends IntentService {
+public class AccountOpenerSignalR extends IntentService {
 
-    private com.microsoft.signalr.HubConnection newAccountsHubConnection;
-    private com.microsoft.signalr.HubConnection newOrdersHubConnection;
+    private com.microsoft.signalr.HubConnection accountsHubConnection;
+    private com.microsoft.signalr.HubConnection ordersHubConnection;
 
     private Handler mHandler; // to display Toast message
     private final IBinder mBinder = new LocalBinder(); // Binder given to clients
@@ -43,9 +44,9 @@ public class SignalRService extends IntentService {
      * runs in the same process as its clients, we don't need to deal with IPC.
      */
     public class LocalBinder extends Binder {
-        public SignalRService getService() {
-            // Return this instance of SignalRService so clients can call public methods
-            return SignalRService.this;
+        public AccountOpenerSignalR getService() {
+            // Return this instance of AccountOpenerSignalR so clients can call public methods
+            return AccountOpenerSignalR.this;
         }
     }
 
@@ -53,19 +54,9 @@ public class SignalRService extends IntentService {
     @Bean
     AccountService accountService;
 
-    private AsyncTaskListener<OrderMenuItem> onOrderItemStatusChangedOperatorTask;
-    public void setOnOrderItemStatusOperatorChanged(AsyncTaskListener<OrderMenuItem> task){
-        this.onOrderItemStatusChangedOperatorTask = task;
-    }
-
-    private AsyncTaskListener<OrderMenuItem> onOrderItemStatusChangedClientTask;
-    public void setOnOrderItemStatusClientChanged(AsyncTaskListener<OrderMenuItem> task){
+    private AsyncTaskListener<OrderItemStatusChangedResult> onOrderItemStatusChangedClientTask;
+    public void setOnOrderItemStatusClientChanged(AsyncTaskListener<OrderItemStatusChangedResult> task){
         this.onOrderItemStatusChangedClientTask = task;
-    }
-
-    private AsyncTaskListener<TableAccountStatusResult> onTAStatusChangedOperatorTask;
-    public void setOnTAStatusChangedOperator(AsyncTaskListener<TableAccountStatusResult> task){
-        this.onTAStatusChangedOperatorTask = task;
     }
 
     //called when the STATUS of AN ACCOUNT is changed
@@ -74,15 +65,8 @@ public class SignalRService extends IntentService {
         this.onTAStatusChangedClientTask = task;
     }
 
-    //called when THE STATUS of ITEM FROM AN ACCOUNT is changed
-    private AsyncTaskListener<TableAccountStatusResult> onTAOrderItemStatusChangedTask;
-    public void setOnTAOrderItemStatusChanged(AsyncTaskListener<TableAccountStatusResult> task){
-        this.onTAOrderItemStatusChangedTask = task;
-    }
-
-    public SignalRService() {
-        super(SignalRService.class.getSimpleName());
-
+    public AccountOpenerSignalR() {
+        super(AccountOpenerSignalR.class.getSimpleName());
     }
 
     @UiThread
@@ -117,8 +101,8 @@ public class SignalRService extends IntentService {
 
     @Override
     public void onDestroy() {
-        this.newAccountsHubConnection.stop();
-        this.newOrdersHubConnection.stop();
+        this.accountsHubConnection.stop();
+        this.ordersHubConnection.stop();
         super.onDestroy();
     }
 
@@ -129,11 +113,10 @@ public class SignalRService extends IntentService {
 
     private void startSignalR() {
         Platform.loadPlatformComponent(new AndroidPlatformComponent());
-        //String webApiAuthToken = this.accountService.getWebApiAuthToken(getApplicationContext());
 
         String userAuthToken = this.accountService.getUserAuthToken(getApplicationContext());
 
-        this.newOrdersHubConnection = com.microsoft.signalr.HubConnectionBuilder
+        this.ordersHubConnection = com.microsoft.signalr.HubConnectionBuilder
                 .create("https://wsmosy.azurewebsites.net/hubs/orders")
                 .withAccessTokenProvider(
                         Single.defer(() -> {
@@ -142,8 +125,7 @@ public class SignalRService extends IntentService {
                         }))
                 .build();
 
-
-        this.newAccountsHubConnection = com.microsoft.signalr.HubConnectionBuilder
+        this.accountsHubConnection = com.microsoft.signalr.HubConnectionBuilder
                 .create("https://wsmosy.azurewebsites.net/hubs/accounts")
                 .withAccessTokenProvider(
                         Single.defer(() -> {
@@ -154,71 +136,41 @@ public class SignalRService extends IntentService {
     }
 
     boolean listenersAlreadySet = false;
-    public void setEventListeners(String username){
+    public void setEventListeners(String accountId){
         if (!listenersAlreadySet){
             listenersAlreadySet = true;
 
             // After connections building !!
             // Before connections started !!
-            //
-            // OPERATOR SIDE !
-            String updatedTAStatusOperatorReceiverMethodName = "TAOperatorHubProxy-" + username + "-TAUpdatedStatusReceiverMethod";
-            newAccountsHubConnection.on(
-                    updatedTAStatusOperatorReceiverMethodName,
-                    result -> onTAStatusChangedOperatorTask.onPostExecute(result),
-                    TableAccountStatusResult.class);
+            // TEST
+            accountsHubConnection.on("PongClient", result -> Log.d("Signalr", result), String.class);
+            ordersHubConnection.on("PongClient", result -> Log.d("Signalr", result), String.class);
 
-            String updatedOrderItemStatusOperatorReceiverMethodName = "TAOperatorHubProxy-" + username + "-OrderUpdatedStatusReceiverMethod";
-            newOrdersHubConnection.on(
-                    updatedOrderItemStatusOperatorReceiverMethodName,
-                    result -> onOrderItemStatusChangedOperatorTask.onPostExecute(result),
-                    OrderMenuItem.class);
-
-            String updatedTAOrderItemStatusOperatorReceiverMethodName = "TAOperatorHubProxy-" + username + "-TAHasUpdatedOrderStatusReceiverMethod";
-            newOrdersHubConnection.on(
-                    updatedTAOrderItemStatusOperatorReceiverMethodName,
-                    result -> onTAOrderItemStatusChangedTask.onPostExecute(result),
-                    TableAccountStatusResult.class);
-
-            // CLIENT SIDE!
-            String updatedTAStatusClientReceiverMethodName = "TAClientHubProxy-" + username + "-TAUpdatedStatusReceiverMethod";
-            newAccountsHubConnection.on(
-                    updatedTAStatusClientReceiverMethodName,
+            // ACTUAL
+            accountsHubConnection.on("AccountStatusChanged",
                     result -> onTAStatusChangedClientTask.onPostExecute(result),
                     TableAccountStatusResult.class);
 
-            String updatedOrderItemStatusClientReceiverMethodName = "TAClientHubProxy-" + username + "-OrderUpdatedStatusReceiverMethod";
-            newOrdersHubConnection.on(
-                    updatedOrderItemStatusClientReceiverMethodName,
+            ordersHubConnection.on("OrderItemStatusChanged",
                     result -> onOrderItemStatusChangedClientTask.onPostExecute(result),
-                    OrderMenuItem.class);
-
-            // TEST
-            String accountsHubPongReceiverMethodName = "PongClient";
-            newAccountsHubConnection.on(
-                    accountsHubPongReceiverMethodName,
-                    result -> Log.d("Signalr", result),
-                    String.class);
-
-            String ordersHubPongReceiverMethodName = "PongClient";
-            newOrdersHubConnection.on(
-                    ordersHubPongReceiverMethodName,
-                    result -> Log.d("Signalr", result),
-                    String.class);
+                    OrderItemStatusChangedResult.class);
 
             // After all .on methods !!
-            try { this.newOrdersHubConnection.start().blockingAwait(); }
-            catch(Exception ex) { ex.printStackTrace(); }//RuntimeExceptions are being thrown when Unauthorized Request is sent or SignalR Connection wasn't started!
+            try {
+                this.ordersHubConnection.start().blockingAwait();
+                this.ordersHubConnection.send("ConnectAsAccountOpener", accountId);
+                //this.pingOrdersHub("Ping Orders 213");
 
-            try { this.newAccountsHubConnection.start().blockingAwait(); }
-            catch(Exception ex) { ex.printStackTrace(); }//RuntimeExceptions are being thrown when Unauthorized Request is sent or SignalR Connection wasn't started!
-
-            try { this.pingOrdersHub("Ping Orders 213"); }
-            catch (Exception ex){ ex.printStackTrace(); }
-
-            try { this.pingAccountsHub("Ping Accounts 213"); }
-            catch (Exception ex){ ex.printStackTrace(); }
-
+                this.accountsHubConnection.start().blockingAwait();
+                this.accountsHubConnection.send("ConnectAsAccountOpener", accountId);
+                //this.pingAccountsHub("Ping Accounts 213");
+            }
+            catch(NullPointerException ex) {
+                ex.printStackTrace();
+            }
+            catch(Error e2) {
+                Log.e("", "ROME parse error2: " + e2.toString());
+            }
         }
     }
 
@@ -228,7 +180,7 @@ public class SignalRService extends IntentService {
         model.TableAccountId = tableAccountId;
         model.RequestableIds = menuItemIds;
         //mOrdersHubProxy.invoke("CreateOrderRequest", model);
-        newOrdersHubConnection.send("CreateOrderRequest", model);
+        ordersHubConnection.send("CreateOrderRequest", model);
     }
 
     public void createTableAccount(String openerUsername, String tableId, ArrayList<String> menuItemIds){
@@ -242,7 +194,7 @@ public class SignalRService extends IntentService {
         model.RequestableIds = menuItemIds;
         model.AssignedOperatorUsername = assignedOperatorUsername;
         //mTableAccountsHubProxy.invoke("CreateTableAccountRequest", model);
-        newAccountsHubConnection.send("CreateTableAccountRequest", model);
+        accountsHubConnection.send("CreateTableAccountRequest", model);
     }
 
     public void updateTableAccountStatus(String tableAccountId, TableAccountStatus newStatus, String updaterUsername){
@@ -251,27 +203,23 @@ public class SignalRService extends IntentService {
         model.NewStatus = newStatus;
         model.UpdaterUsername = updaterUsername;
         //mTableAccountsHubProxy.invoke("UpdateTableAccountStatus", model);
-        newAccountsHubConnection.send("UpdateTableAccountStatus", model);
+        accountsHubConnection.send("UpdateTableAccountStatus", model);
     }
 
     public void updateOrderRequestablesStatusAfterAccountStatusChanged(String tableAccountId){
         //mOrdersHubProxy.invoke("UpdateOrderRequestablesStatusAfterAccountStatusChanged", tableAccountId);
-        newAccountsHubConnection.send("UpdateOrderRequestablesStatusAfterAccountStatusChanged", tableAccountId);
+        accountsHubConnection.send("UpdateOrderRequestablesStatusAfterAccountStatusChanged", tableAccountId);
     }
 
-    public void updateOrderRequestablesStatus(String orderRequestableId){
-        //mOrdersHubProxy.invoke("UpdateOrderRequestableStatus", orderRequestableId);
-        newOrdersHubConnection.send("UpdateOrderRequestableStatus", orderRequestableId);
-    }
-
+    // TEST
     public void pingAccountsHub(String pingStartingMessageToMirror){
         //mOrdersHubProxy.invoke("PingHub", pingStartingMessageToMirror);
-        this.newAccountsHubConnection.send("PingHub", pingStartingMessageToMirror);
+        this.accountsHubConnection.send("PingHub", pingStartingMessageToMirror);
     }
 
     public void pingOrdersHub(String pingStartingMessageToMirror){
         //mOrdersHubProxy.invoke("PingHub", pingStartingMessageToMirror);
-        this.newOrdersHubConnection.send("PingHub", pingStartingMessageToMirror);
+        this.ordersHubConnection.send("PingHub", pingStartingMessageToMirror);
     }
 
 }

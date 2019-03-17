@@ -31,6 +31,10 @@ public class MenuListItemCulture
     @SerializedName("ingredients")
     public ArrayList<Ingredient> Ingredients;
 
+    public MenuListItemCulture(){
+
+    }
+
     @SuppressWarnings("unchecked")
     protected MenuListItemCulture(Parcel in) {
         String[] data = new String[8];

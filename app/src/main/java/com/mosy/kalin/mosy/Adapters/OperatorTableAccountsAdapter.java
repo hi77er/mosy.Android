@@ -16,7 +16,7 @@ import com.mosy.kalin.mosy.ItemViews.Base.WallItemViewBase;
 import com.mosy.kalin.mosy.ItemViews.OperatorTableAccountItemView;
 import com.mosy.kalin.mosy.ItemViews.OperatorTableAccountItemView_;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.OperatorTableAccountItem;
-import com.mosy.kalin.mosy.Services.SignalR.SignalRService;
+import com.mosy.kalin.mosy.Services.SignalR.VenueHostSignalR;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;
@@ -42,8 +42,8 @@ public class OperatorTableAccountsAdapter
         }
     }
 
-    private SignalRService signalRService;
-    public void setSignalRService(SignalRService value) {
+    private VenueHostSignalR signalRService;
+    public void setSignalRService(VenueHostSignalR value) {
         this.signalRService = value;
     }
     private String username;

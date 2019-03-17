@@ -1,5 +1,4 @@
 package com.mosy.kalin.mosy;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -26,8 +25,8 @@ import com.mosy.kalin.mosy.DTOs.Venue;
 import com.mosy.kalin.mosy.Helpers.ConnectivityHelper;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Models.Views.ItemModels.OperatorTableAccountItem;
-import com.mosy.kalin.mosy.Services.SignalR.SignalRService;
-import com.mosy.kalin.mosy.Services.SignalR.SignalRService_;
+import com.mosy.kalin.mosy.Services.SignalR.VenueHostSignalR;
+import com.mosy.kalin.mosy.Services.SignalR.VenueHostSignalR_;
 import com.mosy.kalin.mosy.Services.TableAccountsService;
 
 import org.androidannotations.annotations.AfterViews;
@@ -38,7 +37,6 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 import java.util.Objects;
-
 
 @EActivity(R.layout.activity_operator_tables_accounts)
 public class OperatorTablesAccountsActivity
@@ -67,71 +65,69 @@ public class OperatorTablesAccountsActivity
     @ViewById(R.id.operatorTableAccounts_lvTableAccounts)
     RecyclerView tableAccountsView;
 
-    SignalRService mSignalRService;
+    VenueHostSignalR mSignalRService;
     /** Defines callbacks for service binding, passed to bindService() */
-    private final ServiceConnection mConnection = new ServiceConnection() {
+    protected final ServiceConnection mConnection = new ServiceConnection() {
         @Override public void onServiceConnected(ComponentName className, IBinder service) {
-            // We've bound to SignalRService, cast the IBinder and get SignalRService instance
-            SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
+            VenueHostSignalR.LocalBinder binder = (VenueHostSignalR.LocalBinder) service;
             mSignalRService = binder.getService();
+
+            setupSignlRService();
             setBound(true);
         }
-
         @Override public void onServiceDisconnected(ComponentName arg0) {
             mBound = false;
         }
     };
 
+    private void setupSignlRService() {
+        mSignalRService.setEventListeners(venue.Id);
+
+        //called when the STATUS of AN ACCOUNT is changed
+        mSignalRService.setOnTAStatusChangedOperator(new AsyncTaskListener<TableAccountStatusResult>() {
+            @Override public void onPreExecute() { }
+            @Override public void onPostExecute(TableAccountStatusResult result) {
+                if (operatorTableAccountsAdapter != null){
+                    operatorTableAccountsAdapter.changeItemStatus(result.TableAccountId, result.Status);
+
+                    if (result.NeedsItemsStatusUpdate && result.Status == TableAccountStatus.Idle) //only after confirming the account
+                        mSignalRService.updateOrderRequestablesStatusAfterAccountStatusChanged(result.TableAccountId);
+
+                    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && v != null) {
+                        v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+                    } else if (v != null){ // Vibrate for 500 milliseconds
+                        v.vibrate(500); //deprecated in API 26
+                    }
+                }
+            }
+        });
+
+        //called when THE STATUS of ITEM FROM AN ACCOUNT is changed
+        mSignalRService.setOnTAOrderItemStatusChanged(new AsyncTaskListener<TableAccountStatusResult>() {
+            @Override public void onPreExecute() { }
+            @Override public void onPostExecute(TableAccountStatusResult result) {
+                if (operatorTableAccountsAdapter != null){
+                    operatorTableAccountsAdapter.changeItemStatus(result.TableAccountId, result.Status);
+                }
+            }
+        });
+        operatorTableAccountsAdapter.setUsername(username);
+        operatorTableAccountsAdapter.setSignalRService(mSignalRService);
+    }
+
     private boolean mBound = false;
     private void setBound(boolean value){
         this.mBound = value;
-        if (value){
-            // mSignalRService.pingOrdersHub("ping Test123"); // testing the connection
-
-            mSignalRService.setEventListeners(super.username);
-
-                //called when the STATUS of AN ACCOUNT is changed
-            mSignalRService.setOnTAStatusChangedOperator(new AsyncTaskListener<TableAccountStatusResult>() {
-                @Override public void onPreExecute() { }
-                @Override public void onPostExecute(TableAccountStatusResult result) {
-                    if (operatorTableAccountsAdapter != null){
-                        operatorTableAccountsAdapter.changeItemStatus(result.TableAccountId, result.Status);
-
-                        if (result.NeedsItemsStatusUpdate && result.Status == TableAccountStatus.Idle) //only after confirming the account
-                            mSignalRService.updateOrderRequestablesStatusAfterAccountStatusChanged(result.TableAccountId);
-
-                        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && v != null) {
-                            v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
-                        } else if (v != null){ // Vibrate for 500 milliseconds
-                            v.vibrate(500); //deprecated in API 26
-                        }
-                    }
-                }
-            });
-
-            //called when THE STATUS of ITEM FROM AN ACCOUNT is changed
-            mSignalRService.setOnTAOrderItemStatusChanged(new AsyncTaskListener<TableAccountStatusResult>() {
-                @Override public void onPreExecute() { }
-                @Override public void onPostExecute(TableAccountStatusResult result) {
-                    if (operatorTableAccountsAdapter != null){
-                        operatorTableAccountsAdapter.changeItemStatus(result.TableAccountId, result.Status);
-
-                    }
-                }
-            });
-            operatorTableAccountsAdapter.setUsername(super.username);
-            operatorTableAccountsAdapter.setSignalRService(mSignalRService);
-        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         if (!mBound) {
-            ComponentName myService = startService(new Intent(this, SignalRService.class));
-            this.bindService(SignalRService_.intent(this).get(), mConnection, Context.BIND_AUTO_CREATE);
+            Intent intent = VenueHostSignalR_.intent(this).get();
+            this.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            //this.startService(intent);
         }
-
         super.onCreate(savedInstanceState);
     }
 
@@ -190,10 +186,6 @@ public class OperatorTablesAccountsActivity
     @Override
     protected void onResume(){
         super.onResume();
-
-        if (!mBound) {
-            this.bindService(SignalRService_.intent(this).get(), mConnection, Context.BIND_AUTO_CREATE);
-        }
     }
 
     @Override
@@ -253,8 +245,8 @@ public class OperatorTablesAccountsActivity
     @Override
     protected void onDestroy(){
         super.onDestroy();
-
         if (mBound) {
+            stopService(new Intent(this, VenueHostSignalR_.class));
             unbindService(mConnection);
             mBound = false;
         }
