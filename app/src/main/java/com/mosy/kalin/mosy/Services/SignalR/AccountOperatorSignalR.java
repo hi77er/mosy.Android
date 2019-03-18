@@ -98,10 +98,6 @@ public class AccountOperatorSignalR extends IntentService {
     }
 
 
-    /**
-     * method for clients (activities)
-     */
-
     private void startSignalR() {
         Platform.loadPlatformComponent(new AndroidPlatformComponent());
 
@@ -125,6 +121,7 @@ public class AccountOperatorSignalR extends IntentService {
                         }))
                 .build();
     }
+
 
     boolean listenersAlreadySet = false;
     public void setEventListeners(String venueId){
@@ -180,14 +177,14 @@ public class AccountOperatorSignalR extends IntentService {
     //
 
     // TEST
-    public void pingAccountsHub(String pingStartingMessageToMirror){
-        //mOrdersHubProxy.invoke("PingHub", pingStartingMessageToMirror);
-        this.accountsHubConnection.send("PingHub", pingStartingMessageToMirror);
-    }
-
-    public void pingOrdersHub(String pingStartingMessageToMirror){
-        //mOrdersHubProxy.invoke("PingHub", pingStartingMessageToMirror);
-        this.ordersHubConnection.send("PingHub", pingStartingMessageToMirror);
-    }
+//    public void pingAccountsHub(String pingStartingMessageToMirror){
+//        //mOrdersHubProxy.invoke("PingHub", pingStartingMessageToMirror);
+//        this.accountsHubConnection.send("PingHub", pingStartingMessageToMirror);
+//    }
+//
+//    public void pingOrdersHub(String pingStartingMessageToMirror){
+//        //mOrdersHubProxy.invoke("PingHub", pingStartingMessageToMirror);
+//        this.ordersHubConnection.send("PingHub", pingStartingMessageToMirror);
+//    }
 
 }

@@ -88,17 +88,11 @@ public class OperatorTablesAccountsActivity
             @Override public void onPreExecute() { }
             @Override public void onPostExecute(TableAccountStatusResult result) {
                 if (operatorTableAccountsAdapter != null){
-                    operatorTableAccountsAdapter.changeItemStatus(result.TableAccountId, result.Status);
+                    if (operatorTableAccountsAdapter.changeItemStatus(result.TableAccountId, result.Status))
+                        vibrate();
 
                     if (result.NeedsItemsStatusUpdate && result.Status == TableAccountStatus.Idle) //only after confirming the account
                         mSignalRService.updateOrderRequestablesStatusAfterAccountStatusChanged(result.TableAccountId);
-
-                    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && v != null) {
-                        v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
-                    } else if (v != null){ // Vibrate for 500 milliseconds
-                        v.vibrate(500); //deprecated in API 26
-                    }
                 }
             }
         });
@@ -108,12 +102,22 @@ public class OperatorTablesAccountsActivity
             @Override public void onPreExecute() { }
             @Override public void onPostExecute(TableAccountStatusResult result) {
                 if (operatorTableAccountsAdapter != null){
-                    operatorTableAccountsAdapter.changeItemStatus(result.TableAccountId, result.Status);
+                    if (operatorTableAccountsAdapter.changeItemStatus(result.TableAccountId, result.Status))
+                        vibrate();
                 }
             }
         });
         operatorTableAccountsAdapter.setUsername(username);
         operatorTableAccountsAdapter.setSignalRService(mSignalRService);
+    }
+
+    private void vibrate() {
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && v != null) {
+            v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else if (v != null){ // Vibrate for 500 milliseconds
+            v.vibrate(500); //deprecated in API 26
+        }
     }
 
     private boolean mBound = false;

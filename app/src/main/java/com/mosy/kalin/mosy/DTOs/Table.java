@@ -19,5 +19,8 @@ public class Table
     public String TableRegionId;
     @SerializedName("defaultSeatsCount")
     public int DefaultSeatsCount;
+    @SerializedName("tableAccounts")
+    public ArrayList<TableAccount> TableAccounts;
+
 
 }

@@ -122,7 +122,7 @@ public class ClientTableAccountOrdersActivity
     };
 
     private void setupSignalRService() {
-        mSignalRService.setEventListeners(tableAccount.Id);
+        mSignalRService.setEventListeners(tableAccount != null ? tableAccount.Id : null);
 
         mSignalRService.setOnTAStatusChangedClient(new AsyncTaskListener<TableAccountStatusResult>() {
             @Override public void onPreExecute() { }
@@ -132,7 +132,9 @@ public class ClientTableAccountOrdersActivity
                 tableAccount.Status = result.Status;
                 tableAccount.AssignedOperatorUsername = result.AssignedOperatorUsername;
 
-                setupActionLayout(tableAccount);
+                ClientTableAccountOrdersActivity.this.runOnUiThread(
+                        () -> setupActionLayout(tableAccount)
+                );
 
                 if (result.NeedsItemsStatusUpdate && result.Status == TableAccountStatus.AwaitingOperatorApprovement) //only after creating the account
                     mSignalRService.updateOrderRequestablesStatusAfterAccountStatusChanged(result.TableAccountId);
@@ -178,7 +180,8 @@ public class ClientTableAccountOrdersActivity
                 this.newlySelectedMenuItemIds.size() > 0){
 
             this.mSignalRService.createTableAccount(super.username, this.selectedTable.Id, this.newlySelectedMenuItemIds);
-        } else if (this.mSignalRService != null &&
+        }
+        else if (this.mSignalRService != null &&
                 this.tableAccount != null &&
                 this.selectedTable != null &&
                 StringHelper.isNotNullOrEmpty(super.username) &&
@@ -223,7 +226,6 @@ public class ClientTableAccountOrdersActivity
 
 //            RecyclerViewItemsClickSupport.addTo(this.ordersView).setOnItemClickListener((recyclerView, position, v) -> {
 //                ClientTableAccountItem itemClicked = (ClientTableAccountItem)clientTableAccountOrdersAdapter.getItemAt(position);
-
 //            });
 
             this.ordersView.setAdapter(clientTableAccountOrdersAdapter);

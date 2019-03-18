@@ -107,10 +107,6 @@ public class AccountOpenerSignalR extends IntentService {
     }
 
 
-    /**
-     * method for clients (activities)
-     */
-
     private void startSignalR() {
         Platform.loadPlatformComponent(new AndroidPlatformComponent());
 
@@ -134,6 +130,7 @@ public class AccountOpenerSignalR extends IntentService {
                         }))
                 .build();
     }
+
 
     boolean listenersAlreadySet = false;
     public void setEventListeners(String accountId){
@@ -208,18 +205,18 @@ public class AccountOpenerSignalR extends IntentService {
 
     public void updateOrderRequestablesStatusAfterAccountStatusChanged(String tableAccountId){
         //mOrdersHubProxy.invoke("UpdateOrderRequestablesStatusAfterAccountStatusChanged", tableAccountId);
-        accountsHubConnection.send("UpdateOrderRequestablesStatusAfterAccountStatusChanged", tableAccountId);
+        ordersHubConnection.send("UpdateOrderRequestablesStatusAfterAccountStatusChanged", tableAccountId);
     }
 
     // TEST
-    public void pingAccountsHub(String pingStartingMessageToMirror){
-        //mOrdersHubProxy.invoke("PingHub", pingStartingMessageToMirror);
-        this.accountsHubConnection.send("PingHub", pingStartingMessageToMirror);
-    }
-
-    public void pingOrdersHub(String pingStartingMessageToMirror){
-        //mOrdersHubProxy.invoke("PingHub", pingStartingMessageToMirror);
-        this.ordersHubConnection.send("PingHub", pingStartingMessageToMirror);
-    }
+//    public void pingAccountsHub(String pingStartingMessageToMirror){
+//        //mOrdersHubProxy.invoke("PingHub", pingStartingMessageToMirror);
+//        this.accountsHubConnection.send("PingHub", pingStartingMessageToMirror);
+//    }
+//
+//    public void pingOrdersHub(String pingStartingMessageToMirror){
+//        //mOrdersHubProxy.invoke("PingHub", pingStartingMessageToMirror);
+//        this.ordersHubConnection.send("PingHub", pingStartingMessageToMirror);
+//    }
 
 }

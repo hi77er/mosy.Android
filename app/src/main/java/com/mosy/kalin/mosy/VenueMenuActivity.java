@@ -351,7 +351,7 @@ public class VenueMenuActivity
             Intent intent = new Intent(VenueMenuActivity.this, VenueTablesActivity_.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
-            intent.putExtra("VenueId", this.wallVenue.Id);
+            intent.putExtra("venueId", this.wallVenue.Id);
             intent.putExtra("selectedTable", this.selectedTable);
             intent.putExtra("wallVenue", this.wallVenue);
             intent.putExtra("selectedMenuListId", this.selectedMenuListId);

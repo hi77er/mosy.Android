@@ -50,10 +50,10 @@ public class VenueHostSignalR extends IntentService {
     @Bean
     AccountService accountService;
 
-    private AsyncTaskListener<OrderMenuItem> onOrderItemStatusChangedOperatorTask;
-    public void setOnOrderItemStatusOperatorChanged(AsyncTaskListener<OrderMenuItem> task){
-        this.onOrderItemStatusChangedOperatorTask = task;
-    }
+//    private AsyncTaskListener<OrderMenuItem> onOrderItemStatusChangedOperatorTask;
+//    public void setOnOrderItemStatusOperatorChanged(AsyncTaskListener<OrderMenuItem> task){
+//        this.onOrderItemStatusChangedOperatorTask = task;
+//    }
 
     private AsyncTaskListener<TableAccountStatusResult> onTAStatusChangedOperatorTask;
     public void setOnTAStatusChangedOperator(AsyncTaskListener<TableAccountStatusResult> task){
@@ -127,6 +127,7 @@ public class VenueHostSignalR extends IntentService {
                 .build();
     }
 
+
     boolean listenersAlreadySet = false;
     public void setEventListeners(String venueId){
         if (!listenersAlreadySet){
@@ -173,13 +174,12 @@ public class VenueHostSignalR extends IntentService {
         model.TableAccountId = tableAccountId;
         model.NewStatus = newStatus;
         model.UpdaterUsername = updaterUsername;
-        //mTableAccountsHubProxy.invoke("UpdateTableAccountStatus", model);
+
         accountsHubConnection.send("UpdateTableAccountStatus", model);
     }
 
     public void updateOrderRequestablesStatusAfterAccountStatusChanged(String tableAccountId){
-        //mOrdersHubProxy.invoke("UpdateOrderRequestablesStatusAfterAccountStatusChanged", tableAccountId);
-        accountsHubConnection.send("UpdateOrderRequestablesStatusAfterAccountStatusChanged", tableAccountId);
+        ordersHubConnection.send("UpdateOrderRequestablesStatusAfterAccountStatusChanged", tableAccountId);
     }
 
     //TODO: UNCOMMENT WHEN IMPLEMENTING FEATURE: HOST CREATING AN ACCOUNT
@@ -199,15 +199,15 @@ public class VenueHostSignalR extends IntentService {
     //}
 
     // TEST
-    public void pingAccountsHub(String pingStartingMessageToMirror){
-        //mOrdersHubProxy.invoke("PingHub", pingStartingMessageToMirror);
-        this.accountsHubConnection.send("PingHub", pingStartingMessageToMirror);
-    }
-
-    public void pingOrdersHub(String pingStartingMessageToMirror){
-        //mOrdersHubProxy.invoke("PingHub", pingStartingMessageToMirror);
-        this.ordersHubConnection.send("PingHub", pingStartingMessageToMirror);
-    }
+//    public void pingAccountsHub(String pingStartingMessageToMirror){
+//        //mOrdersHubProxy.invoke("PingHub", pingStartingMessageToMirror);
+//        this.accountsHubConnection.send("PingHub", pingStartingMessageToMirror);
+//    }
+//
+//    public void pingOrdersHub(String pingStartingMessageToMirror){
+//        //mOrdersHubProxy.invoke("PingHub", pingStartingMessageToMirror);
+//        this.ordersHubConnection.send("PingHub", pingStartingMessageToMirror);
+//    }
 
 
 }

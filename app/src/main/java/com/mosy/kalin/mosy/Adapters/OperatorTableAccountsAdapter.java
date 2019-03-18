@@ -110,13 +110,17 @@ public class OperatorTableAccountsAdapter
         }
     }
 
-    public void changeItemStatus(String itemId, TableAccountStatus newStatus) {
+    public boolean changeItemStatus(String itemId, TableAccountStatus newStatus) {
+        boolean changed = false;
         if (this.items != null){
             OperatorTableAccountItem item = this.getItemById(itemId);
-            item.tableAccount.Status = newStatus;
 
+            changed = item.tableAccount.Status == newStatus;
+
+            item.tableAccount.Status = newStatus;
             this.onItemChanged(item);
         }
+        return changed;
     }
 
     public void onItemChanged(WallItemBase item) {
