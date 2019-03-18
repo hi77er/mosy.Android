@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import com.mosy.kalin.mosy.Adapters.OperatorTableAccountsAdapter;
 import com.mosy.kalin.mosy.CustomControls.Support.RecyclerViewItemsClickSupport;
 import com.mosy.kalin.mosy.DTOs.Enums.TableAccountStatus;
+import com.mosy.kalin.mosy.DTOs.OrderMenuItem;
 import com.mosy.kalin.mosy.DTOs.SignalR.SignalRResults.TableAccountStatusResult;
 import com.mosy.kalin.mosy.DTOs.TableAccount;
 import com.mosy.kalin.mosy.DTOs.Venue;
@@ -72,7 +73,7 @@ public class OperatorTablesAccountsActivity
             VenueHostSignalR.LocalBinder binder = (VenueHostSignalR.LocalBinder) service;
             mSignalRService = binder.getService();
 
-            setupSignlRService();
+            setupSignalRService();
             setBound(true);
         }
         @Override public void onServiceDisconnected(ComponentName arg0) {
@@ -80,7 +81,7 @@ public class OperatorTablesAccountsActivity
         }
     };
 
-    private void setupSignlRService() {
+    private void setupSignalRService() {
         mSignalRService.setEventListeners(venue.Id);
 
         //called when the STATUS of AN ACCOUNT is changed
@@ -88,8 +89,18 @@ public class OperatorTablesAccountsActivity
             @Override public void onPreExecute() { }
             @Override public void onPostExecute(TableAccountStatusResult result) {
                 if (operatorTableAccountsAdapter != null){
-                    if (operatorTableAccountsAdapter.changeItemStatus(result.TableAccountId, result.Status))
+                    OperatorTableAccountItem accountItem = operatorTableAccountsAdapter.getItemById(result.TableAccountId);
+                    if (accountItem != null) {
+                        if (operatorTableAccountsAdapter.changeItemStatus(result.TableAccountId, result.Status))
+                            vibrate();
+                    }
+                    else
+                    {
+                        OperatorTablesAccountsActivity.this.runOnUiThread(
+                                () -> operatorTableAccountsAdapter.addTableAccountItem(result.TableAccount)
+                        );
                         vibrate();
+                    }
 
                     if (result.NeedsItemsStatusUpdate && result.Status == TableAccountStatus.Idle) //only after confirming the account
                         mSignalRService.updateOrderRequestablesStatusAfterAccountStatusChanged(result.TableAccountId);

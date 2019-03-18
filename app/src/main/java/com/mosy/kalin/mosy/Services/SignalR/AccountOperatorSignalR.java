@@ -9,7 +9,6 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.mosy.kalin.mosy.DTOs.OrderMenuItem;
 import com.mosy.kalin.mosy.DTOs.SignalR.SignalRResults.OrderItemStatusChangedResult;
 import com.mosy.kalin.mosy.DTOs.SignalR.SignalRResults.TableAccountStatusResult;
 import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;

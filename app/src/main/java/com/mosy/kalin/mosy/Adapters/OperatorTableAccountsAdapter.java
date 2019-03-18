@@ -92,10 +92,10 @@ public class OperatorTableAccountsAdapter
         return this.items.indexOf(item);
     }
 
-    public OperatorTableAccountItem getItemById(String tableAccountid) {
+    public OperatorTableAccountItem getItemById(String tableAccountId) {
         for (WallItemBase item : this.items) {
             OperatorTableAccountItem casted = (OperatorTableAccountItem) item;
-            if (tableAccountid.equals(casted.tableAccount.Id))
+            if (tableAccountId.equals(casted.tableAccount.Id))
                 return casted;
         }
         return null;
