@@ -3,33 +3,39 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
+    android:background="@color/colorPrimaryLanding"
     android:paddingTop="20dp"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
     android:paddingBottom="15dp">
 
-    <TextView
+    <ImageView
         android:id="@+id/landing_ivLogo"
+        android:layout_alignParentTop="true"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/ic_treatspark_logo_100"
+        android:layout_centerInParent="true" />
+
+    <TextView
+        android:id="@+id/landing_tvLogo"
+        android:layout_below="@+id/landing_ivLogo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="80dp"
         android:text="@string/app_name"
-        android:textSize="50sp"
+        android:textSize="60sp"
         android:textStyle="bold"
         android:gravity="center_horizontal"
-        android:textColor="@color/colorPrimary"/>
+        android:textColor="@color/colorWhite"
+        android:layout_marginBottom="40dp" />
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/landing_lButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/landing_ivLogo"
+        android:layout_below="@+id/landing_tvLogo"
         android:orientation="horizontal"
-        android:background="@color/colorWhite"
         android:layout_marginBottom="20dp"
         android:visibility="gone">
 
@@ -41,12 +47,12 @@
             android:padding="10dp"
             android:scaleType="fitXY"
             android:drawableTop="@drawable/ic_food_variant_72"
-            android:drawableTint="@color/colorPrimary"
+            android:drawableTint="@color/colorWhite"
             android:text="@string/activity_landing_dishesBtn"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:background="@drawable/background_transparent_click_oval"
-            android:textColor="@color/colorPrimary"
+            android:background="@drawable/background_transparent_click_white_oval"
+            android:textColor="@color/colorWhite"
             android:stateListAnimator="@null" />
 
         <Button
@@ -56,12 +62,12 @@
             android:layout_weight="1"
             android:padding="10dp"
             android:drawableTop="@drawable/ic_home_map_marker_72"
-            android:drawableTint="@color/colorPrimary"
+            android:drawableTint="@color/colorWhite"
             android:text="@string/activity_landing_venuesBtn"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:background="@drawable/background_transparent_click_oval"
-            android:textColor="@color/colorPrimary"
+            android:background="@drawable/background_transparent_click_white_oval"
+            android:textColor="@color/colorWhite"
             android:stateListAnimator="@null" />
     </LinearLayout>
 
@@ -94,7 +100,7 @@
             android:id="@+id/landing_tvInvalidHost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorPrimaryLight"
             android:layout_centerInParent="true"
             android:gravity="center"
             android:text="@string/activity_landing_noInternetMessageTextView" />
@@ -114,7 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorPrimaryLight"
             android:text="@string/activity_landing_temporarilyDownMessageTextView" />
     </RelativeLayout>
 
@@ -143,9 +149,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/activity_landing_work_btn"
-            android:background="@drawable/background_transparent_click_oval"
+            android:background="@drawable/background_transparent_click_white_oval"
             android:textSize="14sp"
-            android:textColor="@color/soft"
+            android:textColor="@color/colorPrimaryLight"
             android:textStyle="bold"
             android:stateListAnimator="@null" />
 
@@ -155,9 +161,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/activity_landing_profileBtn"
-            android:background="@drawable/background_transparent_click_oval"
+            android:background="@drawable/background_transparent_click_white_oval"
             android:textSize="14sp"
-            android:textColor="@color/soft"
+            android:textColor="@color/colorPrimaryLight"
             android:textStyle="bold"
             android:stateListAnimator="@null" />
 
@@ -166,9 +172,9 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:text="@string/activity_landing_loginSignUpBtn"
-            android:background="@drawable/background_transparent_click_oval"
+            android:background="@drawable/background_transparent_click_white_oval"
             android:textSize="14sp"
-            android:textColor="@color/soft"
+            android:textColor="@color/colorPrimaryLight"
             android:textStyle="bold"
             android:visibility="gone"
             android:stateListAnimator="@null" />
@@ -193,7 +199,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:src="@drawable/ic_facebook_box_24"
-            android:tint="@color/softer" />
+            android:tint="@color/colorPrimaryLight" />
 
         <ImageView
             android:id="@+id/landing_ibSocialInstagram"
@@ -201,7 +207,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:src="@drawable/ic_instagram_24"
-            android:tint="@color/softer" />
+            android:tint="@color/colorPrimaryLight" />
 
         <ImageView
             android:id="@+id/landing_ibSocialTwitter"
@@ -209,6 +215,6 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:src="@drawable/ic_twitter_24"
-            android:tint="@color/softer" />
+            android:tint="@color/colorPrimaryLight" />
     </LinearLayout>
 </RelativeLayout>

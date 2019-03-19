@@ -104,7 +104,7 @@
                 android:layout_width="96dp"
                 android:layout_height="96dp"
                 android:src="@drawable/ic_gesture_swipe_down_24"
-                android:tint="@color/colorPrimaryLight"
+                android:tint="@color/colorPrimaryLighter"
                 android:indeterminate="true" />
 
             <TextView
@@ -112,7 +112,7 @@
                 android:layout_width="wrap_content"
                 android:text="@string/activity_wall_swipeDownToRefreshMessageTextView"
                 android:textStyle="bold"
-                android:textColor="@color/colorPrimaryLight" />
+                android:textColor="@color/colorPrimaryLighter" />
         </LinearLayout>
 
         <android.support.v4.widget.SwipeRefreshLayout

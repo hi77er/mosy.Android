@@ -92,6 +92,7 @@ android {
     }
     productFlavors {
     }
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
 }
 
 android.applicationVariants.all {

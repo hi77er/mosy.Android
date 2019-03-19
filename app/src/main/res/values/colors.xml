@@ -9,19 +9,22 @@
     <color name="colorWhiteTransparent">#33FFFFFF</color>
     <color name="soft">#707070</color>
     <color name="softer">#ababab</color>
+    <color name="softerer">#D8D8D8</color>
     <color name="colorWhite">#FFF</color>
 
     <color name="colorAccent">#fc7878</color>
 
     <color name="colorPrimaryVeryDark">#3F0D12</color>
     <color name="colorPrimaryDark">#720023</color>
+    <color name="colorPrimaryLanding">#901830</color>
     <color name="colorPrimary">#90002D</color> <!--Paprika #90002D -->
     <color name="colorPrimarySalmon">#EF6461</color>
     <color name="colorPrimarySalmonLightTransparent">#66FEC3BF</color>
     <color name="colorPrimarySalmonLight">#edc3c2</color>
     <color name="colorPrimaryApricot">#EB9373</color>
     <color name="colorPrimaryDusty">#CF9893</color>
-    <color name="colorPrimaryLight">#FFE4E4</color>
+    <color name="colorPrimaryLight">#FFBCBC</color>
+    <color name="colorPrimaryLighter">#FFE4E4</color>
     <color name="colorPrimaryVeryLight">#FFEEEE</color>
 
     <color name="colorSecondaryLight">#f7f7f0</color>

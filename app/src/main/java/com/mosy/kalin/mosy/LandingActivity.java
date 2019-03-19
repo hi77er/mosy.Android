@@ -3,6 +3,7 @@ package com.mosy.kalin.mosy;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mosy.kalin.mosy.DTOs.Venue;
@@ -53,6 +55,8 @@ public class LandingActivity
     @ViewById(R.id.landing_llBottomBtns)
     LinearLayout bottomButtonsLayout;
 
+    @ViewById(R.id.landing_tvLogo)
+    TextView tvLogo;
 
     @ViewById(R.id.landing_llInitialLoadingProgress)
     LinearLayout centralProgressLayout;
@@ -76,6 +80,9 @@ public class LandingActivity
 
     @AfterViews
     public void afterViews(){
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/eurof35.ttf");
+        tvLogo.setTypeface(typeface);
+
         if (ConnectivityHelper.isConnected(applicationContext)) {
             try {
                 this.ensureHasAuthenticationToken();
@@ -301,7 +308,7 @@ public class LandingActivity
         loadManagedVenues();
     }
 
-    @Click(R.id.landing_ivLogo)
+    @Click(R.id.landing_tvLogo)
     public void click_ivLogo(){
         SharedPreferences preferences = applicationContext.getSharedPreferences(getString(R.string.pref_collectionName_developersMode), MODE_PRIVATE);
         SharedPreferences.Editor prefEditor = preferences.edit();
