@@ -30,7 +30,7 @@
     <string name="pref_authTokenExpiresInSeconds_user" translatable="false">prefAuthTokenExpiresInSeconds</string>
 
     <!-- AndroidManifest -->
-    <string name="app_name">"Treatspark"</string>
+    <string name="app_name">"TreatSpark"</string>
     <string name="manifest_venuesActivityTitle" translatable="false">"Venues"</string>
     <string name="manifest_venueDetailsActivityTitle" translatable="false">"Venue Details"</string>
     <string name="manifest_itemDetailsActivityTitle" translatable="false">"Item Details"</string>

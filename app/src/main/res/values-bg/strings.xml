@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Treatspark</string>
+    <string name="app_name">TreatSpark</string>
     <string name="activity_wall_swipeDownToRefreshMessageTextView">ДРЪПНИ НАДОЛУ ЗА ДА ОПРЕСНИШ</string>
     <string name="activity_landing_venuesBtn"><![CDATA[ЗАВЕДЕНИЯ \n & МЕНЮТА]]></string>
     <string name="activity_landing_dishesBtn"><![CDATA[ЯСТИЯ \n & НАПИТКИ]]></string>

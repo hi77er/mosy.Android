@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Treatspark</string>
+    <string name="app_name">TreatSpark</string>
     <string name="activity_wall_swipeDownToRefreshMessageTextView">ПОТЯНИТЕ ВНИЗ, ЧТОБЫ ОБНОВИТЬ СТРАНИЦУ</string>
     <string name="activity_landing_languageBgSpinner">Болгарский</string>
     <string name="activity_landing_languageEnUSSpinner">Английский</string>
