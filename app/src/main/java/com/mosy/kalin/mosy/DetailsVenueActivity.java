@@ -302,8 +302,12 @@ public class DetailsVenueActivity
         if (venueContacts != null) {
             boolean any = false;
             if (StringHelper.isNotNullOrEmpty(venueContacts.Phone)) {
-                this.phoneNumber = venueContacts.Phone;
-                this.phoneButton.setText(venueContacts.Phone);
+                if (StringHelper.isNotNullOrEmpty(venueContacts.PhoneCountryCode))
+                    this.phoneNumber = venueContacts.PhoneCountryCode.concat(venueContacts.Phone);
+                else
+                    this.phoneNumber = venueContacts.Phone;
+
+                this.phoneButton.setText(phoneNumber);
                 this.phoneButton.setVisibility(View.VISIBLE);
                 any = true;
             }

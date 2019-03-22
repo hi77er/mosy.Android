@@ -11,6 +11,9 @@ public class VenueContacts extends HttpResult {
     @SerializedName("address")
     public String Address;
 
+    @SerializedName("phoneCountryCode")
+    public String PhoneCountryCode;
+
     @SerializedName("phone")
     public String Phone;
 
