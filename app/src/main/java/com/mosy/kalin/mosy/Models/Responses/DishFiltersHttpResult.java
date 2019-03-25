@@ -14,6 +14,9 @@ public class DishFiltersHttpResult //INFO: Name coming from WebApi specifics
     @SerializedName("dishTypeFilters")
     public ArrayList<Filter> DishTypeFilters;
 
+    @SerializedName("drinksFilters")
+    public ArrayList<Filter> DrinksFilters;
+
     @SerializedName("dishRegionFilters")
     public ArrayList<Filter> DishRegionFilters;
 

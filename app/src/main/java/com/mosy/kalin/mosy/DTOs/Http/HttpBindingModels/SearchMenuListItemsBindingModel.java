@@ -12,6 +12,7 @@ public class SearchMenuListItemsBindingModel {
     public double Latitude;
     public double Longitude;
     public List<String> SelectedDishTypeFilterIds;
+    public List<String> SelectedDrinksFilterIds;
     public List<String> SelectedDishRegionFilterIds;
     public List<String> SelectedDishMainIngredientFilterIds;
     public List<String> SelectedDishAllergenFilterIds;
@@ -30,6 +31,7 @@ public class SearchMenuListItemsBindingModel {
             double longitude,
             String query,
             ArrayList<String> selectedDishTypeFilterIds,
+            ArrayList<String> selectedDrinksFilterIds,
             ArrayList<String> selectedDishRegionFilterIds,
             ArrayList<String> selectedDishMainIngredientFilterIds,
             ArrayList<String> selectedDishAllergenFilterIds,
@@ -46,6 +48,7 @@ public class SearchMenuListItemsBindingModel {
         this.Longitude = longitude;
         this.Query = query;
         this.SelectedDishTypeFilterIds = selectedDishTypeFilterIds;
+        this.SelectedDrinksFilterIds = selectedDrinksFilterIds;
         this.SelectedDishRegionFilterIds = selectedDishRegionFilterIds;
         this.SelectedDishMainIngredientFilterIds = selectedDishMainIngredientFilterIds;
         this.SelectedDishAllergenFilterIds = selectedDishAllergenFilterIds;

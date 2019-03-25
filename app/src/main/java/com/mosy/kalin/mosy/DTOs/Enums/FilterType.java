@@ -28,8 +28,10 @@ public enum FilterType {
     DishMainIngredient(203),
 
     @SerializedName("204")
-    DishAllergens(204);
+    DishAllergens(204),
 
+    @SerializedName("205")
+    Drinks(205);
 
 
     private final int value;

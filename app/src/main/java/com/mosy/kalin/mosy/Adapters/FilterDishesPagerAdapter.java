@@ -21,6 +21,7 @@ public class FilterDishesPagerAdapter
     private int mCurrentPosition = -1;
 
     public ArrayList<FilterItem> DishTypeFilterItems;
+    public ArrayList<FilterItem> DrinksFilterItems;
     public ArrayList<FilterItem> DishRegionFilterItems;
     public ArrayList<FilterItem> DishMainIngredientFilterItems;
     public ArrayList<FilterItem> DishAllergenFilterItems;
@@ -29,12 +30,14 @@ public class FilterDishesPagerAdapter
     public FilterDishesPagerAdapter(Context context,
                                     FragmentManager manager,
                                     ArrayList<FilterItem> dishTypeFilterItems,
+                                    ArrayList<FilterItem> drinksFilterItems,
                                     ArrayList<FilterItem> dishRegionFilterItems,
                                     ArrayList<FilterItem> dishMainIngredientFilterItems,
                                     ArrayList<FilterItem> dishAllergenFilterItems) {
         super(manager);
         this.context = context;
         this.DishTypeFilterItems = dishTypeFilterItems;
+        this.DrinksFilterItems = drinksFilterItems;
         this.DishRegionFilterItems = dishRegionFilterItems;
         this.DishMainIngredientFilterItems = dishMainIngredientFilterItems;
         this.DishAllergenFilterItems = dishAllergenFilterItems;
@@ -65,12 +68,15 @@ public class FilterDishesPagerAdapter
                 filterItems = this.DishTypeFilterItems;
                 break;
             case 1:
-                filterItems = this.DishMainIngredientFilterItems;
+                filterItems = this.DrinksFilterItems;
                 break;
             case 2:
-                filterItems = this.DishRegionFilterItems;
+                filterItems = this.DishMainIngredientFilterItems;
                 break;
             case 3:
+                filterItems = this.DishRegionFilterItems;
+                break;
+            case 4:
                 filterItems = this.DishAllergenFilterItems;
                 String note = StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_allergensFiltersNote);
                 fragment.setNote(note);
@@ -84,7 +90,7 @@ public class FilterDishesPagerAdapter
 
     @Override
     public int getCount() {
-        return 4;
+        return 5;
     }
 
     @Override
@@ -92,10 +98,12 @@ public class FilterDishesPagerAdapter
         if (position == 0)
             return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_typeFiltersTitle);
         if (position == 1)
-            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_ingredientsFiltersTitle);
+            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_drinksFiltersTitle);
         if (position == 2)
-            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_regionFiltersTitle);
+            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_ingredientsFiltersTitle);
         if (position == 3)
+            return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_regionFiltersTitle);
+        if (position == 4)
             return StringHelper.getStringAppDefaultLocale(context, R.string.activity_dishesFilters_allergensFiltersTitle);
         return null;
     }

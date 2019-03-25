@@ -1,6 +1,5 @@
 package com.mosy.kalin.mosy.Helpers;
 
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 

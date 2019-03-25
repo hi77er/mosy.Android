@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
 
     <!--COMMON-->
     <string name="info_dialog_title" translatable="false">"Info"</string>
@@ -140,17 +142,17 @@
     <string name="VenuesFilterCosyName">Cosy</string>
     <string name="VenuesFilterDancingName">Dancing</string>
     <string name="VenuesFilterLiveMusicName">Live music</string>
-    <string name="VenuesFilterNoMusicName">No music</string>
+    <string name="VenuesFilterNoMusicName">No music / quiet area</string>
     <string name="VenuesFiltersQuietMusicName">Quiet music</string>
     <string name="VenuesFilterPanoramaName">Scenic view</string>
     <string name="VenuesFilterTraditionalName">Traditional</string>
-    <string name="VenuesFilterLiveSportsName">Live sports</string>
-    <string name="VenuesFilterPrivateName">Private</string>
+    <string name="VenuesFilterLiveSportsName">Live sports (TV)</string>
+    <string name="VenuesFilterPrivateName">Private events possible</string>
     <string name="VenuesFilterWorking24hName">Open 24h</string>
     <string name="VenuesFilterAllYouCanEatName">All you can eat</string>
     <string name="VenuesFilterOutdoorSittingName">Outdoor sitting</string>
     <string name="VenuesFilterPubGamesName">Pub games</string>
-    <string name="VenuesFilterRooftopName">Rooftop</string>
+    <string name="VenuesFilterRooftopName">Rooftop area</string>
     <string name="VenuesFilterSelfServiceName">Self-service</string>
     <string name="VenuesFilterSheeshaName">Sheesha</string>
     <string name="VenuesFilterCultureBulgariaName">"Bulgaria"</string>
@@ -168,6 +170,12 @@
     <string name="VenuesFilterCultureArgentinaName">"Argentina"</string>
     <string name="VenuesFilterCouchesName">Couches</string>
     <string name="VenuesFilterStandingDesksName">Standing desks</string>
+    <string name="VenuesFilterBilliardsName">Billiard/Pool table</string>
+    <string name="VenuesFilterBoardGamesName">Board games</string>
+    <string name="VenuesFilterDartName">Dart</string>
+    <string name="VenuesFilterPianoName">Piano</string>
+    <string name="VenuesFilterTableFootballName">Table football</string>
+    <string name="VenuesFilterKaraokeName">Karaoke</string>
 
     <string name="VenuesFilterBadgeWorkingFriendlyDescription">Working friendly. Calm and creative atmosphere.</string>
     <string name="VenuesFilterBadgeWiFiAvailableDescription">Wi-Fi network available.</string>
@@ -187,7 +195,7 @@
     <string name="VenuesFiltersQuietMusicDescription">Quiet music. Chilled place.</string>
     <string name="VenuesFilterPanoramaDescription">A place with nice panorama view.</string>
     <string name="VenuesFilterTraditionalDescription">Traditional for the country.</string>
-    <string name="VenuesFilterLiveSportsDescription">Live sport events are shown.</string>
+    <string name="VenuesFilterLiveSportsDescription">Live Sport events are shown (TV).</string>
     <string name="VenuesFilterPrivateDescription">Can be rented for private events.</string>
     <string name="VenuesFilterWorking24hDescription">Working for 24h.</string>
     <string name="VenuesFilterAllYouCanEatDescription">\'All you can eat\' for fixed price.</string>
@@ -211,6 +219,12 @@
     <string name="VenuesFilterCultureArgentinaDescription">This venue is particularly popular for people from Argentina.</string>
     <string name="VenuesFilterCouchesDescription">Couches/Sofas are available.</string>
     <string name="VenuesFilterStandingDesksDescription">Availability of high tables to work while standing.</string>
+    <string name="VenuesFilterBilliardsDescription">Billiards/Pool tables available.</string>
+    <string name="VenuesFilterBoardGamesDescription">Board games available.</string>
+    <string name="VenuesFilterDartDescription">Darts available.</string>
+    <string name="VenuesFilterPianoDescription">There is piano in the saloon.</string>
+    <string name="VenuesFilterTableFootballDescription">Table football available.</string>
+    <string name="VenuesFilterKaraokeDescription">Karaoke nights are organized.</string>
 
     <!-- Activity Dishes Filters -->
     <string name="activity_dishesFilters_title">Filter dishes &amp; drinks</string>
@@ -243,8 +257,8 @@
     <string name="DishesFilterRegionIndianAsianName">"Indian"</string>
     <string name="DishesFilterRegionItalianName">"Italian"</string>
     <string name="DishesFilterRegionJapaneseName">"Japanese"</string>
-    <string name="DishesFilterRegionOtherEuropeanName">"Other European"</string>
-    <string name="DishesFilterRegionNorthAmericanName">"North American"</string>
+    <string name="DishesFilterRegionOtherEuropeanName">"European (other)"</string>
+    <string name="DishesFilterRegionNorthAmericanName">"American (north)"</string>
     <string name="DishesFilterRegionMediterraneanName">Mediterranean</string>
     <string name="DishesFilterRegionMexicanAndCentralAmericanName">Mexican &amp; Central American</string>
     <string name="DishesFilterRegionSouthAmericanLatinName">South American / Latin</string>
@@ -280,7 +294,25 @@
     <string name="DishesFilterAllergenHotPeppersName">Hot Peppers (s)</string>
     <string name="DishesFilterAllergenTreeNutsName">Tree Nuts (8)</string>
     <string name="DishesFilterAllergenMustardName">Mustard (10)</string>
-    <string name="DishesFilterTypeAppetizersAndSnacksDescription">E.g. soups, dips, antipasti, etc.</string>
+    <string name="DishesFilterSoupsName">Soups</string>
+    <string name="DishesFilterFreshDrinksName">Fresh drinks</string>
+    <string name="DishesFilterHotDrinksName">Hot drinks</string>
+    <string name="DishesFilterFrenchName">French</string>
+    <string name="DishesFilterFusionName">Fusion</string>
+    <string name="DishesFilterGermanAustrianName">German/Austrian</string>
+    <string name="DishesFilterSpanishName">Spanish</string>
+    <string name="DishesFilterThaiName">Thai</string>
+    <string name="DishesFilterVietnameseName">Vietnamese</string>
+    <string name="DishesFilterFishName">Fish</string>
+    <string name="DishesFilterSeaFoodName">Seafood</string>
+    <string name="DishesFilterKetoName">Keto</string>
+    <string name="DishesFilterPaleoName">Paleo</string>
+    <string name="DishesFilterBeersName">Beer</string>
+    <string name="DishesFilterWinesName">Wine</string>
+    <string name="DishesFilterCocktailsName">Cocktails</string>
+    <string name="DishesFilterWhiskeysName">Whiskey</string>
+
+    <string name="DishesFilterTypeAppetizersAndSnacksDescription">E.g. dips, antipasti, etc.</string>
     <string name="DishesFilterTypeDesertsDescription">"E.g. cakes, ice cream, pancakes, etc."</string>
     <string name="DishesFilterTypeNonalcoholicDrinksDescription">E.g. smoothies, juices, cocktails, etc.</string>
     <string name="DishesFilterRegionAfricanDescription">E.g. Ethiopian, Moroccan, South African, etc.</string>
@@ -293,6 +325,23 @@
     <string name="DishesFilterRegionSouthAsianDescription">E.g. Indonesian, Philippine, Thai, Vietnamese, etc.</string>
     <string name="DishesFilterMainIngredientWhiteMeatDescription">E.g. chicken, turkey, duck, etc.</string>
     <string name="DishesFilterMainIngredientRedMeatDescription">E.g. beef, Pork, Game, etc.</string>
+    <string name="DishesFilterSoupsDescription"></string>
+    <string name="DishesFilterFreshDrinksDescription">E.g. juices, smoothies, etc.</string>
+    <string name="DishesFilterHotDrinksDescription">E.g. coffee, tea, etc.</string>
+    <string name="DishesFilterFrenchDescription"></string>
+    <string name="DishesFilterFusionDescription"></string>
+    <string name="DishesFilterGermanAustrianDescription"></string>
+    <string name="DishesFilterSpanishDescription"></string>
+    <string name="DishesFilterThaiDescription"></string>
+    <string name="DishesFilterVietnameseDescription"></string>
+    <string name="DishesFilterFishDescription"></string>
+    <string name="DishesFilterSeaFoodDescription"></string>
+    <string name="DishesFilterKetoDescription"></string>
+    <string name="DishesFilterPaleoDescription"></string>
+    <string name="DishesFilterBeersDescription"></string>
+    <string name="DishesFilterWinesDescription"></string>
+    <string name="DishesFilterCocktailsDescription"></string>
+    <string name="DishesFilterWhiskeysDescription"></string>
 
     <string name="activity_dishesFilters_showRecommendedTextView">Only show recommended items</string>
     <string name="activity_dishesFilters_resetFiltersBtn">Reset</string>
@@ -324,6 +373,7 @@
     <string name="activity_venueTables_title">Select Table</string>
     <string name="activity_venuesTables_title">Select Table</string>
     <string name="activity_landing_temporarilyDownMessageTextView">Oops! Problem! We are currently doing our best to fix it!</string>
+    <string name="activity_dishesFilters_drinksFiltersTitle">Drinks</string>
 
 
 </resources>

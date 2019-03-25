@@ -37,6 +37,7 @@ public class DishesService {
                            double longitude,
                            String query,
                            ArrayList<String> phaseFilterIds,
+                           ArrayList<String> drinksFilterIds,
                            ArrayList<String> regionFilterIds,
                            ArrayList<String> spectrumFilterIds,
                            ArrayList<String> allergensFilterIds,
@@ -52,7 +53,7 @@ public class DishesService {
                     String authTokenHeader = this.accountService.getWebApiAuthTokenHeader(applicationContext);
 
                     SearchMenuListItemsBindingModel model = new SearchMenuListItemsBindingModel(authTokenHeader,
-                            maxResultsCount, totalItemsOffset, latitude, longitude, query, phaseFilterIds,
+                            maxResultsCount, totalItemsOffset, latitude, longitude, query, phaseFilterIds, drinksFilterIds,
                             regionFilterIds, spectrumFilterIds, allergensFilterIds, showNotRecommendedDishes, showNotWorkingVenues,
                             localDateTimeOffset, searchedDistanceMeters, isDevModeActivated);
 

@@ -258,14 +258,16 @@ public class DetailsItemActivity
 
         if (filters != null && filters.size() > 0) {
             ArrayList<Filter> typeFilters = new ArrayList<>(Stream.of(filters).filter(x -> x.FilterType == FilterType.DishType).toList());
+            ArrayList<Filter> drinksFilters = new ArrayList<>(Stream.of(filters).filter(x -> x.FilterType == FilterType.Drinks).toList());
             ArrayList<Filter> mainIngredientFilters = new ArrayList<>(Stream.of(filters).filter(x -> x.FilterType == FilterType.DishMainIngredient).toList());
             ArrayList<Filter> regionFilters = new ArrayList<>(Stream.of(filters).filter(x -> x.FilterType == FilterType.DishRegion).toList());
 
             boolean anyTypeFilter = this.iterateFiltersHasAny(typeFilters, true, this.filtersLayout);
+            boolean anyDrinkFilter = this.iterateFiltersHasAny(drinksFilters, true, this.filtersLayout);
             boolean anyMainIngredientFilter = this.iterateFiltersHasAny(mainIngredientFilters, true, this.filtersLayout);
             boolean anyRegionFilter = this.iterateFiltersHasAny(regionFilters, true, this.filtersLayout);
 
-            if (anyTypeFilter || anyMainIngredientFilter || anyRegionFilter)
+            if (anyTypeFilter || anyDrinkFilter || anyMainIngredientFilter || anyRegionFilter)
                 this.showFiltersContainer();
             else
                 this.hideFiltersContainer();

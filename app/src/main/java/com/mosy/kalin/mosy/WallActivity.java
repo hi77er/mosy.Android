@@ -137,6 +137,8 @@ public class WallActivity
     @Extra
     static ArrayList<String> SelectedDishTypeFilterIds;
     @Extra
+    static ArrayList<String> SelectedDrinkFilterIds;
+    @Extra
     static ArrayList<String> SelectedDishRegionFilterIds;
     @Extra
     static ArrayList<String> SelectedDishMainIngredientFilterIds;
@@ -460,7 +462,7 @@ public class WallActivity
                         //INFO: WHILE SCROLLING LOAD
                         int totalItemsCount = recyclerView.getAdapter().getItemCount();
                         loadMoreDishes(itemsToLoadCountWhenScrolled, totalItemsCount, query,
-                                SelectedDishTypeFilterIds, SelectedDishRegionFilterIds, SelectedDishMainIngredientFilterIds, SelectedDishAllergenFilterIds);
+                                SelectedDishTypeFilterIds, SelectedDrinkFilterIds, SelectedDishRegionFilterIds, SelectedDishMainIngredientFilterIds, SelectedDishAllergenFilterIds);
                     }
                 }
                 @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -525,7 +527,7 @@ public class WallActivity
 
                     //INFO: REFRESH INITIAL LOAD
                     loadMoreDishes(itemsInitialLoadCount, 0, query,
-                            SelectedDishTypeFilterIds, SelectedDishRegionFilterIds, SelectedDishMainIngredientFilterIds, SelectedDishAllergenFilterIds);
+                            SelectedDishTypeFilterIds, SelectedDrinkFilterIds, SelectedDishRegionFilterIds, SelectedDishMainIngredientFilterIds, SelectedDishAllergenFilterIds);
                 }
                 dishesSwipeContainer.setRefreshing(false); // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
             });
@@ -533,7 +535,7 @@ public class WallActivity
             //INFO: INITIAL LOAD
             this.wallDishesAdapter.clearItems();
             this.loadMoreDishes(itemsInitialLoadCount, 0, query,
-                    SelectedDishTypeFilterIds, SelectedDishRegionFilterIds, SelectedDishMainIngredientFilterIds, SelectedDishAllergenFilterIds);
+                    SelectedDishTypeFilterIds, SelectedDrinkFilterIds, SelectedDishRegionFilterIds, SelectedDishMainIngredientFilterIds, SelectedDishAllergenFilterIds);
         }
     }
 
@@ -541,6 +543,7 @@ public class WallActivity
                         int totalItemsOffset,
                         String query,
                         ArrayList<String> selectedDishTypeFilterIds,
+                        ArrayList<String> selectedDrinksFilterIds,
                         ArrayList<String> selectedDishRegionFilterIds,
                         ArrayList<String> selectedDishMainIngredientFilterIds,
                         ArrayList<String> selectedDishAllergenFilterIds){
@@ -587,7 +590,7 @@ public class WallActivity
                     maxResultsCount, totalItemsOffset,
                     lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
                     query,
-                    selectedDishTypeFilterIds, selectedDishRegionFilterIds, selectedDishMainIngredientFilterIds, selectedDishAllergenFilterIds,
+                    selectedDishTypeFilterIds, selectedDrinksFilterIds, selectedDishRegionFilterIds, selectedDishMainIngredientFilterIds, selectedDishAllergenFilterIds,
                     !ApplyRecommendedFilterToDishes, !ApplyWorkingStatusFilterToDishes, localDateTimeOffset, ApplyDistanceFilterToDishes, this.isDevelopersModeActivated);
         }
         else {
@@ -677,9 +680,10 @@ public class WallActivity
     private boolean checkFiltersSelected(){
         return (DishesSearchModeActivated &&
                 ((SelectedDishTypeFilterIds != null && SelectedDishTypeFilterIds.size() > 0) ||
-                (SelectedDishRegionFilterIds != null && SelectedDishRegionFilterIds.size() > 0) ||
-                (SelectedDishMainIngredientFilterIds != null && SelectedDishMainIngredientFilterIds.size() > 0) ||
-                (SelectedDishAllergenFilterIds != null && SelectedDishAllergenFilterIds.size() > 0) ||
+                 (SelectedDrinkFilterIds != null && SelectedDrinkFilterIds.size() > 0) ||
+                 (SelectedDishRegionFilterIds != null && SelectedDishRegionFilterIds.size() > 0) ||
+                 (SelectedDishMainIngredientFilterIds != null && SelectedDishMainIngredientFilterIds.size() > 0) ||
+                 (SelectedDishAllergenFilterIds != null && SelectedDishAllergenFilterIds.size() > 0) ||
                  ApplyDistanceFilterToDishes != DEFAULT_MINIMAL_DISTANCE_FILTER_METERS ||
                  ApplyRecommendedFilterToDishes != DEFAULT_APPLY_RECOMMENDED_FILTER ||
                  ApplyWorkingStatusFilterToDishes != DEFAULT_APPLY_WORKING_STATUS_FILTER))
@@ -722,6 +726,7 @@ public class WallActivity
             intent.putExtra("PreselectedApplyRecommendedFilter", ApplyRecommendedFilterToDishes);
             intent.putExtra("PreselectedApplyWorkingStatusFilter", ApplyWorkingStatusFilterToDishes);
             intent.putExtra("PreselectedDishTypeFilterIds", SelectedDishTypeFilterIds);
+            intent.putExtra("PreselectedDrinksFilterIds", SelectedDrinkFilterIds);
             intent.putExtra("PreselectedDishRegionFilterIds", SelectedDishRegionFilterIds);
             intent.putExtra("PreselectedDishMainIngredientFilterIds", SelectedDishMainIngredientFilterIds);
             intent.putExtra("PreselectedDishAllergenFilterIds", SelectedDishAllergenFilterIds);

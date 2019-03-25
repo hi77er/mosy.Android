@@ -69,6 +69,8 @@ public class DishesFiltersActivity
     @Extra
     static ArrayList<String> PreselectedDishTypeFilterIds;
     @Extra
+    static ArrayList<String> PreselectedDrinksFilterIds;
+    @Extra
     static ArrayList<String> PreselectedDishRegionFilterIds;
     @Extra
     static ArrayList<String> PreselectedDishMainIngredientFilterIds;
@@ -168,6 +170,7 @@ public class DishesFiltersActivity
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_activity_filters_dishes);
 
         if (PreselectedDishTypeFilterIds == null) PreselectedDishTypeFilterIds = new ArrayList<>();
+        if (PreselectedDrinksFilterIds == null) PreselectedDrinksFilterIds = new ArrayList<>();
         if (PreselectedDishRegionFilterIds == null) PreselectedDishRegionFilterIds = new ArrayList<>();
         if (PreselectedDishMainIngredientFilterIds == null) PreselectedDishMainIngredientFilterIds = new ArrayList<>();
         if (PreselectedDishAllergenFilterIds == null) PreselectedDishAllergenFilterIds = new ArrayList<>();
@@ -203,6 +206,7 @@ public class DishesFiltersActivity
         if (ConnectivityHelper.isConnected(applicationContext)) {
             Intent intent = new Intent(DishesFiltersActivity.this, WallActivity_.class);
             ArrayList<String> selectedDishTypeFilterIds = new ArrayList<>();
+            ArrayList<String> selectedDrinkFilterIds = new ArrayList<>();
             ArrayList<String> selectedDishRegionFilterIds = new ArrayList<>();
             ArrayList<String> selectedDishMainIngredientFilterIds = new ArrayList<>();
             ArrayList<String> selectedDishAllergenFilterIds = new ArrayList<>();
@@ -213,6 +217,13 @@ public class DishesFiltersActivity
             if (this.dishFiltersAdapter != null && this.dishFiltersAdapter.DishTypeFilterItems != null) {
                 selectedDishTypeFilterIds = new ArrayList<>(Stream
                         .of(dishFiltersAdapter.DishTypeFilterItems)
+                        .filter(x -> x.IsChecked)
+                        .map(x -> x.Id)
+                        .toList());
+            }
+            if (this.dishFiltersAdapter != null && this.dishFiltersAdapter.DrinksFilterItems != null) {
+                selectedDrinkFilterIds = new ArrayList<>(Stream
+                        .of(dishFiltersAdapter.DrinksFilterItems)
                         .filter(x -> x.IsChecked)
                         .map(x -> x.Id)
                         .toList());
@@ -240,10 +251,12 @@ public class DishesFiltersActivity
                         .toList());
             }
 
-            boolean filtersStateChanged = checkFiltersStateChanged(distanceFilterFormattedValue,
+            boolean filtersStateChanged = checkFiltersStateChanged(
+                    distanceFilterFormattedValue,
                     selectedApplyRecommendedFilter,
                     selectedApplyWorkingStatusFilter,
                     selectedDishTypeFilterIds,
+                    selectedDrinkFilterIds,
                     selectedDishRegionFilterIds,
                     selectedDishMainIngredientFilterIds,
                     selectedDishAllergenFilterIds);
@@ -253,6 +266,7 @@ public class DishesFiltersActivity
                 intent.putExtra("ApplyRecommendedFilterToDishes", selectedApplyRecommendedFilter);
                 intent.putExtra("ApplyWorkingStatusFilterToDishes", selectedApplyWorkingStatusFilter);
                 intent.putExtra("SelectedDishTypeFilterIds", selectedDishTypeFilterIds);
+                intent.putExtra("SelectedDrinkFilterIds", selectedDrinkFilterIds);
                 intent.putExtra("SelectedDishRegionFilterIds", selectedDishRegionFilterIds);
                 intent.putExtra("SelectedDishMainIngredientFilterIds", selectedDishMainIngredientFilterIds);
                 intent.putExtra("SelectedDishAllergenFilterIds", selectedDishAllergenFilterIds);
@@ -273,11 +287,13 @@ public class DishesFiltersActivity
                 if (result != null) {
                     populateAlreadySelectedFilters(
                             result.DishTypeFilters,
+                            result.DrinksFilters,
                             result.DishRegionFilters,
                             result.DishMainIngredientFilters,
                             result.DishAllergenFilters);
 
                     ArrayList<FilterItem> dishTypeFilters = toFilterItems(result.DishTypeFilters);
+                    ArrayList<FilterItem> drinksFilters = toFilterItems(result.DrinksFilters);
                     ArrayList<FilterItem> dishRegionFilters = toFilterItems(result.DishRegionFilters);
                     ArrayList<FilterItem> dishMainIngredientFilters = toFilterItems(result.DishMainIngredientFilters);
                     ArrayList<FilterItem> dishAllergenFilters = toFilterItems(result.DishAllergenFilters);
@@ -285,6 +301,7 @@ public class DishesFiltersActivity
                     dishFiltersAdapter = new FilterDishesPagerAdapter(applicationContext,
                                                                       getSupportFragmentManager(),
                                                                       dishTypeFilters,
+                                                                      drinksFilters,
                                                                       dishRegionFilters,
                                                                       dishMainIngredientFilters,
                                                                       dishAllergenFilters);
@@ -333,12 +350,18 @@ public class DishesFiltersActivity
 
     private void populateAlreadySelectedFilters(
             ArrayList<Filter> dishTypeFilters,
+            ArrayList<Filter> drinksFilters,
             ArrayList<Filter> dishRegionFilters,
             ArrayList<Filter> dishMainIngredientFilters,
             ArrayList<Filter> dishAllergenFilters) {
 
         Stream.of(PreselectedDishTypeFilterIds).forEach(filterId -> {
             Filter matchingFilter = Stream.of(dishTypeFilters).filter(filter -> filter.Id.equals(filterId)).single();
+            matchingFilter.IsChecked = true;
+        });
+
+        Stream.of(PreselectedDrinksFilterIds).forEach(filterId -> {
+            Filter matchingFilter = Stream.of(drinksFilters).filter(filter -> filter.Id.equals(filterId)).single();
             matchingFilter.IsChecked = true;
         });
 
@@ -362,6 +385,7 @@ public class DishesFiltersActivity
                                              boolean selectedApplyRecommendedFilter,
                                              boolean selectedApplyWorkingStatusFilter,
                                              ArrayList<String> selectedDishTypeFilterIds,
+                                             ArrayList<String> selectedDrinkFilterIds,
                                              ArrayList<String> selectedDishRegionFilterIds,
                                              ArrayList<String> selectedDishMainIngredientFilterIds,
                                              ArrayList<String> selectedDishAllergenFilterIds) {
@@ -370,6 +394,7 @@ public class DishesFiltersActivity
         boolean applyRecommendedFilterChanged = selectedApplyRecommendedFilter != PreselectedApplyRecommendedFilter;
         boolean applyWorkingStatusChanged = selectedApplyWorkingStatusFilter != PreselectedApplyWorkingStatusFilter;
         boolean dishTypeFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedDishTypeFilterIds, selectedDishTypeFilterIds);
+        boolean drinkFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedDrinksFilterIds, selectedDrinkFilterIds);
         boolean dishRegionFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedDishRegionFilterIds, selectedDishRegionFilterIds);
         boolean dishMainIngredientFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedDishMainIngredientFilterIds, selectedDishMainIngredientFilterIds);
         boolean dishAllergenFiltersChanged = !ListHelper.listEqualsIgnoreOrder(PreselectedDishAllergenFilterIds, selectedDishAllergenFilterIds);
@@ -379,6 +404,7 @@ public class DishesFiltersActivity
                 applyRecommendedFilterChanged ||
                 applyWorkingStatusChanged ||
                 dishTypeFiltersChanged ||
+                drinkFiltersChanged ||
                 dishRegionFiltersChanged ||
                 dishMainIngredientFiltersChanged ||
                 dishAllergenFiltersChanged;
