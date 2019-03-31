@@ -236,6 +236,7 @@ public class AccountService {
             call.enqueue(new Callback<AuthorizationTokensResource>() {
                 @Override public void onFailure(Call<AuthorizationTokensResource> call, Throwable t) {
                     t.printStackTrace();
+                    onFail.run();
                 }
                 @Override public void onResponse(Call<AuthorizationTokensResource> call, Response<AuthorizationTokensResource> response) {
                     try {
@@ -243,12 +244,20 @@ public class AccountService {
                                 if (response.errorBody() != null) {
                                     String errorBody = response.errorBody().string().toLowerCase();
 
-                                    if (errorBody.contains("email is not confirmed"))
+                                    if (errorBody.contains("not confirmed"))
+                                    {
                                         onEmailNotConfirmed.run();
-                                    else if(errorBody.contains("user Name or password is incorrect"))
+                                    }
+                                    else if(errorBody.contains("name or password is incorrect")
+                                         || errorBody.contains("wrong user or pass"))
+                                    {
+                                        //INFO: MEANS THAT USER EMAIL WAS WRONG (NOT FOUND IN THE DB). USER SHOULDN'T KNOW THAT!
                                         onWrongUserOrPass.run();
+                                    }
                                     else
+                                    {
                                         onInvalidHost.run();
+                                    }
                                 }
                         }
                         else {
@@ -259,7 +268,10 @@ public class AccountService {
 
                                 onSuccess.run();
                             }
-                            onFail.run();
+                            else
+                            {
+                                onFail.run();
+                            }
                         }
                     }
                     catch (Exception ex){
@@ -270,6 +282,7 @@ public class AccountService {
             });
         } catch (Exception e) {
             e.printStackTrace();
+            onFail.run();
         }
     }
 

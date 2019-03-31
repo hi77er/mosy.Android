@@ -2,8 +2,11 @@ package com.mosy.kalin.mosy;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,6 +18,7 @@ import com.mosy.kalin.mosy.Listeners.AsyncTaskListener;
 import com.mosy.kalin.mosy.Services.AccountService;
 import com.mosy.kalin.mosy.Helpers.StringHelper;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -42,8 +46,34 @@ public class RegisterActivity
     @ViewById(R.id.register_llInitialLoadingProgress)
     LinearLayout centralProgress;
 
+    @ViewById(R.id.tvConditions)
+    TextView tvConditions;
+    @ViewById(R.id.cbConditions)
+    CheckBox cbConditions;
+
     @ViewById(R.id.btnRegister)
     Button btnRegister;
+
+
+    @AfterViews
+    public void afterViews(){
+        cbConditions.setText(StringHelper.empty());
+
+        tvConditions.setText(
+                Html.fromHtml(
+                        "I have read and agree to the " +
+                        "<a href='https://www.treatspark.com/legal/termsweb'>Terms and Conditions</a>" +
+                        " and " +
+                        "<a href='https://www.treatspark.com/legal/privacyweb'>Privacy Policy</a>" +
+                        " including the " +
+                        "<a href='https://www.treatspark.com/legal/disclaimer'>Disclaimer</a>" +
+                        " and our" +
+                        "<a href='https://www.treatspark.com/legal/cookies'>Cookies Policy</a>" +
+                        ".")
+        );
+        tvConditions.setClickable(true);
+        tvConditions.setMovementMethod(LinkMovementMethod.getInstance());
+    }
 
     private void onPreCheckEmailAvailable() {
         centralProgress.setVisibility(View.VISIBLE);
@@ -129,6 +159,9 @@ public class RegisterActivity
         } else if (!password.equals(repeatPassword)) {
             this.setInfoMessageColor(R.color.colorPrimaryApricot);
             this.toggleInfoMessage("Repeat password does not match Password");
+        } else if (!cbConditions.isChecked()) {
+            this.setInfoMessageColor(R.color.colorPrimaryApricot);
+            this.toggleInfoMessage("Please accept our Terms and Conditions");
         } else {
             AsyncTaskListener<CheckEmailAvailableResult> isEmailValidListener = new AsyncTaskListener<CheckEmailAvailableResult>() {
                 @Override public void onPreExecute() {

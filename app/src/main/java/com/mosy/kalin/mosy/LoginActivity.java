@@ -76,7 +76,7 @@ public class LoginActivity
     public void afterViews(){
         if (confirmEmailNeeded){
             this.infoMessageTextView.setTextColor(getResources().getColor(R.color.colorTertiary));
-            this.onFinishLogin("Confirm your email and come back to Login.");
+            this.onFinishLogin("Confirm your email and come back to Login. (Don't forget to check the spam folder of your mailbox as well.)");
             Toast.makeText(applicationContext, "Registration successful", Toast.LENGTH_SHORT).show();
         }
 
@@ -166,8 +166,6 @@ public class LoginActivity
         this.onStartLogin();
     }
     private void onAuthenticationSucceeded() {
-        this.onFinishLogin(null);
-
         AsyncTaskListener<User> apiCallListener = new AsyncTaskListener<User>() {
             @Override public void onPreExecute() {
 

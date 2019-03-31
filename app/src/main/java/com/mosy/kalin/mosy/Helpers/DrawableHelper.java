@@ -63,6 +63,18 @@ public class DrawableHelper {
             case "9A9D9045-B356-4A2D-886A-42EA52D2C62B":
                 drawableId = R.drawable.filter_fggray_bgmain_live_sports;
                 break;
+            case "5358D380-8727-47B7-BDEB-8D0474523AC1":
+                drawableId = R.drawable.ic_bullseye_arrow_24;
+                break;
+            case "7599C257-F9CE-4ECA-B595-A36259B56297":
+                drawableId = R.drawable.ic_billiards_24;
+                break;
+            case "D265FC6B-0A72-4B81-8A16-CBBB8287DD0F":
+                drawableId = R.drawable.ic_soccer_field_24;
+                break;
+            case "F2B2EBE1-0D22-471F-AA80-CEA0D2807625":
+                drawableId = R.drawable.ic_gamepad_right_24;
+                break;
             case "3D725220-451D-4FCF-A36A-49A794569CC8":
                 drawableId = R.drawable.filter_fggray_bgmain_couches;
                 break;
@@ -95,6 +107,12 @@ public class DrawableHelper {
                 break;
             case "5AB9966D-122D-49EC-9176-F64193E331E7":
                 drawableId = R.drawable.filter_fggray_bgmain_standing_desks;
+                break;
+            case "8BF62DF3-2ED1-411F-86E8-D27E19859D05":
+                drawableId = R.drawable.ic_microphone_variant_24;
+                break;
+            case "57FEFDED-EE11-4222-84A0-082471AABF17":
+                drawableId = R.drawable.ic_piano_24;
                 break;
             case "EA50942C-B218-430D-AF44-233FC64041EA":
                 drawableId = R.drawable.flag_bulgaria;
@@ -687,15 +705,15 @@ public class DrawableHelper {
         }
 
         switch (filterId.toUpperCase()) {
-//                Dish Type
+//          Dish Type
             case "A9C13F74-219A-4FC5-8D81-0A60D7A1173B":
                 drawableId = R.drawable.dish_filter_vegan_food_96;
                 break;
             case "6A87D0EA-1503-4B99-8998-22D24C17307E":
                 drawableId = R.drawable.dish_filter_spaghetti_96;
                 break;
-            case "E48B981A-5146-44AB-A78D-2A0029880286":
-                drawableId = R.drawable.dish_filter_glass_wine;
+            case "5AE75FA5-EE8C-4AB1-A69E-F059203E6E15":
+                drawableId = R.drawable.ic_bowl_24;
                 break;
             case "84AD4941-A8FA-45A7-9A9B-3C2D9F4278F5":
                 drawableId = R.drawable.dish_filter_sushi_96;
@@ -705,9 +723,6 @@ public class DrawableHelper {
                 break;
             case "71539C9A-7DC6-4C55-860B-528C54DBF80D":
                 drawableId = R.drawable.dish_filter_hamburger;
-                break;
-            case "9F704161-7D3B-4397-A68A-60412FB6A941":
-                drawableId = R.drawable.dish_filter_cup_water;
                 break;
             case "09BC29A1-A475-4780-85D8-840DFCD3B18D":
                 drawableId = R.drawable.dish_filter_food_croissant;
@@ -728,43 +743,54 @@ public class DrawableHelper {
                 drawableId = R.drawable.dish_filter_cupcake;
                 break;
 
+//          Drinks
+            case "E48B981A-5146-44AB-A78D-2A0029880286":
+                drawableId = R.drawable.ic_alpha_a_circle_outline_24;
+                break;
+            case "9F704161-7D3B-4397-A68A-60412FB6A941":
+                drawableId = R.drawable.ic_alpha_s_circle_outline_24;
+                break;
+            case "F6855FD7-2E20-48EC-A72D-0949D5E1D108":
+                drawableId = R.drawable.ic_coffee_24;
+                break;
+            case "32B0FEF9-38A6-4114-8ABC-3BE0725464D2":
+                drawableId = R.drawable.ic_glass_flute_24;
+                break;
+            case "0AD236F4-FFAB-45C3-85BD-453CAA5D9EDA":
+                drawableId = R.drawable.dish_filter_glass_wine;
+                break;
+            case "141FBADC-C8E6-4BB3-8F1C-5D7D28E041E8":
+                drawableId = R.drawable.ic_beer_24;
+                break;
+            case "52A56160-FC66-41EC-8691-7E4AF189C5FA":
+                drawableId = R.drawable.ic_glass_cocktail_24;
+                break;
+            case "2FF74CF2-F2B8-4AA9-82A3-CE3A6E014201":
+                drawableId = R.drawable.dish_filter_cup_water;
+                break;
+
 //                Dish Region
             case "DDA95DC5-22EB-43A4-A0B2-AB1FAAFB370B":
                 drawableId = R.drawable.flag_italy;
                 break;
-//            case "15E21580-9A42-409B-A0DC-F3182E719322":
-//                drawableId = R.drawable.flag_argentina;
-//                break;
-//            case "341ACCCF-2E5D-4A85-B807-D8628B7AB7E8":
-//                drawableId = R.drawable.flag_argentina;
-//                break;
-//            case "A3308025-F0A2-48EA-BE68-D98EEEB6E453":
-//                drawableId = R.drawable.flag_argentina;
-//                break;
-//            case "DE6A12C1-AC48-439A-A11A-E4CB73DA9EFA":
-//                drawableId = R.drawable.flag_argentina;
-//                break;
-//            case "8148393B-7D8B-485A-9A3C-A7FACBA43F56":
-//                drawableId = R.drawable.flag_argentina;
-//                break;
-//            case "1CA79DC5-56BE-40A1-94AE-900FB9E5CA8D":
-//                drawableId = R.drawable.flag_argentina;
-//                break;
+            case "E2FB16B5-EFAF-4F93-B607-A7715467C905":
+                drawableId = R.drawable.flag_spain;
+                break;
+            case "D5037FF3-E41F-4143-8FEA-10B9419C9FC3":
+                drawableId = R.drawable.flag_france;
+                break;
+            case "0CE4144C-09C3-437F-AAF2-D03D8DFE8879":
+                drawableId = R.drawable.flag_thailand;
+                break;
+            case "75018D69-EED4-4A19-AFC7-DCD308FFDA2A":
+                drawableId = R.drawable.ic_vector_combine_24;
+                break;
+            case "8D8FF05E-608B-480B-942C-5ACF91EFC234":
+                drawableId = R.drawable.flag_vietnam;
+                break;
             case "18A95D3A-6798-4E1F-8387-9537F5CB11D9":
                 drawableId = R.drawable.flag_japan;
                 break;
-//            case "34E27698-00C3-4FD8-9E34-57A855538EFC":
-//                drawableId = R.drawable.flag_argentina;
-//                break;
-//            case "581C594E-6767-4865-BF2A-3AF612DE19D6":
-//                drawableId = R.drawable.flag_argentina;
-//                break;
-//            case "E8CADEA7-E958-4B67-8F45-0584BE8E458D":
-//                drawableId = R.drawable.flag_argentina;
-//                break;
-//            case "9EF7E126-7F8D-4B3F-B363-0949E0C312CE":
-//                drawableId = R.drawable.flag_argentina;
-//                break;
             case "61B4603E-4E9C-4900-8FD8-12550BC95554":
                 drawableId = R.drawable.flag_china;
                 break;
@@ -773,32 +799,38 @@ public class DrawableHelper {
                 break;
 
 //                Dish Main Ingredient
-            case "1EA9ED64-2B59-43ED-B573-35917A858536":
-                drawableId = R.drawable.dish_filter_fish_food_96;
+            case "5796BEC7-8C93-454E-806E-5E2F360A54FE":
+                drawableId = R.drawable.ic_alpha_f_circle_outline_24;
+                break;
+            case "135B2D41-5760-40D9-B21B-4897EA7A2F8E":
+                drawableId = R.drawable.ic_waves_24;
                 break;
             case "BCABA7FD-2A03-4CD4-853D-51124A791113":
-                drawableId = R.drawable.dish_filter_thanksgiving_96;
+                drawableId = R.drawable.ic_alpha_w_circle_outline_24;
                 break;
             case "72B7A9F9-A4FD-4FA3-8988-6A4FC24BC275":
-                drawableId = R.drawable.dish_filter_vegan_symbol_96;
+                drawableId = R.drawable.ic_alpha_v_circle_outline_24;
                 break;
             case "CFC9FD64-B711-48D3-923D-8D7720451D69":
-                drawableId = R.drawable.dish_filter_kosher_food;
-                break;
-            case "98FBB81E-DE48-4CD9-9E8C-8FEEADA03370":
-                drawableId = R.drawable.dish_filter_no_gluten_96;
+                drawableId = R.drawable.ic_alpha_u_circle_outline_24;
                 break;
             case "9397AB36-37F5-4D70-B021-A971D7221EB8":
                 drawableId = R.drawable.dish_filter_steak_96;
                 break;
             case "C89C5CAD-2497-407E-A729-E9F8AD14E7EB":
-                drawableId = R.drawable.dish_filter_raw_food;
+                drawableId = R.drawable.ic_alpha_r_circle_outline_24;
                 break;
             case "E576F7AB-3F06-451F-8E36-EF8AC878BED5":
-                drawableId = R.drawable.dish_filter_vegetarian_food_symbol_96;
+                drawableId = R.drawable.ic_alpha_v_circle_24;
                 break;
             case "34461B9A-FBFC-4A89-B67F-F2CFACE03AB0":
-                drawableId = R.drawable.dish_filter_halal_food;
+                drawableId = R.drawable.ic_alpha_h_circle_outline_24;
+                break;
+            case "14728F42-192C-4265-AE80-ECBB17B8DA5B":
+                drawableId = R.drawable.ic_alpha_k_circle_outline_24;
+                break;
+            case "6A8D2835-350A-439A-819E-0A14FAA3FA32":
+                drawableId = R.drawable.ic_alpha_p_circle_outline_24;
                 break;
 
 //                Dish Allergen
@@ -824,7 +856,7 @@ public class DrawableHelper {
                 drawableId = R.drawable.dish_filter_celery_24;
                 break;
             case "43888391-4A4C-4A8C-8F82-870A27E598EF":
-                drawableId = R.drawable.dish_filter_glass_wine;
+                drawableId = R.drawable.ic_alpha_a_circle_outline_24;
                 break;
             case "24017BDD-FC90-4721-A3C6-8778156BD0D6":
                 drawableId = R.drawable.dish_filter_shellfish_96;
@@ -857,7 +889,7 @@ public class DrawableHelper {
                 drawableId = R.drawable.dish_filter_soy_96;
                 break;
             case "44B7A122-16F0-4A9D-A2EB-34BABED8384A":
-                drawableId = R.drawable.dish_filter_fish_food_96;
+                drawableId = R.drawable.ic_fish_24;
                 break;
             case "F5950E87-6133-42E0-8D98-1F11C5DF1F18":
                 drawableId = R.drawable.dish_filter_milk_bottle_24;

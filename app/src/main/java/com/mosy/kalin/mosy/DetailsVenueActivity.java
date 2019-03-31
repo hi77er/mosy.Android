@@ -449,8 +449,8 @@ public class DetailsVenueActivity
         lp.width = (int)MetricsHelper.convertDpToPixel(widthDp);
         lp.height = (int)MetricsHelper.convertDpToPixel(31);
         lp.setMargins((int)MetricsHelper.convertDpToPixel(6), 0, 0, 0);
-        filterImageView.setLayoutParams(lp);
 
+        filterImageView.setLayoutParams(lp);
         filterImageView.setOnClickListener(view -> this.filterClick(nameResourceI18nId, defaultNameText, descriptionResourceI18nId, defaultDescriptionText));
 
         filterImageView.setVisibility(View.VISIBLE);

@@ -246,7 +246,7 @@
     <string name="DishesFilterTypePastaName">Pasta</string>
     <string name="DishesFilterTypeSushiName">Sushi</string>
     <string name="DishesFilterTypeBuffetName">Buffet &amp; Brunch</string>
-    <string name="DishesFilterTypeNonalcoholicDrinksName">Non-alcoholic drinks</string>
+    <string name="DishesFilterTypeNonalcoholicDrinksName">Soft drinks</string>
     <string name="DishesFilterTypeBreakfastName">"Breakfast"</string>
     <string name="DishesFilterTypeMainsName">"Mains"</string>
     <string name="DishesFilterTypeDesertsName">"Desserts"</string>
@@ -309,11 +309,12 @@
     <string name="DishesFilterPaleoName">Paleo</string>
     <string name="DishesFilterBeersName">Beer</string>
     <string name="DishesFilterWinesName">Wine</string>
-    <string name="DishesFilterCocktailsName">Cocktails</string>
-    <string name="DishesFilterWhiskeysName">Whiskey</string>
+    <string name="DishesFilterCocktailsName">Cocktails &amp; Long drinks</string>
+    <string name="DishesFilterSpiritsName">Spirits &amp; Liquors</string>
 
     <string name="DishesFilterTypeAppetizersAndSnacksDescription">E.g. dips, antipasti, etc.</string>
     <string name="DishesFilterTypeDesertsDescription">"E.g. cakes, ice cream, pancakes, etc."</string>
+    <string name="DishesFilterTypeAlcoholicDrinksDescription">A drink that contains ethanol, a type of alcohol produced by fermentation of grains, fruits, or other sources of sugar. </string>
     <string name="DishesFilterTypeNonalcoholicDrinksDescription">E.g. smoothies, juices, cocktails, etc.</string>
     <string name="DishesFilterRegionAfricanDescription">E.g. Ethiopian, Moroccan, South African, etc.</string>
     <string name="DishesFilterRegionOtherAsianDescription">E.g. Korean, Nepali, Taiwanese, etc.</string>
@@ -338,10 +339,10 @@
     <string name="DishesFilterSeaFoodDescription"></string>
     <string name="DishesFilterKetoDescription"></string>
     <string name="DishesFilterPaleoDescription"></string>
-    <string name="DishesFilterBeersDescription"></string>
+    <string name="DishesFilterBeersDescription">E.g. beers, ciders, etc.</string>
     <string name="DishesFilterWinesDescription"></string>
     <string name="DishesFilterCocktailsDescription"></string>
-    <string name="DishesFilterWhiskeysDescription"></string>
+    <string name="DishesFilterSpiritsDescription">E.g. whiskey, vodka, rum, brandy, cognac, tequila, gin, liquors, etc.</string>
 
     <string name="activity_dishesFilters_showRecommendedTextView">Only show recommended items</string>
     <string name="activity_dishesFilters_resetFiltersBtn">Reset</string>
